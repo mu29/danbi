@@ -137,6 +137,17 @@ public final class Packet {
 		
 		return packet;
 	}
+
+	// player(0), npc(1), enemy(2)
+	public static JSONObject turnCharacter(int type, int no, int d) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.MOVE_CHARACTER);
+		packet.put("type", type);
+		packet.put("no", no);
+		packet.put("d", d);
+
+		return packet;
+	}
 	
 	public static JSONObject openRegisterWindow() {
 		String[] image = new String[GameData.register.size()];
@@ -153,15 +164,15 @@ public final class Packet {
 		
 		return packet;
 	}
-	
-	public static JSONObject updateStatus(String type, Object value) {
+
+	public static JSONObject updateStatus(int type, Object value) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.UPDATE_STATUS);
-		packet.put(type, value);
-		
+		packet.put("type", type);
+		packet.put("value", value);
+
 		return packet;
 	}
-	
 	
 	public static JSONObject setInventory(GameData.InventoryItem item) {
 		JSONObject packet = new JSONObject();
@@ -184,6 +195,7 @@ public final class Packet {
 		packet.put("hit", item.getHit());
 		packet.put("reinforce", item.getReinforce());
 		packet.put("trade", item.isTradeable() ? 1 : 0);
+
 		return packet;
 	}
 	
@@ -192,5 +204,4 @@ public final class Packet {
 		packet.put("header", STCHeader.UPDATE_INVENTORY);
 		return packet;
 	}
-
 }

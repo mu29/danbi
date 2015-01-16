@@ -25,14 +25,16 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     
     @Override
 	public void channelRead (ChannelHandlerContext ctx, Object msg) {
-    	JSONObject packet = (JSONObject) msg;
-    	switch ((int) packet.get("header")) {
+		JSONObject packet = (JSONObject) msg;
+		switch ((int) packet.get("header")) {
 	    	case CTSHeader.LOGIN:
 	    		login(ctx, packet); break;
 	    	case CTSHeader.REGISTER:
 	    		register(ctx, packet); break;
-	    	case CTSHeader.MOVE_CHARACTER:
-	    		moveUser(ctx, packet); break;
+			case CTSHeader.MOVE_CHARACTER:
+				moveUser(ctx, packet); break;
+			case CTSHeader.TURN_CHARACTER:
+				turnUser(ctx, packet); break;
 	    	case CTSHeader.REMOVE_EQUIP_ITEM:
 	    		removeEquipItem(ctx, packet); break;
 	    	case CTSHeader.USE_STAT_POINT:
@@ -86,7 +88,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 	    			u.loadData();
 	    			
 	    			ctx.writeAndFlush(Packet.loginMessage(u));
-	    	    	map.get(u.getMap()).sendMessage(Packet.createCharacter(u));
+	    	    	map.get(u.getMap()).sendToOthers(u, Packet.createCharacter(u));
 	    	    	map.get(u.getMap()).addUser(u);
 	    		} else {
 	    			ctx.writeAndFlush(Packet.loginMessage(1));
@@ -139,30 +141,47 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     	DataBase.insertUser(readID, readPass, readName, readMail, readImage, readJob, r.getMap(), r.getX(), r.getY(), r.getLevel());
     	ctx.writeAndFlush(Packet.registerMessage(0));
     }
-    
-    void moveUser(ChannelHandlerContext ctx, JSONObject packet) {
-    	switch ((int) packet.get("type")) {
-	    	case 2:
-	    		user.get(ctx).moveDown();
-	    		break;
-	    	case 4:
-	    		user.get(ctx).moveLeft();
-	    		break;
-	    	case 6:
-	    		user.get(ctx).moveRight();
-	    		break;
-	    	case 8:
-	    		user.get(ctx).moveUp();
-	    		break;
-    	}
-    }
+
+	void moveUser(ChannelHandlerContext ctx, JSONObject packet) {
+		switch ((int) packet.get("type")) {
+			case 2:
+				user.get(ctx).moveDown();
+				break;
+			case 4:
+				user.get(ctx).moveLeft();
+				break;
+			case 6:
+				user.get(ctx).moveRight();
+				break;
+			case 8:
+				user.get(ctx).moveUp();
+				break;
+		}
+	}
+
+	void turnUser(ChannelHandlerContext ctx, JSONObject packet) {
+		switch ((int) packet.get("type")) {
+			case 2:
+				user.get(ctx).turnDown();
+				break;
+			case 4:
+				user.get(ctx).turnLeft();
+				break;
+			case 6:
+				user.get(ctx).turnRight();
+				break;
+			case 8:
+				user.get(ctx).turnUp();
+				break;
+		}
+	}
 
     void removeEquipItem(ChannelHandlerContext ctx, JSONObject packet) {
 		user.get(ctx).equipItem((int) packet.get("type"), 0);
     }
     
     void useStatPoint(ChannelHandlerContext ctx, JSONObject packet) {
-    	user.get(ctx).useStatPoint((String) packet.get("stat"));
+    	user.get(ctx).useStatPoint((int) packet.get("type"));
     }
     
     void openRegisterWindow(ChannelHandlerContext ctx) {

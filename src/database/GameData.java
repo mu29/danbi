@@ -39,7 +39,9 @@ public class GameData extends DataBase {
 					rs.getInt("level")));
 		}
 		logger.info("가입 정보 로드 완료.");
-		
+
+		// 0번 인덱스에 빈 아이템 넣음
+		item.put(0, new Item(0, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null));
 		rs = executeQuery("SELECT * FROM `item`;");
 		while (rs.next()) {
 			item.put(rs.getInt("no"), 
@@ -174,7 +176,7 @@ public class GameData extends DataBase {
 		public static final int RIGHT = 6;
 		public static final int UP = 8;
 	}
-	
+
 	public static class ItemType {
 		public static final int WEAPON = 0;
 		public static final int SHIELD = 1;
@@ -184,6 +186,27 @@ public class GameData extends DataBase {
 		public static final int SHOES = 5;
 		public static final int ACCESSORY = 6;
 		public static final int ITEM = 7;
+	}
+
+	public static class StatusType {
+		public static final int TITLE = 0;
+		public static final int IMAGE = 1;
+		public static final int JOB = 2;
+		public static final int STR = 3;
+		public static final int DEX = 4;
+		public static final int AGI = 5;
+		public static final int CRITICAL = 6;
+		public static final int AVOID = 7;
+		public static final int HIT = 8;
+		public static final int STAT_POINT = 9;
+		public static final int SKILL_POINT = 10;
+		public static final int HP = 11;
+		public static final int MAX_HP = 12;
+		public static final int MP = 13;
+		public static final int MAX_MP = 14;
+		public static final int LEVEL = 15;
+		public static final int EXP = 16;
+		public static final int MAX_EXP = 17;
 	}
 	
 	public static class Item {

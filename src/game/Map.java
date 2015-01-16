@@ -58,6 +58,9 @@ public final class Map {
 	
 	public void addUser(User u) {
 		for (User other : user) {
+			if (other.equals(u)) {
+				continue;
+			}
 			u.getCtx().writeAndFlush(Packet.createCharacter(other));
 		}
 		this.user.add(u);
@@ -65,6 +68,9 @@ public final class Map {
 	
 	public void removeUser(User u) {
 		for (User other : user) {
+			if (other.equals(u)) {
+				continue;
+			}
 			other.getCtx().writeAndFlush(Packet.removeCharacter(0, u.getName(), u.getNo()));
 		}
 		this.user.remove(u);
@@ -73,9 +79,19 @@ public final class Map {
 	public ArrayList<User> getUser() {
 		return user;
 	}
-	
-	public void sendMessage(JSONObject msg) {
+
+	public void sendToAll(JSONObject msg) {
 		for (User u : user) {
+			u.getCtx().writeAndFlush(msg);
+		}
+	}
+
+	public void sendToOthers(User us, JSONObject msg) {
+		for (User u : user) {
+			if (u.equals(us)) {
+				continue;
+			}
+
 			u.getCtx().writeAndFlush(msg);
 		}
 	}
