@@ -153,8 +153,8 @@ public final class Packet {
 		String[] image = new String[GameData.register.size()];
 		int[] job = new int[GameData.register.size()];
 		for (int i = 0; i < GameData.register.size(); i++) {
-			image[i] = GameData.register.get(i).getImage();
-			job[i] = GameData.register.get(i).getJob();
+			image[i] = GameData.register.get(i + 1).getImage();
+			job[i] = GameData.register.get(i + 1).getJob();
 		}
 		
 		JSONObject packet = new JSONObject();
@@ -198,10 +198,29 @@ public final class Packet {
 
 		return packet;
 	}
-	
-	public static JSONObject updateInventory() {
+
+	// 삭제(0), 갯수(1)
+	public static JSONObject updateInventory(int type, GameData.InventoryItem item) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.UPDATE_INVENTORY);
+		packet.put("type", type);
+		packet.put("index", item.getIndex());
+		packet.put("amount", item.getAmount());
+		packet.put("damage", item.getDamage());
+		packet.put("magicDamage", item.getMagicDamage());
+		packet.put("defense", item.getDefense());
+		packet.put("magicDefense", item.getMagicDefense());
+		packet.put("str", item.getStr());
+		packet.put("dex", item.getDex());
+		packet.put("agi", item.getAgi());
+		packet.put("hp", item.getHp());
+		packet.put("mp", item.getMp());
+		packet.put("critical", item.getCritical());
+		packet.put("avoid", item.getAvoid());
+		packet.put("hit", item.getHit());
+		packet.put("reinforce", item.getReinforce());
+		packet.put("trade", item.isTradeable() ? 1 : 0);
+
 		return packet;
 	}
 }

@@ -1,5 +1,7 @@
 package database;
 
+import network.Handler;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -137,6 +139,7 @@ public class GameData extends DataBase {
 		private int level;
 		
 		public Register(int job, String image, int map, int x, int y, int level) {
+			this.job = job;
 			this.image = image;
 			this.map = map;
 			this.x = x;
@@ -386,7 +389,7 @@ public class GameData extends DataBase {
 		public InventoryItem(int userNo, int itemNo, int amount, int index, int trade) {
 			this.userNo = userNo;
 			this.itemNo = itemNo;
-			this.amount = amount;
+			this.amount = amount > GameData.item.get(itemNo).getMaxLoad() ? GameData.item.get(itemNo).getMaxLoad() : amount;
 			this.index = index;
 			this.damage = 0;
 			this.magicDamage = 0;
@@ -499,13 +502,17 @@ public class GameData extends DataBase {
 			return this.trade;
 		}
 		
-		public void setUpAmount(int value) {
-			if (this.amount + value > GameData.item.get(this.itemNo).getMaxLoad()) {
-				this.amount = GameData.item.get(this.itemNo).getMaxLoad();
-			} else if (this.amount + value < 0) {
-				this.amount = 0;
+		public void setIndex(int value) {
+			index = value;
+		}
+		
+		public void changeAmount(int value) {
+			if (amount + value > GameData.item.get(itemNo).getMaxLoad()) {
+				amount = GameData.item.get(itemNo).getMaxLoad();
+			} else if (amount + value < 0) {
+				amount = 0;
 			} else {
-				this.amount += value;
+				amount += value;
 			}
 		}
 	}

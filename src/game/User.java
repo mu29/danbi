@@ -42,13 +42,15 @@ public class User {
 	private int speed;
 	private boolean admin;
 	
-	private int weapon = 0;
-	private int shield = 0;
-	private int helmet = 0;
-	private int armor = 0;
-	private int cape = 0;
-	private int shoes = 0;
-	private int accessory = 0;
+	private int weapon = -1;
+	private int shield = -1;
+	private int helmet = -1;
+	private int armor = -1;
+	private int cape = -1;
+	private int shoes = -1;
+	private int accessory = -1;
+
+	private int maxInventory = 35;
 	
 	private Hashtable<Integer, GameData.InventoryItem> inventory = new Hashtable<Integer, GameData.InventoryItem>();
 	
@@ -82,8 +84,8 @@ public class User {
 		this.speed = speed;
 		this.admin = admin == 0 ? false : true;
 
-		// 0번 인덱스에 빈 아이템 넣음
-		inventory.put(0, new GameData.InventoryItem(no, 0, 0, 0, 0));
+		// 35번 인덱스에 빈 아이템 넣음
+		inventory.put(35, new GameData.InventoryItem(no, 0, 0, 35, 0));
 	}
 	
 	public ChannelHandlerContext getCtx() {
@@ -178,13 +180,13 @@ public class User {
 		// 직업 기본 Dex
 		n += GameData.job.get(job).getDex() * level;
 		// 아이템으로 오르는 Dex
-		n += GameData.item.get(weapon).getDex();
-		n += GameData.item.get(shield).getDex();
-		n += GameData.item.get(helmet).getDex();
-		n += GameData.item.get(armor).getDex();
-		n += GameData.item.get(cape).getDex();
-		n += GameData.item.get(shoes).getDex();
-		n += GameData.item.get(accessory).getDex();
+		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getDex();
+		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getDex();
+		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getDex();
+		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getDex();
+		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getDex();
+		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getDex();
+		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getDex();
 		// 아이템 추가 능력치로 오르는 Dex
 		n += findItemByIndex(weapon).getDex();
 		n += findItemByIndex(shield).getDex();
@@ -207,13 +209,13 @@ public class User {
 		// 직업 기본 Agi
 		n += GameData.job.get(job).getAgi() * level;
 		// 아이템으로 오르는 Agi
-		n += GameData.item.get(weapon).getAgi();
-		n += GameData.item.get(shield).getAgi();
-		n += GameData.item.get(helmet).getAgi();
-		n += GameData.item.get(armor).getAgi();
-		n += GameData.item.get(cape).getAgi();
-		n += GameData.item.get(shoes).getAgi();
-		n += GameData.item.get(accessory).getAgi();
+		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getAgi();
+		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getAgi();
+		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getAgi();
+		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getAgi();
+		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getAgi();
+		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getAgi();
+		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getAgi();
 		// 아이템 추가 능력치로 오르는 Agi
 		n += findItemByIndex(weapon).getAgi();
 		n += findItemByIndex(shield).getAgi();
@@ -234,9 +236,8 @@ public class User {
 	}
 
 	public void gainHp(int value) {
-		if (hp + value > getMaxHp()) {
+		if (hp + value > getMaxHp())
 			value = getMaxHp() - hp;
-		}
 
 		hp += value;
 		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.HP, hp));
@@ -256,13 +257,13 @@ public class User {
 		// 직업 기본 Hp
 		n += GameData.job.get(job).getHp() * level;
 		// 아이템으로 오르는 Hp
-		n += GameData.item.get(weapon).getHp();
-		n += GameData.item.get(shield).getHp();
-		n += GameData.item.get(helmet).getHp();
-		n += GameData.item.get(armor).getHp();
-		n += GameData.item.get(cape).getHp();
-		n += GameData.item.get(shoes).getHp();
-		n += GameData.item.get(accessory).getHp();
+		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getHp();
+		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getHp();
+		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getHp();
+		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getHp();
+		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getHp();
+		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getHp();
+		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getHp();
 		// 아이템 추가 능력치로 오르는 Hp
 		n += findItemByIndex(weapon).getHp();
 		n += findItemByIndex(shield).getHp();
@@ -280,18 +281,17 @@ public class User {
 	}
 
 	public void gainMp(int value) {
-		if (mp + value > getMaxMp()) {
+		if (mp + value > getMaxMp())
 			value = getMaxMp() - mp;
-		}
 
 		mp += value;
 		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.MP, mp));
 	}
 
 	public boolean loseMp(int value) {
-		if (mp - value < 0) {
+		if (mp - value < 0)
 			return false;
-		}
+
 		gainMp(-value);
 		return true;
 	}
@@ -301,13 +301,13 @@ public class User {
 		// 직업 기본 Mp
 		n += GameData.job.get(job).getMp() * level;
 		// 아이템으로 오르는 Mp
-		n += GameData.item.get(weapon).getMp();
-		n += GameData.item.get(shield).getMp();
-		n += GameData.item.get(helmet).getMp();
-		n += GameData.item.get(armor).getMp();
-		n += GameData.item.get(cape).getMp();
-		n += GameData.item.get(shoes).getMp();
-		n += GameData.item.get(accessory).getMp();
+		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getMp();
+		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getMp();
+		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getMp();
+		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getMp();
+		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getMp();
+		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getMp();
+		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getMp();
 		// 아이템 추가 능력치로 오르는 Mp
 		n += findItemByIndex(weapon).getMp();
 		n += findItemByIndex(shield).getMp();
@@ -323,13 +323,13 @@ public class User {
 	public int getCritical() {
 		int n = 0;
 		// 아이템으로 오르는 Critical
-		n += GameData.item.get(weapon).getCritical();
-		n += GameData.item.get(shield).getCritical();
-		n += GameData.item.get(helmet).getCritical();
-		n += GameData.item.get(armor).getCritical();
-		n += GameData.item.get(cape).getCritical();
-		n += GameData.item.get(shoes).getCritical();
-		n += GameData.item.get(accessory).getCritical();
+		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getCritical();
+		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getCritical();
+		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getCritical();
+		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getCritical();
+		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getCritical();
+		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getCritical();
+		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getCritical();
 		// 아이템 추가 능력치로 오르는 Critical
 		n += findItemByIndex(weapon).getCritical();
 		n += findItemByIndex(shield).getCritical();
@@ -345,13 +345,13 @@ public class User {
 	public int getAvoid() {
 		int n = 0;
 		// 아이템으로 오르는 Avoid
-		n += GameData.item.get(weapon).getAvoid();
-		n += GameData.item.get(shield).getAvoid();
-		n += GameData.item.get(helmet).getAvoid();
-		n += GameData.item.get(armor).getAvoid();
-		n += GameData.item.get(cape).getAvoid();
-		n += GameData.item.get(shoes).getAvoid();
-		n += GameData.item.get(accessory).getAvoid();
+		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getAvoid();
+		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getAvoid();
+		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getAvoid();
+		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getAvoid();
+		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getAvoid();
+		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getAvoid();
+		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getAvoid();
 		// 아이템 추가 능력치로 오르는 Avoid
 		n += findItemByIndex(weapon).getAvoid();
 		n += findItemByIndex(shield).getAvoid();
@@ -367,13 +367,13 @@ public class User {
 	public int getHit() {
 		int n = 0;
 		// 아이템으로 오르는 Hit
-		n += GameData.item.get(weapon).getHit();
-		n += GameData.item.get(shield).getHit();
-		n += GameData.item.get(helmet).getHit();
-		n += GameData.item.get(armor).getHit();
-		n += GameData.item.get(cape).getHit();
-		n += GameData.item.get(shoes).getHit();
-		n += GameData.item.get(accessory).getHit();
+		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getHit();
+		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getHit();
+		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getHit();
+		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getHit();
+		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getHit();
+		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getHit();
+		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getHit();
 		// 아이템 추가 능력치로 오르는 Hit
 		n += findItemByIndex(weapon).getHit();
 		n += findItemByIndex(shield).getHit();
@@ -421,9 +421,9 @@ public class User {
 	}
 
 	public void loseExp(int value) {
-		if (exp - value < 0) {
+		if (exp - value < 0)
 			value = exp;
-		}
+
 		gainExp(-value);
 	}
 
@@ -438,9 +438,9 @@ public class User {
 	}
 
 	public boolean loseGold(int value) {
-		if (gold < value) {
+		if (gold < value)
 			return false;
-		}
+
 		gainGold(-value);
 		return true;
 	}
@@ -504,6 +504,10 @@ public class User {
 	public int getAccessory() {
 		return accessory;
 	}
+
+	public int getMaxInventory() {
+		return maxInventory;
+	}
 	
 	public void loadData() {
 		loadEquipItem();
@@ -523,7 +527,9 @@ public class User {
 	    		cape = rs.getInt("cape");
 	    		shoes = rs.getInt("shoes");
 	    		accessory = rs.getInt("accessory");
-	    	}
+	    	} else {
+				DataBase.insertEquip(no);
+			}
 	    	
 			rs.close();
 		} catch (SQLException e) {
@@ -560,6 +566,8 @@ public class User {
 
 	    		ctx.writeAndFlush(Packet.setInventory(inventory.get(rs.getInt("index"))));
 	    	}
+
+			ctx.writeAndFlush(Packet.setInventory(inventory.get(35)));
 	    	
 			rs.close();
 		} catch (SQLException e) {
@@ -596,9 +604,8 @@ public class User {
 	}
 	
 	public void useStatPoint(int stat) {
-		if (statPoint <= 0) {
+		if (statPoint <= 0)
 			return;
-		}
 		
 		switch (stat) {
 			case GameData.StatusType.STR:
@@ -622,68 +629,79 @@ public class User {
 	}
 
 	// NPC로부터 아이템 획득 (번호만으로 아이템 획득)
-	public void gainItem(int no, int num) {
+	public boolean gainItem(int itemNo, int num) {
+		int gap = 0;
 		int index = getEmptyIndex();
-		GameData.Item i = GameData.item.get(no);
+		GameData.Item i = GameData.item.get(itemNo);
+		GameData.InventoryItem item = findLazyItemByNo(itemNo);
 
-		// 새로 얻은 아이템일 경우
-		if (findItemByNo(no) == null) {
+		// 이미 있던 아이템일 경우 채워줌
+		if (item != null) {
+			gap = item.getAmount() + num - i.getMaxLoad();
+			item.changeAmount(num);
+			num = gap;
+			ctx.writeAndFlush(Packet.updateInventory(1, item));
+		}
+
+		while (num > 0) {
 			if (index == -1) {
-				return;
+				// 나머지 아이템 드랍
+				return false;
 			}
-			inventory.put(index, new GameData.InventoryItem(no, no, num, index, i.isTradeable() ? 1 : 0));
-		} else {
-			// 이미 있던 아이템일 경우
-			int gap = findItemByNo(no).getAmount() + num - i.getMaxLoad();
-			findItemByNo(no).setUpAmount(num);
-			if (gap > 0) {
-				if (index == -1) {
-					// gap만큼 아이템 드랍한다
-					return;
-				} else {
-					inventory.put(index, new GameData.InventoryItem(no, no, gap, index, i.isTradeable() ? 1 : 0));
-				}
-			}
+			inventory.put(index, new GameData.InventoryItem(no, itemNo, num, index, i.isTradeable() ? 1 : 0));
+			ctx.writeAndFlush(Packet.setInventory(inventory.get(index)));
+			index = getEmptyIndex();
+			num -= i.getMaxLoad();
 		}
+
+		return true;
 	}
-	
-	// No로 아이템 제거
-	public void loseItemByNo(int no, int num) {
-		if (no == 0 || num < 0) {
-			return;
-		}
+
+	public boolean loseItemByNo(int itemNo, int num) {
+		if (itemNo <= 0 || num <= 0)
+			return false;
 		
 		int gap = 0;
-		GameData.InventoryItem i = null;
+		GameData.InventoryItem i = findItemByNo(itemNo);
+
+		if (i == null || getTotalItemAmount(i.getItemNo()) < num)
+			return false;
+
 		do {
-			i = findItemByNo(no);
-			if (i != null) {
-				gap = i.getAmount() - num;
-				i.setUpAmount(-num);
-				if (i.getAmount() == 0) {
-					inventory.remove(i.getIndex());
-				}
-				num = gap;
-			} else {
-				break;
-			}
-		} while (num < 0);
-	}
-	
-	// Index로 아이템 제거
-	public void loseItemByIndex(int index, int num) {
-		GameData.InventoryItem i = findItemByIndex(index);
-		if (i != null) {
-			i.setUpAmount(-num);
+			gap = num - i.getAmount();
+			i.changeAmount(-num);
 			if (i.getAmount() == 0) {
 				inventory.remove(i.getIndex());
+				ctx.writeAndFlush(Packet.updateInventory(0, i));
+			} else {
+				ctx.writeAndFlush(Packet.updateInventory(1, i));
 			}
+			num = gap;
+		} while (num > 0);
+
+		return true;
+	}
+
+	public boolean loseItemByIndex(int index, int num) {
+		GameData.InventoryItem i = findItemByIndex(index);
+
+		if (i == null || i.getAmount() < num)
+			return false;
+
+		i.changeAmount(-num);
+		if (i.getAmount() == 0) {
+			inventory.remove(i.getIndex());
+			ctx.writeAndFlush(Packet.updateInventory(0, i));
+		} else {
+			ctx.writeAndFlush(Packet.updateInventory(1, i));
 		}
+
+		return true;
 	}
 	
 	// 비어있는 인덱스를 획득
 	public int getEmptyIndex() {
-		for (int i = 0; i < 35; i++) {
+		for (int i = 0; i < maxInventory; i++) {
 			if (!inventory.containsKey(i))
 				return i;
 		}
@@ -709,47 +727,74 @@ public class User {
 		
 		return inventory.get(index);
 	}
-	
+
 	// No로 아이템 검색
 	public GameData.InventoryItem findItemByNo(int no) {
 		for (GameData.InventoryItem item : inventory.values()) {
 			if (item.getItemNo() == no)
 				return item;
 		}
-		
+
 		return null;
 	}
 
+	// No로 아이템 검색
+	public GameData.InventoryItem findLazyItemByNo(int no) {
+		for (GameData.InventoryItem item : inventory.values()) {
+			if (item.getItemNo() == no && item.getAmount() < GameData.item.get(item.getItemNo()).getMaxLoad())
+				return item;
+		}
+
+		return null;
+	}
+
+	public void changeItemIndex(int index1, int index2) {
+		if (!inventory.containsKey(index1) || !inventory.containsKey(index2))
+			return;
+
+		GameData.InventoryItem item1 = inventory.get(index1);
+		GameData.InventoryItem item2 = inventory.get(index2);
+		inventory.remove(index1);
+		inventory.remove(index2);
+		item1.setIndex(index2);
+		item2.setIndex(index1);
+		inventory.put(index2, item1);
+		inventory.put(index1, item2);
+
+		ctx.write(Packet.setInventory(item1));
+		ctx.writeAndFlush(Packet.setInventory(item2));
+	}
+
 	public void turnUp() {
-		Map gameMap = Handler.getMap().get(map);
+		Map gameMap = Handler.map.get(map);
 		direction = GameData.Direction.UP;
 
 		gameMap.sendToOthers(this, Packet.turnCharacter(0, no, direction));
 	}
 
 	public void turnDown() {
-		Map gameMap = Handler.getMap().get(map);
+		Map gameMap = Handler.map.get(map);
 		direction = GameData.Direction.DOWN;
 
 		gameMap.sendToOthers(this, Packet.turnCharacter(0, no, direction));
 	}
 
 	public void turnLeft() {
-		Map gameMap = Handler.getMap().get(map);
+		Map gameMap = Handler.map.get(map);
 		direction = GameData.Direction.LEFT;
 
 		gameMap.sendToOthers(this, Packet.turnCharacter(0, no, direction));
 	}
 
 	public void turnRight() {
-		Map gameMap = Handler.getMap().get(map);
+		Map gameMap = Handler.map.get(map);
 		direction = GameData.Direction.RIGHT;
 
 		gameMap.sendToOthers(this, Packet.turnCharacter(0, no, direction));
 	}
 	
 	public void moveUp() {
-		Map gameMap = Handler.getMap().get(map);
+		Map gameMap = Handler.map.get(map);
 		direction = GameData.Direction.UP;
 
 		if (gameMap.isPassable(x, y - 1)) {
@@ -761,7 +806,7 @@ public class User {
 	}
 	
 	public void moveDown() {
-		Map gameMap = Handler.getMap().get(map);
+		Map gameMap = Handler.map.get(map);
 		direction = GameData.Direction.DOWN;
 
 		if (gameMap.isPassable(x, y + 1)) {
@@ -773,7 +818,7 @@ public class User {
 	}
 	
 	public void moveLeft() {
-		Map gameMap = Handler.getMap().get(map);
+		Map gameMap = Handler.map.get(map);
 		direction = GameData.Direction.LEFT;
 
 		if (gameMap.isPassable(x - 1, y)) {
@@ -785,7 +830,7 @@ public class User {
 	}
 	
 	public void moveRight() {
-		Map gameMap = Handler.getMap().get(map);
+		Map gameMap = Handler.map.get(map);
 		direction = GameData.Direction.RIGHT;
 
 		if (gameMap.isPassable(x + 1, y)) {

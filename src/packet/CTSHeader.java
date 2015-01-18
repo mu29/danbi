@@ -9,5 +9,5 @@ public final class CTSHeader {
 	public final static int USE_STAT_POINT = 5;
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
-	public final static int OPEN_INVENTORY = 101;
+	public final static int CHANGE_ITEM_INDEX = 101;
 }

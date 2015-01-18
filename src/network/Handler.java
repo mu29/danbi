@@ -19,8 +19,8 @@ import database.GameData;
 
 public final class Handler extends ChannelInboundHandlerAdapter {
 
-	private static HashMap<ChannelHandlerContext, User>  user = new HashMap<ChannelHandlerContext, User>();
-	private static HashMap<Integer, Map> map = new HashMap<Integer, Map>();
+	public static HashMap<ChannelHandlerContext, User>  user = new HashMap<ChannelHandlerContext, User>();
+	public static HashMap<Integer, Map> map = new HashMap<Integer, Map>();
     private static Logger logger = Logger.getLogger(Handler.class.getName());
     
     @Override
@@ -36,13 +36,13 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.TURN_CHARACTER:
 				turnUser(ctx, packet); break;
 	    	case CTSHeader.REMOVE_EQUIP_ITEM:
-	    		removeEquipItem(ctx, packet); break;
+				user.get(ctx).equipItem((int) packet.get("type"), 0); break;
 	    	case CTSHeader.USE_STAT_POINT:
-	    		useStatPoint(ctx, packet); break;
+				user.get(ctx).useStatPoint((int) packet.get("type")); break;
 	    	case CTSHeader.OPEN_REGISTER_WINDOW:
-	    		openRegisterWindow(ctx); break;
-	    	case CTSHeader.OPEN_INVENTORY:
-	    		break;
+				ctx.writeAndFlush(Packet.openRegisterWindow()); break;
+	    	case CTSHeader.CHANGE_ITEM_INDEX:
+				changeItemIndex(ctx, packet); break;
     	}
     }
 
@@ -107,19 +107,13 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     	String readPass = (String) packet.get("pass");
     	String readName = (String) packet.get("name");
     	String readMail = (String) packet.get("mail");
-    	String readImage = (String) packet.get("image");
-    	int readJob = (int) packet.get("job");
+    	int readNo = (int) packet.get("no");
     	
-    	if (readID.equals("") || readPass.equals("") || readName.equals("") || readMail.equals("") || readImage.equals(""))
+    	if (readID.equals("") || readPass.equals("") || readName.equals("") || readMail.equals(""))
     		return;
-    	
-    	boolean isIncludeInRegister = false;
-    	for (GameData.Register r : GameData.register.values()) {
-    		if (r.getJob() == readJob)
-    			isIncludeInRegister = true;
-    	}
-    	if (!isIncludeInRegister)
-    		return;
+
+		if (!GameData.register.containsKey(readNo))
+			return;
 
 		try {
 			ResultSet checkID = DataBase.executeQuery("SELECT * FROM `user` WHERE `id` = '" + readID + "';");
@@ -137,8 +131,8 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			logger.warning(e.toString());
 			return;
 		}
-    	GameData.Register r = GameData.register.get(readJob);
-    	DataBase.insertUser(readID, readPass, readName, readMail, readImage, readJob, r.getMap(), r.getX(), r.getY(), r.getLevel());
+    	GameData.Register r = GameData.register.get(readNo);
+    	DataBase.insertUser(readID, readPass, readName, readMail, r.getImage(), r.getJob(), r.getMap(), r.getX(), r.getY(), r.getLevel());
     	ctx.writeAndFlush(Packet.registerMessage(0));
     }
 
@@ -176,17 +170,14 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 		}
 	}
 
-    void removeEquipItem(ChannelHandlerContext ctx, JSONObject packet) {
-		user.get(ctx).equipItem((int) packet.get("type"), 0);
-    }
-    
-    void useStatPoint(ChannelHandlerContext ctx, JSONObject packet) {
-    	user.get(ctx).useStatPoint((int) packet.get("type"));
-    }
-    
-    void openRegisterWindow(ChannelHandlerContext ctx) {
-    	ctx.writeAndFlush(Packet.openRegisterWindow());
-    }
+	void changeItemIndex(ChannelHandlerContext ctx, JSONObject packet) {
+		switch ((int) packet.get("type")) {
+			case 0:
+				// 아이템
+				user.get(ctx).changeItemIndex((int) packet.get("index1"), (int) packet.get("index2"));
+				break;
+		}
+	}
     
     public static void loadMap(int num) throws IOException {
     	for (int i = 1; i <= num; i++)
@@ -212,10 +203,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         ctx.fireExceptionCaught(cause);
-    }
-    
-    public static HashMap<Integer, Map> getMap() {
-    	return map;
     }
     
 }
