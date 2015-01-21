@@ -58,31 +58,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
  
 	    	if (rs.next()) {
 	    		if (readPass.equals(rs.getString("pass"))) {
-	    			user.put(ctx, new User(ctx,
-	    					rs.getInt("no"), 
-	    					rs.getString("id"), 
-	    					rs.getString("pass"), 
-	    					rs.getString("name"),
-	    					rs.getInt("title"), 
-	    					rs.getString("mail"), 
-	    					rs.getString("image"), 
-	    					rs.getInt("job"),
-	    					rs.getInt("str"), 
-	    					rs.getInt("dex"), 
-	    					rs.getInt("agi"), 
-	    					rs.getInt("stat_point"), 
-	    					rs.getInt("skill_point"), 
-	    					rs.getInt("hp"), 
-	    					rs.getInt("mp"), 
-	    					rs.getInt("level"), 
-	    					rs.getInt("exp"), 
-	    					rs.getInt("gold"), 
-	    					rs.getInt("map"), 
-	    					rs.getInt("x"), 
-	    					rs.getInt("y"), 
-	    					rs.getInt("direction"), 
-	    					rs.getInt("speed"),
-	    					rs.getInt("admin")));
+	    			user.put(ctx, new User(ctx, rs));
 	    			
 	    			User u = user.get(ctx);
 	    			u.loadData();

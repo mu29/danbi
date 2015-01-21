@@ -17,62 +17,20 @@ public class GameData extends DataBase {
 	public static void loadSettings() throws SQLException {
 		ResultSet rs = executeQuery("SELECT * FROM `setting_job`;");
 		while (rs.next()) {
-			job.put(rs.getInt("no"), 
-					new Job(rs.getInt("no"),
-							rs.getString("name"),
-							rs.getInt("hp"),
-							rs.getInt("mp"),
-							rs.getInt("str"),
-							rs.getInt("dex"),
-							rs.getInt("agi")));
+			job.put(rs.getInt("no"), new Job(rs));
 		}
 		rs = null;
 		logger.info("직업 정보 로드 완료.");
 		
 		rs = executeQuery("SELECT * FROM `setting_register`;");
 		while (rs.next()) {
-			register.put(rs.getInt("no"),
-					new Register(
-					rs.getInt("job"),
-					rs.getString("image"),
-					rs.getInt("map"),
-					rs.getInt("x"),
-					rs.getInt("y"),
-					rs.getInt("level")));
+			register.put(rs.getInt("no"), new Register(rs));
 		}
 		logger.info("가입 정보 로드 완료.");
 
-		// 0번 인덱스에 빈 아이템 넣음
-		item.put(0, new Item(0, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null));
 		rs = executeQuery("SELECT * FROM `item`;");
 		while (rs.next()) {
-			item.put(rs.getInt("no"), 
-					new Item(
-					rs.getInt("no"),
-					rs.getString("name"),
-					rs.getString("description"),
-					rs.getString("image"),
-					rs.getInt("job"),
-					rs.getInt("level"),
-					rs.getInt("type"),
-					rs.getInt("price"),
-					rs.getInt("damage"),
-					rs.getInt("magic_damage"),
-					rs.getInt("defense"),
-					rs.getInt("magic_defense"),
-					rs.getInt("str"),
-					rs.getInt("dex"),
-					rs.getInt("agi"),
-					rs.getInt("hp"),
-					rs.getInt("mp"),
-					rs.getInt("critical"),
-					rs.getInt("avoid"),
-					rs.getInt("hit"),
-					rs.getInt("delay"),
-					rs.getInt("consume"),
-					rs.getInt("max_load"),
-					rs.getInt("trade"),
-					rs.getString("function")));
+			item.put(rs.getInt("no"), new Item(rs));
 		}
 		logger.info("아이템 정보 로드 완료.");
 	}
@@ -90,14 +48,14 @@ public class GameData extends DataBase {
 		private int dex;
 		private int agi;
 		
-		public Job(int no, String name, int hp, int mp, int str, int dex, int agi) {
-			this.no = no;
-			this.name = name;
-			this.hp = hp;
-			this.mp = mp;
-			this.str = str;
-			this.dex = dex;
-			this.agi = agi;
+		public Job(ResultSet rs) throws SQLException {
+			this.no = rs.getInt("no");
+			this.name = rs.getString("name");
+			this.hp = rs.getInt("hp");
+			this.mp = rs.getInt("mp");
+			this.str =rs.getInt("str");
+			this.dex = 	rs.getInt("dex");
+			this.agi = rs.getInt("agi");
 		}
 		
 		public int getNo() {
@@ -138,13 +96,13 @@ public class GameData extends DataBase {
 		private int y;
 		private int level;
 		
-		public Register(int job, String image, int map, int x, int y, int level) {
-			this.job = job;
-			this.image = image;
-			this.map = map;
-			this.x = x;
-			this.y = y;
-			this.level = level;
+		public Register(ResultSet rs) throws SQLException {
+			this.job = rs.getInt("job");
+			this.image = rs.getString("image");
+			this.map = rs.getInt("map");
+			this.x = rs.getInt("x");
+			this.y = rs.getInt("y");
+			this.level = rs.getInt("level");
 		}
 
 		public int getJob() {
@@ -239,34 +197,32 @@ public class GameData extends DataBase {
 		private boolean trade;
 		private String function;
 		
-		public Item(int no, String name, String desc, String image, int job, int level, int type, int price, 
-				int damage, int magicDamage, int defense, int magicDefense, int str, int dex, int agi, int hp, int mp, 
-				int critical, int avoid, int hit, int delay, int consume, int maxLoad, int trade, String function) {
-			this.no = no;
-			this.name = name;
-			this.description = desc;
-			this.image = image;
-			this.job = job;
-			this.level = level;
-			this.type = type;
-			this.price = price;
-			this.damage = damage;
-			this.magicDamage = magicDamage;
-			this.defense = defense;
-			this.magicDefense = magicDefense;
-			this.str = str;
-			this.dex = dex;
-			this.agi = agi;
-			this.hp = hp;
-			this.mp = mp;
-			this.critical = critical;
-			this.avoid = avoid;
-			this.hit = hit;
-			this.delay = delay;
-			this.consume = consume == 1 ? true : false;
-			this.maxLoad = maxLoad;
-			this.trade = trade == 1 ? true : false;
-			this.function = function;
+		public Item(ResultSet rs) throws SQLException {
+			this.no = rs.getInt("no");
+			this.name = rs.getString("name");
+			this.description = rs.getString("description");
+			this.image = rs.getString("image");
+			this.job = rs.getInt("job");
+			this.level = rs.getInt("level");
+			this.type = rs.getInt("type");
+			this.price = rs.getInt("price");
+			this.damage = rs.getInt("damage");
+			this.magicDamage = rs.getInt("magic_damage");
+			this.defense = rs.getInt("defense");
+			this.magicDefense = rs.getInt("magic_defense");
+			this.str = rs.getInt("str");
+			this.dex = rs.getInt("dex");
+			this.agi = rs.getInt("agi");
+			this.hp = rs.getInt("hp");
+			this.mp = rs.getInt("mp");
+			this.critical = rs.getInt("critical");
+			this.avoid = rs.getInt("avoid");
+			this.hit = rs.getInt("hit");
+			this.delay = rs.getInt("delay");
+			this.consume = rs.getInt("consume") == 1 ? true : false;
+			this.maxLoad = rs.getInt("max_load");
+			this.trade = rs.getInt("trade") == 1 ? true : false;
+			this.function = rs.getString("function");
 		}
 
 		public int getNo() {
@@ -516,5 +472,68 @@ public class GameData extends DataBase {
 			}
 		}
 	}
-	
+
+	public class Enemy {
+		private int no;
+		private String name;
+		private String image;
+		private int type;
+		private int hp;
+		private int maxHp;
+		private int mp;
+		private int maxMp;
+		private int damage;
+		private int magicDamage;
+		private int defense;
+		private int magicDefense;
+		private int critical;
+		private int avoid;
+		private int hit;
+		private int moveSpeed;
+		private int attackSpeed;
+		private int map;
+		private int x;
+		private int y;
+		private int direction;
+		private int regen;
+		private int level;
+		private int exp;
+		private int gold;
+		private int reward;
+		private String function;
+		private int frequency;
+		private String die;
+
+		public Enemy(ResultSet rs) throws SQLException {
+			no = rs.getInt("no");
+			name = rs.getString("name");
+			image = rs.getString("image");
+			type = rs.getInt("type");
+			hp = rs.getInt("hp");
+			maxHp = rs.getInt("hp");
+			mp = rs.getInt("mp");
+			maxMp = rs.getInt("mp");
+			damage = rs.getInt("damage");
+			magicDamage = rs.getInt("magic_damage");
+			defense = rs.getInt("defense");
+			magicDefense = rs.getInt("magic_defense");
+			critical = rs.getInt("critical");
+			avoid = rs.getInt("avoid");
+			hit = rs.getInt("hit");
+			moveSpeed = rs.getInt("move_speed");
+			attackSpeed = rs.getInt("attack_speed");
+			map = rs.getInt("map");
+			x = rs.getInt("x");
+			y = rs.getInt("y");
+			direction = rs.getInt("direction");
+			regen = rs.getInt("regen");
+			level = rs.getInt("level");
+			exp = rs.getInt("exp");
+			gold = rs.getInt("gold");
+			reward = rs.getInt("reward");
+			function = rs.getString("function");
+			frequency = rs.getInt("frequency");
+			die = rs.getString("die");
+		}
+	}
 }

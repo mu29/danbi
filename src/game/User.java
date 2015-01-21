@@ -12,6 +12,8 @@ import packet.Packet;
 import database.DataBase;
 import database.GameData;
 
+import javax.xml.transform.Result;
+
 public class User {
 	
 	private Logger logger = Logger.getLogger(User.class.getName());
@@ -42,50 +44,45 @@ public class User {
 	private int speed;
 	private boolean admin;
 	
-	private int weapon = -1;
-	private int shield = -1;
-	private int helmet = -1;
-	private int armor = -1;
-	private int cape = -1;
-	private int shoes = -1;
-	private int accessory = -1;
+	private int weapon = 0;
+	private int shield = 0;
+	private int helmet = 0;
+	private int armor = 0;
+	private int cape = 0;
+	private int shoes = 0;
+	private int accessory = 0;
 
 	private int maxInventory = 35;
 	
 	private Hashtable<Integer, GameData.InventoryItem> inventory = new Hashtable<Integer, GameData.InventoryItem>();
 	
-	public User(ChannelHandlerContext ctx, int no, String id, String pass, String name, int title, String mail, String image, int job, 
-				int str, int dex, int agi, int statPoint, int skillPoint, int hp, int mp, int level, int exp, int gold, int map, int x, 
-				int y, int d, int speed, int admin) {
+	public User(ChannelHandlerContext ctx, ResultSet rs) throws SQLException {
 		this.ctx = ctx;
-		this.no = no;
-		this.id = id;
-		this.pass = pass;
-		this.name = name;
-		this.title = title;
+		this.no = rs.getInt("no");
+		this.id = rs.getString("id");
+		this.pass = rs.getString("pass");
+		this.name = rs.getString("name");
+		this.title = rs.getInt("title");
 		this.guild = "";
-		this.mail = mail;
-		this.image = image;
-		this.job = job;
-		this.pureStr = str;
-		this.pureDex = dex;
-		this.pureAgi = agi;
-		this.statPoint = statPoint;
-		this.skillPoint = skillPoint;
-		this.hp = hp;
-		this.mp = mp;
-		this.level = level;
-		this.exp = exp;
-		this.map = map;
-		this.gold = gold;
-		this.x = x;
-		this.y = y;
-		this.direction = d;
-		this.speed = speed;
-		this.admin = admin == 0 ? false : true;
-
-		// 35번 인덱스에 빈 아이템 넣음
-		inventory.put(35, new GameData.InventoryItem(no, 0, 0, 35, 0));
+		this.mail = rs.getString("mail");
+		this.image = rs.getString("image");
+		this.job = rs.getInt("job");
+		this.pureStr = rs.getInt("str");
+		this.pureDex = rs.getInt("dex");
+		this.pureAgi = rs.getInt("agi");
+		this.statPoint = rs.getInt("stat_point");
+		this.skillPoint = rs.getInt("skill_point");
+		this.hp = rs.getInt("hp");
+		this.mp = rs.getInt("mp");
+		this.level = rs.getInt("level");
+		this.exp = rs.getInt("exp");
+		this.map = rs.getInt("map");
+		this.gold = rs.getInt("gold");
+		this.x = rs.getInt("x");
+		this.y = rs.getInt("y");
+		this.direction = rs.getInt("direction");
+		this.speed = rs.getInt("speed");
+		this.admin = rs.getInt("admin") ==0 ? false : true;
 	}
 	
 	public ChannelHandlerContext getCtx() {
@@ -124,7 +121,7 @@ public class User {
 	public String getMail() {
 		return mail;
 	}
-	
+
 	public String getImage() {
 		return image;
 	}
@@ -150,22 +147,35 @@ public class User {
 		// 직업 기본 Str
 		n += GameData.job.get(job).getStr() * level;
 		// 아이템으로 오르는 Str
-		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getStr();
-		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getStr();
-		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getStr();
-		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getStr();
-		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getStr();
-		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getStr();
-		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getStr();
-		// 아이템 추가 능력치로 오르는 Str
-		n += findItemByIndex(weapon).getStr();
-		n += findItemByIndex(shield).getStr();
-		n += findItemByIndex(helmet).getStr();
-		n += findItemByIndex(armor).getStr();
-		n += findItemByIndex(cape).getStr();
-		n += findItemByIndex(shoes).getStr();
-		n += findItemByIndex(accessory).getStr();
-		
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getStr();
+			n += findItemByIndex(weapon).getStr();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getStr();
+			n += findItemByIndex(shield).getStr();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getStr();
+			n += findItemByIndex(helmet).getStr();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getStr();
+			n += findItemByIndex(armor).getStr();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getStr();
+			n += findItemByIndex(cape).getStr();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getStr();
+			n += findItemByIndex(shoes).getStr();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getStr();
+			n += findItemByIndex(accessory).getStr();
+		}
+
 		return n;
 	}
 	
@@ -180,21 +190,34 @@ public class User {
 		// 직업 기본 Dex
 		n += GameData.job.get(job).getDex() * level;
 		// 아이템으로 오르는 Dex
-		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getDex();
-		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getDex();
-		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getDex();
-		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getDex();
-		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getDex();
-		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getDex();
-		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getDex();
-		// 아이템 추가 능력치로 오르는 Dex
-		n += findItemByIndex(weapon).getDex();
-		n += findItemByIndex(shield).getDex();
-		n += findItemByIndex(helmet).getDex();
-		n += findItemByIndex(armor).getDex();
-		n += findItemByIndex(cape).getDex();
-		n += findItemByIndex(shoes).getDex();
-		n += findItemByIndex(accessory).getDex();
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getDex();
+			n += findItemByIndex(weapon).getDex();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getDex();
+			n += findItemByIndex(shield).getDex();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getDex();
+			n += findItemByIndex(helmet).getDex();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getDex();
+			n += findItemByIndex(armor).getDex();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getDex();
+			n += findItemByIndex(cape).getDex();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getDex();
+			n += findItemByIndex(shoes).getDex();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getDex();
+			n += findItemByIndex(accessory).getDex();
+		}
 		return n;
 	}
 	
@@ -209,21 +232,34 @@ public class User {
 		// 직업 기본 Agi
 		n += GameData.job.get(job).getAgi() * level;
 		// 아이템으로 오르는 Agi
-		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getAgi();
-		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getAgi();
-		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getAgi();
-		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getAgi();
-		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getAgi();
-		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getAgi();
-		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getAgi();
-		// 아이템 추가 능력치로 오르는 Agi
-		n += findItemByIndex(weapon).getAgi();
-		n += findItemByIndex(shield).getAgi();
-		n += findItemByIndex(helmet).getAgi();
-		n += findItemByIndex(armor).getAgi();
-		n += findItemByIndex(cape).getAgi();
-		n += findItemByIndex(shoes).getAgi();
-		n += findItemByIndex(accessory).getAgi();
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getAgi();
+			n += findItemByIndex(weapon).getAgi();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getAgi();
+			n += findItemByIndex(shield).getAgi();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getAgi();
+			n += findItemByIndex(helmet).getAgi();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getAgi();
+			n += findItemByIndex(armor).getAgi();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getAgi();
+			n += findItemByIndex(cape).getAgi();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getAgi();
+			n += findItemByIndex(shoes).getAgi();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getAgi();
+			n += findItemByIndex(accessory).getAgi();
+		}
 		return n;
 	}
 	
@@ -257,21 +293,34 @@ public class User {
 		// 직업 기본 Hp
 		n += GameData.job.get(job).getHp() * level;
 		// 아이템으로 오르는 Hp
-		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getHp();
-		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getHp();
-		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getHp();
-		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getHp();
-		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getHp();
-		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getHp();
-		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getHp();
-		// 아이템 추가 능력치로 오르는 Hp
-		n += findItemByIndex(weapon).getHp();
-		n += findItemByIndex(shield).getHp();
-		n += findItemByIndex(helmet).getHp();
-		n += findItemByIndex(armor).getHp();
-		n += findItemByIndex(cape).getHp();
-		n += findItemByIndex(shoes).getHp();
-		n += findItemByIndex(accessory).getHp();
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getHp();
+			n += findItemByIndex(weapon).getHp();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getHp();
+			n += findItemByIndex(shield).getHp();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getHp();
+			n += findItemByIndex(helmet).getHp();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getHp();
+			n += findItemByIndex(armor).getHp();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getHp();
+			n += findItemByIndex(cape).getHp();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getHp();
+			n += findItemByIndex(shoes).getHp();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getHp();
+			n += findItemByIndex(accessory).getHp();
+		}
 
 		return n;
 	}
@@ -301,21 +350,34 @@ public class User {
 		// 직업 기본 Mp
 		n += GameData.job.get(job).getMp() * level;
 		// 아이템으로 오르는 Mp
-		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getMp();
-		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getMp();
-		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getMp();
-		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getMp();
-		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getMp();
-		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getMp();
-		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getMp();
-		// 아이템 추가 능력치로 오르는 Mp
-		n += findItemByIndex(weapon).getMp();
-		n += findItemByIndex(shield).getMp();
-		n += findItemByIndex(helmet).getMp();
-		n += findItemByIndex(armor).getMp();
-		n += findItemByIndex(cape).getMp();
-		n += findItemByIndex(shoes).getMp();
-		n += findItemByIndex(accessory).getMp();
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getMp();
+			n += findItemByIndex(weapon).getMp();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getMp();
+			n += findItemByIndex(shield).getMp();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getMp();
+			n += findItemByIndex(helmet).getMp();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getMp();
+			n += findItemByIndex(armor).getMp();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getMp();
+			n += findItemByIndex(cape).getMp();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getMp();
+			n += findItemByIndex(shoes).getMp();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getMp();
+			n += findItemByIndex(accessory).getMp();
+		}
 		
 		return n;
 	}
@@ -323,21 +385,34 @@ public class User {
 	public int getCritical() {
 		int n = 0;
 		// 아이템으로 오르는 Critical
-		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getCritical();
-		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getCritical();
-		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getCritical();
-		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getCritical();
-		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getCritical();
-		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getCritical();
-		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getCritical();
-		// 아이템 추가 능력치로 오르는 Critical
-		n += findItemByIndex(weapon).getCritical();
-		n += findItemByIndex(shield).getCritical();
-		n += findItemByIndex(helmet).getCritical();
-		n += findItemByIndex(armor).getCritical();
-		n += findItemByIndex(cape).getCritical();
-		n += findItemByIndex(shoes).getCritical();
-		n += findItemByIndex(accessory).getCritical();
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getCritical();
+			n += findItemByIndex(weapon).getCritical();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getCritical();
+			n += findItemByIndex(shield).getCritical();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getCritical();
+			n += findItemByIndex(helmet).getCritical();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getCritical();
+			n += findItemByIndex(armor).getCritical();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getCritical();
+			n += findItemByIndex(cape).getCritical();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getCritical();
+			n += findItemByIndex(shoes).getCritical();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getCritical();
+			n += findItemByIndex(accessory).getCritical();
+		}
 		
 		return n;
 	}
@@ -345,21 +420,34 @@ public class User {
 	public int getAvoid() {
 		int n = 0;
 		// 아이템으로 오르는 Avoid
-		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getAvoid();
-		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getAvoid();
-		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getAvoid();
-		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getAvoid();
-		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getAvoid();
-		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getAvoid();
-		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getAvoid();
-		// 아이템 추가 능력치로 오르는 Avoid
-		n += findItemByIndex(weapon).getAvoid();
-		n += findItemByIndex(shield).getAvoid();
-		n += findItemByIndex(helmet).getAvoid();
-		n += findItemByIndex(armor).getAvoid();
-		n += findItemByIndex(cape).getAvoid();
-		n += findItemByIndex(shoes).getAvoid();
-		n += findItemByIndex(accessory).getAvoid();
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getAvoid();
+			n += findItemByIndex(weapon).getAvoid();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getAvoid();
+			n += findItemByIndex(shield).getAvoid();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getAvoid();
+			n += findItemByIndex(helmet).getAvoid();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getAvoid();
+			n += findItemByIndex(armor).getAvoid();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getAvoid();
+			n += findItemByIndex(cape).getAvoid();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getAvoid();
+			n += findItemByIndex(shoes).getAvoid();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getAvoid();
+			n += findItemByIndex(accessory).getAvoid();
+		}
 
 		return n;
 	}
@@ -367,21 +455,35 @@ public class User {
 	public int getHit() {
 		int n = 0;
 		// 아이템으로 오르는 Hit
-		n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getHit();
-		n += GameData.item.get(findItemByIndex(shield).getItemNo()).getHit();
-		n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getHit();
-		n += GameData.item.get(findItemByIndex(armor).getItemNo()).getHit();
-		n += GameData.item.get(findItemByIndex(cape).getItemNo()).getHit();
-		n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getHit();
-		n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getHit();
-		// 아이템 추가 능력치로 오르는 Hit
-		n += findItemByIndex(weapon).getHit();
-		n += findItemByIndex(shield).getHit();
-		n += findItemByIndex(helmet).getHit();
-		n += findItemByIndex(armor).getHit();
-		n += findItemByIndex(cape).getHit();
-		n += findItemByIndex(shoes).getHit();
-		n += findItemByIndex(accessory).getHit();
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getHit();
+			n += findItemByIndex(weapon).getHit();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getHit();
+			n += findItemByIndex(shield).getHit();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getHit();
+			n += findItemByIndex(helmet).getHit();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getHit();
+			n += findItemByIndex(armor).getHit();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getHit();
+			n += findItemByIndex(cape).getHit();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getHit();
+			n += findItemByIndex(shoes).getHit();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getHit();
+			n += findItemByIndex(accessory).getHit();
+		}
+
 
 		return n;
 	}
@@ -567,8 +669,6 @@ public class User {
 	    		ctx.writeAndFlush(Packet.setInventory(inventory.get(rs.getInt("index"))));
 	    	}
 
-			ctx.writeAndFlush(Packet.setInventory(inventory.get(35)));
-	    	
 			rs.close();
 		} catch (SQLException e) {
 			logger.warning(e.toString());
