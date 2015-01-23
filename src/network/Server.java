@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import database.DataBase;
 import database.GameData;
+import game.*;
 
 public class Server {
 	
@@ -44,8 +45,15 @@ public class Server {
             logger.info("서버를 시작합니다. (" + port + ")");
             ChannelFuture f = bootStrap.bind(port).sync();
             DataBase.connect("jdbc:mysql://localhost:3306/danbi", "root", "projectDanbi");
+			GameData.loadSettings();
             Handler.loadMap(2);
-            GameData.loadSettings();
+
+			while (Handler.isRunning) {
+				Thread.sleep(100);
+				for (Map map : Handler.map.values()) {
+					map.update();
+				}
+			}
             
             f.channel().closeFuture().sync();
         } finally {

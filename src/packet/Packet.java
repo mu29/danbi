@@ -1,12 +1,13 @@
 package packet;
 
+import database.Type;
 import game.User;
+import game.Character;
 
 import org.json.simple.JSONObject;
 
 import database.GameData;
 
-@SuppressWarnings("unchecked")
 public final class Packet {
 	
 	// success(0), id/pass error(1), sql error(2)
@@ -70,35 +71,25 @@ public final class Packet {
 	}
 
 	// player(0), npc(1), enemy(2)
-	public static JSONObject createCharacter(int type, String name, int x, int y, int d, int maxHp, int hp) {
+	public static JSONObject createCharacter(int type, Character c) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CREATE_CHARACTER);
 		packet.put("type", type);
-		packet.put("name", name);
-		packet.put("x", x);
-		packet.put("y", y);
-		packet.put("d", d);
-		packet.put("maxHp", maxHp);
-		packet.put("hp", hp);
-		
-		return packet;
-	}
+		packet.put("no", c.getNo());
+		packet.put("name", c.getName());
+		packet.put("image", c.getImage());
+		packet.put("speed", c.getMoveSpeed());
+		packet.put("hp", c.getHp());
+		packet.put("maxHp", c.getMaxHp());
+		packet.put("x", c.getX());
+		packet.put("y", c.getY());
+		packet.put("d", c.getDirection());
 
-	public static JSONObject createCharacter(User user) {
-		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.CREATE_CHARACTER);
-		packet.put("type", 0);
-		packet.put("no", user.getNo());
-		packet.put("name", user.getName());
-		packet.put("image", user.getImage());
-		packet.put("guild", user.getGuild());
-		packet.put("title", user.getTitle());
-		packet.put("speed", user.getSpeed());
-		packet.put("x", user.getX());
-		packet.put("y", user.getY());
-		packet.put("d", user.getDirection());
-		packet.put("maxHp", user.getMaxHp());
-		packet.put("hp", user.getHp());
+		if (type == Type.Character.USER) {
+			User u = (User) c;
+			packet.put("guild", u.getGuild());
+			packet.put("title", u.getTitle());
+		}
 		
 		return packet;
 	}
@@ -113,14 +104,16 @@ public final class Packet {
 		
 		return packet;
 	}
-	
-	public static JSONObject userRefresh(User user) {
+
+	// player(0), npc(1), enemy(2)
+	public static JSONObject refreshCharacter(int type, int no, int x, int y, int d) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.USER_REFRESH);
-		packet.put("no", user.getNo());
-		packet.put("x", user.getX());
-		packet.put("y", user.getY());
-		packet.put("d", user.getDirection());
+		packet.put("header", STCHeader.REFRESH_CHARACTER);
+		packet.put("type", type);
+		packet.put("no", no);
+		packet.put("x", x);
+		packet.put("y", y);
+		packet.put("d", d);
 		
 		return packet;
 	}
@@ -141,7 +134,7 @@ public final class Packet {
 	// player(0), npc(1), enemy(2)
 	public static JSONObject turnCharacter(int type, int no, int d) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.MOVE_CHARACTER);
+		packet.put("header", STCHeader.TURN_CHARACTER);
 		packet.put("type", type);
 		packet.put("no", no);
 		packet.put("d", d);

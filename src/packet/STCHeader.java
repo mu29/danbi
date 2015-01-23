@@ -7,7 +7,7 @@ public final class STCHeader {
 	public final static int TURN_CHARACTER = 3;
 	public final static int CREATE_CHARACTER = 4;
 	public final static int REMOVE_CHARACTER = 5;
-	public final static int USER_REFRESH = 6;
+	public final static int REFRESH_CHARACTER = 6;
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int UPDATE_STATUS = 101;

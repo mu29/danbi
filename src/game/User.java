@@ -9,21 +9,15 @@ import java.util.logging.Logger;
 
 import network.Handler;
 import packet.Packet;
-import database.DataBase;
-import database.GameData;
+import database.*;
 
-import javax.xml.transform.Result;
-
-public class User {
+public class User extends Character {
 	
 	private Logger logger = Logger.getLogger(User.class.getName());
 	private ChannelHandlerContext ctx;
-	private int no;
 	private String id;
 	private String pass;
-	private String name;
 	private String mail;
-	private String image;
 	private String guild;
 	private int job;
 	private int pureStr;
@@ -32,16 +26,6 @@ public class User {
 	private int statPoint;
 	private int skillPoint;
 	private int title;
-	private int hp;
-	private int mp;
-	private int level;
-	private int exp;
-	private int gold;
-	private int map;
-	private int x;
-	private int y;
-	private int direction;
-	private int speed;
 	private boolean admin;
 	
 	private int weapon = 0;
@@ -56,41 +40,44 @@ public class User {
 	
 	private Hashtable<Integer, GameData.InventoryItem> inventory = new Hashtable<Integer, GameData.InventoryItem>();
 	
-	public User(ChannelHandlerContext ctx, ResultSet rs) throws SQLException {
-		this.ctx = ctx;
-		this.no = rs.getInt("no");
-		this.id = rs.getString("id");
-		this.pass = rs.getString("pass");
-		this.name = rs.getString("name");
-		this.title = rs.getInt("title");
-		this.guild = "";
-		this.mail = rs.getString("mail");
-		this.image = rs.getString("image");
-		this.job = rs.getInt("job");
-		this.pureStr = rs.getInt("str");
-		this.pureDex = rs.getInt("dex");
-		this.pureAgi = rs.getInt("agi");
-		this.statPoint = rs.getInt("stat_point");
-		this.skillPoint = rs.getInt("skill_point");
-		this.hp = rs.getInt("hp");
-		this.mp = rs.getInt("mp");
-		this.level = rs.getInt("level");
-		this.exp = rs.getInt("exp");
-		this.map = rs.getInt("map");
-		this.gold = rs.getInt("gold");
-		this.x = rs.getInt("x");
-		this.y = rs.getInt("y");
-		this.direction = rs.getInt("direction");
-		this.speed = rs.getInt("speed");
-		this.admin = rs.getInt("admin") ==0 ? false : true;
+	public User(ChannelHandlerContext ct, ResultSet rs) {
+		try {
+			ctx = ct;
+			no = rs.getInt("no");
+			id = rs.getString("id");
+			pass = rs.getString("pass");
+			name = rs.getString("name");
+			title = rs.getInt("title");
+			guild = "";
+			mail = rs.getString("mail");
+			image = rs.getString("image");
+			job = rs.getInt("job");
+			pureStr = rs.getInt("str");
+			pureDex = rs.getInt("dex");
+			pureAgi = rs.getInt("agi");
+			statPoint = rs.getInt("stat_point");
+			skillPoint = rs.getInt("skill_point");
+			hp = rs.getInt("hp");
+			mp = rs.getInt("mp");
+			level = rs.getInt("level");
+			exp = rs.getInt("exp");
+			gold = rs.getInt("gold");
+			map = rs.getInt("map");
+			seed = rs.getInt("seed");
+			x = rs.getInt("x");
+			y = rs.getInt("y");
+			direction = rs.getInt("direction");
+			moveSpeed = rs.getInt("speed");
+			admin = rs.getInt("admin") == 0;
+
+			team = no;
+		} catch (SQLException e) {
+			logger.warning(e.getMessage());
+		}
 	}
 	
 	public ChannelHandlerContext getCtx() {
 		return ctx;
-	}
-	
-	public int getNo() {
-		return no;
 	}
 	
 	public String getID() {
@@ -101,17 +88,13 @@ public class User {
 		return pass;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
 	public int getTitle() {
 		return title;
 	}
 
 	public void setTitle(int t) {
 		title = t;
-		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.TITLE, t));
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.TITLE, t));
 	}
 	
 	public String getGuild() {
@@ -122,13 +105,9 @@ public class User {
 		return mail;
 	}
 
-	public String getImage() {
-		return image;
-	}
-
 	public void setImage(String i) {
 		image = i;
-		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.IMAGE, i));
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.IMAGE, i));
 	}
 	
 	public int getJob() {
@@ -137,7 +116,7 @@ public class User {
 
 	public void setJob(int j) {
 		job = j;
-		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.JOB, j));
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.JOB, j));
 	}
 	
 	public int getStr() {
@@ -267,16 +246,12 @@ public class User {
 		return pureAgi;
 	}
 
-	public int getHp() {
-		return hp;
-	}
-
 	public void gainHp(int value) {
 		if (hp + value > getMaxHp())
 			value = getMaxHp() - hp;
 
 		hp += value;
-		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.HP, hp));
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.HP, hp));
 	}
 
 	public void loseHp(int value) {
@@ -325,16 +300,12 @@ public class User {
 		return n;
 	}
 
-	public int getMp() {
-		return mp;
-	}
-
 	public void gainMp(int value) {
 		if (mp + value > getMaxMp())
 			value = getMaxMp() - mp;
 
 		mp += value;
-		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.MP, mp));
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.MP, mp));
 	}
 
 	public boolean loseMp(int value) {
@@ -487,14 +458,6 @@ public class User {
 
 		return n;
 	}
-	
-	public int getLevel() {
-		return level;
-	}
-	
-	public int getExp() {
-		return exp;
-	}
 
 	public int getMaxExp() {
 		int n = 0;
@@ -513,13 +476,13 @@ public class User {
 			statPoint += 5;
 			skillPoint += 1;
 
-			ctx.write(Packet.updateStatus(GameData.StatusType.LEVEL, level));
-			ctx.write(Packet.updateStatus(GameData.StatusType.STAT_POINT, statPoint));
-			ctx.write(Packet.updateStatus(GameData.StatusType.SKILL_POINT, skillPoint));
-			ctx.write(Packet.updateStatus(GameData.StatusType.MAX_EXP, getMaxExp()));
+			ctx.write(Packet.updateStatus(Type.Status.LEVEL, level));
+			ctx.write(Packet.updateStatus(Type.Status.STAT_POINT, statPoint));
+			ctx.write(Packet.updateStatus(Type.Status.SKILL_POINT, skillPoint));
+			ctx.write(Packet.updateStatus(Type.Status.MAX_EXP, getMaxExp()));
 		}
 
-		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.EXP, exp));
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.EXP, exp));
 	}
 
 	public void loseExp(int value) {
@@ -527,10 +490,6 @@ public class User {
 			value = exp;
 
 		gainExp(-value);
-	}
-
-	public int getGold() {
-		return gold;
 	}
 
 	public void gainGold(int value) {
@@ -546,35 +505,15 @@ public class User {
 		gainGold(-value);
 		return true;
 	}
-	
-	public int getMap() {
-		return map;
-	}
-	
-	public int getX() {
-		return x;
-	}
-	
-	public int getY() {
-		return y;
-	}
-	
-	public int getDirection() {
-		return direction;
-	}
-	
-	public int getSpeed() {
-		return speed;
-	}
-	
+
 	public int getStatPoint() {
 		return statPoint;
 	}
-	
+
 	public int getSkillPoint() {
 		return skillPoint;
 	}
-	
+
 	public boolean isAdmin() {
 		return admin;
 	}
@@ -582,19 +521,19 @@ public class User {
 	public int getWeapon() {
 		return weapon;
 	}
-	
+
 	public int getShield() {
 		return shield;
 	}
-	
+
 	public int getHelmet() {
 		return helmet;
 	}
-	
+
 	public int getArmor() {
 		return armor;
 	}
-	
+
 	public int getCape() {
 		return cape;
 	}
@@ -645,27 +584,7 @@ public class User {
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `inventory` WHERE `user_no` = '" + no + "';");
     	
 	    	while (rs.next()) {
-	    		inventory.put(rs.getInt("index"), 
-				    				new GameData.InventoryItem(
-				    				rs.getInt("user_no"),
-				    				rs.getInt("item_no"),
-				    				rs.getInt("amount"),
-				    				rs.getInt("index"),
-				    				rs.getInt("damage"),
-				    				rs.getInt("magic_damage"),
-				    				rs.getInt("defense"),
-				    				rs.getInt("magic_defense"),
-				    				rs.getInt("str"),
-				    				rs.getInt("dex"),
-				    				rs.getInt("agi"),
-				    				rs.getInt("hp"),
-				    				rs.getInt("mp"),
-				    				rs.getInt("critical"),
-				    				rs.getInt("avoid"),
-				    				rs.getInt("hit"),
-				    				rs.getInt("reinforce"),
-				    				rs.getInt("trade")));
-
+	    		inventory.put(rs.getInt("index"), new GameData.InventoryItem(rs));
 	    		ctx.writeAndFlush(Packet.setInventory(inventory.get(rs.getInt("index"))));
 	    	}
 
@@ -679,25 +598,25 @@ public class User {
 	// 아이템 장착
 	public void equipItem(int type, int index) {
 		switch (type) {
-		case GameData.ItemType.WEAPON:
+		case Type.Item.WEAPON:
 			weapon = index;
 			break;
-		case GameData.ItemType.SHIELD:
+		case Type.Item.SHIELD:
 			shield = index;
 			break;
-		case GameData.ItemType.HELMET:
+		case Type.Item.HELMET:
 			helmet = index;
 			break;
-		case GameData.ItemType.ARMOR:
+		case Type.Item.ARMOR:
 			armor = index;
 			break;
-		case GameData.ItemType.CAPE:
+		case Type.Item.CAPE:
 			cape = index;
 			break;
-		case GameData.ItemType.SHOES:
+		case Type.Item.SHOES:
 			shoes = index;
 			break;
-		case GameData.ItemType.ACCESSORY:
+		case Type.Item.ACCESSORY:
 			accessory = index;
 			break;
 		}
@@ -708,15 +627,15 @@ public class User {
 			return;
 		
 		switch (stat) {
-			case GameData.StatusType.STR:
+			case Type.Status.STR:
 				pureStr++;
 				ctx.writeAndFlush(Packet.updateStatus(stat, getStr()));
 				break;
-			case GameData.StatusType.DEX:
+			case Type.Status.DEX:
 				pureDex++;
 				ctx.writeAndFlush(Packet.updateStatus(stat, getDex()));
 				break;
-			case GameData.StatusType.AGI:
+			case Type.Status.AGI:
 				pureAgi++;
 				ctx.writeAndFlush(Packet.updateStatus(stat, getAgi()));
 				break;
@@ -725,7 +644,7 @@ public class User {
 		}
 
 		statPoint--;
-		ctx.writeAndFlush(Packet.updateStatus(GameData.StatusType.STAT_POINT, statPoint));
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.STAT_POINT, statPoint));
 	}
 
 	// NPC로부터 아이템 획득 (번호만으로 아이템 획득)
@@ -865,79 +784,113 @@ public class User {
 		ctx.writeAndFlush(Packet.setInventory(item2));
 	}
 
-	public void turnUp() {
-		Map gameMap = Handler.map.get(map);
-		direction = GameData.Direction.UP;
-
-		gameMap.sendToOthers(this, Packet.turnCharacter(0, no, direction));
+	public void turn(int type) {
+		switch (type) {
+			case 2:
+				turnDown();
+				break;
+			case 4:
+				turnLeft();
+				break;
+			case 6:
+				turnRight();
+				break;
+			case 8:
+				turnUp();
+				break;
+		}
 	}
 
-	public void turnDown() {
+	private void turnUp() {
 		Map gameMap = Handler.map.get(map);
-		direction = GameData.Direction.DOWN;
+		direction = Type.Direction.UP;
 
-		gameMap.sendToOthers(this, Packet.turnCharacter(0, no, direction));
+		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
 	}
 
-	public void turnLeft() {
+	private void turnDown() {
 		Map gameMap = Handler.map.get(map);
-		direction = GameData.Direction.LEFT;
+		direction = Type.Direction.DOWN;
 
-		gameMap.sendToOthers(this, Packet.turnCharacter(0, no, direction));
+		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
 	}
 
-	public void turnRight() {
+	private void turnLeft() {
 		Map gameMap = Handler.map.get(map);
-		direction = GameData.Direction.RIGHT;
+		direction = Type.Direction.LEFT;
 
-		gameMap.sendToOthers(this, Packet.turnCharacter(0, no, direction));
+		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
 	}
-	
-	public void moveUp() {
-		Map gameMap = Handler.map.get(map);
-		direction = GameData.Direction.UP;
 
-		if (gameMap.isPassable(x, y - 1)) {
+	private void turnRight() {
+		Map gameMap = Handler.map.get(map);
+		direction = Type.Direction.RIGHT;
+
+		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
+	}
+
+	public void move(int type) {
+		switch (type) {
+			case 2:
+				moveDown();
+				break;
+			case 4:
+				moveLeft();
+				break;
+			case 6:
+				moveRight();
+				break;
+			case 8:
+				moveUp();
+				break;
+		}
+	}
+
+	private void moveUp() {
+		Map gameMap = Handler.map.get(map);
+		direction = Type.Direction.UP;
+
+		if (gameMap.isPassable(this, x, y - 1)) {
 			y -= 1;
-			gameMap.sendToOthers(this, Packet.moveCharacter(0, no, x, y, direction));
+			gameMap.sendToOthers(no, seed, Packet.moveCharacter(Type.Character.USER, no, x, y, direction));
 		} else {
-			ctx.writeAndFlush(Packet.userRefresh(this));
+			ctx.writeAndFlush(Packet.refreshCharacter(Type.Character.USER, no, x, y, direction));
 		}
 	}
-	
-	public void moveDown() {
-		Map gameMap = Handler.map.get(map);
-		direction = GameData.Direction.DOWN;
 
-		if (gameMap.isPassable(x, y + 1)) {
+	private void moveDown() {
+		Map gameMap = Handler.map.get(map);
+		direction = Type.Direction.DOWN;
+
+		if (gameMap.isPassable(this, x, y + 1)) {
 			y += 1;
-			gameMap.sendToOthers(this, Packet.moveCharacter(0, no, x, y, direction));
+			gameMap.sendToOthers(no, seed, Packet.moveCharacter(Type.Character.USER, no, x, y, direction));
 		} else {
-			ctx.writeAndFlush(Packet.userRefresh(this));
+			ctx.writeAndFlush(Packet.refreshCharacter(Type.Character.USER, no, x, y, direction));
 		}
 	}
-	
-	public void moveLeft() {
-		Map gameMap = Handler.map.get(map);
-		direction = GameData.Direction.LEFT;
 
-		if (gameMap.isPassable(x - 1, y)) {
+	private void moveLeft() {
+		Map gameMap = Handler.map.get(map);
+		direction = Type.Direction.LEFT;
+
+		if (gameMap.isPassable(this, x - 1, y)) {
 			x -= 1;
-			gameMap.sendToOthers(this, Packet.moveCharacter(0, no, x, y, direction));
+			gameMap.sendToOthers(no, seed, Packet.moveCharacter(Type.Character.USER, no, x, y, direction));
 		} else {
-			ctx.writeAndFlush(Packet.userRefresh(this));
+			ctx.writeAndFlush(Packet.refreshCharacter(Type.Character.USER, no, x, y, direction));
 		}
 	}
-	
-	public void moveRight() {
-		Map gameMap = Handler.map.get(map);
-		direction = GameData.Direction.RIGHT;
 
-		if (gameMap.isPassable(x + 1, y)) {
+	private void moveRight() {
+		Map gameMap = Handler.map.get(map);
+		direction = Type.Direction.RIGHT;
+
+		if (gameMap.isPassable(this, x + 1, y)) {
 			x += 1;
-			gameMap.sendToOthers(this, Packet.moveCharacter(0, no, x, y, direction));
+			gameMap.sendToOthers(no, seed, Packet.moveCharacter(Type.Character.USER, no, x, y, direction));
 		} else {
-			ctx.writeAndFlush(Packet.userRefresh(this));
+			ctx.writeAndFlush(Packet.refreshCharacter(Type.Character.USER, no, x, y, direction));
 		}
 	}
 	

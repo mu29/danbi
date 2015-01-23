@@ -12,14 +12,16 @@ public class GameData extends DataBase {
 	public static Hashtable<Integer, Job> job = new Hashtable<Integer, Job>();
 	public static Hashtable<Integer, Register> register = new Hashtable<Integer, Register>();
 	public static Hashtable<Integer, Item> item = new Hashtable<Integer, Item>();
+	public static Hashtable<Integer, Troop> troop = new Hashtable<Integer, Troop>();
 	private static Logger logger = Logger.getLogger(GameData.class.getName());
 
 	public static void loadSettings() throws SQLException {
-		ResultSet rs = executeQuery("SELECT * FROM `setting_job`;");
+		ResultSet rs;
+
+		rs = executeQuery("SELECT * FROM `setting_job`;");
 		while (rs.next()) {
 			job.put(rs.getInt("no"), new Job(rs));
 		}
-		rs = null;
 		logger.info("직업 정보 로드 완료.");
 		
 		rs = executeQuery("SELECT * FROM `setting_register`;");
@@ -33,10 +35,12 @@ public class GameData extends DataBase {
 			item.put(rs.getInt("no"), new Item(rs));
 		}
 		logger.info("아이템 정보 로드 완료.");
-	}
-	
-	public static void load() {
-		
+
+		rs = executeQuery("SELECT * FROM `troop`;");
+		while (rs.next()) {
+			troop.put(rs.getInt("no"), new Troop(rs));
+		}
+		logger.info("에너미 정보 로드 완료.");
 	}
 
 	public static class Job {
@@ -96,78 +100,43 @@ public class GameData extends DataBase {
 		private int y;
 		private int level;
 		
-		public Register(ResultSet rs) throws SQLException {
-			this.job = rs.getInt("job");
-			this.image = rs.getString("image");
-			this.map = rs.getInt("map");
-			this.x = rs.getInt("x");
-			this.y = rs.getInt("y");
-			this.level = rs.getInt("level");
+		public Register(ResultSet rs) {
+			try {
+				job = rs.getInt("job");
+				image = rs.getString("image");
+				map = rs.getInt("map");
+				x = rs.getInt("x");
+				y = rs.getInt("y");
+				level = rs.getInt("level");
+			} catch (SQLException e) {
+				logger.warning(e.getMessage());
+			}
 		}
 
 		public int getJob() {
-			return this.job;
+			return job;
 		}
 		
 		public String getImage() {
-			return this.image;
+			return image;
 		}
 
 		public int getMap() {
-			return this.map;
+			return map;
 		}
 
 		public int getX() {
-			return this.x;
+			return x;
 		}
 
 		public int getY() {
-			return this.y;
+			return y;
 		}
 
 		public int getLevel() {
-			return this.level;
+			return level;
 		}
 		
-	}
-	
-	public static class Direction {
-		public static final int DOWN = 2;
-		public static final int LEFT = 4;
-		public static final int RIGHT = 6;
-		public static final int UP = 8;
-	}
-
-	public static class ItemType {
-		public static final int WEAPON = 0;
-		public static final int SHIELD = 1;
-		public static final int HELMET = 2;
-		public static final int ARMOR = 3;
-		public static final int CAPE = 4;
-		public static final int SHOES = 5;
-		public static final int ACCESSORY = 6;
-		public static final int ITEM = 7;
-	}
-
-	public static class StatusType {
-		public static final int TITLE = 0;
-		public static final int IMAGE = 1;
-		public static final int JOB = 2;
-		public static final int STR = 3;
-		public static final int DEX = 4;
-		public static final int AGI = 5;
-		public static final int CRITICAL = 6;
-		public static final int AVOID = 7;
-		public static final int HIT = 8;
-		public static final int STAT_POINT = 9;
-		public static final int SKILL_POINT = 10;
-		public static final int HP = 11;
-		public static final int MAX_HP = 12;
-		public static final int MP = 13;
-		public static final int MAX_MP = 14;
-		public static final int LEVEL = 15;
-		public static final int EXP = 16;
-		public static final int MAX_EXP = 17;
 	}
 	
 	public static class Item {
@@ -197,128 +166,132 @@ public class GameData extends DataBase {
 		private boolean trade;
 		private String function;
 		
-		public Item(ResultSet rs) throws SQLException {
-			this.no = rs.getInt("no");
-			this.name = rs.getString("name");
-			this.description = rs.getString("description");
-			this.image = rs.getString("image");
-			this.job = rs.getInt("job");
-			this.level = rs.getInt("level");
-			this.type = rs.getInt("type");
-			this.price = rs.getInt("price");
-			this.damage = rs.getInt("damage");
-			this.magicDamage = rs.getInt("magic_damage");
-			this.defense = rs.getInt("defense");
-			this.magicDefense = rs.getInt("magic_defense");
-			this.str = rs.getInt("str");
-			this.dex = rs.getInt("dex");
-			this.agi = rs.getInt("agi");
-			this.hp = rs.getInt("hp");
-			this.mp = rs.getInt("mp");
-			this.critical = rs.getInt("critical");
-			this.avoid = rs.getInt("avoid");
-			this.hit = rs.getInt("hit");
-			this.delay = rs.getInt("delay");
-			this.consume = rs.getInt("consume") == 1 ? true : false;
-			this.maxLoad = rs.getInt("max_load");
-			this.trade = rs.getInt("trade") == 1 ? true : false;
-			this.function = rs.getString("function");
+		public Item(ResultSet rs) {
+			try {
+				no = rs.getInt("no");
+				name = rs.getString("name");
+				description = rs.getString("description");
+				image = rs.getString("image");
+				job = rs.getInt("job");
+				level = rs.getInt("level");
+				type = rs.getInt("type");
+				price = rs.getInt("price");
+				damage = rs.getInt("damage");
+				magicDamage = rs.getInt("magic_damage");
+				defense = rs.getInt("defense");
+				magicDefense = rs.getInt("magic_defense");
+				str = rs.getInt("str");
+				dex = rs.getInt("dex");
+				agi = rs.getInt("agi");
+				hp = rs.getInt("hp");
+				mp = rs.getInt("mp");
+				critical = rs.getInt("critical");
+				avoid = rs.getInt("avoid");
+				hit = rs.getInt("hit");
+				delay = rs.getInt("delay");
+				consume = rs.getInt("consume") == 1;
+				maxLoad = rs.getInt("max_load");
+				trade = rs.getInt("trade") == 1;
+				function = rs.getString("function");
+			} catch (SQLException e) {
+				logger.warning(e.getMessage());
+			}
 		}
 
 		public int getNo() {
-			return this.no;
+			return no;
 		}
 		
 		public String getName() {
-			return this.name;
+			return name;
 		}
 		
 		public String getDesc() {
-			return this.description;
+			return description;
 		}
 		
 		public String getImage() {
-			return this.image;
+			return image;
 		}
 		
 		public int getJob() {
-			return this.job;
+			return job;
 		}
 		
 		public int getLevel() {
-			return this.level;
+			return level;
 		}
 		
 		public int getType() {
-			return this.type;
+			return type;
 		}
 		
 		public int getPrice() {
-			return this.price;
+			return price;
 		}
 		
 		public int getDamage() {
-			return this.damage;
+			return damage;
 		}
 		
 		public int getMagicDamage() {
-			return this.magicDamage;
+			return magicDamage;
 		}
 		
 		public int getDefense() {
-			return this.defense;
+			return defense;
 		}
 		
 		public int getMagicDefense() {
-			return this.magicDefense;
+			return magicDefense;
 		}
 		
 		public int getStr() {
-			return this.str;
+			return str;
 		}
 		
 		public int getDex() {
-			return this.dex;
+			return dex;
 		}
 		
 		public int getAgi() {
-			return this.agi;
+			return agi;
 		}
 		
 		public int getHp() {
-			return this.hp;
+			return hp;
 		}
 		
 		public int getMp() {
-			return this.mp;
+			return mp;
 		}
 		
 		public int getCritical() {
-			return this.critical;
+			return critical;
 		}
 		
 		public int getAvoid() {
-			return this.avoid;
+			return avoid;
 		}
 		
 		public int getHit() {
-			return this.hit;
+			return hit;
 		}
 		
 		public int getDelay() {
-			return this.delay;
+			return delay;
 		}
 		
 		public int getMaxLoad() {
-			return this.maxLoad;
+			return maxLoad;
 		}
 		
 		public boolean isConsumable() {
-			return this.consume;
+			return consume;
 		}
 		
 		public boolean isTradeable() {
-			return this.trade;
+			return trade;
 		}
 	}
 	
@@ -341,121 +314,146 @@ public class GameData extends DataBase {
 		private int hit;
 		private int reinforce;
 		private boolean trade;
-		
-		public InventoryItem(int userNo, int itemNo, int amount, int index, int trade) {
-			this.userNo = userNo;
-			this.itemNo = itemNo;
-			this.amount = amount > GameData.item.get(itemNo).getMaxLoad() ? GameData.item.get(itemNo).getMaxLoad() : amount;
-			this.index = index;
-			this.damage = 0;
-			this.magicDamage = 0;
-			this.defense = 0;
-			this.magicDefense = 0;
-			this.str = 0;
-			this.dex = 0;
-			this.agi = 0;
-			this.hp = 0;
-			this.mp = 0;
-			this.critical = 0;
-			this.avoid = 0;
-			this.hit = 0;
-			this.reinforce = 0;
-			this.trade = trade == 1 ? true : false;
+
+		public InventoryItem(ResultSet rs) {
+			try {
+				userNo = rs.getInt("user_no");
+				itemNo = rs.getInt("item_no");
+				amount = rs.getInt("amount");
+				index = rs.getInt("index");
+				damage = rs.getInt("damage");
+				magicDamage = rs.getInt("magic_damage");
+				defense = rs.getInt("defense");
+				magicDefense = rs.getInt("magic_defense");
+				str = rs.getInt("str");
+				dex = rs.getInt("dex");
+				agi = rs.getInt("agi");
+				hp = rs.getInt("hp");
+				mp = rs.getInt("mp");
+				critical = rs.getInt("critical");
+				avoid = rs.getInt("avoid");
+				hit = rs.getInt("hit");
+				reinforce = rs.getInt("reinforce");
+				trade = rs.getInt("trade") == 1;
+			} catch (SQLException e) {
+				logger.warning(e.getMessage());
+			}
 		}
 		
-		public InventoryItem(int userNo, int itemNo, int amount, int index, int damage, int magicDamage, int defense, 
-				int magicDefense, int str, int dex, int agi, int hp, int mp, int critical, int avoid, int hit,
-				int reinforce, int trade) {
-			this.userNo = userNo;
-			this.itemNo = itemNo;
-			this.amount = amount;
-			this.index = index;
-			this.damage = damage;
-			this.magicDamage = magicDamage;
-			this.defense = defense;
-			this.magicDefense = magicDefense;
-			this.str = str;
-			this.dex = dex;
-			this.agi = agi;
-			this.hp = hp;
-			this.mp = mp;
-			this.critical = critical;
-			this.avoid = avoid;
-			this.hit = hit;
-			this.reinforce = reinforce;
-			this.trade = trade == 1 ? true : false;
+		public InventoryItem(int _userNo, int _itemNo, int _amount, int _index, int _trade) {
+			userNo = _userNo;
+			itemNo = _itemNo;
+			amount = _amount > GameData.item.get(itemNo).getMaxLoad() ? GameData.item.get(itemNo).getMaxLoad() : amount;
+			index = _index;
+			damage = 0;
+			magicDamage = 0;
+			defense = 0;
+			magicDefense = 0;
+			str = 0;
+			dex = 0;
+			agi = 0;
+			hp = 0;
+			mp = 0;
+			critical = 0;
+			avoid = 0;
+			hit = 0;
+			reinforce = 0;
+			trade = _trade == 1;
+		}
+
+		public InventoryItem(int _userNo, int _itemNo, int _amount, int _index, int _damage, int _magicDamage, int _defense,
+							 int _magicDefense, int _str, int _dex, int _agi, int _hp, int _mp, int _critical, int _avoid, int _hit,
+							 int _reinforce, int _trade) {
+			userNo = _userNo;
+			itemNo = _itemNo;
+			amount = _amount;
+			index = _index;
+			damage = _damage;
+			magicDamage = _magicDamage;
+			defense = _defense;
+			magicDefense = _magicDefense;
+			str = _str;
+			dex = _dex;
+			agi = _agi;
+			hp = _hp;
+			mp = _mp;
+			critical = _critical;
+			avoid = _avoid;
+			hit = _hit;
+			reinforce = _reinforce;
+			trade = _trade == 1;
 		}
 
 		public int getUserNo() {
-			return this.userNo;
+			return userNo;
 		}
 
 		public int getItemNo() {
-			return this.itemNo;
+			return itemNo;
 		}
 
 		public int getAmount() {
-			return this.amount;
+			return amount;
 		}
 
 		public int getIndex() {
-			return this.index;
+			return index;
 		}
 		
 		public int getDamage() {
-			return this.damage;
+			return damage;
 		}
 		
 		public int getMagicDamage() {
-			return this.magicDamage;
+			return magicDamage;
 		}
 		
 		public int getDefense() {
-			return this.defense;
+			return defense;
 		}
 		
 		public int getMagicDefense() {
-			return this.magicDefense;
+			return magicDefense;
 		}
 		
 		public int getStr() {
-			return this.str;
+			return str;
 		}
 		
 		public int getDex() {
-			return this.dex;
+			return dex;
 		}
 		
 		public int getAgi() {
-			return this.agi;
+			return agi;
 		}
 		
 		public int getHp() {
-			return this.hp;
+			return hp;
 		}
 		
 		public int getMp() {
-			return this.mp;
+			return mp;
 		}
 		
 		public int getCritical() {
-			return this.critical;
+			return critical;
 		}
 		
 		public int getAvoid() {
-			return this.avoid;
+			return avoid;
 		}
 		
 		public int getHit() {
-			return this.hit;
+			return hit;
 		}
 		
 		public int getReinforce() {
-			return this.reinforce;
+			return reinforce;
 		}
 		
 		public boolean isTradeable() {
-			return this.trade;
+			return trade;
 		}
 		
 		public void setIndex(int value) {
@@ -473,67 +471,38 @@ public class GameData extends DataBase {
 		}
 	}
 
-	public class Enemy {
-		private int no;
-		private String name;
-		private String image;
-		private int type;
-		private int hp;
-		private int maxHp;
-		private int mp;
-		private int maxMp;
-		private int damage;
-		private int magicDamage;
-		private int defense;
-		private int magicDefense;
-		private int critical;
-		private int avoid;
-		private int hit;
-		private int moveSpeed;
-		private int attackSpeed;
+	public static class Troop {
+		private int num;
+		private int range;
 		private int map;
-		private int x;
-		private int y;
-		private int direction;
-		private int regen;
-		private int level;
-		private int exp;
-		private int gold;
-		private int reward;
-		private String function;
-		private int frequency;
-		private String die;
+		private ResultSet resultSet;
+		private String query;
 
-		public Enemy(ResultSet rs) throws SQLException {
-			no = rs.getInt("no");
-			name = rs.getString("name");
-			image = rs.getString("image");
-			type = rs.getInt("type");
-			hp = rs.getInt("hp");
-			maxHp = rs.getInt("hp");
-			mp = rs.getInt("mp");
-			maxMp = rs.getInt("mp");
-			damage = rs.getInt("damage");
-			magicDamage = rs.getInt("magic_damage");
-			defense = rs.getInt("defense");
-			magicDefense = rs.getInt("magic_defense");
-			critical = rs.getInt("critical");
-			avoid = rs.getInt("avoid");
-			hit = rs.getInt("hit");
-			moveSpeed = rs.getInt("move_speed");
-			attackSpeed = rs.getInt("attack_speed");
-			map = rs.getInt("map");
-			x = rs.getInt("x");
-			y = rs.getInt("y");
-			direction = rs.getInt("direction");
-			regen = rs.getInt("regen");
-			level = rs.getInt("level");
-			exp = rs.getInt("exp");
-			gold = rs.getInt("gold");
-			reward = rs.getInt("reward");
-			function = rs.getString("function");
-			frequency = rs.getInt("frequency");
-			die = rs.getString("die");
+		public Troop(ResultSet rs) {
+			try {
+				num = rs.getInt("num");
+				range = rs.getInt("range");
+				map = rs.getInt("map");
+				query = "SELECT * FROM `enemy` WHERE `no`='" + rs.getInt("no") + "';";
+				resultSet = rs;
+			} catch (SQLException e) {
+				logger.warning(e.getMessage());
+			}
+		}
+
+		public ResultSet getResultSet() {
+			return resultSet;
+		}
+
+		public int getNum() {
+			return num;
+		}
+
+		public int getRange() {
+			return range;
+		}
+		public int getMap() {
+			return map;
 		}
 	}
 }

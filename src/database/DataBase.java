@@ -25,7 +25,6 @@ public class DataBase {
 		} catch (SQLException sqex) {
 			logger.warning(sqex.getMessage());
 		}
-		return;
 	}
 	
 	// Select
@@ -67,7 +66,7 @@ public class DataBase {
 									"', `exp` = '" + user.getExp() + "', `gold` = '" + user.getGold() + 
 									"', `map` = '" + user.getMap() + "', `x` = '" + user.getX() +
 									"', `y` = '" + user.getY() + "', `direction` = '" + user.getDirection() + 
-									"', `speed` = '" + user.getSpeed() + "', `stat_point` = '" + user.getStatPoint() + 
+									"', `speed` = '" + user.getMoveSpeed() + "', `stat_point` = '" + user.getStatPoint() +
 									"', `skill_point` = '" + user.getSkillPoint() + "' WHERE `no` = '" + user.getNo() +"';");
 		} catch (SQLException e) {
 			logger.warning(e.toString());

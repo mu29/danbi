@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
@@ -19,8 +20,9 @@ import database.GameData;
 
 public final class Handler extends ChannelInboundHandlerAdapter {
 
-	public static HashMap<ChannelHandlerContext, User>  user = new HashMap<ChannelHandlerContext, User>();
-	public static HashMap<Integer, Map> map = new HashMap<Integer, Map>();
+	public static Hashtable<ChannelHandlerContext, User>  user = new Hashtable<ChannelHandlerContext, User>();
+	public static Hashtable<Integer, Map> map = new Hashtable<Integer, Map>();
+	public static boolean isRunning = true;
     private static Logger logger = Logger.getLogger(Handler.class.getName());
     
     @Override
@@ -28,21 +30,29 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 		JSONObject packet = (JSONObject) msg;
 		switch ((int) packet.get("header")) {
 	    	case CTSHeader.LOGIN:
-	    		login(ctx, packet); break;
+	    		login(ctx, packet);
+				break;
 	    	case CTSHeader.REGISTER:
-	    		register(ctx, packet); break;
+	    		register(ctx, packet);
+				break;
 			case CTSHeader.MOVE_CHARACTER:
-				moveUser(ctx, packet); break;
+				user.get(ctx).move((int) packet.get("type"));
+				break;
 			case CTSHeader.TURN_CHARACTER:
-				turnUser(ctx, packet); break;
+				user.get(ctx).turn((int) packet.get("type"));
+				break;
 	    	case CTSHeader.REMOVE_EQUIP_ITEM:
-				user.get(ctx).equipItem((int) packet.get("type"), 0); break;
+				user.get(ctx).equipItem((int) packet.get("type"), 0);
+				break;
 	    	case CTSHeader.USE_STAT_POINT:
-				user.get(ctx).useStatPoint((int) packet.get("type")); break;
+				user.get(ctx).useStatPoint((int) packet.get("type"));
+				break;
 	    	case CTSHeader.OPEN_REGISTER_WINDOW:
-				ctx.writeAndFlush(Packet.openRegisterWindow()); break;
+				ctx.writeAndFlush(Packet.openRegisterWindow());
+				break;
 	    	case CTSHeader.CHANGE_ITEM_INDEX:
-				changeItemIndex(ctx, packet); break;
+				changeItemIndex(ctx, packet);
+				break;
     	}
     }
 
@@ -64,7 +74,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 	    			u.loadData();
 	    			
 	    			ctx.writeAndFlush(Packet.loginMessage(u));
-	    	    	map.get(u.getMap()).sendToOthers(u, Packet.createCharacter(u));
 	    	    	map.get(u.getMap()).addUser(u);
 	    		} else {
 	    			ctx.writeAndFlush(Packet.loginMessage(1));
@@ -112,40 +121,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     	ctx.writeAndFlush(Packet.registerMessage(0));
     }
 
-	void moveUser(ChannelHandlerContext ctx, JSONObject packet) {
-		switch ((int) packet.get("type")) {
-			case 2:
-				user.get(ctx).moveDown();
-				break;
-			case 4:
-				user.get(ctx).moveLeft();
-				break;
-			case 6:
-				user.get(ctx).moveRight();
-				break;
-			case 8:
-				user.get(ctx).moveUp();
-				break;
-		}
-	}
-
-	void turnUser(ChannelHandlerContext ctx, JSONObject packet) {
-		switch ((int) packet.get("type")) {
-			case 2:
-				user.get(ctx).turnDown();
-				break;
-			case 4:
-				user.get(ctx).turnLeft();
-				break;
-			case 6:
-				user.get(ctx).turnRight();
-				break;
-			case 8:
-				user.get(ctx).turnUp();
-				break;
-		}
-	}
-
 	void changeItemIndex(ChannelHandlerContext ctx, JSONObject packet) {
 		switch ((int) packet.get("type")) {
 			case 0:
@@ -155,9 +130,10 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 		}
 	}
     
-    public static void loadMap(int num) throws IOException {
-    	for (int i = 1; i <= num; i++)
-    		map.put(i, new Map("./Map/MAP" + i + ".map"));
+    public static void loadMap(int num) {
+    	for (int i = 1; i <= num; i++) {
+			map.put(i, new Map("./Map/MAP" + i + ".map"));
+		}
     	
 		logger.info("맵 로드 완료.");
     }
