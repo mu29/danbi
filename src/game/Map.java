@@ -66,10 +66,11 @@ public class Map {
 		for (GameData.Troop troop : GameData.troop.values()) {
 			if (troop.getMap() == no) {
 				for (int i = 0; i < troop.getNum(); i++) {
-					int x, y;
+					int x = troop.getX() - troop.getRange() / 2;
+					int y = troop.getY() - troop.getRange() / 2;
 					do {
-						x = random.nextInt(troop.getRange());
-						y = random.nextInt(troop.getRange());
+						x += random.nextInt(troop.getRange());
+						y += random.nextInt(troop.getRange());
 					} while (!isPassable(null, x, y));
 					enemy.addElement(new Enemy(enemy.size(), x, y, troop.getResultSet()));
 				}
@@ -93,14 +94,14 @@ public class Map {
 		for (User other : user) {
 			if (other.equals(c))
 				continue;
-			if (other.getSeed() == c.getSeed() && other.x == x && other.y == y)
+			if (other.getSeed() == (c == null ? 0 : c.getSeed()) && other.x == x && other.y == y)
 				return false;
 		}
 
 		for (Enemy other : enemy) {
 			if (other.equals(c))
 				continue;
-			if (other.getSeed() == c.getSeed() && other.x == x && other.y == y)
+			if (other.getSeed() == (c == null ? 0 : c.getSeed()) && other.x == x && other.y == y)
 				return false;
 		}
 

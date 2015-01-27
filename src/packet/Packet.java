@@ -70,7 +70,6 @@ public final class Packet {
 		return packet;
 	}
 
-	// player(0), npc(1), enemy(2)
 	public static JSONObject createCharacter(int type, Character c) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CREATE_CHARACTER);
@@ -94,7 +93,6 @@ public final class Packet {
 		return packet;
 	}
 
-	// player(0), npc(1), enemy(2)
 	public static JSONObject removeCharacter(int type, String name, int no) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REMOVE_CHARACTER);
@@ -105,7 +103,6 @@ public final class Packet {
 		return packet;
 	}
 
-	// player(0), npc(1), enemy(2)
 	public static JSONObject refreshCharacter(int type, int no, int x, int y, int d) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REFRESH_CHARACTER);
@@ -118,7 +115,6 @@ public final class Packet {
 		return packet;
 	}
 
-	// player(0), npc(1), enemy(2)
 	public static JSONObject moveCharacter(int type, int no, int x, int y, int d) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.MOVE_CHARACTER);
@@ -131,13 +127,23 @@ public final class Packet {
 		return packet;
 	}
 
-	// player(0), npc(1), enemy(2)
 	public static JSONObject turnCharacter(int type, int no, int d) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.TURN_CHARACTER);
 		packet.put("type", type);
 		packet.put("no", no);
 		packet.put("d", d);
+
+		return packet;
+	}
+
+	public static JSONObject jumpCharacter(int type, int no, int x, int y) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.JUMP_CHARACTER);
+		packet.put("type", type);
+		packet.put("no", no);
+		packet.put("x", x);
+		packet.put("y", y);
 
 		return packet;
 	}

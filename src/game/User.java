@@ -459,6 +459,146 @@ public class User extends Character {
 		return n;
 	}
 
+	public int getDamage() {
+		int n = 0;
+		// 아이템으로 오르는 Damage
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getDamage();
+			n += findItemByIndex(weapon).getDamage();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getDamage();
+			n += findItemByIndex(shield).getDamage();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getDamage();
+			n += findItemByIndex(helmet).getDamage();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getDamage();
+			n += findItemByIndex(armor).getDamage();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getDamage();
+			n += findItemByIndex(cape).getDamage();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getDamage();
+			n += findItemByIndex(shoes).getDamage();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getDamage();
+			n += findItemByIndex(accessory).getDamage();
+		}
+		
+		return n;
+	}
+
+	public int getMagicDamage() {
+		int n = 0;
+		// 아이템으로 오르는 MagicDamage
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getMagicDamage();
+			n += findItemByIndex(weapon).getMagicDamage();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getMagicDamage();
+			n += findItemByIndex(shield).getMagicDamage();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getMagicDamage();
+			n += findItemByIndex(helmet).getMagicDamage();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getMagicDamage();
+			n += findItemByIndex(armor).getMagicDamage();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getMagicDamage();
+			n += findItemByIndex(cape).getMagicDamage();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getMagicDamage();
+			n += findItemByIndex(shoes).getMagicDamage();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getMagicDamage();
+			n += findItemByIndex(accessory).getMagicDamage();
+		}
+
+		return n;
+	}
+
+	public int getDefense() {
+		int n = 0;
+		// 아이템으로 오르는 Defense
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getDefense();
+			n += findItemByIndex(weapon).getDefense();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getDefense();
+			n += findItemByIndex(shield).getDefense();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getDefense();
+			n += findItemByIndex(helmet).getDefense();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getDefense();
+			n += findItemByIndex(armor).getDefense();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getDefense();
+			n += findItemByIndex(cape).getDefense();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getDefense();
+			n += findItemByIndex(shoes).getDefense();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getDefense();
+			n += findItemByIndex(accessory).getDefense();
+		}
+
+		return n;
+	}
+
+	public int getMagicDefense() {
+		int n = 0;
+		// 아이템으로 오르는 MagicDefense
+		if (weapon > 0) {
+			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getMagicDefense();
+			n += findItemByIndex(weapon).getMagicDefense();
+		}
+		if (shield > 0) {
+			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getMagicDefense();
+			n += findItemByIndex(shield).getMagicDefense();
+		}
+		if (helmet > 0) {
+			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getMagicDefense();
+			n += findItemByIndex(helmet).getMagicDefense();
+		}
+		if (armor > 0) {
+			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getMagicDefense();
+			n += findItemByIndex(armor).getMagicDefense();
+		}
+		if (cape > 0) {
+			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getMagicDefense();
+			n += findItemByIndex(cape).getMagicDefense();
+		}
+		if (shoes > 0) {
+			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getMagicDefense();
+			n += findItemByIndex(shoes).getMagicDefense();
+		}
+		if (accessory > 0) {
+			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getMagicDefense();
+			n += findItemByIndex(accessory).getMagicDefense();
+		}
+
+		return n;
+	}
+
 	public int getMaxExp() {
 		int n = 0;
 		n += level * level * 10;
@@ -720,7 +860,7 @@ public class User extends Character {
 	
 	// 비어있는 인덱스를 획득
 	public int getEmptyIndex() {
-		for (int i = 0; i < maxInventory; i++) {
+		for (int i = 1; i <= maxInventory; i++) {
 			if (!inventory.containsKey(i))
 				return i;
 		}
@@ -768,20 +908,30 @@ public class User extends Character {
 	}
 
 	public void changeItemIndex(int index1, int index2) {
-		if (!inventory.containsKey(index1) || !inventory.containsKey(index2))
+		if (!inventory.containsKey(index1))
 			return;
 
-		GameData.InventoryItem item1 = inventory.get(index1);
-		GameData.InventoryItem item2 = inventory.get(index2);
-		inventory.remove(index1);
-		inventory.remove(index2);
-		item1.setIndex(index2);
-		item2.setIndex(index1);
-		inventory.put(index2, item1);
-		inventory.put(index1, item2);
+		GameData.InventoryItem presentItem = inventory.get(index1);
+		GameData.InventoryItem targetItem;
+		if (inventory.containsKey(index2)) {
+			targetItem = inventory.get(index2);
+			inventory.remove(index1);
+			inventory.remove(index2);
+			presentItem.setIndex(index2);
+			targetItem.setIndex(index1);
+			inventory.put(index2, presentItem);
+			inventory.put(index1, targetItem);
 
-		ctx.write(Packet.setInventory(item1));
-		ctx.writeAndFlush(Packet.setInventory(item2));
+			ctx.write(Packet.setInventory(presentItem));
+			ctx.writeAndFlush(Packet.setInventory(targetItem));
+		} else {
+			ctx.write(Packet.updateInventory(0, presentItem));
+			inventory.remove(index1);
+			presentItem.setIndex(index2);
+			inventory.put(index2, presentItem);
+			ctx.writeAndFlush(Packet.setInventory(presentItem));
+		}
+
 	}
 
 	public void turn(int type) {

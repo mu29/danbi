@@ -475,15 +475,17 @@ public class GameData extends DataBase {
 		private int num;
 		private int range;
 		private int map;
+		private int x;
+		private int y;
 		private ResultSet resultSet;
-		private String query;
 
 		public Troop(ResultSet rs) {
 			try {
 				num = rs.getInt("num");
 				range = rs.getInt("range");
 				map = rs.getInt("map");
-				query = "SELECT * FROM `enemy` WHERE `no`='" + rs.getInt("no") + "';";
+				x = rs.getInt("x");
+				y = rs.getInt("y");
 				resultSet = rs;
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
@@ -501,8 +503,17 @@ public class GameData extends DataBase {
 		public int getRange() {
 			return range;
 		}
+
 		public int getMap() {
 			return map;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public int getY() {
+			return y;
 		}
 	}
 }

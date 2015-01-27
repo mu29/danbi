@@ -87,6 +87,22 @@ public class Enemy extends Character {
         return type;
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
+    public int getMagicDamage() {
+        return magicDamage;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public int getMagicDefense() {
+        return magicDefense;
+    }
+
     public void gainHp(int value) {
         if (hp + value > getMaxHp())
             value = getMaxHp() - hp;
@@ -132,7 +148,7 @@ public class Enemy extends Character {
         if (nowTime < lastMoveTime)
             return;
 
-        lastMoveTime = nowTime + moveSpeed;
+        lastMoveTime = nowTime + moveSpeed + random.nextInt(moveSpeed) / 2;
 
         if (target != null) {
             int distance = Math.abs(target.getX() - x) + Math.abs(target.getY() - y);
@@ -142,6 +158,29 @@ public class Enemy extends Character {
                 target = null;
         } else {
             findTarget();
+        }
+    }
+
+    // 공속 1당 0.1초
+    private void attackTarget() {
+        long nowTime = System.currentTimeMillis() / 100;
+
+        if (nowTime < lastAttackTime)
+            return;
+
+        lastAttackTime = nowTime + attackSpeed + random.nextInt(attackSpeed) / 2;;
+        int new_x = x + (direction == 6 ? 1 : direction == 4 ? -1 : 0);
+        int new_y = y + (direction == 2 ? 1 : direction == 8 ? -1 : 0);
+        for (User user : Handler.map.get(map).user) {
+            if (user.x == new_x && user.y == new_y) {
+                Handler.map.get(map).sendToAll(seed, Packet.jumpCharacter(Type.Character.ENEMY, no, x, y));
+                int attackDamage = (damage - target.getDefense()) *  (damage - target.getDefense());
+                if (target.getClass().getName().equals("game.User")) {
+                    User u = (User) target;
+                    u.loseHp(attackDamage);
+                }
+                break;
+            }
         }
     }
 
@@ -328,24 +367,6 @@ public class Enemy extends Character {
             gameMap.sendToAll(seed, Packet.moveCharacter(Type.Character.ENEMY, no, x, y, direction));
         } else {
             moveRandom();
-        }
-    }
-
-    // 공속 1당 0.1초
-    private void attackTarget() {
-        long nowTime = System.currentTimeMillis() / 100;
-
-        if (nowTime < lastAttackTime)
-            return;
-
-        lastAttackTime = nowTime + attackSpeed;
-        int new_x = x + (direction == 6 ? 1 : direction == 4 ? -1 : 0);
-        int new_y = y + (direction == 2 ? 1 : direction == 8 ? -1 : 0);
-        for (User user : Handler.map.get(map).user) {
-            if (user.x == new_x && user.y == new_y) {
-                //
-
-            }
         }
     }
 }

@@ -86,4 +86,20 @@ public class Character {
     public int getTeam() {
         return team;
     }
+
+    public int getDamage() {
+        return 0;
+    }
+
+    public int getMagicDamage() {
+        return 0;
+    }
+
+    public int getDefense() {
+        return 0;
+    }
+
+    public int getMagicDefense() {
+        return 0;
+    }
 }
