@@ -46,11 +46,11 @@ public class Server {
             ChannelFuture f = bootStrap.bind(port).sync();
             DataBase.connect("jdbc:mysql://localhost:3306/danbi", "root", "projectDanbi");
 			GameData.loadSettings();
-            Handler.loadMap(2);
+            Map.loadMap(2);
 
 			while (Handler.isRunning) {
 				Thread.sleep(100);
-				for (Map map : Handler.map.values()) {
+				for (Map map : Map.getAll().values()) {
 					map.update();
 				}
 			}

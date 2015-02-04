@@ -2,8 +2,7 @@ package game;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -15,6 +14,7 @@ import org.json.simple.JSONObject;
 import packet.Packet;
 
 public class Map {
+	private static Hashtable<Integer, Map> maps = new Hashtable<>();
 
 	private String texture;
 	private int no;
@@ -23,13 +23,29 @@ public class Map {
 	private int height;
 	private int[] data;
 	private Random random;
-	
-	private static Logger logger = Logger.getLogger(Map.class.getName());
-	public Vector<User> user = new Vector<User>();
-	public Vector<Enemy> enemy = new Vector<Enemy>();
+
+	public Vector<User> users = new Vector<>();
+	public Vector<Enemy> enemies = new Vector<>();
 	//public HashMap<String, NPC> NPC = new HashMap<String, NPC>();
 	//public HashMap<String, DropGold> dropGold = new HashMap<String, DropGold>();
 	//public HashMap<String, DropItem> dropItem = new HashMap<String, DropItem>();
+	private static Logger logger = Logger.getLogger(Map.class.getName());
+
+	public static Map get(int no) {
+		return maps.get(no);
+	}
+
+	public static Hashtable<Integer, Map> getAll() {
+		return maps;
+	}
+
+	public static void loadMap(int num) {
+		for (int i = 1; i <= num; i++) {
+			maps.put(i, new Map("./Map/MAP" + i + ".map"));
+		}
+
+		logger.info("맵 로드 완료.");
+	}
 
 	public Map(String fileName) {
 		random = new Random();
@@ -38,6 +54,7 @@ public class Map {
 		loadTroops();
 	}
 
+	// 맵 데이터 로드
 	private void loadMapData(String fileName) {
 		try {
 			FileReader fr = new FileReader(fileName);
@@ -62,6 +79,7 @@ public class Map {
 		}
 	}
 
+	// 에너미 로드
 	private void loadTroops() {
 		for (GameData.Troop troop : GameData.troop.values()) {
 			if (troop.getMap() == no) {
@@ -72,7 +90,7 @@ public class Map {
 						x += random.nextInt(troop.getRange());
 						y += random.nextInt(troop.getRange());
 					} while (!isPassable(null, x, y));
-					enemy.addElement(new Enemy(enemy.size(), x, y, troop.getResultSet()));
+					enemies.addElement(new Enemy(enemies.size(), x, y, troop.getResultSet()));
 				}
 				logger.info(no + "번 맵 에너미 등록 완료");
 			}
@@ -80,8 +98,7 @@ public class Map {
 	}
 	
 	private boolean isValid(int x, int y) {
-		int index = this.width * y + x;
-		return index >= 0 && (index < width * height);
+		return x >= 0 && y >= 0 && x < width && y < height;
 	}
 
 	public boolean isPassable(Character c, int x, int y) {
@@ -91,14 +108,14 @@ public class Map {
 		if (data[width * y + x] == 1)
 			return false;
 
-		for (User other : user) {
+		for (User other : users) {
 			if (other.equals(c))
 				continue;
 			if (other.getSeed() == (c == null ? 0 : c.getSeed()) && other.x == x && other.y == y)
 				return false;
 		}
 
-		for (Enemy other : enemy) {
+		for (Enemy other : getAliveEnemies()) {
 			if (other.equals(c))
 				continue;
 			if (other.getSeed() == (c == null ? 0 : c.getSeed()) && other.x == x && other.y == y)
@@ -119,11 +136,11 @@ public class Map {
 			else if (data[width * y + x] == 1)
 				blocked += 1;
 
-			for (User other : user)
+			for (User other : users)
 				if (other.getSeed() == c.getSeed() && other.x == x && other.y == y)
 					blocked += 1;
 
-			for (Enemy other : enemy)
+			for (Enemy other : enemies)
 				if (other.getSeed() == c.getSeed() && other.x == x && other.y == y)
 					blocked += 1;
 		}
@@ -132,51 +149,61 @@ public class Map {
 	}
 	
 	public void addUser(User u) {
-		for (User other : user) {
+		for (User other : users) {
 			if (other.getSeed() == u.getSeed()) {
 				other.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.USER, u));
 				u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.USER, other));
 			}
 		}
 
-		for (Enemy other : enemy) {
+		for (Enemy other : getAliveEnemies()) {
 			if (other.getSeed() == u.getSeed()) {
 				u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.ENEMY, other));
 			}
 		}
-		user.addElement(u);
+		users.addElement(u);
 	}
 	
 	public void removeUser(User u) {
-		for (User other : user) {
+		for (User other : users) {
 			if (other.equals(u) || other.getSeed() != u.getSeed())
 				continue;
 
 			other.getCtx().writeAndFlush(Packet.removeCharacter(Type.Character.USER, u.getName(), u.getNo()));
 		}
-		user.removeElement(u);
+		users.removeElement(u);
 	}
 
 	public void update() {
-		for (Enemy e : enemy) {
+		for (Enemy e : enemies) {
 			e.update();
 		}
 	}
 
+	public Vector<Enemy> getAliveEnemies() {
+		Vector<Enemy> aliveEnemies = new Vector<>();
+
+		for (Enemy enemy : enemies) {
+			if (enemy.isAlive())
+				aliveEnemies.addElement(enemy);
+		}
+
+		return aliveEnemies;
+	}
+
 	public void sendToAll(int seed, JSONObject msg) {
-		for (User other : user) {
+		for (User other : users) {
 			if (other.getSeed() == seed)
 				other.getCtx().writeAndFlush(msg);
 		}
 	}
 
 	public void sendToOthers(int no, int seed, JSONObject msg) {
-		for (User other : user) {
+		for (User other : users) {
 			if (other.getNo() == no || other.getSeed() != seed)
 				continue;
 
 			other.getCtx().writeAndFlush(msg);
 		}
 	}
-
 }

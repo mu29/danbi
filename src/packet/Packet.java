@@ -147,6 +147,27 @@ public final class Packet {
 
 		return packet;
 	}
+
+	public static JSONObject animationCharacter(int type, int no, int ani) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.ANIMATION_CHARACTER);
+		packet.put("type", type);
+		packet.put("no", no);
+		packet.put("ani", ani);
+
+		return packet;
+	}
+
+	public static JSONObject updateCharacter(int type, int no, int status, Object value) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.UPDATE_CHARACTER);
+		packet.put("type", type);
+		packet.put("no", no);
+		packet.put("status", status);
+		packet.put("value", value);
+
+		return packet;
+	}
 	
 	public static JSONObject openRegisterWindow() {
 		String[] image = new String[GameData.register.size()];
@@ -173,7 +194,7 @@ public final class Packet {
 		return packet;
 	}
 	
-	public static JSONObject setInventory(GameData.InventoryItem item) {
+	public static JSONObject setInventory(GameData.Item item) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.SET_INVENTORY);
 		packet.put("userNo", item.getUserNo());
@@ -199,7 +220,7 @@ public final class Packet {
 	}
 
 	// 삭제(0), 갯수(1)
-	public static JSONObject updateInventory(int type, GameData.InventoryItem item) {
+	public static JSONObject updateInventory(int type, GameData.Item item) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.UPDATE_INVENTORY);
 		packet.put("type", type);
@@ -219,6 +240,15 @@ public final class Packet {
 		packet.put("hit", item.getHit());
 		packet.put("reinforce", item.getReinforce());
 		packet.put("trade", item.isTradeable() ? 1 : 0);
+
+		return packet;
+	}
+
+	public static JSONObject setSkillList(GameData.Skill skill) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.SET_SKILL_LIST);
+		packet.put("no", skill.getNo());
+		packet.put("rank", skill.getRank());
 
 		return packet;
 	}

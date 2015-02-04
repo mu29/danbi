@@ -1,7 +1,5 @@
 package database;
 
-import network.Handler;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -11,7 +9,8 @@ public class GameData extends DataBase {
 
 	public static Hashtable<Integer, Job> job = new Hashtable<Integer, Job>();
 	public static Hashtable<Integer, Register> register = new Hashtable<Integer, Register>();
-	public static Hashtable<Integer, Item> item = new Hashtable<Integer, Item>();
+	public static Hashtable<Integer, ItemData> item = new Hashtable<Integer, ItemData>();
+	public static Hashtable<Integer, SkillData> skill = new Hashtable<Integer, SkillData>();
 	public static Hashtable<Integer, Troop> troop = new Hashtable<Integer, Troop>();
 	private static Logger logger = Logger.getLogger(GameData.class.getName());
 
@@ -30,13 +29,19 @@ public class GameData extends DataBase {
 		}
 		logger.info("가입 정보 로드 완료.");
 
-		rs = executeQuery("SELECT * FROM `item`;");
+		rs = executeQuery("SELECT * FROM `setting_item`;");
 		while (rs.next()) {
-			item.put(rs.getInt("no"), new Item(rs));
+			item.put(rs.getInt("no"), new ItemData(rs));
 		}
 		logger.info("아이템 정보 로드 완료.");
 
-		rs = executeQuery("SELECT * FROM `troop`;");
+		rs = executeQuery("SELECT * FROM `setting_skill`;");
+		while (rs.next()) {
+			skill.put(rs.getInt("no"), new SkillData(rs));
+		}
+		logger.info("스킬 정보 로드 완료.");
+
+		rs = executeQuery("SELECT * FROM `setting_troop`;");
 		while (rs.next()) {
 			troop.put(rs.getInt("no"), new Troop(rs));
 		}
@@ -138,14 +143,114 @@ public class GameData extends DataBase {
 		}
 		
 	}
+
+	public static class SkillData {
+		private int no;
+		private String name;
+		private String description;
+		private String type;
+		private int job;
+		private int delay;
+		private int limitLevel;
+		private int maxRank;
+		private int userAnimation;
+		private int targetAnimation;
+		private String image;
+		private String function;
+
+		public SkillData(ResultSet rs) {
+			try {
+				no = rs.getInt("no");
+				name = rs.getString("name");
+				description = rs.getString("description");
+				type = rs.getString("type");
+				job = rs.getInt("job");
+				delay = rs.getInt("delay");
+				limitLevel = rs.getInt("limit_level");
+				maxRank = rs.getInt("max_rank");
+				userAnimation = rs.getInt("user_animation");
+				targetAnimation = rs.getInt("target_animation");
+				image = rs.getString("image");
+				function = rs.getString("function");
+			} catch (SQLException e) {
+				logger.warning(e.getMessage());
+			}
+		}
+
+		public int getNo() {
+			return no;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public int getJob() {
+			return job;
+		}
+
+		public int getDelay() {
+			return delay;
+		}
+
+		public int getLimitLevel() {
+			return limitLevel;
+		}
+
+		public int getMaxRank() {
+			return maxRank;
+		}
+
+		public int getUserAnimation() {
+			return userAnimation;
+		}
+
+		public int getTargetAnimation() {
+			return targetAnimation;
+		}
+
+		public String getImage() {
+			return image;
+		}
+
+		public String getFunction() {
+			return function;
+		}
+	}
+
+	public static class Skill {
+		private int no;
+		private int rank;
+
+		public Skill(int _no) {
+			no = _no;
+			rank = 1;
+		}
+
+		public int getNo() {
+			return no;
+		}
+
+		public int getRank() {
+			return rank;
+		}
+	}
 	
-	public static class Item {
+	public static class ItemData {
 		private int no;
 		private String name;
 		private String description;
 		private String image;
 		private int job;
-		private int level;
+		private int limitLevel;
 		private int type;
 		private int price;
 		private int damage;
@@ -166,14 +271,14 @@ public class GameData extends DataBase {
 		private boolean trade;
 		private String function;
 		
-		public Item(ResultSet rs) {
+		public ItemData(ResultSet rs) {
 			try {
 				no = rs.getInt("no");
 				name = rs.getString("name");
 				description = rs.getString("description");
 				image = rs.getString("image");
 				job = rs.getInt("job");
-				level = rs.getInt("level");
+				limitLevel = rs.getInt("limit_level");
 				type = rs.getInt("type");
 				price = rs.getInt("price");
 				damage = rs.getInt("damage");
@@ -218,8 +323,8 @@ public class GameData extends DataBase {
 			return job;
 		}
 		
-		public int getLevel() {
-			return level;
+		public int getLimitLevel() {
+			return limitLevel;
 		}
 		
 		public int getType() {
@@ -293,9 +398,13 @@ public class GameData extends DataBase {
 		public boolean isTradeable() {
 			return trade;
 		}
+
+		public String getFunction() {
+			return function;
+		}
 	}
 	
-	public static class InventoryItem {
+	public static class Item {
 		private int userNo;
 		private int itemNo;
 		private int amount;
@@ -315,7 +424,28 @@ public class GameData extends DataBase {
 		private int reinforce;
 		private boolean trade;
 
-		public InventoryItem(ResultSet rs) {
+		public Item(int _userNo, int _itemNo, int _amount, int _index, int _trade) {
+			userNo = _userNo;
+			itemNo = _itemNo;
+			amount = _amount > GameData.item.get(itemNo).getMaxLoad() ? GameData.item.get(itemNo).getMaxLoad() : amount;
+			index = _index;
+			damage = 0;
+			magicDamage = 0;
+			defense = 0;
+			magicDefense = 0;
+			str = 0;
+			dex = 0;
+			agi = 0;
+			hp = 0;
+			mp = 0;
+			critical = 0;
+			avoid = 0;
+			hit = 0;
+			reinforce = 0;
+			trade = _trade == 1;
+		}
+
+		public Item(ResultSet rs) {
 			try {
 				userNo = rs.getInt("user_no");
 				itemNo = rs.getInt("item_no");
@@ -338,50 +468,6 @@ public class GameData extends DataBase {
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
 			}
-		}
-		
-		public InventoryItem(int _userNo, int _itemNo, int _amount, int _index, int _trade) {
-			userNo = _userNo;
-			itemNo = _itemNo;
-			amount = _amount > GameData.item.get(itemNo).getMaxLoad() ? GameData.item.get(itemNo).getMaxLoad() : amount;
-			index = _index;
-			damage = 0;
-			magicDamage = 0;
-			defense = 0;
-			magicDefense = 0;
-			str = 0;
-			dex = 0;
-			agi = 0;
-			hp = 0;
-			mp = 0;
-			critical = 0;
-			avoid = 0;
-			hit = 0;
-			reinforce = 0;
-			trade = _trade == 1;
-		}
-
-		public InventoryItem(int _userNo, int _itemNo, int _amount, int _index, int _damage, int _magicDamage, int _defense,
-							 int _magicDefense, int _str, int _dex, int _agi, int _hp, int _mp, int _critical, int _avoid, int _hit,
-							 int _reinforce, int _trade) {
-			userNo = _userNo;
-			itemNo = _itemNo;
-			amount = _amount;
-			index = _index;
-			damage = _damage;
-			magicDamage = _magicDamage;
-			defense = _defense;
-			magicDefense = _magicDefense;
-			str = _str;
-			dex = _dex;
-			agi = _agi;
-			hp = _hp;
-			mp = _mp;
-			critical = _critical;
-			avoid = _avoid;
-			hit = _hit;
-			reinforce = _reinforce;
-			trade = _trade == 1;
 		}
 
 		public int getUserNo() {

@@ -20,8 +20,6 @@ import database.GameData;
 
 public final class Handler extends ChannelInboundHandlerAdapter {
 
-	public static Hashtable<ChannelHandlerContext, User>  user = new Hashtable<ChannelHandlerContext, User>();
-	public static Hashtable<Integer, Map> map = new Hashtable<Integer, Map>();
 	public static boolean isRunning = true;
     private static Logger logger = Logger.getLogger(Handler.class.getName());
     
@@ -36,22 +34,31 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 	    		register(ctx, packet);
 				break;
 			case CTSHeader.MOVE_CHARACTER:
-				user.get(ctx).move((int) packet.get("type"));
+				User.get(ctx).move((int) packet.get("type"));
 				break;
 			case CTSHeader.TURN_CHARACTER:
-				user.get(ctx).turn((int) packet.get("type"));
+				User.get(ctx).turn((int) packet.get("type"));
 				break;
 	    	case CTSHeader.REMOVE_EQUIP_ITEM:
-				user.get(ctx).equipItem((int) packet.get("type"), 0);
+				User.get(ctx).equipItem((int) packet.get("type"), 0);
 				break;
 	    	case CTSHeader.USE_STAT_POINT:
-				user.get(ctx).useStatPoint((int) packet.get("type"));
+				User.get(ctx).useStatPoint((int) packet.get("type"));
+				break;
+			case CTSHeader.ACTION:
+				User.get(ctx).action();
+				break;
+			case CTSHeader.USE_ITEM:
+				User.get(ctx).useItemByIndex((int) packet.get("index"), (int) packet.get("amount"));
+				break;
+			case CTSHeader.USE_SKILL:
+				User.get(ctx).useSkill((int) packet.get("no"));
 				break;
 	    	case CTSHeader.OPEN_REGISTER_WINDOW:
 				ctx.writeAndFlush(Packet.openRegisterWindow());
 				break;
 	    	case CTSHeader.CHANGE_ITEM_INDEX:
-				changeItemIndex(ctx, packet);
+				User.get(ctx).changeItemIndex((int) packet.get("index1"), (int) packet.get("index2"));
 				break;
     	}
     }
@@ -64,17 +71,17 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     		return;
 
 		try {
-			ResultSet rs = DataBase.executeQuery("SELECT * FROM `user` WHERE `id` = '" + readID + "';");
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `User` WHERE `id` = '" + readID + "';");
  
 	    	if (rs.next()) {
 	    		if (readPass.equals(rs.getString("pass"))) {
-	    			user.put(ctx, new User(ctx, rs));
+	    			User.put(ctx, new User(ctx, rs));
 	    			
-	    			User u = user.get(ctx);
+	    			User u = User.get(ctx);
 	    			u.loadData();
 	    			
 	    			ctx.writeAndFlush(Packet.loginMessage(u));
-	    	    	map.get(u.getMap()).addUser(u);
+	    	    	Map.get(u.getMap()).addUser(u);
 	    		} else {
 	    			ctx.writeAndFlush(Packet.loginMessage(1));
 	    		}
@@ -101,12 +108,12 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			return;
 
 		try {
-			ResultSet checkID = DataBase.executeQuery("SELECT * FROM `user` WHERE `id` = '" + readID + "';");
+			ResultSet checkID = DataBase.executeQuery("SELECT * FROM `User` WHERE `id` = '" + readID + "';");
 	    	if (checkID.next()) {
 	    		ctx.writeAndFlush(Packet.registerMessage(1));
 	    		return;
 	    	}
-	    	ResultSet checkName = DataBase.executeQuery("SELECT * FROM `user` WHERE `name` = '" + readName + "';");
+	    	ResultSet checkName = DataBase.executeQuery("SELECT * FROM `User` WHERE `name` = '" + readName + "';");
 	    	if (checkName.next()) {
 	    		ctx.writeAndFlush(Packet.registerMessage(2));
 	    		return;
@@ -120,23 +127,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     	DataBase.insertUser(readID, readPass, readName, readMail, r.getImage(), r.getJob(), r.getMap(), r.getX(), r.getY(), r.getLevel());
     	ctx.writeAndFlush(Packet.registerMessage(0));
     }
-
-	void changeItemIndex(ChannelHandlerContext ctx, JSONObject packet) {
-		switch ((int) packet.get("type")) {
-			case 0:
-				// 아이템
-				user.get(ctx).changeItemIndex((int) packet.get("index1"), (int) packet.get("index2"));
-				break;
-		}
-	}
-    
-    public static void loadMap(int num) {
-    	for (int i = 1; i <= num; i++) {
-			map.put(i, new Map("./Map/MAP" + i + ".map"));
-		}
-    	
-		logger.info("맵 로드 완료.");
-    }
     
     @Override
 	public void channelRegistered (ChannelHandlerContext ctx) {
@@ -145,9 +135,9 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     
     @Override
 	public void channelUnregistered (ChannelHandlerContext ctx) throws SQLException {
-    	if (user.containsKey(ctx)) {
-    		DataBase.updateUser(user.get(ctx));
-    		user.remove(ctx);
+    	if (User.getAll().containsKey(ctx)) {
+    		DataBase.updateUser(User.get(ctx));
+    		User.remove(ctx);
     	}
     	logger.info(ctx.channel().toString() + " Unregistered.");
     }

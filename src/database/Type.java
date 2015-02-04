@@ -9,6 +9,18 @@ public class Type {
 
     public static class Enemy {
         public static final int PRACTICE = 0;
+        public static final int PACIFISM = 1;
+        public static final int CAUTIOUS = 2;
+        public static final int PROTECTIVE = 3;
+        public static final int AGGRESSIVE = 4;
+        public static final int UNBEATABLE = 5;
+        public static final int TRAP = 6;
+    }
+
+    public static class Team {
+        public static final int NORMAL = 0;
+        public static final int NAMED = 1;
+        public static final int BOSS = 2;
     }
 
     public static class Direction {

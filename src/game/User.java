@@ -12,8 +12,8 @@ import packet.Packet;
 import database.*;
 
 public class User extends Character {
-	
-	private Logger logger = Logger.getLogger(User.class.getName());
+	private static Hashtable<ChannelHandlerContext, User> users = new Hashtable<ChannelHandlerContext, User>();
+
 	private ChannelHandlerContext ctx;
 	private String id;
 	private String pass;
@@ -37,9 +37,39 @@ public class User extends Character {
 	private int accessory = 0;
 
 	private int maxInventory = 35;
-	
-	private Hashtable<Integer, GameData.InventoryItem> inventory = new Hashtable<Integer, GameData.InventoryItem>();
-	
+
+	private Hashtable<Integer, GameData.Item> inventory = new Hashtable<Integer, GameData.Item>();
+	private Hashtable<Integer, GameData.Skill> skillList  = new Hashtable<Integer, GameData.Skill>();
+
+	private static Logger logger = Logger.getLogger(User.class.getName());
+
+	public static User get(ChannelHandlerContext ctx) {
+		if (!users.containsKey(ctx))
+			return null;
+
+		return users.get(ctx);
+	}
+
+	public static Hashtable<ChannelHandlerContext, User> getAll() {
+		return users;
+	}
+
+	public static boolean put(ChannelHandlerContext ctx, User user) {
+		if (users.containsKey(ctx))
+			return false;
+
+		users.put(ctx, user);
+		return true;
+	}
+
+	public static boolean remove(ChannelHandlerContext ctx) {
+		if (!users.containsKey(ctx))
+			return false;
+
+		users.remove(ctx);
+		return true;
+	}
+
 	public User(ChannelHandlerContext ct, ResultSet rs) {
 		try {
 			ctx = ct;
@@ -92,9 +122,10 @@ public class User extends Character {
 		return title;
 	}
 
-	public void setTitle(int t) {
-		title = t;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.TITLE, t));
+	public void setTitle(int _title) {
+		title = _title;
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.TITLE, title));
+		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.TITLE, title));
 	}
 	
 	public String getGuild() {
@@ -105,18 +136,20 @@ public class User extends Character {
 		return mail;
 	}
 
-	public void setImage(String i) {
-		image = i;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.IMAGE, i));
+	public void setImage(String _image) {
+		image = _image;
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.IMAGE, image));
+		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.IMAGE, image));
 	}
 	
 	public int getJob() {
 		return job;
 	}
 
-	public void setJob(int j) {
-		job = j;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.JOB, j));
+	public void setJob(int _job) {
+		job = _job;
+		ctx.writeAndFlush(Packet.updateStatus(Type.Status.JOB, job));
+		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.JOB, job));
 	}
 	
 	public int getStr() {
@@ -247,22 +280,25 @@ public class User extends Character {
 	}
 
 	public void gainHp(int value) {
+		// 최대 HP 이상인 경우 보정
 		if (hp + value > getMaxHp())
 			value = getMaxHp() - hp;
 
 		hp += value;
 		ctx.writeAndFlush(Packet.updateStatus(Type.Status.HP, hp));
+		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.HP, hp));
 	}
 
 	public void loseHp(int value) {
+		gainHp(-value);
+
 		if (hp - value < 0) {
 			// 쥬금
 			return;
 		}
-
-		gainHp(-value);
 	}
-	
+
+	// 최대 HP
 	public int getMaxHp() {
 		int n = 0;
 		// 직업 기본 Hp
@@ -301,6 +337,7 @@ public class User extends Character {
 	}
 
 	public void gainMp(int value) {
+		// 최대 MP 이상인 경우 보정
 		if (mp + value > getMaxMp())
 			value = getMaxMp() - mp;
 
@@ -315,7 +352,8 @@ public class User extends Character {
 		gainMp(-value);
 		return true;
 	}
-	
+
+	// 최대 MP
 	public int getMaxMp() {
 		int n = 0;
 		// 직업 기본 Mp
@@ -352,7 +390,8 @@ public class User extends Character {
 		
 		return n;
 	}
-	
+
+	// 치명타율
 	public int getCritical() {
 		int n = 0;
 		// 아이템으로 오르는 Critical
@@ -387,7 +426,8 @@ public class User extends Character {
 		
 		return n;
 	}
-	
+
+	// 회피율
 	public int getAvoid() {
 		int n = 0;
 		// 아이템으로 오르는 Avoid
@@ -422,7 +462,8 @@ public class User extends Character {
 
 		return n;
 	}
-	
+
+	// 명중률
 	public int getHit() {
 		int n = 0;
 		// 아이템으로 오르는 Hit
@@ -459,6 +500,7 @@ public class User extends Character {
 		return n;
 	}
 
+	// 물리 데미지
 	public int getDamage() {
 		int n = 0;
 		// 아이템으로 오르는 Damage
@@ -494,6 +536,7 @@ public class User extends Character {
 		return n;
 	}
 
+	// 마법 데미지
 	public int getMagicDamage() {
 		int n = 0;
 		// 아이템으로 오르는 MagicDamage
@@ -529,6 +572,7 @@ public class User extends Character {
 		return n;
 	}
 
+	// 물리 방어력
 	public int getDefense() {
 		int n = 0;
 		// 아이템으로 오르는 Defense
@@ -564,6 +608,7 @@ public class User extends Character {
 		return n;
 	}
 
+	// 마법 방어력
 	public int getMagicDefense() {
 		int n = 0;
 		// 아이템으로 오르는 MagicDefense
@@ -599,7 +644,9 @@ public class User extends Character {
 		return n;
 	}
 
+	// 필요 경험치
 	public int getMaxExp() {
+		// 필요 경험치 계산식
 		int n = 0;
 		n += level * level * 10;
 
@@ -620,6 +667,9 @@ public class User extends Character {
 			ctx.write(Packet.updateStatus(Type.Status.STAT_POINT, statPoint));
 			ctx.write(Packet.updateStatus(Type.Status.SKILL_POINT, skillPoint));
 			ctx.write(Packet.updateStatus(Type.Status.MAX_EXP, getMaxExp()));
+
+			Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.LEVEL, level));
+			Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.MAX_HP, getMaxHp()));
 		}
 
 		ctx.writeAndFlush(Packet.updateStatus(Type.Status.EXP, exp));
@@ -693,6 +743,7 @@ public class User extends Character {
 	public void loadData() {
 		loadEquipItem();
 		loadInventory();
+		loadSkillList();
 	}
 	
 	// 장착한 아이템 불러오기
@@ -721,18 +772,35 @@ public class User extends Character {
 	// 인벤토리 불러오기
 	public void loadInventory() {
 		try {
-			ResultSet rs = DataBase.executeQuery("SELECT * FROM `inventory` WHERE `user_no` = '" + no + "';");
-    	
-	    	while (rs.next()) {
-	    		inventory.put(rs.getInt("index"), new GameData.InventoryItem(rs));
-	    		ctx.writeAndFlush(Packet.setInventory(inventory.get(rs.getInt("index"))));
-	    	}
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `item` WHERE `user_no` = '" + no + "';");
+
+			while (rs.next()) {
+				inventory.put(rs.getInt("index"), new GameData.Item(rs));
+				ctx.writeAndFlush(Packet.setInventory(inventory.get(rs.getInt("index"))));
+			}
 
 			rs.close();
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}
-		
+
+	}
+
+	// 스킬 불러오기
+	public void loadSkillList() {
+		try {
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `skill` WHERE `user_no` = '" + no + "';");
+
+			while (rs.next()) {
+				skillList.put(rs.getInt("no"), new GameData.Skill(rs.getInt("no")));
+				ctx.writeAndFlush(Packet.setSkillList(skillList.get(rs.getInt("no"))));
+			}
+
+			rs.close();
+		} catch (SQLException e) {
+			logger.warning(e.toString());
+		}
+
 	}
 	
 	// 아이템 장착
@@ -760,12 +828,16 @@ public class User extends Character {
 			accessory = index;
 			break;
 		}
+
+		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.MAX_HP, getMaxHp()));
 	}
-	
+
+	// 스텟 포인트 사용
 	public void useStatPoint(int stat) {
 		if (statPoint <= 0)
 			return;
-		
+
+		// 올릴 수 있는 스텟만 올리고
 		switch (stat) {
 			case Type.Status.STR:
 				pureStr++;
@@ -783,16 +855,17 @@ public class User extends Character {
 				return;
 		}
 
+		// 스포 하나 까자
 		statPoint--;
 		ctx.writeAndFlush(Packet.updateStatus(Type.Status.STAT_POINT, statPoint));
 	}
 
-	// NPC로부터 아이템 획득 (번호만으로 아이템 획득)
+	// NPC로부터 아이템 획득 (아이템 번호로 아이템 획득)
 	public boolean gainItem(int itemNo, int num) {
 		int gap = 0;
 		int index = getEmptyIndex();
-		GameData.Item i = GameData.item.get(itemNo);
-		GameData.InventoryItem item = findLazyItemByNo(itemNo);
+		GameData.ItemData i = GameData.item.get(itemNo);
+		GameData.Item item = findLazyItemByNo(itemNo);
 
 		// 이미 있던 아이템일 경우 채워줌
 		if (item != null) {
@@ -807,7 +880,8 @@ public class User extends Character {
 				// 나머지 아이템 드랍
 				return false;
 			}
-			inventory.put(index, new GameData.InventoryItem(no, itemNo, num, index, i.isTradeable() ? 1 : 0));
+			// 계속해서 아이템 채우자
+			inventory.put(index, new GameData.Item(no, itemNo, num, index, i.isTradeable() ? 1 : 0));
 			ctx.writeAndFlush(Packet.setInventory(inventory.get(index)));
 			index = getEmptyIndex();
 			num -= i.getMaxLoad();
@@ -816,23 +890,28 @@ public class User extends Character {
 		return true;
 	}
 
+	// 아이템 No로 아이템 잃음 (퀘스트 등)
 	public boolean loseItemByNo(int itemNo, int num) {
 		if (itemNo <= 0 || num <= 0)
 			return false;
 		
 		int gap = 0;
-		GameData.InventoryItem i = findItemByNo(itemNo);
+		GameData.Item i = findItemByNo(itemNo);
 
+		// 아이템이 없거나 잃을 갯수가 더 많은 경우
 		if (i == null || getTotalItemAmount(i.getItemNo()) < num)
 			return false;
 
+		// 모든 아이템을 잃을 때까지 반복
 		do {
 			gap = num - i.getAmount();
 			i.changeAmount(-num);
 			if (i.getAmount() == 0) {
+				// 아이템 삭제
 				inventory.remove(i.getIndex());
 				ctx.writeAndFlush(Packet.updateInventory(0, i));
 			} else {
+				// 아이템 갯수 업데이트
 				ctx.writeAndFlush(Packet.updateInventory(1, i));
 			}
 			num = gap;
@@ -841,17 +920,21 @@ public class User extends Character {
 		return true;
 	}
 
+	// Index로 아이템 잃음 (직접 드랍하는 경우)
 	public boolean loseItemByIndex(int index, int num) {
-		GameData.InventoryItem i = findItemByIndex(index);
+		GameData.Item i = findItemByIndex(index);
 
+		// 아이템이 없거나 잃을 갯수가 더 많은 경우
 		if (i == null || i.getAmount() < num)
 			return false;
 
 		i.changeAmount(-num);
 		if (i.getAmount() == 0) {
+			// 아이템 삭제
 			inventory.remove(i.getIndex());
 			ctx.writeAndFlush(Packet.updateInventory(0, i));
 		} else {
+			// 아이템 갯수 업데이트
 			ctx.writeAndFlush(Packet.updateInventory(1, i));
 		}
 
@@ -871,7 +954,7 @@ public class User extends Character {
 	// 가지고 있는 아이템 총량을 획득
 	public int getTotalItemAmount(int no) {
 		int num = 0;
-		for (GameData.InventoryItem item : inventory.values()) {
+		for (GameData.Item item : inventory.values()) {
 			if (item.getItemNo() == no)
 				num += item.getAmount();
 		}
@@ -880,7 +963,7 @@ public class User extends Character {
 	}
 	
 	// Index로 아이템 검색
-	public GameData.InventoryItem findItemByIndex(int index) {
+	public GameData.Item findItemByIndex(int index) {
 		if (!inventory.containsKey(index))
 			return null;
 		
@@ -888,8 +971,8 @@ public class User extends Character {
 	}
 
 	// No로 아이템 검색
-	public GameData.InventoryItem findItemByNo(int no) {
-		for (GameData.InventoryItem item : inventory.values()) {
+	public GameData.Item findItemByNo(int no) {
+		for (GameData.Item item : inventory.values()) {
 			if (item.getItemNo() == no)
 				return item;
 		}
@@ -897,9 +980,10 @@ public class User extends Character {
 		return null;
 	}
 
-	// No로 아이템 검색
-	public GameData.InventoryItem findLazyItemByNo(int no) {
-		for (GameData.InventoryItem item : inventory.values()) {
+	// No로 여유 있는 아이템 검색
+	public GameData.Item findLazyItemByNo(int no) {
+		for (GameData.Item item : inventory.values()) {
+			// 아이템이 꽉 찬 경우가 아니라면
 			if (item.getItemNo() == no && item.getAmount() < GameData.item.get(item.getItemNo()).getMaxLoad())
 				return item;
 		}
@@ -907,14 +991,17 @@ public class User extends Character {
 		return null;
 	}
 
+	// 아이템 인덱스 변경
 	public void changeItemIndex(int index1, int index2) {
-		if (!inventory.containsKey(index1))
+		GameData.Item presentItem = findItemByIndex(index1);
+		GameData.Item targetItem = findItemByIndex(index2);
+
+		// 아이템이 없으면 반환
+		if (presentItem == null)
 			return;
 
-		GameData.InventoryItem presentItem = inventory.get(index1);
-		GameData.InventoryItem targetItem;
-		if (inventory.containsKey(index2)) {
-			targetItem = inventory.get(index2);
+		if (targetItem != null) {
+			// 아이템 간 인덱스 변경
 			inventory.remove(index1);
 			inventory.remove(index2);
 			presentItem.setIndex(index2);
@@ -925,6 +1012,7 @@ public class User extends Character {
 			ctx.write(Packet.setInventory(presentItem));
 			ctx.writeAndFlush(Packet.setInventory(targetItem));
 		} else {
+			// 빈 곳으로 아이템 이동
 			ctx.write(Packet.updateInventory(0, presentItem));
 			inventory.remove(index1);
 			presentItem.setIndex(index2);
@@ -934,51 +1022,178 @@ public class User extends Character {
 
 	}
 
+	// Index로 아이템 사용
+	public boolean useItemByIndex(int index, int amount) {
+		GameData.Item item = findItemByIndex(index);
+
+		// 아이템이 없으면 반환
+		if (item == null)
+			return false;
+
+		// 갯수가 적으면 반환
+		if (item.getAmount() < amount)
+			return false;
+
+		// 소모품이면 아이템 잃음
+		if (GameData.item.get(item.getItemNo()).isConsumable())
+			loseItemByIndex(index, amount);
+
+		// 함수가 있을 경우 실행
+		String function = GameData.item.get(item.getItemNo()).getFunction();
+		if (function != "")
+			Functions.execute(Functions.item, function, new Object[] { this, item });
+
+		return true;
+	}
+
+	// No로 아이템 사용
+	public boolean useItemByNo(int no, int amount) {
+		GameData.Item item = findItemByNo(no);
+
+		// 아이템이 없으면 반환
+		if (item == null)
+			return false;
+
+		// 갯수가 적으면 반환
+		if (item.getAmount() < amount)
+			return false;
+
+		// 소모품이면 아이템 잃음
+		if (GameData.item.get(item.getItemNo()).isConsumable())
+			loseItemByNo(no, amount);
+
+		// 함수가 있을 경우 실행
+		String function = GameData.item.get(item.getItemNo()).getFunction();
+		if (function != "")
+			Functions.execute(Functions.item, function, new Object[] { this, item });
+
+		return true;
+	}
+
+	// No로 스킬 검색
+	public GameData.Skill findSkillByNo(int no) {
+		if (!skillList.containsKey(no))
+			return null;
+
+		return skillList.get(no);
+	}
+
+	// 스킬 배우기
+	public boolean studySkill(int no) {
+		if (skillList.containsKey(no))
+			return false;
+
+		skillList.put(no, new GameData.Skill(no));
+		return true;
+	}
+
+	// 스킬 지우기
+	public boolean forgetSkill(int no) {
+		if (!skillList.containsKey(no))
+			return false;
+
+		skillList.remove(no);
+		return true;
+	}
+
+	// No로 스킬 사용
+	public boolean useSkill(int no) {
+		GameData.Skill skill = findSkillByNo(no);
+
+		if (skill == null)
+			return false;
+
+		// 함수가 있을 경우 실행
+		String function = GameData.skill.get(skill.getNo()).getFunction();
+		if (function != "")
+			Functions.execute(Functions.skill, function, new Object[] { this, skill });
+
+		return true;
+	}
+
+	// 스페이스바 누를 경우 액션
+	public void action() {
+		int new_x = x + (direction == 6 ? 1 : direction == 4 ? -1 : 0);
+		int new_y = y + (direction == 2 ? 1 : direction == 8 ? -1 : 0);
+
+		// 에너미가 있을 경우 공격하고 반환
+		for (Enemy enemy : Map.get(map).getAliveEnemies()) {
+			if (enemy.getX() == new_x && enemy.getY() == new_y) {
+				assault(enemy);
+				return;
+			}
+		}
+	}
+
+	// 적 공격
+	public void assault(Character target) {
+		Map.get(map).sendToAll(seed, Packet.jumpCharacter(Type.Character.USER, no, x, y));
+		Map.get(map).sendToAll(seed, Packet.animationCharacter(Type.Character.ENEMY, target.getNo(), 8));
+
+		// 실 데미지를 계산
+		int attackDamage = (getDamage() - target.getDefense()) *  (getDamage() - target.getDefense());
+		if (target.getClass().getName().equals("game.Enemy")) {
+			// 타겟이 에너미인 경우
+			Enemy e = (Enemy) target;
+			e.loseHp(attackDamage);
+		} else if (target.getClass().getName().equals("game.User")) {
+			// 타겟이 유저인 경우
+			User u = (User) target;
+			u.loseHp(attackDamage);
+		}
+	}
+
+	public void update() {
+
+	}
+
+	// 방향 전환
 	public void turn(int type) {
 		switch (type) {
-			case 2:
+			case Type.Direction.DOWN:
 				turnDown();
 				break;
-			case 4:
+			case Type.Direction.LEFT:
 				turnLeft();
 				break;
-			case 6:
+			case Type.Direction.RIGHT:
 				turnRight();
 				break;
-			case 8:
+			case Type.Direction.UP:
 				turnUp();
 				break;
 		}
 	}
 
 	private void turnUp() {
-		Map gameMap = Handler.map.get(map);
+		Map gameMap = Map.get(map);
 		direction = Type.Direction.UP;
 
 		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
 	}
 
 	private void turnDown() {
-		Map gameMap = Handler.map.get(map);
+		Map gameMap = Map.get(map);
 		direction = Type.Direction.DOWN;
 
 		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
 	}
 
 	private void turnLeft() {
-		Map gameMap = Handler.map.get(map);
+		Map gameMap = Map.get(map);
 		direction = Type.Direction.LEFT;
 
 		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
 	}
 
 	private void turnRight() {
-		Map gameMap = Handler.map.get(map);
+		Map gameMap = Map.get(map);
 		direction = Type.Direction.RIGHT;
 
 		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
 	}
 
+	// 좌표 이동
 	public void move(int type) {
 		switch (type) {
 			case 2:
@@ -997,7 +1212,7 @@ public class User extends Character {
 	}
 
 	private void moveUp() {
-		Map gameMap = Handler.map.get(map);
+		Map gameMap = Map.get(map);
 		direction = Type.Direction.UP;
 
 		if (gameMap.isPassable(this, x, y - 1)) {
@@ -1009,7 +1224,7 @@ public class User extends Character {
 	}
 
 	private void moveDown() {
-		Map gameMap = Handler.map.get(map);
+		Map gameMap = Map.get(map);
 		direction = Type.Direction.DOWN;
 
 		if (gameMap.isPassable(this, x, y + 1)) {
@@ -1021,7 +1236,7 @@ public class User extends Character {
 	}
 
 	private void moveLeft() {
-		Map gameMap = Handler.map.get(map);
+		Map gameMap = Map.get(map);
 		direction = Type.Direction.LEFT;
 
 		if (gameMap.isPassable(this, x - 1, y)) {
@@ -1033,7 +1248,8 @@ public class User extends Character {
 	}
 
 	private void moveRight() {
-		Map gameMap = Handler.map.get(map);
+		studySkill(1);
+		Map gameMap = Map.get(map);
 		direction = Type.Direction.RIGHT;
 
 		if (gameMap.isPassable(this, x + 1, y)) {
