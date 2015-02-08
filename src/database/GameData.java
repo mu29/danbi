@@ -3,6 +3,7 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 public class GameData extends DataBase {
@@ -12,6 +13,8 @@ public class GameData extends DataBase {
 	public static Hashtable<Integer, ItemData> item = new Hashtable<Integer, ItemData>();
 	public static Hashtable<Integer, SkillData> skill = new Hashtable<Integer, SkillData>();
 	public static Hashtable<Integer, Troop> troop = new Hashtable<Integer, Troop>();
+	public static Vector<Reward> reward = new Vector<Reward>();
+	public static Hashtable<Integer, NPC> npc = new Hashtable<Integer, NPC>();
 	private static Logger logger = Logger.getLogger(GameData.class.getName());
 
 	public static void loadSettings() throws SQLException {
@@ -40,6 +43,18 @@ public class GameData extends DataBase {
 			skill.put(rs.getInt("no"), new SkillData(rs));
 		}
 		logger.info("스킬 정보 로드 완료.");
+
+		rs = executeQuery("SELECT * FROM `setting_npc`;");
+		while (rs.next()) {
+			npc.put(rs.getInt("no"), new NPC(rs));
+		}
+		logger.info("NPC 정보 로드 완료.");
+
+		rs = executeQuery("SELECT * FROM `setting_reward`;");
+		while (rs.next()) {
+			reward.addElement(new Reward(rs));
+		}
+		logger.info("보상 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_troop`;");
 		while (rs.next()) {
@@ -142,106 +157,6 @@ public class GameData extends DataBase {
 			return level;
 		}
 		
-	}
-
-	public static class SkillData {
-		private int no;
-		private String name;
-		private String description;
-		private String type;
-		private int job;
-		private int delay;
-		private int limitLevel;
-		private int maxRank;
-		private int userAnimation;
-		private int targetAnimation;
-		private String image;
-		private String function;
-
-		public SkillData(ResultSet rs) {
-			try {
-				no = rs.getInt("no");
-				name = rs.getString("name");
-				description = rs.getString("description");
-				type = rs.getString("type");
-				job = rs.getInt("job");
-				delay = rs.getInt("delay");
-				limitLevel = rs.getInt("limit_level");
-				maxRank = rs.getInt("max_rank");
-				userAnimation = rs.getInt("user_animation");
-				targetAnimation = rs.getInt("target_animation");
-				image = rs.getString("image");
-				function = rs.getString("function");
-			} catch (SQLException e) {
-				logger.warning(e.getMessage());
-			}
-		}
-
-		public int getNo() {
-			return no;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public int getJob() {
-			return job;
-		}
-
-		public int getDelay() {
-			return delay;
-		}
-
-		public int getLimitLevel() {
-			return limitLevel;
-		}
-
-		public int getMaxRank() {
-			return maxRank;
-		}
-
-		public int getUserAnimation() {
-			return userAnimation;
-		}
-
-		public int getTargetAnimation() {
-			return targetAnimation;
-		}
-
-		public String getImage() {
-			return image;
-		}
-
-		public String getFunction() {
-			return function;
-		}
-	}
-
-	public static class Skill {
-		private int no;
-		private int rank;
-
-		public Skill(int _no) {
-			no = _no;
-			rank = 1;
-		}
-
-		public int getNo() {
-			return no;
-		}
-
-		public int getRank() {
-			return rank;
-		}
 	}
 	
 	public static class ItemData {
@@ -557,29 +472,173 @@ public class GameData extends DataBase {
 		}
 	}
 
-	public static class Troop {
-		private int num;
-		private int range;
-		private int map;
-		private int x;
-		private int y;
-		private ResultSet resultSet;
+	public static class SkillData {
+		private int no;
+		private String name;
+		private String description;
+		private String type;
+		private int job;
+		private int delay;
+		private int limitLevel;
+		private int maxRank;
+		private int userAnimation;
+		private int targetAnimation;
+		private String image;
+		private String function;
 
-		public Troop(ResultSet rs) {
+		public SkillData(ResultSet rs) {
 			try {
-				num = rs.getInt("num");
-				range = rs.getInt("range");
-				map = rs.getInt("map");
-				x = rs.getInt("x");
-				y = rs.getInt("y");
-				resultSet = rs;
+				no = rs.getInt("no");
+				name = rs.getString("name");
+				description = rs.getString("description");
+				type = rs.getString("type");
+				job = rs.getInt("job");
+				delay = rs.getInt("delay");
+				limitLevel = rs.getInt("limit_level");
+				maxRank = rs.getInt("max_rank");
+				userAnimation = rs.getInt("user_animation");
+				targetAnimation = rs.getInt("target_animation");
+				image = rs.getString("image");
+				function = rs.getString("function");
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
 			}
 		}
 
-		public ResultSet getResultSet() {
-			return resultSet;
+		public int getNo() {
+			return no;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public int getJob() {
+			return job;
+		}
+
+		public int getDelay() {
+			return delay;
+		}
+
+		public int getLimitLevel() {
+			return limitLevel;
+		}
+
+		public int getMaxRank() {
+			return maxRank;
+		}
+
+		public int getUserAnimation() {
+			return userAnimation;
+		}
+
+		public int getTargetAnimation() {
+			return targetAnimation;
+		}
+
+		public String getImage() {
+			return image;
+		}
+
+		public String getFunction() {
+			return function;
+		}
+	}
+
+	public static class Skill {
+		private int no;
+		private int rank;
+
+		public Skill(int _no) {
+			no = _no;
+			rank = 1;
+		}
+
+		public int getNo() {
+			return no;
+		}
+
+		public int getRank() {
+			return rank;
+		}
+	}
+
+	public static class Troop {
+		private String name;
+		private int num;
+		private String image;
+		private int type;
+		private int team;
+		private int range;
+		private int hp;
+		private int mp;
+		private int attackAnimation;
+		private int damage;
+		private int magicDamage;
+		private int defense;
+		private int magicDefense;
+		private int critical;
+		private int avoid;
+		private int hit;
+		private int moveSpeed;
+		private int attackSpeed;
+		private int map;
+		private int x;
+		private int y;
+		private int direction;
+		private int regen;
+		private int level;
+		private int gold;
+		private int exp;
+		private int reward;
+		private String function;
+		private int frequency;
+		private String dieFunction;
+
+		public Troop(ResultSet rs) {
+			try {
+				name = rs.getString("name");
+				num = rs.getInt("num");
+				image = rs.getString("image");
+				type = rs.getInt("type");
+				team = rs.getInt("team");
+				range = rs.getInt("range");
+				hp = rs.getInt("hp");
+				mp = rs.getInt("mp");
+				attackAnimation = rs.getInt("animation");
+				damage = rs.getInt("damage");
+				magicDamage = rs.getInt("magic_damage");
+				defense = rs.getInt("defense");
+				magicDefense = rs.getInt("magic_defense");
+				critical = rs.getInt("critical");
+				avoid = rs.getInt("avoid");
+				hit = rs.getInt("hit");
+				moveSpeed = rs.getInt("move_speed");
+				attackSpeed = rs.getInt("attack_speed");
+				map = rs.getInt("map");
+				x = rs.getInt("x");
+				y = rs.getInt("y");
+				direction = rs.getInt("direction");
+				regen = rs.getInt("regen");
+				level = rs.getInt("level");
+				exp = rs.getInt("exp");
+				gold = rs.getInt("gold");
+				reward = rs.getInt("reward");
+				function = rs.getString("function");
+				frequency = rs.getInt("frequency");
+				dieFunction = rs.getString("die");
+			} catch (SQLException e) {
+				logger.warning(e.getMessage());
+			}
 		}
 
 		public int getNum() {
@@ -588,6 +647,70 @@ public class GameData extends DataBase {
 
 		public int getRange() {
 			return range;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getImage() {
+			return image;
+		}
+
+		public int getType() {
+			return type;
+		}
+
+		public int getTeam() {
+			return team;
+		}
+
+		public int getHp() {
+			return hp;
+		}
+
+		public int getMp() {
+			return mp;
+		}
+
+		public int getAttackAnimation() {
+			return attackAnimation;
+		}
+
+		public int getDamage() {
+			return damage;
+		}
+
+		public int getMagicDamage() {
+			return magicDamage;
+		}
+
+		public int getDefense() {
+			return defense;
+		}
+
+		public int getMagicDefense() {
+			return magicDefense;
+		}
+
+		public int getCritical() {
+			return critical;
+		}
+
+		public int getAvoid() {
+			return avoid;
+		}
+
+		public int getHit() {
+			return hit;
+		}
+
+		public int getMoveSpeed() {
+			return moveSpeed;
+		}
+
+		public int getAttackSpeed() {
+			return attackSpeed;
 		}
 
 		public int getMap() {
@@ -600,6 +723,134 @@ public class GameData extends DataBase {
 
 		public int getY() {
 			return y;
+		}
+
+		public int getDirection() {
+			return direction;
+		}
+
+		public int getRegen() {
+			return regen;
+		}
+
+		public int getLevel() {
+			return level;
+		}
+
+		public int getGold() {
+			return gold;
+		}
+
+		public int getExp() {
+			return exp;
+		}
+
+		public int getReward() {
+			return reward;
+		}
+
+		public String getFunction() {
+			return function;
+		}
+
+		public int getFrequency() {
+			return frequency;
+		}
+
+		public String getDieFunction() {
+			return dieFunction;
+		}
+	}
+
+	public static class Reward {
+		private int no;
+		private int itemNo;
+		private int num;
+		private int per;
+
+		public Reward(ResultSet rs) {
+			try {
+				no = rs.getInt("no");
+				itemNo = rs.getInt("item_no");
+				num = rs.getInt("num");
+				per = rs.getInt("per");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		public int getNo() {
+			return no;
+		}
+
+		public int getItemNo() {
+			return itemNo;
+		}
+
+		public int getNum() {
+			return num;
+		}
+
+		public int getPer() {
+			return per;
+		}
+	}
+
+	public static class NPC {
+		private int no;
+		private String name;
+		private String image;
+		private int map;
+		private int x;
+		private int y;
+		private int direction;
+		private String function;
+
+		public NPC(ResultSet rs) {
+			try {
+				no = rs.getInt("no");
+				name = rs.getString("name");
+				image = rs.getString("image");
+				map = rs.getInt("map");
+				x = rs.getInt("x");
+				y = rs.getInt("y");
+				direction = rs.getInt("direction");
+				function = rs.getString("function");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public int getNo() {
+			return no;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getImage() {
+			return image;
+		}
+
+		public int getMap() {
+			return map;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public int getY() {
+			return y;
+		}
+
+		public int getDirection() {
+			return direction;
+		}
+
+		public String getFunction() {
+			return function;
 		}
 	}
 }

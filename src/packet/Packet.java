@@ -3,6 +3,7 @@ package packet;
 import database.Type;
 import game.User;
 import game.Character;
+import game.Map;
 
 import org.json.simple.JSONObject;
 
@@ -165,6 +166,17 @@ public final class Packet {
 		packet.put("no", no);
 		packet.put("status", status);
 		packet.put("value", value);
+
+		return packet;
+	}
+
+	public static JSONObject loadDropItem(Map.DropItem item) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.LOAD_DROP_ITEM);
+		packet.put("no", item.getNo());
+		packet.put("x", item.getX());
+		packet.put("y", item.getY());
+		packet.put("image", item.getImage());
 
 		return packet;
 	}

@@ -17,12 +17,6 @@ public class Type {
         public static final int TRAP = 6;
     }
 
-    public static class Team {
-        public static final int NORMAL = 0;
-        public static final int NAMED = 1;
-        public static final int BOSS = 2;
-    }
-
     public static class Direction {
         public static final int DOWN = 2;
         public static final int LEFT = 4;

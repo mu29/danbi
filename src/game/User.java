@@ -101,6 +101,7 @@ public class User extends Character {
 			admin = rs.getInt("admin") == 0;
 
 			team = no;
+			characterType = Type.Character.USER;
 		} catch (SQLException e) {
 			logger.warning(e.getMessage());
 		}
@@ -802,35 +803,6 @@ public class User extends Character {
 		}
 
 	}
-	
-	// 아이템 장착
-	public void equipItem(int type, int index) {
-		switch (type) {
-		case Type.Item.WEAPON:
-			weapon = index;
-			break;
-		case Type.Item.SHIELD:
-			shield = index;
-			break;
-		case Type.Item.HELMET:
-			helmet = index;
-			break;
-		case Type.Item.ARMOR:
-			armor = index;
-			break;
-		case Type.Item.CAPE:
-			cape = index;
-			break;
-		case Type.Item.SHOES:
-			shoes = index;
-			break;
-		case Type.Item.ACCESSORY:
-			accessory = index;
-			break;
-		}
-
-		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.MAX_HP, getMaxHp()));
-	}
 
 	// 스텟 포인트 사용
 	public void useStatPoint(int stat) {
@@ -859,20 +831,67 @@ public class User extends Character {
 		statPoint--;
 		ctx.writeAndFlush(Packet.updateStatus(Type.Status.STAT_POINT, statPoint));
 	}
+	
+	// 아이템 장착
+	public void equipItem(int type, int index) {
+		GameData.Item item = findItemByIndex(index);
+
+		// 아이템이 없으면 반환
+		if (item == null)
+			return;
+
+		GameData.ItemData itemData = GameData.item.get(item.getItemNo());
+
+		// 레벨이 낮으면 반환
+		if (level < itemData.getLimitLevel())
+			return;
+
+		// 직업이 다르고 아이템도 공용이 아니면 반환
+		if (job != itemData.getJob() && itemData.getJob() != 0)
+			return;
+
+		switch (type) {
+			case Type.Item.WEAPON:
+				weapon = index;
+				break;
+			case Type.Item.SHIELD:
+				shield = index;
+				break;
+			case Type.Item.HELMET:
+				helmet = index;
+				break;
+			case Type.Item.ARMOR:
+				armor = index;
+				break;
+			case Type.Item.CAPE:
+				cape = index;
+				break;
+			case Type.Item.SHOES:
+				shoes = index;
+				break;
+			case Type.Item.ACCESSORY:
+				accessory = index;
+				break;
+			default:
+				return;
+		}
+
+		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.MAX_HP, getMaxHp()));
+	}
 
 	// NPC로부터 아이템 획득 (아이템 번호로 아이템 획득)
 	public boolean gainItem(int itemNo, int num) {
 		int gap = 0;
 		int index = getEmptyIndex();
-		GameData.ItemData i = GameData.item.get(itemNo);
-		GameData.Item item = findLazyItemByNo(itemNo);
+		GameData.ItemData item = GameData.item.get(itemNo);
+		GameData.Item itemData = findLazyItemByNo(itemNo);
 
 		// 이미 있던 아이템일 경우 채워줌
-		if (item != null) {
-			gap = item.getAmount() + num - i.getMaxLoad();
-			item.changeAmount(num);
+		if (itemData != null) {
+			gap = itemData.getAmount() + num - item.getMaxLoad();
+			itemData.changeAmount(num);
 			num = gap;
-			ctx.writeAndFlush(Packet.updateInventory(1, item));
+			ctx.writeAndFlush(Packet.updateInventory(1, itemData));
 		}
 
 		while (num > 0) {
@@ -881,10 +900,10 @@ public class User extends Character {
 				return false;
 			}
 			// 계속해서 아이템 채우자
-			inventory.put(index, new GameData.Item(no, itemNo, num, index, i.isTradeable() ? 1 : 0));
+			inventory.put(index, new GameData.Item(no, itemNo, num, index, item.isTradeable() ? 1 : 0));
 			ctx.writeAndFlush(Packet.setInventory(inventory.get(index)));
 			index = getEmptyIndex();
-			num -= i.getMaxLoad();
+			num -= item.getMaxLoad();
 		}
 
 		return true;
@@ -896,23 +915,23 @@ public class User extends Character {
 			return false;
 		
 		int gap = 0;
-		GameData.Item i = findItemByNo(itemNo);
+		GameData.Item item = findItemByNo(itemNo);
 
 		// 아이템이 없거나 잃을 갯수가 더 많은 경우
-		if (i == null || getTotalItemAmount(i.getItemNo()) < num)
+		if (item == null || getTotalItemAmount(item.getItemNo()) < num)
 			return false;
 
 		// 모든 아이템을 잃을 때까지 반복
 		do {
-			gap = num - i.getAmount();
-			i.changeAmount(-num);
-			if (i.getAmount() == 0) {
+			gap = num - item.getAmount();
+			item.changeAmount(-num);
+			if (item.getAmount() == 0) {
 				// 아이템 삭제
-				inventory.remove(i.getIndex());
-				ctx.writeAndFlush(Packet.updateInventory(0, i));
+				inventory.remove(item.getIndex());
+				ctx.writeAndFlush(Packet.updateInventory(0, item));
 			} else {
 				// 아이템 갯수 업데이트
-				ctx.writeAndFlush(Packet.updateInventory(1, i));
+				ctx.writeAndFlush(Packet.updateInventory(1, item));
 			}
 			num = gap;
 		} while (num > 0);
@@ -922,20 +941,20 @@ public class User extends Character {
 
 	// Index로 아이템 잃음 (직접 드랍하는 경우)
 	public boolean loseItemByIndex(int index, int num) {
-		GameData.Item i = findItemByIndex(index);
+		GameData.Item item = findItemByIndex(index);
 
 		// 아이템이 없거나 잃을 갯수가 더 많은 경우
-		if (i == null || i.getAmount() < num)
+		if (item == null || item.getAmount() < num)
 			return false;
 
-		i.changeAmount(-num);
-		if (i.getAmount() == 0) {
+		item.changeAmount(-num);
+		if (item.getAmount() == 0) {
 			// 아이템 삭제
-			inventory.remove(i.getIndex());
-			ctx.writeAndFlush(Packet.updateInventory(0, i));
+			inventory.remove(item.getIndex());
+			ctx.writeAndFlush(Packet.updateInventory(0, item));
 		} else {
 			// 아이템 갯수 업데이트
-			ctx.writeAndFlush(Packet.updateInventory(1, i));
+			ctx.writeAndFlush(Packet.updateInventory(1, item));
 		}
 
 		return true;
@@ -1034,12 +1053,18 @@ public class User extends Character {
 		if (item.getAmount() < amount)
 			return false;
 
+		GameData.ItemData itemData = GameData.item.get(item.getItemNo());
+
 		// 소모품이면 아이템 잃음
-		if (GameData.item.get(item.getItemNo()).isConsumable())
+		if (itemData.isConsumable())
 			loseItemByIndex(index, amount);
 
+		// 아이템이 아니라면 장착해보자
+		if (itemData.getType() != Type.Item.ITEM)
+			equipItem(itemData.getType(), item.getIndex());
+
 		// 함수가 있을 경우 실행
-		String function = GameData.item.get(item.getItemNo()).getFunction();
+		String function = itemData.getFunction();
 		if (function != "")
 			Functions.execute(Functions.item, function, new Object[] { this, item });
 
@@ -1127,9 +1152,8 @@ public class User extends Character {
 
 	// 적 공격
 	public void assault(Character target) {
-		Map.get(map).sendToAll(seed, Packet.jumpCharacter(Type.Character.USER, no, x, y));
-		Map.get(map).sendToAll(seed, Packet.animationCharacter(Type.Character.ENEMY, target.getNo(), 8));
-
+		jump(0, 0);
+		target.animation(8);
 		// 실 데미지를 계산
 		int attackDamage = (getDamage() - target.getDefense()) *  (getDamage() - target.getDefense());
 		if (target.getClass().getName().equals("game.Enemy")) {
@@ -1145,6 +1169,52 @@ public class User extends Character {
 
 	public void update() {
 
+	}
+
+	// 좌표 이동
+	public void move(int type) {
+		switch (type) {
+			case Type.Direction.DOWN:
+				moveDown();
+				break;
+			case Type.Direction.LEFT:
+				moveLeft();
+				break;
+			case Type.Direction.RIGHT:
+				moveRight();
+				break;
+			case Type.Direction.UP:
+				moveUp();
+				break;
+		}
+	}
+
+	protected boolean moveUp() {
+		if (!super.moveUp())
+			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+
+		return true;
+	}
+
+	protected boolean moveDown() {
+		if (!super.moveDown())
+			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+
+		return true;
+	}
+
+	protected boolean moveLeft() {
+		if (!super.moveLeft())
+			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+
+		return true;
+	}
+
+	protected boolean moveRight() {
+		if (!super.moveRight())
+			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+
+		return true;
 	}
 
 	// 방향 전환
@@ -1164,100 +1234,4 @@ public class User extends Character {
 				break;
 		}
 	}
-
-	private void turnUp() {
-		Map gameMap = Map.get(map);
-		direction = Type.Direction.UP;
-
-		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
-	}
-
-	private void turnDown() {
-		Map gameMap = Map.get(map);
-		direction = Type.Direction.DOWN;
-
-		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
-	}
-
-	private void turnLeft() {
-		Map gameMap = Map.get(map);
-		direction = Type.Direction.LEFT;
-
-		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
-	}
-
-	private void turnRight() {
-		Map gameMap = Map.get(map);
-		direction = Type.Direction.RIGHT;
-
-		gameMap.sendToOthers(no, seed, Packet.turnCharacter(Type.Character.USER, no, direction));
-	}
-
-	// 좌표 이동
-	public void move(int type) {
-		switch (type) {
-			case 2:
-				moveDown();
-				break;
-			case 4:
-				moveLeft();
-				break;
-			case 6:
-				moveRight();
-				break;
-			case 8:
-				moveUp();
-				break;
-		}
-	}
-
-	private void moveUp() {
-		Map gameMap = Map.get(map);
-		direction = Type.Direction.UP;
-
-		if (gameMap.isPassable(this, x, y - 1)) {
-			y -= 1;
-			gameMap.sendToOthers(no, seed, Packet.moveCharacter(Type.Character.USER, no, x, y, direction));
-		} else {
-			ctx.writeAndFlush(Packet.refreshCharacter(Type.Character.USER, no, x, y, direction));
-		}
-	}
-
-	private void moveDown() {
-		Map gameMap = Map.get(map);
-		direction = Type.Direction.DOWN;
-
-		if (gameMap.isPassable(this, x, y + 1)) {
-			y += 1;
-			gameMap.sendToOthers(no, seed, Packet.moveCharacter(Type.Character.USER, no, x, y, direction));
-		} else {
-			ctx.writeAndFlush(Packet.refreshCharacter(Type.Character.USER, no, x, y, direction));
-		}
-	}
-
-	private void moveLeft() {
-		Map gameMap = Map.get(map);
-		direction = Type.Direction.LEFT;
-
-		if (gameMap.isPassable(this, x - 1, y)) {
-			x -= 1;
-			gameMap.sendToOthers(no, seed, Packet.moveCharacter(Type.Character.USER, no, x, y, direction));
-		} else {
-			ctx.writeAndFlush(Packet.refreshCharacter(Type.Character.USER, no, x, y, direction));
-		}
-	}
-
-	private void moveRight() {
-		studySkill(1);
-		Map gameMap = Map.get(map);
-		direction = Type.Direction.RIGHT;
-
-		if (gameMap.isPassable(this, x + 1, y)) {
-			x += 1;
-			gameMap.sendToOthers(no, seed, Packet.moveCharacter(Type.Character.USER, no, x, y, direction));
-		} else {
-			ctx.writeAndFlush(Packet.refreshCharacter(Type.Character.USER, no, x, y, direction));
-		}
-	}
-	
 }

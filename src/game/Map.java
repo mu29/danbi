@@ -14,9 +14,6 @@ import org.json.simple.JSONObject;
 import packet.Packet;
 
 public class Map {
-	private static Hashtable<Integer, Map> maps = new Hashtable<>();
-
-	private String texture;
 	private int no;
 	private String name;
 	private int width;
@@ -24,34 +21,40 @@ public class Map {
 	private int[] data;
 	private Random random;
 
-	public Vector<User> users = new Vector<>();
-	public Vector<Enemy> enemies = new Vector<>();
-	//public HashMap<String, NPC> NPC = new HashMap<String, NPC>();
-	//public HashMap<String, DropGold> dropGold = new HashMap<String, DropGold>();
-	//public HashMap<String, DropItem> dropItem = new HashMap<String, DropItem>();
+	public Vector<User> users = new Vector<User>();
+	public Vector<Enemy> enemies = new Vector<Enemy>();
+	public Hashtable<Integer, NPC> npcs = new Hashtable<Integer, NPC>();
+	public Vector<DropItem> dropItems = new Vector<DropItem>();
+	public Vector<DropGold> dropGolds = new Vector<DropGold>();
+
+	private static Hashtable<Integer, Map> maps = new Hashtable<Integer, Map>();
 	private static Logger logger = Logger.getLogger(Map.class.getName());
-
-	public static Map get(int no) {
-		return maps.get(no);
-	}
-
-	public static Hashtable<Integer, Map> getAll() {
-		return maps;
-	}
-
-	public static void loadMap(int num) {
-		for (int i = 1; i <= num; i++) {
-			maps.put(i, new Map("./Map/MAP" + i + ".map"));
-		}
-
-		logger.info("맵 로드 완료.");
-	}
 
 	public Map(String fileName) {
 		random = new Random();
 
 		loadMapData(fileName);
 		loadTroops();
+		loadNPCs();
+	}
+
+	// 맵을 얻음
+	public static Map get(int no) {
+		return maps.get(no);
+	}
+
+	// 모든 맵을 얻음
+	public static Hashtable<Integer, Map> getAll() {
+		return maps;
+	}
+
+	// 모든 맵을 로드
+	public static void loadMap(int num) {
+		for (int i = 1; i <= num; i++) {
+			maps.put(i, new Map("./Map/MAP" + i + ".map"));
+		}
+
+		logger.info("맵 로드 완료.");
 	}
 
 	// 맵 데이터 로드
@@ -79,7 +82,7 @@ public class Map {
 		}
 	}
 
-	// 에너미 로드
+	// Enemy 로드
 	private void loadTroops() {
 		for (GameData.Troop troop : GameData.troop.values()) {
 			if (troop.getMap() == no) {
@@ -90,11 +93,21 @@ public class Map {
 						x += random.nextInt(troop.getRange());
 						y += random.nextInt(troop.getRange());
 					} while (!isPassable(null, x, y));
-					enemies.addElement(new Enemy(enemies.size(), x, y, troop.getResultSet()));
+					enemies.addElement(new Enemy(enemies.size(), x, y, troop));
 				}
-				logger.info(no + "번 맵 에너미 등록 완료");
 			}
 		}
+		logger.info(no + "번 맵 에너미 등록 완료");
+	}
+
+	// NPC 로드
+	private void loadNPCs() {
+		for (GameData.NPC npc : GameData.npc.values()) {
+			if (npc.getMap() == no) {
+				npcs.put(npc.getNo(), new NPC(npc));
+			}
+		}
+		logger.info(no + "번 맵 NPC 등록 완료");
 	}
 	
 	private boolean isValid(int x, int y) {
@@ -122,6 +135,13 @@ public class Map {
 				return false;
 		}
 
+		for (NPC other : npcs.values()) {
+			if (other.equals(c))
+				continue;
+			if (other.getSeed() == (c == null ? 0 : c.getSeed()) && other.x == x && other.y == y)
+				return false;
+		}
+
 		return true;
 	}
 
@@ -143,6 +163,11 @@ public class Map {
 			for (Enemy other : enemies)
 				if (other.getSeed() == c.getSeed() && other.x == x && other.y == y)
 					blocked += 1;
+
+			for (NPC other : npcs.values()) {
+				if (other.getSeed() == c.getSeed() && other.x == x && other.y == y)
+					blocked += 1;
+			}
 		}
 
 		return blocked >= 4;
@@ -161,6 +186,19 @@ public class Map {
 				u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.ENEMY, other));
 			}
 		}
+
+		for (NPC other : npcs.values()) {
+			if (other.getSeed() == u.getSeed()) {
+				u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.NPC, other));
+			}
+		}
+
+		for (DropItem item : dropItems) {
+			if (item.getSeed() == u.getSeed()) {
+				u.getCtx().writeAndFlush(Packet.loadDropItem(item));
+			}
+		}
+
 		users.addElement(u);
 	}
 	
@@ -171,17 +209,12 @@ public class Map {
 
 			other.getCtx().writeAndFlush(Packet.removeCharacter(Type.Character.USER, u.getName(), u.getNo()));
 		}
+
 		users.removeElement(u);
 	}
 
-	public void update() {
-		for (Enemy e : enemies) {
-			e.update();
-		}
-	}
-
 	public Vector<Enemy> getAliveEnemies() {
-		Vector<Enemy> aliveEnemies = new Vector<>();
+		Vector<Enemy> aliveEnemies = new Vector<Enemy>();
 
 		for (Enemy enemy : enemies) {
 			if (enemy.isAlive())
@@ -189,6 +222,18 @@ public class Map {
 		}
 
 		return aliveEnemies;
+	}
+
+	public void loadDropItem(int seed, int itemNo, int num, int x, int y) {
+		DropItem item = new DropItem(seed, dropItems.size(), itemNo, num, x, y);
+		dropItems.addElement(item);
+		sendToAll(seed, Packet.loadDropItem(item));
+	}
+
+	public void update() {
+		for (Enemy e : enemies) {
+			e.update();
+		}
 	}
 
 	public void sendToAll(int seed, JSONObject msg) {
@@ -204,6 +249,62 @@ public class Map {
 				continue;
 
 			other.getCtx().writeAndFlush(msg);
+		}
+	}
+
+	public static class DropItem {
+		private int no;
+		private int itemNo;
+		private int num;
+		private int seed;
+		private int x;
+		private int y;
+		private String image;
+
+		public DropItem(int _seed, int _no, int _itemNo, int _num, int _x, int _y) {
+			seed = _seed;
+			no = _no;
+			itemNo = _itemNo;
+			num = _num;
+			x = _x;
+			y = _y;
+			image = GameData.item.get(itemNo).getImage();
+		}
+
+		public int getNo() {
+			return no;
+		}
+
+		public int getItemNo() {
+			return itemNo;
+		}
+
+		public int getNum() {
+			return num;
+		}
+
+		public int getSeed() {
+			return seed;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public int getY() {
+			return y;
+		}
+
+		public String getImage() {
+			return image;
+		}
+	}
+
+	public static class DropGold {
+		private int amount;
+
+		public DropGold(int _amount) {
+			amount = _amount;
 		}
 	}
 }

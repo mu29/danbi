@@ -1,7 +1,7 @@
 package game;
 
+import database.GameData;
 import database.Type;
-import network.Handler;
 import packet.Packet;
 
 import java.sql.ResultSet;
@@ -15,7 +15,7 @@ public class Enemy extends Character {
     private int range;
     private int maxHp;
     private int maxMp;
-    private int animation;
+    private int attackAnimation;
     private int damage;
     private int magicDamage;
     private int defense;
@@ -42,52 +42,49 @@ public class Enemy extends Character {
 
     private static Logger logger = Logger.getLogger(Enemy.class.getName());
 
-    public Enemy(int _no, int _x, int _y, ResultSet rs) {
-        try {
-            rs.first();
-            no = _no;
-            name = rs.getString("name");
-            image = rs.getString("image");
-            type = rs.getInt("type");
-            team = rs.getInt("team");
-            range = rs.getInt("range");
-            hp = rs.getInt("hp");
-            maxHp = rs.getInt("hp");
-            mp = rs.getInt("mp");
-            maxMp = rs.getInt("mp");
-            animation = rs.getInt("animation");
-            damage = rs.getInt("damage");
-            magicDamage = rs.getInt("magic_damage");
-            defense = rs.getInt("defense");
-            magicDefense = rs.getInt("magic_defense");
-            critical = rs.getInt("critical");
-            avoid = rs.getInt("avoid");
-            hit = rs.getInt("hit");
-            moveSpeed = rs.getInt("move_speed");
-            attackSpeed = rs.getInt("attack_speed");
-            map = rs.getInt("map");
-            seed = 0;
-            x = _x;
-            y = _y;
-            originalX = _x;
-            originalY = _y;
-            direction = rs.getInt("direction");
-            regen = rs.getInt("regen");
-            level = rs.getInt("level");
-            exp = rs.getInt("exp");
-            gold = rs.getInt("gold");
-            reward = rs.getInt("reward");
-            function = rs.getString("function");
-            frequency = rs.getInt("frequency");
-            dieFunction = rs.getString("die");
+    public Enemy(int _no, int _x, int _y, GameData.Troop troop) {
+        no = _no;
+        name = troop.getName();
+        image = troop.getImage();
+        type = troop.getType();
+        team = troop.getTeam();
+        range = troop.getRange();
+        hp = troop.getHp();
+        maxHp = troop.getHp();
+        mp = troop.getMp();
+        maxMp = troop.getMp();
+        attackAnimation = troop.getAttackAnimation();
+        damage = troop.getDamage();
+        magicDamage = troop.getMagicDamage();
+        defense = troop.getDefense();
+        magicDefense = troop.getMagicDefense();
+        critical = troop.getCritical();
+        avoid = troop.getAvoid();
+        hit = troop.getHit();
+        moveSpeed = troop.getMoveSpeed();
+        attackSpeed = troop.getAttackSpeed();
+        map = troop.getMap();
+        seed = 0;
+        x = _x;
+        y = _y;
+        originalX = _x;
+        originalY = _y;
+        direction = troop.getDirection();
+        regen = troop.getRegen();
+        level = troop.getLevel();
+        exp = troop.getExp();
+        gold = troop.getGold();
+        reward = troop.getReward();
+        function = troop.getFunction();
+        frequency = troop.getFrequency();
+        dieFunction = troop.getDieFunction();
 
-            lastMoveTime = 0;
-            lastAttackTime = 0;
-            target = null;
-            random = new Random();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        lastMoveTime = 0;
+        lastAttackTime = 0;
+        target = null;
+        random = new Random();
+
+        characterType = Type.Character.ENEMY;
     }
 
     public int getType() {
@@ -215,19 +212,25 @@ public class Enemy extends Character {
 
     // 에너미 죽음
     private void die() {
-        // 데드 플래그 온
-        isDead = true;
-        // 죽은 시간을 저장
-        deadTime = System.currentTimeMillis() / 100;
-        Map.get(map).sendToAll(seed, Packet.removeCharacter(Type.Character.ENEMY, name, no));
-
         // 타겟이 유저인 경우
         if (target.getClass().getName().equals("game.User")) {
             User u = (User) target;
             u.gainExp(exp);
             u.gainGold(gold);
+
+            // 보상 목록에 있는 아이템을 드랍
+            for (GameData.Reward r : GameData.reward)
+                if (r.getNo() == reward && r.getPer() > random.nextInt(10000))
+                    Map.get(map).loadDropItem(seed, r.getItemNo(), r.getNum(), x, y);
+
             Functions.execute(Functions.enemy, dieFunction, new Object[]{this});
         }
+        // 죽은 시간을 저장
+        deadTime = System.currentTimeMillis() / 100;
+        Map.get(map).sendToAll(seed, Packet.removeCharacter(Type.Character.ENEMY, name, no));
+
+        target = null;
+        isDead = true;
     }
 
     // 에너미 리젠
@@ -292,8 +295,8 @@ public class Enemy extends Character {
 
     // 적 공격
     private void assault(Character target) {
-        Map.get(map).sendToAll(seed, Packet.jumpCharacter(Type.Character.ENEMY, no, x, y));
-        Map.get(map).sendToAll(seed, Packet.animationCharacter(Type.Character.USER, target.getNo(), animation));
+        jump(0, 0);
+        target.animation(attackAnimation);
 
         // 실 데미지를 계산
         int attackDamage = (damage - target.getDefense()) *  (damage - target.getDefense());
@@ -425,52 +428,32 @@ public class Enemy extends Character {
         }
     }
 
-    private void moveUp() {
-        Map gameMap = Map.get(map);
-
-        if (gameMap.isPassable(this, x, y - 1)) {
-            direction = Type.Direction.UP;
-            y -= 1;
-            gameMap.sendToAll(seed, Packet.moveCharacter(Type.Character.ENEMY, no, x, y, direction));
-        } else {
+    protected boolean moveUp() {
+        if (!super.moveUp())
             moveRandom();
-        }
+
+        return true;
     }
 
-    private void moveDown() {
-        Map gameMap = Map.get(map);
-
-        if (gameMap.isPassable(this, x, y + 1)) {
-            direction = Type.Direction.DOWN;
-            y += 1;
-            gameMap.sendToAll(seed, Packet.moveCharacter(Type.Character.ENEMY, no, x, y, direction));
-        } else {
+    protected boolean moveDown() {
+        if (!super.moveDown())
             moveRandom();
-        }
+
+        return true;
     }
 
-    private void moveLeft() {
-        Map gameMap = Map.get(map);
-
-        if (gameMap.isPassable(this, x - 1, y)) {
-            direction = Type.Direction.LEFT;
-            x -= 1;
-            gameMap.sendToAll(seed, Packet.moveCharacter(Type.Character.ENEMY, no, x, y, direction));
-        } else {
+    protected boolean moveLeft() {
+        if (!super.moveLeft())
             moveRandom();
-        }
+
+        return true;
     }
 
-    private void moveRight() {
-        Map gameMap = Map.get(map);
-
-        if (gameMap.isPassable(this, x + 1, y)) {
-            direction = Type.Direction.RIGHT;
-            x += 1;
-            gameMap.sendToAll(seed, Packet.moveCharacter(Type.Character.ENEMY, no, x, y, direction));
-        } else {
+    protected boolean moveRight() {
+        if (!super.moveRight())
             moveRandom();
-        }
+
+        return true;
     }
 
     // 타겟을 바라봄
@@ -493,43 +476,4 @@ public class Enemy extends Character {
         }
     }
 
-    private void turnUp() {
-        if (direction == Type.Direction.UP)
-            return;
-
-        Map gameMap = Map.get(map);
-        direction = Type.Direction.UP;
-
-        gameMap.sendToAll(seed, Packet.turnCharacter(Type.Character.ENEMY, no, direction));
-    }
-
-    private void turnDown() {
-        if (direction == Type.Direction.DOWN)
-            return;
-
-        Map gameMap = Map.get(map);
-        direction = Type.Direction.DOWN;
-
-        gameMap.sendToAll(seed, Packet.turnCharacter(Type.Character.ENEMY, no, direction));
-    }
-
-    private void turnLeft() {
-        if (direction == Type.Direction.LEFT)
-            return;
-
-        Map gameMap = Map.get(map);
-        direction = Type.Direction.LEFT;
-
-        gameMap.sendToAll(seed, Packet.turnCharacter(Type.Character.ENEMY, no, direction));
-    }
-
-    private void turnRight() {
-        if (direction == Type.Direction.RIGHT)
-            return;
-
-        Map gameMap = Map.get(map);
-        direction = Type.Direction.RIGHT;
-
-        gameMap.sendToAll(seed, Packet.turnCharacter(Type.Character.ENEMY, no, direction));
-    }
 }
