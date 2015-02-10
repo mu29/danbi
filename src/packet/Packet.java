@@ -1,10 +1,11 @@
 package packet;
 
 import database.Type;
+import game.Field;
 import game.User;
 import game.Character;
-import game.Map;
 
+import javafx.beans.DefaultProperty;
 import org.json.simple.JSONObject;
 
 import database.GameData;
@@ -94,11 +95,10 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject removeCharacter(int type, String name, int no) {
+	public static JSONObject removeCharacter(int type, int no) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REMOVE_CHARACTER);
 		packet.put("type", type);
-		packet.put("name", name);
 		packet.put("no", no);
 		
 		return packet;
@@ -159,18 +159,29 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject updateCharacter(int type, int no, int status, Object value) {
+	public static JSONObject updateCharacter(int type, int no, int[] keys, Object[] values) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.UPDATE_CHARACTER);
 		packet.put("type", type);
 		packet.put("no", no);
-		packet.put("status", status);
-		packet.put("value", value);
+		for (int i = 0; i < keys.length; i++)
+			packet.put(keys[i], values[i]);
 
 		return packet;
 	}
 
-	public static JSONObject loadDropItem(Map.DropItem item) {
+	public static JSONObject damageCharacter(int type, int no, int value, boolean critical) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.DAMAGE_CHARACTER);
+		packet.put("type", type);
+		packet.put("no", no);
+		packet.put("value", value);
+		if (critical) packet.put("critical", 1);
+
+		return packet;
+	}
+
+	public static JSONObject loadDropItem(Field.DropItem item) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.LOAD_DROP_ITEM);
 		packet.put("no", item.getNo());
@@ -197,11 +208,11 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject updateStatus(int type, Object value) {
+	public static JSONObject updateStatus(int[] keys, Object[] values) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.UPDATE_STATUS);
-		packet.put("type", type);
-		packet.put("value", value);
+		for (int i = 0; i < keys.length; i++)
+			packet.put(keys[i], values[i]);
 
 		return packet;
 	}
@@ -210,7 +221,7 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.SET_INVENTORY);
 		packet.put("userNo", item.getUserNo());
-		packet.put("itemNo", item.getItemNo());
+		packet.put("itemNo", item.getNo());
 		packet.put("amount", item.getAmount());
 		packet.put("index", item.getIndex());
 		packet.put("damage", item.getDamage());

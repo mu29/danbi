@@ -17,7 +17,7 @@ public class Server {
 	private int port;
 	private final Logger logger = Logger.getLogger(Server.class.getName());
 	
-    public static final void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         new Server(Integer.parseInt(args[0])).run();
     }
 	
@@ -25,7 +25,10 @@ public class Server {
 		this.port = port;
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				logger.info("Server Shutdown.");
+				for (User u : User.getAll().values())
+					u.exitGracefully();
+
+				logger.info("서버를 종료합니다.");
 			}
 		});
 	}

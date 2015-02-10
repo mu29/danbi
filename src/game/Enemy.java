@@ -4,8 +4,6 @@ import database.GameData;
 import database.Type;
 import packet.Packet;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -38,11 +36,10 @@ public class Enemy extends Character {
     private long lastMoveTime;
     private long lastAttackTime;
     private Character target;
-    private Random random;
 
     private static Logger logger = Logger.getLogger(Enemy.class.getName());
 
-    public Enemy(int _no, int _x, int _y, GameData.Troop troop) {
+    public Enemy(int _seed, int _no, int _x, int _y, GameData.Troop troop) {
         no = _no;
         name = troop.getName();
         image = troop.getImage();
@@ -64,7 +61,7 @@ public class Enemy extends Character {
         moveSpeed = troop.getMoveSpeed();
         attackSpeed = troop.getAttackSpeed();
         map = troop.getMap();
-        seed = 0;
+        seed = _seed;
         x = _x;
         y = _y;
         originalX = _x;
@@ -113,7 +110,8 @@ public class Enemy extends Character {
             value = getMaxHp() - hp;
 
         hp += value;
-        Map.get(map).sendToAll(seed, Packet.updateCharacter(Type.Character.ENEMY, no, Type.Status.HP, hp));
+        Map.getMap(map).getField(seed).sendToAll(Packet.updateCharacter(characterType, no,
+                new int[]{ Type.Status.HP }, new Integer[]{ hp }));
     }
 
     public void loseHp(int value) {
@@ -213,7 +211,7 @@ public class Enemy extends Character {
     // 에너미 죽음
     private void die() {
         // 타겟이 유저인 경우
-        if (target.getClass().getName().equals("game.User")) {
+        if (target != null && target.getClass().getName().equals("game.User")) {
             User u = (User) target;
             u.gainExp(exp);
             u.gainGold(gold);
@@ -221,13 +219,13 @@ public class Enemy extends Character {
             // 보상 목록에 있는 아이템을 드랍
             for (GameData.Reward r : GameData.reward)
                 if (r.getNo() == reward && r.getPer() > random.nextInt(10000))
-                    Map.get(map).loadDropItem(seed, r.getItemNo(), r.getNum(), x, y);
+                    Map.getMap(map).getField(seed).loadDropItem(r.getItemNo(), r.getNum(), x, y);
 
-            Functions.execute(Functions.enemy, dieFunction, new Object[]{this});
+            Functions.execute(Functions.enemy, dieFunction, new Object[] { this });
         }
         // 죽은 시간을 저장
         deadTime = System.currentTimeMillis() / 100;
-        Map.get(map).sendToAll(seed, Packet.removeCharacter(Type.Character.ENEMY, name, no));
+        Map.getMap(map).getField(seed).sendToAll(Packet.removeCharacter(Type.Character.ENEMY, no));
 
         target = null;
         isDead = true;
@@ -241,7 +239,7 @@ public class Enemy extends Character {
         x = originalX;
         y = originalY;
 
-        Map.get(map).sendToAll(seed, Packet.createCharacter(Type.Character.ENEMY, this));
+        Map.getMap(map).getField(seed).sendToAll(Packet.createCharacter(Type.Character.ENEMY, this));
     }
 
     // 타겟을 공격
@@ -299,20 +297,25 @@ public class Enemy extends Character {
         target.animation(attackAnimation);
 
         // 실 데미지를 계산
-        int attackDamage = (damage - target.getDefense()) *  (damage - target.getDefense());
+        int attackDamage = (damage - target.getDefense()) * (damage - target.getDefense());
+        boolean isFatal = critical > random.nextInt(100);
+        if (isFatal) attackDamage *= 2;
+
         if (target.getClass().getName().equals("game.User")) {
             // 타겟이 유저인 경우
             User u = (User) target;
             u.loseHp(attackDamage);
+            u.displayDamage(attackDamage, isFatal);
         } else if (target.getClass().getName().equals("game.Enemy")) {
             // 타겟이 에너미인 경우
             Enemy e = (Enemy) target;
             e.loseHp(attackDamage);
+            e.displayDamage(attackDamage, isFatal);
         }
     }
 
     // 가장 가까운 타겟을 찾자
-    private void findTarget() {
+    public void findTarget() {
         target = null;
         // 범위 외의 경우, 타겟은 null
         int nearest = range;
@@ -331,13 +334,13 @@ public class Enemy extends Character {
         Vector<Character> enemies = new Vector<Character>();
 
         // 팀이 다른 경우 적 목록에 넣음
-        for (User user : Map.get(map).users) {
-            if (user.getSeed() == seed && user.getTeam() != team) {
+        for (User user : Map.getMap(map).getField(seed).getUsers()) {
+            if (user.getTeam() != team) {
                 enemies.addElement(user);
             }
         }
-        for (Enemy enemy : Map.get(map).getAliveEnemies()) {
-            if (enemy.getSeed() == seed && enemy.getTeam() != team) {
+        for (Enemy enemy : Map.getMap(map).getField(seed).getAliveEnemies()) {
+            if (enemy.getTeam() != team) {
                 enemies.addElement(enemy);
             }
         }
@@ -361,7 +364,7 @@ public class Enemy extends Character {
         }
 
         // 사방이 막힌 경우 이동하지 않음
-        if (Map.get(map).isIsolated(this))
+        if (Map.getMap(map).getField(seed).isIsolated(this))
             return;
 
         // 타겟을 향해 이동
@@ -389,7 +392,7 @@ public class Enemy extends Character {
         int y_gap = Math.abs(y - target.y);
 
         // 사방이 막힌 경우 이동하지 않음
-        if (Map.get(map).isIsolated(this))
+        if (Map.getMap(map).getField(seed).isIsolated(this))
             return;
 
         // 타겟을 피해 이동
@@ -475,5 +478,4 @@ public class Enemy extends Character {
             }
         }
     }
-
 }

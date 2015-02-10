@@ -12,8 +12,9 @@ public final class STCHeader {
 	public final static int ANIMATION_CHARACTER = 8;
 	public final static int MOTION_CHARACTER = 9;
 	public final static int UPDATE_CHARACTER = 10;
-	public final static int LOAD_DROP_ITEM = 11;
-	public final static int LOAD_DROP_GOLD = 12;
+	public final static int DAMAGE_CHARACTER = 11;
+	public final static int LOAD_DROP_ITEM = 12;
+	public final static int LOAD_DROP_GOLD = 13;
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int UPDATE_STATUS = 101;

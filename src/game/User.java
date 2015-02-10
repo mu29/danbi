@@ -5,9 +5,9 @@ import io.netty.channel.ChannelHandlerContext;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Random;
 import java.util.logging.Logger;
 
-import network.Handler;
 import packet.Packet;
 import database.*;
 
@@ -66,6 +66,7 @@ public class User extends Character {
 		if (!users.containsKey(ctx))
 			return false;
 
+		users.get(ctx).exitGracefully();
 		users.remove(ctx);
 		return true;
 	}
@@ -102,6 +103,7 @@ public class User extends Character {
 
 			team = no;
 			characterType = Type.Character.USER;
+			random = new Random();
 		} catch (SQLException e) {
 			logger.warning(e.getMessage());
 		}
@@ -125,8 +127,9 @@ public class User extends Character {
 
 	public void setTitle(int _title) {
 		title = _title;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.TITLE, title));
-		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.TITLE, title));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.TITLE }, new Integer[]{ title }));
+		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
+				new int[]{ Type.Status.TITLE }, new Integer[]{ title }));
 	}
 	
 	public String getGuild() {
@@ -139,8 +142,9 @@ public class User extends Character {
 
 	public void setImage(String _image) {
 		image = _image;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.IMAGE, image));
-		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.IMAGE, image));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.IMAGE }, new String[]{ image }));
+		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
+				new int[]{Type.Status.IMAGE}, new String[]{image}));
 	}
 	
 	public int getJob() {
@@ -149,8 +153,9 @@ public class User extends Character {
 
 	public void setJob(int _job) {
 		job = _job;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.JOB, job));
-		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.JOB, job));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.JOB }, new Integer[]{ job }));
+		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
+				new int[]{Type.Status.JOB}, new Integer[]{job}));
 	}
 	
 	public int getStr() {
@@ -161,31 +166,31 @@ public class User extends Character {
 		n += GameData.job.get(job).getStr() * level;
 		// 아이템으로 오르는 Str
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getStr();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getStr();
 			n += findItemByIndex(weapon).getStr();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getStr();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getStr();
 			n += findItemByIndex(shield).getStr();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getStr();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getStr();
 			n += findItemByIndex(helmet).getStr();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getStr();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getStr();
 			n += findItemByIndex(armor).getStr();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getStr();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getStr();
 			n += findItemByIndex(cape).getStr();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getStr();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getStr();
 			n += findItemByIndex(shoes).getStr();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getStr();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getStr();
 			n += findItemByIndex(accessory).getStr();
 		}
 
@@ -204,31 +209,31 @@ public class User extends Character {
 		n += GameData.job.get(job).getDex() * level;
 		// 아이템으로 오르는 Dex
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getDex();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getDex();
 			n += findItemByIndex(weapon).getDex();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getDex();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getDex();
 			n += findItemByIndex(shield).getDex();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getDex();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getDex();
 			n += findItemByIndex(helmet).getDex();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getDex();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getDex();
 			n += findItemByIndex(armor).getDex();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getDex();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getDex();
 			n += findItemByIndex(cape).getDex();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getDex();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getDex();
 			n += findItemByIndex(shoes).getDex();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getDex();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getDex();
 			n += findItemByIndex(accessory).getDex();
 		}
 		return n;
@@ -246,31 +251,31 @@ public class User extends Character {
 		n += GameData.job.get(job).getAgi() * level;
 		// 아이템으로 오르는 Agi
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getAgi();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getAgi();
 			n += findItemByIndex(weapon).getAgi();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getAgi();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getAgi();
 			n += findItemByIndex(shield).getAgi();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getAgi();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getAgi();
 			n += findItemByIndex(helmet).getAgi();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getAgi();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getAgi();
 			n += findItemByIndex(armor).getAgi();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getAgi();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getAgi();
 			n += findItemByIndex(cape).getAgi();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getAgi();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getAgi();
 			n += findItemByIndex(shoes).getAgi();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getAgi();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getAgi();
 			n += findItemByIndex(accessory).getAgi();
 		}
 		return n;
@@ -286,8 +291,10 @@ public class User extends Character {
 			value = getMaxHp() - hp;
 
 		hp += value;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.HP, hp));
-		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.HP, hp));
+
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.HP }, new Integer[]{ hp }));
+		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
+				new int[]{ Type.Status.HP }, new Integer[]{ hp }));
 	}
 
 	public void loseHp(int value) {
@@ -306,31 +313,31 @@ public class User extends Character {
 		n += GameData.job.get(job).getHp() * level;
 		// 아이템으로 오르는 Hp
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getHp();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getHp();
 			n += findItemByIndex(weapon).getHp();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getHp();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getHp();
 			n += findItemByIndex(shield).getHp();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getHp();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getHp();
 			n += findItemByIndex(helmet).getHp();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getHp();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getHp();
 			n += findItemByIndex(armor).getHp();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getHp();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getHp();
 			n += findItemByIndex(cape).getHp();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getHp();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getHp();
 			n += findItemByIndex(shoes).getHp();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getHp();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getHp();
 			n += findItemByIndex(accessory).getHp();
 		}
 
@@ -343,7 +350,7 @@ public class User extends Character {
 			value = getMaxMp() - mp;
 
 		mp += value;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.MP, mp));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.MP }, new Integer[]{ mp }));
 	}
 
 	public boolean loseMp(int value) {
@@ -361,31 +368,31 @@ public class User extends Character {
 		n += GameData.job.get(job).getMp() * level;
 		// 아이템으로 오르는 Mp
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getMp();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getMp();
 			n += findItemByIndex(weapon).getMp();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getMp();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getMp();
 			n += findItemByIndex(shield).getMp();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getMp();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getMp();
 			n += findItemByIndex(helmet).getMp();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getMp();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getMp();
 			n += findItemByIndex(armor).getMp();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getMp();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getMp();
 			n += findItemByIndex(cape).getMp();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getMp();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getMp();
 			n += findItemByIndex(shoes).getMp();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getMp();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getMp();
 			n += findItemByIndex(accessory).getMp();
 		}
 		
@@ -397,31 +404,31 @@ public class User extends Character {
 		int n = 0;
 		// 아이템으로 오르는 Critical
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getCritical();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getCritical();
 			n += findItemByIndex(weapon).getCritical();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getCritical();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getCritical();
 			n += findItemByIndex(shield).getCritical();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getCritical();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getCritical();
 			n += findItemByIndex(helmet).getCritical();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getCritical();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getCritical();
 			n += findItemByIndex(armor).getCritical();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getCritical();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getCritical();
 			n += findItemByIndex(cape).getCritical();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getCritical();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getCritical();
 			n += findItemByIndex(shoes).getCritical();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getCritical();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getCritical();
 			n += findItemByIndex(accessory).getCritical();
 		}
 		
@@ -433,31 +440,31 @@ public class User extends Character {
 		int n = 0;
 		// 아이템으로 오르는 Avoid
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getAvoid();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getAvoid();
 			n += findItemByIndex(weapon).getAvoid();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getAvoid();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getAvoid();
 			n += findItemByIndex(shield).getAvoid();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getAvoid();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getAvoid();
 			n += findItemByIndex(helmet).getAvoid();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getAvoid();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getAvoid();
 			n += findItemByIndex(armor).getAvoid();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getAvoid();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getAvoid();
 			n += findItemByIndex(cape).getAvoid();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getAvoid();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getAvoid();
 			n += findItemByIndex(shoes).getAvoid();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getAvoid();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getAvoid();
 			n += findItemByIndex(accessory).getAvoid();
 		}
 
@@ -469,34 +476,33 @@ public class User extends Character {
 		int n = 0;
 		// 아이템으로 오르는 Hit
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getHit();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getHit();
 			n += findItemByIndex(weapon).getHit();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getHit();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getHit();
 			n += findItemByIndex(shield).getHit();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getHit();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getHit();
 			n += findItemByIndex(helmet).getHit();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getHit();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getHit();
 			n += findItemByIndex(armor).getHit();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getHit();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getHit();
 			n += findItemByIndex(cape).getHit();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getHit();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getHit();
 			n += findItemByIndex(shoes).getHit();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getHit();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getHit();
 			n += findItemByIndex(accessory).getHit();
 		}
-
 
 		return n;
 	}
@@ -506,31 +512,31 @@ public class User extends Character {
 		int n = 0;
 		// 아이템으로 오르는 Damage
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getDamage();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getDamage();
 			n += findItemByIndex(weapon).getDamage();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getDamage();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getDamage();
 			n += findItemByIndex(shield).getDamage();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getDamage();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getDamage();
 			n += findItemByIndex(helmet).getDamage();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getDamage();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getDamage();
 			n += findItemByIndex(armor).getDamage();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getDamage();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getDamage();
 			n += findItemByIndex(cape).getDamage();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getDamage();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getDamage();
 			n += findItemByIndex(shoes).getDamage();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getDamage();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getDamage();
 			n += findItemByIndex(accessory).getDamage();
 		}
 		
@@ -542,31 +548,31 @@ public class User extends Character {
 		int n = 0;
 		// 아이템으로 오르는 MagicDamage
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getMagicDamage();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getMagicDamage();
 			n += findItemByIndex(weapon).getMagicDamage();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getMagicDamage();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getMagicDamage();
 			n += findItemByIndex(shield).getMagicDamage();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getMagicDamage();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getMagicDamage();
 			n += findItemByIndex(helmet).getMagicDamage();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getMagicDamage();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getMagicDamage();
 			n += findItemByIndex(armor).getMagicDamage();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getMagicDamage();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getMagicDamage();
 			n += findItemByIndex(cape).getMagicDamage();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getMagicDamage();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getMagicDamage();
 			n += findItemByIndex(shoes).getMagicDamage();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getMagicDamage();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getMagicDamage();
 			n += findItemByIndex(accessory).getMagicDamage();
 		}
 
@@ -578,31 +584,31 @@ public class User extends Character {
 		int n = 0;
 		// 아이템으로 오르는 Defense
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getDefense();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getDefense();
 			n += findItemByIndex(weapon).getDefense();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getDefense();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getDefense();
 			n += findItemByIndex(shield).getDefense();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getDefense();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getDefense();
 			n += findItemByIndex(helmet).getDefense();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getDefense();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getDefense();
 			n += findItemByIndex(armor).getDefense();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getDefense();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getDefense();
 			n += findItemByIndex(cape).getDefense();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getDefense();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getDefense();
 			n += findItemByIndex(shoes).getDefense();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getDefense();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getDefense();
 			n += findItemByIndex(accessory).getDefense();
 		}
 
@@ -614,31 +620,31 @@ public class User extends Character {
 		int n = 0;
 		// 아이템으로 오르는 MagicDefense
 		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getItemNo()).getMagicDefense();
+			n += GameData.item.get(findItemByIndex(weapon).getNo()).getMagicDefense();
 			n += findItemByIndex(weapon).getMagicDefense();
 		}
 		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getItemNo()).getMagicDefense();
+			n += GameData.item.get(findItemByIndex(shield).getNo()).getMagicDefense();
 			n += findItemByIndex(shield).getMagicDefense();
 		}
 		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getItemNo()).getMagicDefense();
+			n += GameData.item.get(findItemByIndex(helmet).getNo()).getMagicDefense();
 			n += findItemByIndex(helmet).getMagicDefense();
 		}
 		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getItemNo()).getMagicDefense();
+			n += GameData.item.get(findItemByIndex(armor).getNo()).getMagicDefense();
 			n += findItemByIndex(armor).getMagicDefense();
 		}
 		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getItemNo()).getMagicDefense();
+			n += GameData.item.get(findItemByIndex(cape).getNo()).getMagicDefense();
 			n += findItemByIndex(cape).getMagicDefense();
 		}
 		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getItemNo()).getMagicDefense();
+			n += GameData.item.get(findItemByIndex(shoes).getNo()).getMagicDefense();
 			n += findItemByIndex(shoes).getMagicDefense();
 		}
 		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getItemNo()).getMagicDefense();
+			n += GameData.item.get(findItemByIndex(accessory).getNo()).getMagicDefense();
 			n += findItemByIndex(accessory).getMagicDefense();
 		}
 
@@ -654,28 +660,38 @@ public class User extends Character {
 		return n;
 	}
 
+	// 경험치 획득
 	public void gainExp(int value) {
 		int maxExp = getMaxExp();
 		exp += value;
 
+		// 현재 경험치가 최대 경험치를 초과한 경우
 		if (exp >= maxExp) {
+			// 레벨 업
 			exp = 0;
 			level++;
 			statPoint += 5;
 			skillPoint += 1;
+			// HP 및 MP 회복
+			hp = getMaxHp();
+			mp = getMaxMp();
 
-			ctx.write(Packet.updateStatus(Type.Status.LEVEL, level));
-			ctx.write(Packet.updateStatus(Type.Status.STAT_POINT, statPoint));
-			ctx.write(Packet.updateStatus(Type.Status.SKILL_POINT, skillPoint));
-			ctx.write(Packet.updateStatus(Type.Status.MAX_EXP, getMaxExp()));
+			// 변화한 스텟 정보를 보냄
+			ctx.writeAndFlush(Packet.updateStatus(
+					new int[]{Type.Status.LEVEL, Type.Status.STAT_POINT, Type.Status.SKILL_POINT, Type.Status.HP, Type.Status.MAX_HP, Type.Status.MP, Type.Status.MAX_MP, Type.Status.MAX_EXP},
+					new Integer[]{level, statPoint, skillPoint, hp, getMaxHp(), mp, getMaxMp(), getMaxExp()}));
 
-			Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.LEVEL, level));
-			Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.MAX_HP, getMaxHp()));
+			Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
+					new int[]{ Type.Status.LEVEL, Type.Status.HP, Type.Status.MAX_HP },
+					new Integer[] { level, hp, getMaxHp() }));
+
+			animation(25);
 		}
 
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.EXP, exp));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.EXP }, new Integer[]{ exp }));
 	}
 
+	// 경험치 잃음
 	public void loseExp(int value) {
 		if (exp - value < 0)
 			value = exp;
@@ -793,15 +809,14 @@ public class User extends Character {
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `skill` WHERE `user_no` = '" + no + "';");
 
 			while (rs.next()) {
-				skillList.put(rs.getInt("no"), new GameData.Skill(rs.getInt("no")));
-				ctx.writeAndFlush(Packet.setSkillList(skillList.get(rs.getInt("no"))));
+				skillList.put(rs.getInt("skill_no"), new GameData.Skill(no, rs.getInt("skill_no")));
+				ctx.writeAndFlush(Packet.setSkillList(skillList.get(rs.getInt("skill_no"))));
 			}
 
 			rs.close();
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}
-
 	}
 
 	// 스텟 포인트 사용
@@ -813,15 +828,15 @@ public class User extends Character {
 		switch (stat) {
 			case Type.Status.STR:
 				pureStr++;
-				ctx.writeAndFlush(Packet.updateStatus(stat, getStr()));
+				ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getStr() }));
 				break;
 			case Type.Status.DEX:
 				pureDex++;
-				ctx.writeAndFlush(Packet.updateStatus(stat, getDex()));
+				ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getDex() }));
 				break;
 			case Type.Status.AGI:
 				pureAgi++;
-				ctx.writeAndFlush(Packet.updateStatus(stat, getAgi()));
+				ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getAgi() }));
 				break;
 			default:
 				return;
@@ -829,7 +844,7 @@ public class User extends Character {
 
 		// 스포 하나 까자
 		statPoint--;
-		ctx.writeAndFlush(Packet.updateStatus(Type.Status.STAT_POINT, statPoint));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.STAT_POINT }, new Integer[]{ statPoint }));
 	}
 	
 	// 아이템 장착
@@ -840,7 +855,7 @@ public class User extends Character {
 		if (item == null)
 			return;
 
-		GameData.ItemData itemData = GameData.item.get(item.getItemNo());
+		GameData.ItemData itemData = GameData.item.get(item.getNo());
 
 		// 레벨이 낮으면 반환
 		if (level < itemData.getLimitLevel())
@@ -876,7 +891,8 @@ public class User extends Character {
 				return;
 		}
 
-		Map.get(map).sendToOthers(no, seed, Packet.updateCharacter(Type.Character.USER, no, Type.Status.MAX_HP, getMaxHp()));
+		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(Type.Character.USER, no,
+				new int[]{ Type.Status.MAX_HP }, new Integer[]{ getMaxHp() }));
 	}
 
 	// NPC로부터 아이템 획득 (아이템 번호로 아이템 획득)
@@ -918,7 +934,7 @@ public class User extends Character {
 		GameData.Item item = findItemByNo(itemNo);
 
 		// 아이템이 없거나 잃을 갯수가 더 많은 경우
-		if (item == null || getTotalItemAmount(item.getItemNo()) < num)
+		if (item == null || getTotalItemAmount(item.getNo()) < num)
 			return false;
 
 		// 모든 아이템을 잃을 때까지 반복
@@ -971,10 +987,10 @@ public class User extends Character {
 	}
 	
 	// 가지고 있는 아이템 총량을 획득
-	public int getTotalItemAmount(int no) {
+	public int getTotalItemAmount(int itemNo) {
 		int num = 0;
 		for (GameData.Item item : inventory.values()) {
-			if (item.getItemNo() == no)
+			if (item.getNo() == itemNo)
 				num += item.getAmount();
 		}
 		
@@ -990,9 +1006,9 @@ public class User extends Character {
 	}
 
 	// No로 아이템 검색
-	public GameData.Item findItemByNo(int no) {
+	public GameData.Item findItemByNo(int itemNo) {
 		for (GameData.Item item : inventory.values()) {
-			if (item.getItemNo() == no)
+			if (item.getNo() == itemNo)
 				return item;
 		}
 
@@ -1000,10 +1016,10 @@ public class User extends Character {
 	}
 
 	// No로 여유 있는 아이템 검색
-	public GameData.Item findLazyItemByNo(int no) {
+	public GameData.Item findLazyItemByNo(int itemNo) {
 		for (GameData.Item item : inventory.values()) {
 			// 아이템이 꽉 찬 경우가 아니라면
-			if (item.getItemNo() == no && item.getAmount() < GameData.item.get(item.getItemNo()).getMaxLoad())
+			if (item.getNo() == itemNo && item.getAmount() < GameData.item.get(item.getNo()).getMaxLoad())
 				return item;
 		}
 
@@ -1053,7 +1069,7 @@ public class User extends Character {
 		if (item.getAmount() < amount)
 			return false;
 
-		GameData.ItemData itemData = GameData.item.get(item.getItemNo());
+		GameData.ItemData itemData = GameData.item.get(item.getNo());
 
 		// 소모품이면 아이템 잃음
 		if (itemData.isConsumable())
@@ -1072,8 +1088,8 @@ public class User extends Character {
 	}
 
 	// No로 아이템 사용
-	public boolean useItemByNo(int no, int amount) {
-		GameData.Item item = findItemByNo(no);
+	public boolean useItemByNo(int itemNo, int amount) {
+		GameData.Item item = findItemByNo(itemNo);
 
 		// 아이템이 없으면 반환
 		if (item == null)
@@ -1084,11 +1100,11 @@ public class User extends Character {
 			return false;
 
 		// 소모품이면 아이템 잃음
-		if (GameData.item.get(item.getItemNo()).isConsumable())
-			loseItemByNo(no, amount);
+		if (GameData.item.get(item.getNo()).isConsumable())
+			loseItemByNo(itemNo, amount);
 
 		// 함수가 있을 경우 실행
-		String function = GameData.item.get(item.getItemNo()).getFunction();
+		String function = GameData.item.get(item.getNo()).getFunction();
 		if (function != "")
 			Functions.execute(Functions.item, function, new Object[] { this, item });
 
@@ -1096,34 +1112,34 @@ public class User extends Character {
 	}
 
 	// No로 스킬 검색
-	public GameData.Skill findSkillByNo(int no) {
-		if (!skillList.containsKey(no))
+	public GameData.Skill findSkillByNo(int skillNo) {
+		if (!skillList.containsKey(skillNo))
 			return null;
 
-		return skillList.get(no);
+		return skillList.get(skillNo);
 	}
 
 	// 스킬 배우기
-	public boolean studySkill(int no) {
-		if (skillList.containsKey(no))
+	public boolean studySkill(int skillNo) {
+		if (skillList.containsKey(skillNo))
 			return false;
 
-		skillList.put(no, new GameData.Skill(no));
+		skillList.put(skillNo, new GameData.Skill(no, skillNo));
 		return true;
 	}
 
 	// 스킬 지우기
-	public boolean forgetSkill(int no) {
-		if (!skillList.containsKey(no))
+	public boolean forgetSkill(int skillNo) {
+		if (!skillList.containsKey(skillNo))
 			return false;
 
-		skillList.remove(no);
+		skillList.remove(skillNo);
 		return true;
 	}
 
 	// No로 스킬 사용
-	public boolean useSkill(int no) {
-		GameData.Skill skill = findSkillByNo(no);
+	public boolean useSkill(int skillNo) {
+		GameData.Skill skill = findSkillByNo(skillNo);
 
 		if (skill == null)
 			return false;
@@ -1142,7 +1158,7 @@ public class User extends Character {
 		int new_y = y + (direction == 2 ? 1 : direction == 8 ? -1 : 0);
 
 		// 에너미가 있을 경우 공격하고 반환
-		for (Enemy enemy : Map.get(map).getAliveEnemies()) {
+		for (Enemy enemy : Map.getMap(map).getField(seed).getAliveEnemies()) {
 			if (enemy.getX() == new_x && enemy.getY() == new_y) {
 				assault(enemy);
 				return;
@@ -1154,16 +1170,22 @@ public class User extends Character {
 	public void assault(Character target) {
 		jump(0, 0);
 		target.animation(8);
+
 		// 실 데미지를 계산
 		int attackDamage = (getDamage() - target.getDefense()) *  (getDamage() - target.getDefense());
+		boolean isFatal = getCritical() > random.nextInt(100);
+		if (isFatal) attackDamage *= 2;
+
 		if (target.getClass().getName().equals("game.Enemy")) {
 			// 타겟이 에너미인 경우
 			Enemy e = (Enemy) target;
 			e.loseHp(attackDamage);
+			e.displayDamage(attackDamage, isFatal);
 		} else if (target.getClass().getName().equals("game.User")) {
 			// 타겟이 유저인 경우
 			User u = (User) target;
 			u.loseHp(attackDamage);
+			u.displayDamage(attackDamage, isFatal);
 		}
 	}
 
@@ -1189,6 +1211,7 @@ public class User extends Character {
 		}
 	}
 
+	// 이동이 불가능한 경우 리프레쉬
 	protected boolean moveUp() {
 		if (!super.moveUp())
 			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
@@ -1233,5 +1256,26 @@ public class User extends Character {
 				turnUp();
 				break;
 		}
+	}
+
+	// 게임 종료
+	public void exitGracefully() {
+		// 맵에서 나가기
+		Map.getMap(map).getField(seed).removeUser(this);
+
+		// 유저 정보 업데이트
+		DataBase.updateUser(this);
+		// 장착 아이템 정보 업데이트
+		DataBase.updateEquip(this);
+
+		// 아이템과 스킬을 지운다
+		DataBase.deleteItem(no);
+		DataBase.deleteSkill(no);
+
+		// 가진 아이템과 스킬을 넣자
+		for (GameData.Item item : inventory.values())
+			DataBase.insertItem(item);
+		for (GameData.Skill skill : skillList.values())
+			DataBase.insertSkill(skill);
 	}
 }

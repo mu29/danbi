@@ -1,8 +1,6 @@
 package game;
 
-import database.GameData;
-import database.Type;
-import network.Handler;
+import database.*;
 import packet.Packet;
 
 import java.lang.reflect.Method;
@@ -34,24 +32,26 @@ public class Functions {
         public void test(game.Enemy enemy) {
             if (enemy.getTarget().getClass().getName().equals("game.User")) {
                 User u = (User) enemy.getTarget();
-                u.getCtx().writeAndFlush(Packet.jumpCharacter(Type.Character.USER, u.getNo(), u.getX(), u.getY()));
+                u.jump(u.getDirection(), 0);
             }
         }
     }
 
     public static class Item {
         public void potion(game.User user, database.GameData.Item _item) {
-            GameData.ItemData item = GameData.item.get(_item.getItemNo());
+            GameData.ItemData item = GameData.item.get(_item.getNo());
             user.gainHp(item.getHp());
         }
     }
 
     public static class Skill {
         public void crossCut(game.User user, database.GameData.Skill _skill) {
-            game.Map gameMap = Map.get(user.getMap());
-            for (game.Enemy enemy : gameMap.getAliveEnemies()) {
+            game.Field gameField = Map.getMap(user.getMap()).getField(user.getSeed());
+            GameData.SkillData skill = GameData.skill.get(_skill.getNo());
+
+            for (game.Enemy enemy : gameField.getAliveEnemies()) {
+                enemy.animation(57);
                 enemy.loseHp(100);
-                gameMap.sendToAll(user.getSeed(), Packet.animationCharacter(Type.Character.ENEMY, enemy.getNo(), 57));
             }
         }
     }

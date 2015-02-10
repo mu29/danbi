@@ -7,7 +7,6 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 public class GameData extends DataBase {
-
 	public static Hashtable<Integer, Job> job = new Hashtable<Integer, Job>();
 	public static Hashtable<Integer, Register> register = new Hashtable<Integer, Register>();
 	public static Hashtable<Integer, ItemData> item = new Hashtable<Integer, ItemData>();
@@ -61,6 +60,8 @@ public class GameData extends DataBase {
 			troop.put(rs.getInt("no"), new Troop(rs));
 		}
 		logger.info("에너미 정보 로드 완료.");
+
+		rs.close();
 	}
 
 	public static class Job {
@@ -389,7 +390,7 @@ public class GameData extends DataBase {
 			return userNo;
 		}
 
-		public int getItemNo() {
+		public int getNo() {
 			return itemNo;
 		}
 
@@ -555,16 +556,22 @@ public class GameData extends DataBase {
 	}
 
 	public static class Skill {
-		private int no;
+		private int userNo;
+		private int skillNo;
 		private int rank;
 
-		public Skill(int _no) {
-			no = _no;
+		public Skill(int _userNo, int _skillNo) {
+			userNo = _userNo;
+			skillNo  = _skillNo;
 			rank = 1;
 		}
 
+		public int getUserNo() {
+			return userNo;
+		}
+
 		public int getNo() {
-			return no;
+			return skillNo;
 		}
 
 		public int getRank() {
