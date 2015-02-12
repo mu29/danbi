@@ -72,7 +72,7 @@ public class Enemy extends Character {
         exp = troop.getExp();
         gold = troop.getGold();
         reward = troop.getReward();
-        function = troop.getFunction();
+        function = troop.getSkill();
         frequency = troop.getFrequency();
         dieFunction = troop.getDieFunction();
 
@@ -180,7 +180,7 @@ public class Enemy extends Character {
             if (distance < range) {
                 // 스킬 사용
                 if (frequency > random.nextInt(100))
-                    Functions.execute(Functions.enemy, function, new Object[] { this });
+                    Functions.execute(Functions.enemySkill, function, new Object[] { this });
 
                 // 에너미 종류에 따라 분기
                 switch (type) {
@@ -214,14 +214,15 @@ public class Enemy extends Character {
         if (target != null && target.getClass().getName().equals("game.User")) {
             User u = (User) target;
             u.gainExp(exp);
-            u.gainGold(gold);
-
+            //u.gainGold(gold);
+            if (gold > 0)
+                Map.getMap(map).getField(seed).loadDropGold(gold, x, y);
             // 보상 목록에 있는 아이템을 드랍
             for (GameData.Reward r : GameData.reward)
                 if (r.getNo() == reward && r.getPer() > random.nextInt(10000))
                     Map.getMap(map).getField(seed).loadDropItem(r.getItemNo(), r.getNum(), x, y);
 
-            Functions.execute(Functions.enemy, dieFunction, new Object[] { this });
+            Functions.execute(Functions.enemyDie, dieFunction, new Object[] { this });
         }
         // 죽은 시간을 저장
         deadTime = System.currentTimeMillis() / 100;
@@ -320,6 +321,22 @@ public class Enemy extends Character {
         // 범위 외의 경우, 타겟은 null
         int nearest = range;
         for (Character c : findEnemies()) {
+            // 가장 가까운 타겟을 찾음
+            int distance = Math.abs(c.getX() - x) + Math.abs(c.getY() - y);
+            if (distance < nearest) {
+                target = c;
+                nearest = distance;
+            }
+        }
+    }
+
+    public void findTarget(Character _target) {
+        target = null;
+        // 범위 외의 경우, 타겟은 null
+        int nearest = range;
+        for (Character c : findEnemies()) {
+            if (c.equals(_target))
+                continue;
             // 가장 가까운 타겟을 찾음
             int distance = Math.abs(c.getX() - x) + Math.abs(c.getY() - y);
             if (distance < nearest) {

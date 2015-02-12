@@ -678,8 +678,9 @@ public class User extends Character {
 
 			// 변화한 스텟 정보를 보냄
 			ctx.writeAndFlush(Packet.updateStatus(
-					new int[]{Type.Status.LEVEL, Type.Status.STAT_POINT, Type.Status.SKILL_POINT, Type.Status.HP, Type.Status.MAX_HP, Type.Status.MP, Type.Status.MAX_MP, Type.Status.MAX_EXP},
-					new Integer[]{level, statPoint, skillPoint, hp, getMaxHp(), mp, getMaxMp(), getMaxExp()}));
+					new int[]{Type.Status.LEVEL, Type.Status.STAT_POINT, Type.Status.SKILL_POINT, Type.Status.STR, Type.Status.DEX,
+							Type.Status.AGI, Type.Status.HP, Type.Status.MAX_HP, Type.Status.MP, Type.Status.MAX_MP, Type.Status.MAX_EXP},
+					new Integer[]{level, statPoint, skillPoint, getStr(), getDex(), getAgi(), hp, getMaxHp(), mp, getMaxMp(), getMaxExp()}));
 
 			Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
 					new int[]{ Type.Status.LEVEL, Type.Status.HP, Type.Status.MAX_HP },
@@ -702,7 +703,7 @@ public class User extends Character {
 	public void gainGold(int value) {
 		gold += value;
 
-		//
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.GOLD }, new Integer[] { gold }));
 	}
 
 	public boolean loseGold(int value) {
@@ -846,56 +847,79 @@ public class User extends Character {
 		statPoint--;
 		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.STAT_POINT }, new Integer[]{ statPoint }));
 	}
+
+	public void removeEquipItem(int type) {
+
+	}
 	
 	// 아이템 장착
 	public void equipItem(int type, int index) {
-		GameData.Item item = findItemByIndex(index);
-
-		// 아이템이 없으면 반환
-		if (item == null)
-			return;
-
-		GameData.ItemData itemData = GameData.item.get(item.getNo());
-
-		// 레벨이 낮으면 반환
-		if (level < itemData.getLimitLevel())
-			return;
-
-		// 직업이 다르고 아이템도 공용이 아니면 반환
-		if (job != itemData.getJob() && itemData.getJob() != 0)
-			return;
+		int oldEquip = 0;
 
 		switch (type) {
 			case Type.Item.WEAPON:
+				oldEquip = weapon;
 				weapon = index;
 				break;
 			case Type.Item.SHIELD:
+				oldEquip = shield;
 				shield = index;
 				break;
 			case Type.Item.HELMET:
+				oldEquip = helmet;
 				helmet = index;
 				break;
 			case Type.Item.ARMOR:
+				oldEquip = armor;
 				armor = index;
 				break;
 			case Type.Item.CAPE:
+				oldEquip = cape;
 				cape = index;
 				break;
 			case Type.Item.SHOES:
+				oldEquip = shoes;
 				shoes = index;
 				break;
 			case Type.Item.ACCESSORY:
+				oldEquip = accessory;
 				accessory = index;
 				break;
 			default:
 				return;
 		}
 
+		// 이전에 장착했던 아이템과 현재 장착한 아이템
+		GameData.Item lastEquippedItem = findItemByIndex(oldEquip);
+		GameData.Item nowEquipItem = findItemByIndex(index);
+
+		// 장착 상태 변경 후 인벤토리 업데이트
+		if (lastEquippedItem != null) {
+			lastEquippedItem.setEquipped(false);
+			ctx.writeAndFlush(Packet.updateInventory(1, lastEquippedItem));
+		}
+
+		if (nowEquipItem != null) {
+			nowEquipItem.setEquipped(true);
+			ctx.writeAndFlush(Packet.updateInventory(1, nowEquipItem));
+		}
+
+		if (getMaxHp() < hp)
+			hp = getMaxHp();
+
+		if (getMaxMp() < mp)
+			mp = getMaxMp();
+
+		// TODO : Type.Status.WEAPON + type는 임시. 수정 요망
+		ctx.writeAndFlush(Packet.updateStatus(
+				new int[]{ Type.Status.WEAPON + type, Type.Status.STR, Type.Status.DEX, Type.Status.AGI, Type.Status.MAX_HP, Type.Status.HP,
+						Type.Status.MAX_MP, Type.Status.MP, Type.Status.CRITICAL, Type.Status.AVOID, Type.Status.HIT },
+				new Integer[]{ index, getStr(), getDex(), getAgi(), getMaxHp(), hp, getMaxMp(), mp, getCritical(), getAvoid(), getHit() }));
 		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(Type.Character.USER, no,
-				new int[]{ Type.Status.MAX_HP }, new Integer[]{ getMaxHp() }));
+				new int[]{ Type.Status.MAX_HP, Type.Status.HP }, new Integer[]{ getMaxHp(), hp }));
 	}
 
-	// NPC로부터 아이템 획득 (아이템 번호로 아이템 획득)
+	// 아이템 번호로 아이템 획득
 	public boolean gainItem(int itemNo, int num) {
 		int gap = 0;
 		int index = getEmptyIndex();
@@ -913,6 +937,7 @@ public class User extends Character {
 		while (num > 0) {
 			if (index == -1) {
 				// 나머지 아이템 드랍
+				Map.getMap(map).getField(seed).loadDropItem(itemNo, num, x, y);
 				return false;
 			}
 			// 계속해서 아이템 채우자
@@ -921,6 +946,19 @@ public class User extends Character {
 			index = getEmptyIndex();
 			num -= item.getMaxLoad();
 		}
+
+		return true;
+	}
+
+	// 능력치 있는 장비 아이템 획득
+	public boolean gainItem(int itemNo, GameData.Item item) {
+		int index = getEmptyIndex();
+
+		if (index == -1)
+			return false;
+
+		inventory.put(index, new GameData.Item(no, item.getNo(), index, item));
+		ctx.writeAndFlush(Packet.setInventory(inventory.get(index)));
 
 		return true;
 	}
@@ -1035,7 +1073,13 @@ public class User extends Character {
 		if (presentItem == null)
 			return;
 
+		if (presentItem.isEquipped())
+			return;
+
 		if (targetItem != null) {
+			if (targetItem.isEquipped())
+				return;
+
 			// 아이템 간 인덱스 변경
 			inventory.remove(index1);
 			inventory.remove(index2);
@@ -1071,6 +1115,14 @@ public class User extends Character {
 
 		GameData.ItemData itemData = GameData.item.get(item.getNo());
 
+		// 레벨이 낮으면 반환
+		if (level < itemData.getLimitLevel())
+			return false;
+
+		// 직업이 다르고 아이템도 공용이 아니면 반환
+		if (job != itemData.getJob() && itemData.getJob() != 0)
+			return false;
+
 		// 소모품이면 아이템 잃음
 		if (itemData.isConsumable())
 			loseItemByIndex(index, amount);
@@ -1099,8 +1151,18 @@ public class User extends Character {
 		if (item.getAmount() < amount)
 			return false;
 
+		GameData.ItemData itemData = GameData.item.get(item.getNo());
+
+		// 레벨이 낮으면 반환
+		if (level < itemData.getLimitLevel())
+			return false;
+
+		// 직업이 다르고 아이템도 공용이 아니면 반환
+		if (job != itemData.getJob() && itemData.getJob() != 0)
+			return false;
+
 		// 소모품이면 아이템 잃음
-		if (GameData.item.get(item.getNo()).isConsumable())
+		if (itemData.isConsumable())
 			loseItemByNo(itemNo, amount);
 
 		// 함수가 있을 경우 실행
@@ -1109,6 +1171,104 @@ public class User extends Character {
 			Functions.execute(Functions.item, function, new Object[] { this, item });
 
 		return true;
+	}
+
+	// No로 아이템 버리기
+	public boolean dropItemByNo(int itemNo, int amount) {
+		GameData.Item item = findItemByNo(itemNo);
+
+		// 아이템이 없으면 반환
+		if (item == null)
+			return false;
+
+		// 갯수가 적으면 반환
+		if (item.getAmount() < amount || amount <= 0)
+			return false;
+
+		GameData.ItemData itemData = GameData.item.get(item.getNo());
+
+		loseItemByNo(itemNo, amount);
+		if (itemData.getType() == Type.Item.ITEM)
+			Map.getMap(no).getField(seed).loadDropItem(itemNo, amount, x, y);
+		else
+			Map.getMap(no).getField(seed).loadDropItem(itemNo, item, x, y);
+
+		return true;
+	}
+
+	// Index로 아이템 버리기
+	public boolean dropItemByIndex(int index, int amount) {
+		GameData.Item item = findItemByIndex(index);
+
+		// 아이템이 없으면 반환
+		if (item == null)
+			return false;
+
+		// 갯수가 적으면 반환
+		if (item.getAmount() < amount || amount <= 0)
+			return false;
+
+		GameData.ItemData itemData = GameData.item.get(item.getNo());
+
+		loseItemByIndex(index, amount);
+		if (itemData.getType() == Type.Item.ITEM)
+			Map.getMap(no).getField(seed).loadDropItem(item.getNo(), amount, x, y);
+		else
+			Map.getMap(no).getField(seed).loadDropItem(item.getNo(), item, x, y);
+
+		return true;
+	}
+
+	public boolean dropGold(int amount) {
+		if (gold < amount)
+			return false;
+
+		loseGold(amount);
+		Map.getMap(no).getField(seed).loadDropGold(amount, x, y);
+
+		return true;
+	}
+
+	// 아이템 줍기
+	public void pickItem() {
+		Field field = Map.getMap(map).getField(seed);
+		// 골드 먼저 줍자
+		Field.DropGold dropGold = field.pickGold(x, y);
+		Field.DropItem dropItem;
+
+		// 골드가 없다면
+		if (dropGold == null) {
+			// 아이템을 줍자
+			dropItem = field.pickItem(x, y);
+
+			// 아이템도 없다면 반환
+			if (dropItem == null)
+				return;
+		}
+		else {
+			// 골드가 있다면 획득하고 반환
+			gainGold(dropGold.getAmount());
+			field.removeDropGold(dropGold);
+
+			return;
+		}
+
+		// 비어있는 인덱스를 획득
+		int index = getEmptyIndex();
+		if (index == -1)
+			return;
+
+		GameData.ItemData itemData = GameData.item.get(dropItem.getItemNo());
+
+		if (itemData.getType() != Type.Item.ITEM) {
+			// 장비 아이템일 경우 기존 능력치 얻어가자
+			gainItem(dropItem.getItemNo(), dropItem.getItem());
+		} else {
+			// 일반 아이템일 경우 그냥 얻자
+			gainItem(dropItem.getItemNo(), dropItem.getAmount());
+		}
+
+		field.removeDropItem(dropItem);
 	}
 
 	// No로 스킬 검색
@@ -1179,13 +1339,13 @@ public class User extends Character {
 		if (target.getClass().getName().equals("game.Enemy")) {
 			// 타겟이 에너미인 경우
 			Enemy e = (Enemy) target;
-			e.loseHp(attackDamage);
 			e.displayDamage(attackDamage, isFatal);
+			e.loseHp(attackDamage);
 		} else if (target.getClass().getName().equals("game.User")) {
 			// 타겟이 유저인 경우
 			User u = (User) target;
-			u.loseHp(attackDamage);
 			u.displayDamage(attackDamage, isFatal);
+			u.loseHp(attackDamage);
 		}
 	}
 

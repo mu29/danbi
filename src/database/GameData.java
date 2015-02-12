@@ -339,11 +339,12 @@ public class GameData extends DataBase {
 		private int hit;
 		private int reinforce;
 		private boolean trade;
+		private boolean equipped;
 
 		public Item(int _userNo, int _itemNo, int _amount, int _index, int _trade) {
 			userNo = _userNo;
 			itemNo = _itemNo;
-			amount = _amount > GameData.item.get(itemNo).getMaxLoad() ? GameData.item.get(itemNo).getMaxLoad() : amount;
+			amount = _amount > GameData.item.get(itemNo).getMaxLoad() ? GameData.item.get(itemNo).getMaxLoad() : _amount;
 			index = _index;
 			damage = 0;
 			magicDamage = 0;
@@ -359,6 +360,29 @@ public class GameData extends DataBase {
 			hit = 0;
 			reinforce = 0;
 			trade = _trade == 1;
+			equipped = false;
+		}
+
+		public Item(int _userNo, int _itemNo, int _index, GameData.Item itemInfo) {
+			userNo = _userNo;
+			itemNo = _itemNo;
+			amount = 1;
+			index = _index;
+			damage = itemInfo.getDamage();
+			magicDamage = itemInfo.getMagicDamage();
+			defense = itemInfo.getDefense();
+			magicDefense = itemInfo.getMagicDefense();
+			str = itemInfo.getStr();
+			dex = itemInfo.getDex();
+			agi = itemInfo.getAgi();
+			hp = itemInfo.getHp();
+			mp = itemInfo.getMp();
+			critical = itemInfo.getCritical();
+			avoid = itemInfo.getAvoid();
+			hit = itemInfo.getHit();
+			reinforce = itemInfo.getReinforce();
+			trade = itemInfo.isTradeable();
+			equipped = false;
 		}
 
 		public Item(ResultSet rs) {
@@ -381,6 +405,7 @@ public class GameData extends DataBase {
 				hit = rs.getInt("hit");
 				reinforce = rs.getInt("reinforce");
 				trade = rs.getInt("trade") == 1;
+				equipped = rs.getInt("equipped") == 1;
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
 			}
@@ -457,7 +482,15 @@ public class GameData extends DataBase {
 		public boolean isTradeable() {
 			return trade;
 		}
-		
+
+		public boolean isEquipped() {
+			return equipped;
+		}
+
+		public void setEquipped(boolean value) {
+			equipped = value;
+		}
+
 		public void setIndex(int value) {
 			index = value;
 		}
@@ -607,7 +640,7 @@ public class GameData extends DataBase {
 		private int gold;
 		private int exp;
 		private int reward;
-		private String function;
+		private String skill;
 		private int frequency;
 		private String dieFunction;
 
@@ -640,7 +673,7 @@ public class GameData extends DataBase {
 				exp = rs.getInt("exp");
 				gold = rs.getInt("gold");
 				reward = rs.getInt("reward");
-				function = rs.getString("function");
+				skill = rs.getString("skill");
 				frequency = rs.getInt("frequency");
 				dieFunction = rs.getString("die");
 			} catch (SQLException e) {
@@ -756,8 +789,8 @@ public class GameData extends DataBase {
 			return reward;
 		}
 
-		public String getFunction() {
-			return function;
+		public String getSkill() {
+			return skill;
 		}
 
 		public int getFrequency() {

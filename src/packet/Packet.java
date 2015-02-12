@@ -191,6 +191,33 @@ public final class Packet {
 
 		return packet;
 	}
+
+	public static JSONObject loadDropGold(Field.DropGold gold) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.LOAD_DROP_GOLD);
+		packet.put("no", gold.getNo());
+		packet.put("x", gold.getX());
+		packet.put("y", gold.getY());
+		packet.put("amount", gold.getAmount());
+
+		return packet;
+	}
+
+	public static JSONObject removeDropItem(Field.DropItem item) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.REMOVE_DROP_ITEM);
+		packet.put("no", item.getNo());
+
+		return packet;
+	}
+
+	public static JSONObject removeDropGold(Field.DropGold gold) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.REMOVE_DROP_GOLD);
+		packet.put("no", gold.getNo());
+
+		return packet;
+	}
 	
 	public static JSONObject openRegisterWindow() {
 		String[] image = new String[GameData.register.size()];
@@ -238,6 +265,7 @@ public final class Packet {
 		packet.put("hit", item.getHit());
 		packet.put("reinforce", item.getReinforce());
 		packet.put("trade", item.isTradeable() ? 1 : 0);
+		packet.put("equipped", item.isEquipped() ? 1 : 0);
 
 		return packet;
 	}
@@ -263,6 +291,7 @@ public final class Packet {
 		packet.put("hit", item.getHit());
 		packet.put("reinforce", item.getReinforce());
 		packet.put("trade", item.isTradeable() ? 1 : 0);
+		packet.put("equipped", item.isEquipped() ? 1 : 0);
 
 		return packet;
 	}

@@ -10,6 +10,9 @@ public final class CTSHeader {
 	public final static int ACTION = 6;
 	public final static int USE_ITEM = 7;
 	public final static int USE_SKILL = 8;
+	public final static int DROP_ITEM = 9;
+	public final static int DROP_GOLD = 10;
+	public final static int PICK_ITEM = 11;
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int CHANGE_ITEM_INDEX = 101;

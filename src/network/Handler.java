@@ -51,6 +51,15 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.USE_SKILL:
 				User.get(ctx).useSkill((int) packet.get("no"));
 				break;
+			case CTSHeader.DROP_ITEM:
+				User.get(ctx).dropItemByIndex((int) packet.get("index"), (int) packet.get("amount"));
+				break;
+			case CTSHeader.DROP_GOLD:
+				//User.get(ctx).dropItemByIndex((int) packet.get("index"), (int) packet.get("amount"));
+				break;
+			case CTSHeader.PICK_ITEM:
+				User.get(ctx).pickItem();
+				break;
 	    	case CTSHeader.OPEN_REGISTER_WINDOW:
 				ctx.writeAndFlush(Packet.openRegisterWindow());
 				break;

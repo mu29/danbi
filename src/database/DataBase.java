@@ -82,7 +82,8 @@ public class DataBase {
 					"`avoid` = '" + item.getAvoid() + "', " +
 					"`hit` = '" + item.getHit() + "', " +
 					"`reinforce` = '" + item.getReinforce() + "', " +
-					"`trade` = '" + (item.isTradeable() ? 1 : 0) + "';");
+					"`trade` = '" + (item.isTradeable() ? 1 : 0) + "', " +
+					"`equipped` = '" + (item.isEquipped() ? 1 : 0) + "';");
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}

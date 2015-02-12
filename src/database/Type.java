@@ -54,12 +54,13 @@ public class Type {
         public static final int LEVEL = 15;
         public static final int EXP = 16;
         public static final int MAX_EXP = 17;
-        public static final int WEAPON = 18;
-        public static final int SHIELD = 19;
-        public static final int HELMET = 20;
-        public static final int ARMOR = 21;
-        public static final int CAPE = 22;
-        public static final int SHOES = 23;
-        public static final int ACCESSORY = 24;
+        public static final int GOLD = 18;
+        public static final int WEAPON = 19;
+        public static final int SHIELD = 20;
+        public static final int HELMET = 21;
+        public static final int ARMOR = 22;
+        public static final int CAPE = 23;
+        public static final int SHOES = 24;
+        public static final int ACCESSORY = 25;
     }
 }

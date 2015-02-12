@@ -14,6 +14,7 @@ public class Field {
     private int mapNo;
     private int seed;
     private Random random;
+    private int dropItemNo = 0;
 
     private Vector<User> users = new Vector<User>();
     private Vector<Enemy> enemies = new Vector<Enemy>();
@@ -127,21 +128,24 @@ public class Field {
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.NPC, other));
 
         for (DropItem item : dropItems)
-            if (item.getSeed() == u.getSeed())
-                u.getCtx().writeAndFlush(Packet.loadDropItem(item));
+            u.getCtx().writeAndFlush(Packet.loadDropItem(item));
 
         users.addElement(u);
     }
 
     public void removeUser(User u) {
-        users.removeElement(u);
+        for (User other : users) {
+            if (other.equals(u))
+                continue;
 
-        for (User other : users)
             other.getCtx().writeAndFlush(Packet.removeCharacter(Type.Character.USER, u.getNo()));
+        }
 
         for (Enemy enemy : getAliveEnemies())
-            if (enemy.getTarget().equals(u))
-                enemy.findTarget();
+            if (enemy.getTarget() != null && enemy.getTarget().equals(u))
+                enemy.findTarget(u);
+
+        users.removeElement(u);
     }
 
     public Vector<User> getUsers() {
@@ -164,9 +168,60 @@ public class Field {
     }
 
     public void loadDropItem(int itemNo, int num, int x, int y) {
-        DropItem item = new DropItem(seed, dropItems.size(), itemNo, num, x, y);
+        DropItem item = new DropItem(dropItemNo, itemNo, num, x, y);
         dropItems.addElement(item);
+        dropItemNo++;
         sendToAll(Packet.loadDropItem(item));
+    }
+
+    public void loadDropItem(int itemNo, GameData.Item _item, int x, int y) {
+        DropItem item = new DropItem(dropItemNo, itemNo, _item, x, y);
+        dropItems.addElement(item);
+        dropItemNo++;
+        sendToAll(Packet.loadDropItem(item));
+    }
+
+    public void loadDropGold(int amount, int x, int y) {
+        DropGold gold = new DropGold(dropItemNo, amount, x, y);
+        dropGolds.addElement(gold);
+        dropItemNo++;
+        sendToAll(Packet.loadDropGold(gold));
+    }
+
+    public void removeDropItem(DropItem item) {
+        if (!dropItems.contains(item))
+            return;
+
+        sendToAll(Packet.removeDropItem(item));
+        dropItems.removeElement(item);
+    }
+
+    public void removeDropGold(DropGold gold) {
+        if (!dropGolds.contains(gold))
+            return;
+
+        sendToAll(Packet.removeDropGold(gold));
+        dropGolds.removeElement(gold);
+    }
+
+    public DropItem pickItem(int x, int y) {
+        for (DropItem item : dropItems) {
+            if (item.getX() == x && item.getY() == y) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public DropGold pickGold(int x, int y) {
+        for (DropGold gold : dropGolds) {
+            if (gold.getX() == x && gold.getY() == y) {
+                return gold;
+            }
+        }
+
+        return null;
     }
 
     public void update() {
@@ -195,20 +250,30 @@ public class Field {
     public static class DropItem {
         private int no;
         private int itemNo;
-        private int num;
-        private int seed;
+        private int amount;
         private int x;
         private int y;
+        private GameData.Item item;
         private String image;
 
-        public DropItem(int _seed, int _no, int _itemNo, int _num, int _x, int _y) {
-            seed = _seed;
+        public DropItem( int _no, int _itemNo, int _amount, int _x, int _y) {
             no = _no;
             itemNo = _itemNo;
-            num = _num;
+            amount = _amount;
             x = _x;
             y = _y;
             image = GameData.item.get(itemNo).getImage();
+            item = new GameData.Item(0, itemNo, amount, 0, GameData.item.get(itemNo).isTradeable() ? 1 : 0);
+        }
+
+        public DropItem(int _no, int _itemNo, GameData.Item _item, int _x, int _y) {
+            no = _no;
+            itemNo = _itemNo;
+            amount = 1;
+            x = _x;
+            y = _y;
+            image = GameData.item.get(itemNo).getImage();
+            item = _item;
         }
 
         public int getNo() {
@@ -219,12 +284,8 @@ public class Field {
             return itemNo;
         }
 
-        public int getNum() {
-            return num;
-        }
-
-        public int getSeed() {
-            return seed;
+        public int getAmount() {
+            return amount;
         }
 
         public int getX() {
@@ -238,13 +299,39 @@ public class Field {
         public String getImage() {
             return image;
         }
+
+        public GameData.Item getItem() {
+            return item;
+        }
     }
 
     public static class DropGold {
+        private int no;
+        private int x;
+        private int y;
         private int amount;
 
-        public DropGold(int _amount) {
+        public DropGold(int _no, int _amount, int _x, int _y) {
+            no = _no;
             amount = _amount;
+            x = _x;
+            y = _y;
+        }
+
+        public int getNo() {
+            return no;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public int getAmount() {
+            return amount;
         }
     }
 }

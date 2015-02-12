@@ -15,6 +15,8 @@ public final class STCHeader {
 	public final static int DAMAGE_CHARACTER = 11;
 	public final static int LOAD_DROP_ITEM = 12;
 	public final static int LOAD_DROP_GOLD = 13;
+	public final static int REMOVE_DROP_ITEM = 14;
+	public final static int REMOVE_DROP_GOLD = 15;
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int UPDATE_STATUS = 101;
