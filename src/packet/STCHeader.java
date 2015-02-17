@@ -20,7 +20,13 @@ public final class STCHeader {
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int UPDATE_STATUS = 101;
-	public final static int SET_INVENTORY = 102;
-	public final static int UPDATE_INVENTORY = 103;
-	public final static int SET_SKILL_LIST = 104;
+	public final static int SET_ITEM = 102;
+	public final static int UPDATE_ITEM = 103;
+	public final static int SET_SKILL = 104;
+	public final static int UPDATE_SKILL = 105;
+	public final static int REQUEST_TRADE = 106;
+	public final static int OPEN_TRADE_WINDOW = 107;
+	public final static int SET_TRADE_ITEM = 108;
+	public final static int DROP_TRADE_ITEM = 109;
+	public final static int FINISH_TRADE = 110;
 }

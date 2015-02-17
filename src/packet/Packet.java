@@ -5,7 +5,6 @@ import game.Field;
 import game.User;
 import game.Character;
 
-import javafx.beans.DefaultProperty;
 import org.json.simple.JSONObject;
 
 import database.GameData;
@@ -244,9 +243,9 @@ public final class Packet {
 		return packet;
 	}
 	
-	public static JSONObject setInventory(GameData.Item item) {
+	public static JSONObject setItem(GameData.Item item) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.SET_INVENTORY);
+		packet.put("header", STCHeader.SET_ITEM);
 		packet.put("userNo", item.getUserNo());
 		packet.put("itemNo", item.getNo());
 		packet.put("amount", item.getAmount());
@@ -271,9 +270,9 @@ public final class Packet {
 	}
 
 	// 삭제(0), 갯수(1)
-	public static JSONObject updateInventory(int type, GameData.Item item) {
+	public static JSONObject updateItem(int type, GameData.Item item) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.UPDATE_INVENTORY);
+		packet.put("header", STCHeader.UPDATE_ITEM);
 		packet.put("type", type);
 		packet.put("index", item.getIndex());
 		packet.put("amount", item.getAmount());
@@ -296,11 +295,38 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject setSkillList(GameData.Skill skill) {
+	public static JSONObject setSkill(GameData.Skill skill) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.SET_SKILL_LIST);
+		packet.put("header", STCHeader.SET_SKILL);
 		packet.put("no", skill.getNo());
 		packet.put("rank", skill.getRank());
+
+		return packet;
+	}
+
+	// 삭제(0), 랭크(1)
+	public static JSONObject updateSkill(int type, GameData.Skill skill) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.UPDATE_SKILL);
+		packet.put("type", type);
+		packet.put("no", skill.getNo());
+		packet.put("rank", skill.getRank());
+
+		return packet;
+	}
+
+	public static JSONObject requestTrade(int partnerNo) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.REQUEST_TRADE);
+		packet.put("partnerNo", partnerNo);
+
+		return packet;
+	}
+
+	public static JSONObject openTradeWindow(int partnerNo) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.OPEN_TRADE_WINDOW);
+		packet.put("partnerNo", partnerNo);
 
 		return packet;
 	}

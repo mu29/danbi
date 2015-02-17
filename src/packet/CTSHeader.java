@@ -16,4 +16,9 @@ public final class CTSHeader {
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int CHANGE_ITEM_INDEX = 101;
+	public final static int REQUEST_TRADE = 102;
+	public final static int RESPONSE_TRADE = 103;
+	public final static int LOAD_TRADE_ITEM = 104;
+	public final static int DROP_TRADE_ITEM = 105;
+	public final static int FINISH_TRADE = 106;
 }

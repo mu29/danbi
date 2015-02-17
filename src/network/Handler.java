@@ -55,7 +55,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 				User.get(ctx).dropItemByIndex((int) packet.get("index"), (int) packet.get("amount"));
 				break;
 			case CTSHeader.DROP_GOLD:
-				//User.get(ctx).dropItemByIndex((int) packet.get("index"), (int) packet.get("amount"));
+				User.get(ctx).dropGold((int) packet.get("amount"));
 				break;
 			case CTSHeader.PICK_ITEM:
 				User.get(ctx).pickItem();
@@ -66,11 +66,17 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 	    	case CTSHeader.CHANGE_ITEM_INDEX:
 				User.get(ctx).changeItemIndex((int) packet.get("index1"), (int) packet.get("index2"));
 				break;
+			case CTSHeader.REQUEST_TRADE:
+				User.get(ctx).requestTrade((int) packet.get("partner"));
+				break;
+			case CTSHeader.RESPONSE_TRADE:
+				User.get(ctx).responseTrade((int) packet.get("type"), (int) packet.get("partner"));
+				break;
     	}
     }
 
 	// 로그인
-    void login(ChannelHandlerContext ctx, JSONObject packet) {
+    private void login(ChannelHandlerContext ctx, JSONObject packet) {
 		// 아이디와 비밀번호를 읽어온다
     	String readID = (String) packet.get("id");
     	String readPass = (String) packet.get("pass");
@@ -111,7 +117,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     }
 
 	// 회원가입
-    void register(ChannelHandlerContext ctx, JSONObject packet) {
+    private void register(ChannelHandlerContext ctx, JSONObject packet) {
 		// 가입 정보를 읽어온다
     	String readID = (String) packet.get("id");
     	String readPass = (String) packet.get("pass");
@@ -159,7 +165,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     	DataBase.insertUser(readID, readPass, readName, readMail, r.getImage(), r.getJob(), r.getMap(), r.getX(), r.getY(), r.getLevel());
     	ctx.writeAndFlush(Packet.registerMessage(0));
     }
-    
+
     @Override
 	public void channelRegistered (ChannelHandlerContext ctx) {
 		logger.info(ctx.channel().remoteAddress().toString() + " 접속");

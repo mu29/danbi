@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Random;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import packet.Packet;
@@ -37,9 +38,12 @@ public class User extends Character {
 	private int accessory = 0;
 
 	private int maxInventory = 35;
+	private int tradePartner;
 
 	private Hashtable<Integer, GameData.Item> inventory = new Hashtable<Integer, GameData.Item>();
 	private Hashtable<Integer, GameData.Skill> skillList  = new Hashtable<Integer, GameData.Skill>();
+
+	private Vector<GameData.Item> tradeItem = new Vector<GameData.Item>();
 
 	private static Logger logger = Logger.getLogger(User.class.getName());
 
@@ -48,6 +52,14 @@ public class User extends Character {
 			return null;
 
 		return users.get(ctx);
+	}
+
+	public static User get(int userNo) {
+		for (User u : users.values())
+			if (u.getNo() == userNo)
+				return u;
+
+		return null;
 	}
 
 	public static Hashtable<ChannelHandlerContext, User> getAll() {
@@ -794,7 +806,7 @@ public class User extends Character {
 
 			while (rs.next()) {
 				inventory.put(rs.getInt("index"), new GameData.Item(rs));
-				ctx.writeAndFlush(Packet.setInventory(inventory.get(rs.getInt("index"))));
+				ctx.writeAndFlush(Packet.setItem(inventory.get(rs.getInt("index"))));
 			}
 
 			rs.close();
@@ -811,7 +823,7 @@ public class User extends Character {
 
 			while (rs.next()) {
 				skillList.put(rs.getInt("skill_no"), new GameData.Skill(no, rs.getInt("skill_no")));
-				ctx.writeAndFlush(Packet.setSkillList(skillList.get(rs.getInt("skill_no"))));
+				ctx.writeAndFlush(Packet.setSkill(skillList.get(rs.getInt("skill_no"))));
 			}
 
 			rs.close();
@@ -846,10 +858,6 @@ public class User extends Character {
 		// 스포 하나 까자
 		statPoint--;
 		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.STAT_POINT }, new Integer[]{ statPoint }));
-	}
-
-	public void removeEquipItem(int type) {
-
 	}
 	
 	// 아이템 장착
@@ -896,12 +904,12 @@ public class User extends Character {
 		// 장착 상태 변경 후 인벤토리 업데이트
 		if (lastEquippedItem != null) {
 			lastEquippedItem.setEquipped(false);
-			ctx.writeAndFlush(Packet.updateInventory(1, lastEquippedItem));
+			ctx.writeAndFlush(Packet.updateItem(1, lastEquippedItem));
 		}
 
 		if (nowEquipItem != null) {
 			nowEquipItem.setEquipped(true);
-			ctx.writeAndFlush(Packet.updateInventory(1, nowEquipItem));
+			ctx.writeAndFlush(Packet.updateItem(1, nowEquipItem));
 		}
 
 		if (getMaxHp() < hp)
@@ -931,7 +939,7 @@ public class User extends Character {
 			gap = itemData.getAmount() + num - item.getMaxLoad();
 			itemData.changeAmount(num);
 			num = gap;
-			ctx.writeAndFlush(Packet.updateInventory(1, itemData));
+			ctx.writeAndFlush(Packet.updateItem(1, itemData));
 		}
 
 		while (num > 0) {
@@ -942,7 +950,7 @@ public class User extends Character {
 			}
 			// 계속해서 아이템 채우자
 			inventory.put(index, new GameData.Item(no, itemNo, num, index, item.isTradeable() ? 1 : 0));
-			ctx.writeAndFlush(Packet.setInventory(inventory.get(index)));
+			ctx.writeAndFlush(Packet.setItem(inventory.get(index)));
 			index = getEmptyIndex();
 			num -= item.getMaxLoad();
 		}
@@ -958,7 +966,7 @@ public class User extends Character {
 			return false;
 
 		inventory.put(index, new GameData.Item(no, item.getNo(), index, item));
-		ctx.writeAndFlush(Packet.setInventory(inventory.get(index)));
+		ctx.writeAndFlush(Packet.setItem(inventory.get(index)));
 
 		return true;
 	}
@@ -982,10 +990,10 @@ public class User extends Character {
 			if (item.getAmount() == 0) {
 				// 아이템 삭제
 				inventory.remove(item.getIndex());
-				ctx.writeAndFlush(Packet.updateInventory(0, item));
+				ctx.writeAndFlush(Packet.updateItem(0, item));
 			} else {
 				// 아이템 갯수 업데이트
-				ctx.writeAndFlush(Packet.updateInventory(1, item));
+				ctx.writeAndFlush(Packet.updateItem(1, item));
 			}
 			num = gap;
 		} while (num > 0);
@@ -1005,10 +1013,10 @@ public class User extends Character {
 		if (item.getAmount() == 0) {
 			// 아이템 삭제
 			inventory.remove(item.getIndex());
-			ctx.writeAndFlush(Packet.updateInventory(0, item));
+			ctx.writeAndFlush(Packet.updateItem(0, item));
 		} else {
 			// 아이템 갯수 업데이트
-			ctx.writeAndFlush(Packet.updateInventory(1, item));
+			ctx.writeAndFlush(Packet.updateItem(1, item));
 		}
 
 		return true;
@@ -1088,15 +1096,15 @@ public class User extends Character {
 			inventory.put(index2, presentItem);
 			inventory.put(index1, targetItem);
 
-			ctx.write(Packet.setInventory(presentItem));
-			ctx.writeAndFlush(Packet.setInventory(targetItem));
+			ctx.write(Packet.setItem(presentItem));
+			ctx.writeAndFlush(Packet.setItem(targetItem));
 		} else {
 			// 빈 곳으로 아이템 이동
-			ctx.write(Packet.updateInventory(0, presentItem));
+			ctx.write(Packet.updateItem(0, presentItem));
 			inventory.remove(index1);
 			presentItem.setIndex(index2);
 			inventory.put(index2, presentItem);
-			ctx.writeAndFlush(Packet.setInventory(presentItem));
+			ctx.writeAndFlush(Packet.setItem(presentItem));
 		}
 
 	}
@@ -1219,6 +1227,7 @@ public class User extends Character {
 		return true;
 	}
 
+	// 골드 버리기
 	public boolean dropGold(int amount) {
 		if (gold < amount)
 			return false;
@@ -1284,7 +1293,9 @@ public class User extends Character {
 		if (skillList.containsKey(skillNo))
 			return false;
 
-		skillList.put(skillNo, new GameData.Skill(no, skillNo));
+		GameData.Skill skill = new GameData.Skill(no, skillNo);
+		skillList.put(skillNo, skill);
+		ctx.writeAndFlush(Packet.setSkill(skill));
 		return true;
 	}
 
@@ -1293,6 +1304,7 @@ public class User extends Character {
 		if (!skillList.containsKey(skillNo))
 			return false;
 
+		ctx.writeAndFlush(Packet.updateSkill(0, skillList.get(skillNo)));
 		skillList.remove(skillNo);
 		return true;
 	}
@@ -1310,6 +1322,70 @@ public class User extends Character {
 			Functions.execute(Functions.skill, function, new Object[] { this, skill });
 
 		return true;
+	}
+
+	// 거래 요청
+	public boolean requestTrade(int partnerNo) {
+		User partner = User.get(partnerNo);
+
+		// 이미 거래중이라면 반환
+		if (tradePartner > 0)
+			return false;
+
+		// 파트너가 없으면 반환
+		if (partner == null)
+			return false;
+
+		// 상대 유저가 거래중이라면 반환
+		if (partner.nowTrading())
+			return false;
+
+		// 거래 요청
+		partner.getCtx().writeAndFlush(Packet.requestTrade(no));
+		return true;
+	}
+
+	// 거래 수락 및 거절
+	public void responseTrade(int type, int partnerNo) {
+		User partner = User.get(partnerNo);
+
+		// 파트너가 없으면 반환
+		if (partner == null)
+			return;
+
+		// 파트너가 교환중이면 반환
+		if (partner.nowTrading())
+			return;
+
+		switch (type) {
+			case 0:
+				// 수락
+				startTrade(partnerNo);
+				ctx.writeAndFlush(Packet.openTradeWindow(partnerNo));
+				partner.startTrade(no);
+				partner.getCtx().writeAndFlush(Packet.openTradeWindow(no));
+				break;
+			case 1:
+				// 거절
+				partner.finishTrade();
+				break;
+		}
+	}
+
+	// 거래 시작
+	public void startTrade(int partnerNo) {
+		tradePartner = partnerNo;
+		tradeItem.clear();
+	}
+
+	// 거래 종료
+	public void finishTrade() {
+		tradePartner = 0;
+	}
+
+	// 거래 중 여부
+	public boolean nowTrading() {
+		return tradePartner > 0;
 	}
 
 	// 스페이스바 누를 경우 액션

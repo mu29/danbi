@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: danbi
 Target Host: localhost
 Target Database: danbi
-Date: 2015-02-04 ���� 8:09:28
+Date: 2015-02-12 ���� 3:01:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,7 +33,7 @@ CREATE TABLE `item` (
   `index` int(11) NOT NULL,
   `damage` int(11) NOT NULL DEFAULT '0',
   `magic_damage` int(11) NOT NULL DEFAULT '0',
-  `defense` int(11) NOT NULL,
+  `defense` int(11) NOT NULL DEFAULT '0',
   `magic_defense` int(11) NOT NULL DEFAULT '0',
   `str` int(11) NOT NULL DEFAULT '0',
   `dex` int(11) NOT NULL DEFAULT '0',
@@ -44,22 +44,9 @@ CREATE TABLE `item` (
   `avoid` int(11) NOT NULL DEFAULT '0',
   `hit` int(11) NOT NULL DEFAULT '0',
   `reinforce` int(11) NOT NULL DEFAULT '0',
-  `trade` int(11) NOT NULL DEFAULT '1'
+  `trade` int(11) NOT NULL DEFAULT '1',
+  `equipped` int(11) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for npc
--- ----------------------------
-CREATE TABLE `npc` (
-  `no` int(11) DEFAULT NULL,
-  `name` char(255) DEFAULT NULL,
-  `image` char(255) DEFAULT NULL,
-  `map` int(11) DEFAULT NULL,
-  `x` int(11) DEFAULT NULL,
-  `y` int(11) DEFAULT NULL,
-  `direction` int(11) DEFAULT NULL,
-  `function` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for setting_item
@@ -107,6 +94,20 @@ CREATE TABLE `setting_job` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Table structure for setting_npc
+-- ----------------------------
+CREATE TABLE `setting_npc` (
+  `no` int(11) DEFAULT NULL,
+  `name` char(255) DEFAULT NULL,
+  `image` char(255) DEFAULT NULL,
+  `map` int(11) DEFAULT NULL,
+  `x` int(11) DEFAULT NULL,
+  `y` int(11) DEFAULT NULL,
+  `direction` int(11) DEFAULT NULL,
+  `function` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 -- Table structure for setting_register
 -- ----------------------------
 CREATE TABLE `setting_register` (
@@ -119,6 +120,16 @@ CREATE TABLE `setting_register` (
   `level` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`no`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for setting_reward
+-- ----------------------------
+CREATE TABLE `setting_reward` (
+  `no` int(11) DEFAULT NULL,
+  `item_no` int(11) DEFAULT NULL,
+  `num` int(11) DEFAULT '1',
+  `per` int(11) DEFAULT '100'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for setting_skill
@@ -171,7 +182,7 @@ CREATE TABLE `setting_troop` (
   `exp` int(11) DEFAULT '0',
   `gold` int(11) DEFAULT '0',
   `reward` int(11) DEFAULT NULL,
-  `function` char(255) DEFAULT NULL,
+  `skill` char(255) DEFAULT NULL,
   `frequency` int(11) DEFAULT '0',
   `die` char(255) DEFAULT NULL,
   PRIMARY KEY (`no`)
@@ -182,8 +193,8 @@ CREATE TABLE `setting_troop` (
 -- ----------------------------
 CREATE TABLE `skill` (
   `user_no` int(11) DEFAULT NULL,
-  `no` int(11) DEFAULT NULL,
-  `level` int(11) DEFAULT NULL
+  `skill_no` int(11) DEFAULT NULL,
+  `rank` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -216,23 +227,23 @@ CREATE TABLE `user` (
   `speed` int(11) NOT NULL DEFAULT '4',
   `admin` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`no`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records 
 -- ----------------------------
-INSERT INTO `equip` VALUES ('1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('1', '7', '0', '0', '0', '0', '14', '0');
 INSERT INTO `equip` VALUES ('2', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('3', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('4', '0', '0', '0', '0', '0', '0', '0');
-INSERT INTO `item` VALUES ('1', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
-INSERT INTO `item` VALUES ('1', '2', '1', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
-INSERT INTO `item` VALUES ('1', '3', '1', '3', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
-INSERT INTO `item` VALUES ('1', '4', '1', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
-INSERT INTO `item` VALUES ('1', '5', '1', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
-INSERT INTO `item` VALUES ('1', '6', '1', '6', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
-INSERT INTO `item` VALUES ('1', '7', '1', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
-INSERT INTO `item` VALUES ('1', '8', '1', '8', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
+INSERT INTO `equip` VALUES ('6', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('8', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('9', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('11', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `item` VALUES ('1', '6', '1', '14', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1');
+INSERT INTO `item` VALUES ('1', '1', '1', '7', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1');
+INSERT INTO `item` VALUES ('1', '7', '1', '5', '10', '0', '0', '0', '10', '20', '30', '0', '0', '0', '0', '0', '0', '1', '0');
+INSERT INTO `item` VALUES ('1', '8', '10', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `setting_item` VALUES ('1', '목도', '나무로 만든 검', '001-Weapon01', '0', '1', '0', '100', '10', '10', '10', '10', '5', '4', '3', '2', '1', '10', '5', '5', '2', '0', '1', '1', null);
 INSERT INTO `setting_item` VALUES ('2', '냄비 뚜껑', '방패가 없으니 이거라도 쓰자', '009-Shield01', '0', '1', '1', '10', '0', '0', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', null);
 INSERT INTO `setting_item` VALUES ('3', '밀짚모자', '난 해적왕이 될 사나이!', '010-Head01', '0', '1', '2', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0', '1', '1', null);
@@ -241,16 +252,25 @@ INSERT INTO `setting_item` VALUES ('5', '누더기 망토', '누가 쓰던걸까
 INSERT INTO `setting_item` VALUES ('6', '등산화', '아빠 등산화를 훔쳤다', '020-Accessory05', '0', '1', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', null);
 INSERT INTO `setting_item` VALUES ('7', '금반지', '돌잔치때 받은 금반지', '016-Accessory01', '0', '1', '6', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', null);
 INSERT INTO `setting_item` VALUES ('8', '포션', '뭐지 이 아이템은', '021-Potion01', '0', '1', '7', '0', '0', '0', '0', '0', '0', '0', '0', '100', '0', '0', '0', '0', '0', '1', '10', '1', 'potion');
-INSERT INTO `setting_job` VALUES ('1', '전사', '10', '5', '1', '0', '0');
+INSERT INTO `setting_job` VALUES ('1', '전사', '1000', '5', '1', '0', '0');
 INSERT INTO `setting_job` VALUES ('2', '마법사', '5', '10', '0', '0', '1');
 INSERT INTO `setting_job` VALUES ('3', '도적', '7', '7', '0', '1', '0');
+INSERT INTO `setting_npc` VALUES ('1', '테스트', '003-Fighter03', '1', '10', '4', '2', null);
 INSERT INTO `setting_register` VALUES ('1', '1', '001-Fighter01', '1', '0', '0', '1');
 INSERT INTO `setting_register` VALUES ('2', '1', '002-Fighter02', '1', '0', '0', '1');
 INSERT INTO `setting_register` VALUES ('3', '2', '004-Fighter04', '1', '0', '0', '1');
+INSERT INTO `setting_reward` VALUES ('1', '1', '1', '10000');
 INSERT INTO `setting_skill` VALUES ('1', '크로스 컷', '전사의 기본적인 기술. 적을 두차례 벤다.', '근접 공격', '1', '20', '5', '10', '0', '67', '050-Skill07', 'crossCut');
-INSERT INTO `setting_troop` VALUES ('1', '다람쥐', '168-Small10', '4', '0', '1', '10', '10', '10', '4', '3', '1', '1', '1', '10', '50', '50', '5', '5', '1', '5', '5', '2', '30', '1', '0', '0', null, 'test', '50', null);
+INSERT INTO `setting_troop` VALUES ('1', '다람쥐', '168-Small10', '4', '0', '1', '10', '10', '10', '4', '3', '1', '1', '1', '10', '50', '50', '5', '5', '1', '5', '5', '2', '30', '1', '10', '100', '1', 'chipmunkSkill', '50', null);
 INSERT INTO `skill` VALUES ('1', '1', '1');
-INSERT INTO `user` VALUES ('1', '1', '1', '테스트', '0', '1', '001-Fighter01', '1', '30', '19', '20', '31', '13', '963', '0', '99', '200', '0', '1', '0', '9', '7', '8', '4', '0');
-INSERT INTO `user` VALUES ('2', '2', '2', '2', '0', '2', '002-Fighter02', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '3', '9', '2', '4', '0');
+INSERT INTO `user` VALUES ('1', '1', 'PPAkXhcIYGcDVjdCgY/hHg==', '테스트', '0', '1', '001-Fighter01', '1', '30', '19', '20', '51', '17', '4365', '26', '5', '70', '15100', '1', '0', '9', '13', '6', '4', '0');
+INSERT INTO `user` VALUES ('2', '2', '2', '2', '0', '2', '002-Fighter02', '1', '0', '0', '0', '0', '0', '10000', '0', '1', '0', '0', '1', '0', '3', '9', '2', '4', '0');
 INSERT INTO `user` VALUES ('3', '3', '3', '3', '0', '3', '004-Fighter04', '2', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '13', '7', '2', '4', '0');
 INSERT INTO `user` VALUES ('4', '11', '1', '1', '0', '1', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '4', '6', '4', '0');
+INSERT INTO `user` VALUES ('5', 'springday94', 'lock1362@@', '?', '0', 'springday94@naver.com', '002-Fighter02', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
+INSERT INTO `user` VALUES ('6', '4', '4', '4sdafa', '0', '4sdaf', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '10', '9', '2', '4', '0');
+INSERT INTO `user` VALUES ('7', 'answp', 'sdafsa', 'asdfasdf', '0', 'sadfsadf', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
+INSERT INTO `user` VALUES ('8', 'a', 'KkPhAQH4Tx5uyU3BEt3KAQ==', 'a', '0', 'a', '001-Fighter01', '1', '11', '4', '0', '0', '3', '39928', '20', '4', '0', '0', '1', '0', '8', '9', '2', '4', '0');
+INSERT INTO `user` VALUES ('9', 'b', 'hqxcuUK5XT5yO4I6W1/2JQ==', 'b', '0', 'a', '001-Fighter01', '1', '0', '0', '0', '0', '0', '-90', '0', '1', '0', '0', '1', '0', '3', '6', '6', '4', '0');
+INSERT INTO `user` VALUES ('10', '123', 'PPAkXhcIYGcDVjdCgY/hHg==', '1213', '0', '1', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
+INSERT INTO `user` VALUES ('11', 'chip', 'wtUrc38hNLCxbeFjlTKA1g==', '???', '0', 'never', '004-Fighter04', '2', '0', '0', '0', '0', '0', '-27', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
