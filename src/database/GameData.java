@@ -320,7 +320,7 @@ public class GameData extends DataBase {
 		}
 	}
 	
-	public static class Item {
+	public static class Item implements Cloneable {
 		private int userNo;
 		private int itemNo;
 		private int amount;
@@ -495,7 +495,7 @@ public class GameData extends DataBase {
 			index = value;
 		}
 		
-		public void changeAmount(int value) {
+		public void addAmount(int value) {
 			if (amount + value > GameData.item.get(itemNo).getMaxLoad()) {
 				amount = GameData.item.get(itemNo).getMaxLoad();
 			} else if (amount + value < 0) {
@@ -503,6 +503,23 @@ public class GameData extends DataBase {
 			} else {
 				amount += value;
 			}
+		}
+
+		public void setAmount(int value) {
+			amount = Math.abs(value);
+		}
+
+		@Override
+		public Item clone() {
+			Item cloneItem = null;
+
+			try {
+				cloneItem = (Item) super.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+
+			return cloneItem;
 		}
 	}
 

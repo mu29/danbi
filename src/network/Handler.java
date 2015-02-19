@@ -72,6 +72,21 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.RESPONSE_TRADE:
 				User.get(ctx).responseTrade((int) packet.get("type"), (int) packet.get("partner"));
 				break;
+			case CTSHeader.LOAD_TRADE_ITEM:
+				User.get(ctx).loadTradeItem((int) packet.get("index"), (int) packet.get("amount"), (int) packet.get("tradeIndex"));
+				break;
+			case CTSHeader.DROP_TRADE_ITEM:
+				User.get(ctx).dropTradeItem((int) packet.get("index"));
+				break;
+			case CTSHeader.CHANGE_TRADE_GOLD:
+				User.get(ctx).changeTradeGold((int) packet.get("amount"));
+				break;
+			case CTSHeader.FINISH_TRADE:
+				User.get(ctx).acceptTrade();
+				break;
+			case CTSHeader.CANCEL_TRADE:
+				User.get(ctx).cancelTrade();
+				break;
     	}
     }
 

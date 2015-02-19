@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Random;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import packet.Packet;
@@ -43,7 +42,9 @@ public class User extends Character {
 	private Hashtable<Integer, GameData.Item> inventory = new Hashtable<Integer, GameData.Item>();
 	private Hashtable<Integer, GameData.Skill> skillList  = new Hashtable<Integer, GameData.Skill>();
 
-	private Vector<GameData.Item> tradeItem = new Vector<GameData.Item>();
+	private Hashtable<Integer, GameData.Item>  tradeItemList = new Hashtable<Integer, GameData.Item>();
+	private int tradeGold;
+	private boolean isAcceptTrade = false;
 
 	private static Logger logger = Logger.getLogger(User.class.getName());
 
@@ -937,7 +938,7 @@ public class User extends Character {
 		// 이미 있던 아이템일 경우 채워줌
 		if (itemData != null) {
 			gap = itemData.getAmount() + num - item.getMaxLoad();
-			itemData.changeAmount(num);
+			itemData.addAmount(num);
 			num = gap;
 			ctx.writeAndFlush(Packet.updateItem(1, itemData));
 		}
@@ -986,7 +987,7 @@ public class User extends Character {
 		// 모든 아이템을 잃을 때까지 반복
 		do {
 			gap = num - item.getAmount();
-			item.changeAmount(-num);
+			item.addAmount(-num);
 			if (item.getAmount() == 0) {
 				// 아이템 삭제
 				inventory.remove(item.getIndex());
@@ -1009,7 +1010,7 @@ public class User extends Character {
 		if (item == null || item.getAmount() < num)
 			return false;
 
-		item.changeAmount(-num);
+		item.addAmount(-num);
 		if (item.getAmount() == 0) {
 			// 아이템 삭제
 			inventory.remove(item.getIndex());
@@ -1176,7 +1177,7 @@ public class User extends Character {
 		// 함수가 있을 경우 실행
 		String function = GameData.item.get(item.getNo()).getFunction();
 		if (function != "")
-			Functions.execute(Functions.item, function, new Object[] { this, item });
+			Functions.execute(Functions.item, function, new Object[]{this, item});
 
 		return true;
 	}
@@ -1328,8 +1329,8 @@ public class User extends Character {
 	public boolean requestTrade(int partnerNo) {
 		User partner = User.get(partnerNo);
 
-		// 이미 거래중이라면 반환
-		if (tradePartner > 0)
+		// 거래 중이라면 반환
+		if (nowTrading())
 			return false;
 
 		// 파트너가 없으면 반환
@@ -1360,32 +1361,233 @@ public class User extends Character {
 		switch (type) {
 			case 0:
 				// 수락
-				startTrade(partnerNo);
+				tradePartner = partnerNo;
 				ctx.writeAndFlush(Packet.openTradeWindow(partnerNo));
-				partner.startTrade(no);
+				partner.tradePartner = no;
 				partner.getCtx().writeAndFlush(Packet.openTradeWindow(no));
 				break;
 			case 1:
 				// 거절
-				partner.finishTrade();
+				//partner.finishTrade();
 				break;
 		}
 	}
 
-	// 거래 시작
-	public void startTrade(int partnerNo) {
-		tradePartner = partnerNo;
-		tradeItem.clear();
+	// 거래 아이템 올리기
+	public void loadTradeItem(int index, int amount, int tradeIndex) {
+		// 거래 중 아니라면 반환
+		if (!nowTrading())
+			return;
+
+		// 거래 종료 대기 중이라면 반환
+		if (isAcceptTrade)
+			return;
+
+		GameData.Item item = findItemByIndex(index);
+
+		// 아이템이 없다면 반환
+		if (item == null)
+			return;
+
+		// 거래 불가능한 아이템일 경우 반환
+		if (!item.isTradeable())
+			return;
+
+		// 장착중이라면 반환
+		if (item.isEquipped())
+			return;
+
+		// 소지 갯수보다 거래하려는 갯수가 많을 경우 반환
+		if (item.getAmount() < amount)
+			return;
+
+		// 해당 공간에 이미 아이템이 있는 경우 반환
+		if (tradeItemList.containsKey(tradeIndex))
+			return;
+
+		// 거래하려는 아이템을 거래 목록에 올림
+		GameData.Item tradeItem = item.clone();
+		tradeItem.setIndex(tradeIndex);
+		tradeItem.setAmount(amount);
+		tradeItemList.put(tradeIndex, tradeItem);
+
+		// 아이템 잃음
+		loseItemByIndex(index, amount);
+
+		// 거래 아이템 로드
+		ctx.writeAndFlush(Packet.loadTradeItem(tradeItem));
+		User.get(tradePartner).getCtx().writeAndFlush(Packet.loadTradeItem(tradeItem));
+	}
+
+	// 거래 아이템 내리기
+	public void dropTradeItem(int index) {
+		// 거래 중 아니라면 반환
+		if (!nowTrading())
+			return;
+
+		// 거래 종료 대기 중이라면 반환
+		if (isAcceptTrade)
+			return;
+
+		// 아이템이 없으면 반환
+		if (!tradeItemList.containsKey(index))
+			return;
+
+		GameData.Item item = tradeItemList.get(index);
+		GameData.ItemData itemData = GameData.item.get(item.getNo());
+
+		// 일반 아이템일 경우 그냥 얻고, 장비 아이템일 경우 능력치 보존
+		if (itemData.getType() == Type.Item.ITEM)
+			gainItem(item.getNo(), item.getAmount());
+		else
+			gainItem(item.getNo(), item);
+
+		// 거래 아이템 리스트에서 제거
+		tradeItemList.remove(index);
+
+		// 거래 아이템 삭제
+		ctx.writeAndFlush(Packet.dropTradeItem(no, index));
+		User.get(tradePartner).getCtx().writeAndFlush(Packet.dropTradeItem(no, index));
+	}
+
+	// 거래 골드 변경
+	public void changeTradeGold(int value) {
+		// 거래 중 아니라면 반환
+		if (!nowTrading())
+			return;
+
+		// 거래 종료 대기 중이라면 반환
+		if (isAcceptTrade)
+			return;
+
+		// 가진 골드와 거래중인 골드의 합보다 많으면 반환
+		if (tradeGold + gold < value)
+			return;
+
+		gainGold(tradeGold);
+		loseGold(value);
+		tradeGold = value;
+
+		// 골드 변경하렴
+		ctx.writeAndFlush(Packet.changeTradeGold(no, tradeGold));
+		User.get(tradePartner).getCtx().writeAndFlush(Packet.changeTradeGold(no, tradeGold));
+	}
+
+	// 거래 종료 대기
+	public void acceptTrade() {
+		// 거래 중 아니라면 반환
+		if (!nowTrading())
+			return;
+
+		User partner = User.get(tradePartner);
+
+		// 상대방도 거래 종료 대기 중이라면
+		if (partner.isAcceptTrade)
+			finishTrade();
+		else
+			isAcceptTrade = true;
+
+		ctx.writeAndFlush(Packet.acceptTrade(no));
+		partner.getCtx().writeAndFlush(Packet.acceptTrade(no));
 	}
 
 	// 거래 종료
 	public void finishTrade() {
+		// 거래 중 아니라면 반환
+		if (!nowTrading())
+			return;
+
+		User partner = User.get(tradePartner);
+
+		// 아이템 및 골드 획득
+		for (GameData.Item i : partner.tradeItemList.values()) {
+			GameData.ItemData iData = GameData.item.get(i.getNo());
+
+			if (iData.getType() == Type.Item.ITEM)
+				gainItem(i.getNo(), i.getAmount());
+			else
+				gainItem(i.getNo(), i);
+		}
+		gainGold(partner.tradeGold);
+
+		// 파트너 아이템 및 골드 획득
+		for (GameData.Item i : tradeItemList.values()) {
+			GameData.ItemData iData = GameData.item.get(i.getNo());
+
+			if (iData.getType() == Type.Item.ITEM)
+				partner.gainItem(i.getNo(), i.getAmount());
+			else
+				partner.gainItem(i.getNo(), i);
+		}
+		partner.gainGold(tradeGold);
+
+		// 거래 관련 변수 초기화
 		tradePartner = 0;
+		isAcceptTrade = false;
+		tradeGold = 0;
+		tradeItemList.clear();
+
+		partner.tradePartner = 0;
+		partner.isAcceptTrade = false;
+		partner.tradeGold = 0;
+		partner.tradeItemList.clear();
+	}
+
+	// 거래 취소
+	public void cancelTrade() {
+		// 거래 중 아니라면 반환
+		if (!nowTrading())
+			return;
+
+		// 아이템 및 골드 돌려받기
+		for (GameData.Item i : tradeItemList.values()) {
+			GameData.ItemData iData = GameData.item.get(i.getNo());
+
+			if (iData.getType() == Type.Item.ITEM)
+				gainItem(i.getNo(), i.getAmount());
+			else
+				gainItem(i.getNo(), i);
+		}
+		gainGold(tradeGold);
+
+		// 파트너 아이템 및 골드 돌려받기
+		User partner = User.get(tradePartner);
+		for (GameData.Item i : partner.tradeItemList.values()) {
+			GameData.ItemData iData = GameData.item.get(i.getNo());
+
+			if (iData.getType() == Type.Item.ITEM)
+				partner.gainItem(i.getNo(), i.getAmount());
+			else
+				partner.gainItem(i.getNo(), i);
+		}
+		partner.gainGold(partner.tradeGold);
+
+		// 거래 관련 변수 초기화
+		tradePartner = 0;
+		isAcceptTrade = false;
+		tradeGold = 0;
+		tradeItemList.clear();
+
+		partner.tradePartner = 0;
+		partner.isAcceptTrade = false;
+		partner.tradeGold = 0;
+		partner.tradeItemList.clear();
+
+		ctx.writeAndFlush(Packet.cancelTrade());
+		partner.getCtx().writeAndFlush(Packet.cancelTrade());
 	}
 
 	// 거래 중 여부
 	public boolean nowTrading() {
-		return tradePartner > 0;
+		// 거래 중이 아니라면
+		if (tradePartner == 0)
+			return false;
+
+		// 거래 상대 없다면
+		if (User.get(tradePartner) == null)
+			return false;
+
+		return true;
 	}
 
 	// 스페이스바 누를 경우 액션

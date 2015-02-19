@@ -21,62 +21,6 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="module-library">
-      <library name="mysql-connector-java-5.1.33-bin.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Library/MySQL/mysql-connector-java-5.1.33-bin.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="json-simple-1.1.1.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Library/JSON/json-simple-1.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="jackson-annotations-2.4.0.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Library/Jackson JSON/jackson-annotations-2.4.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="jackson-core-2.4.2.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Library/Jackson JSON/jackson-core-2.4.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="jackson-databind-2.4.2.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Library/Jackson JSON/jackson-databind-2.4.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="netty-all-4.0.24.Final.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Library/Netty 4/jar/all-in-one/netty-all-4.0.24.Final.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../Library/Netty 4/jar/all-in-one/netty-all-4.0.24.Final-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Jackson JSON" level="project" />
     <orderEntry type="library" name="JSON" level="project" />
     <orderEntry type="library" name="MySQL" level="project" />

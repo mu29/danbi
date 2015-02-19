@@ -330,4 +330,61 @@ public final class Packet {
 
 		return packet;
 	}
+
+	public static JSONObject loadTradeItem(GameData.Item item) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.LOAD_TRADE_ITEM);
+		packet.put("userNo", item.getUserNo());
+		packet.put("itemNo", item.getNo());
+		packet.put("amount", item.getAmount());
+		packet.put("index", item.getIndex());
+		packet.put("damage", item.getDamage());
+		packet.put("magicDamage", item.getMagicDamage());
+		packet.put("defense", item.getDefense());
+		packet.put("magicDefense", item.getMagicDefense());
+		packet.put("str", item.getStr());
+		packet.put("dex", item.getDex());
+		packet.put("agi", item.getAgi());
+		packet.put("hp", item.getHp());
+		packet.put("mp", item.getMp());
+		packet.put("critical", item.getCritical());
+		packet.put("avoid", item.getAvoid());
+		packet.put("hit", item.getHit());
+		packet.put("reinforce", item.getReinforce());
+
+		return packet;
+	}
+
+	public static JSONObject dropTradeItem(int no, int index) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.DROP_TRADE_ITEM);
+		packet.put("no", no);
+		packet.put("index", index);
+
+		return packet;
+	}
+
+	public static JSONObject changeTradeGold(int no, int value) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHANGE_TRADE_GOLD);
+		packet.put("no", no);
+		packet.put("value", value);
+
+		return packet;
+	}
+
+	public static JSONObject acceptTrade(int no) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.FINISH_TRADE);
+		packet.put("no", no);
+
+		return packet;
+	}
+
+	public static JSONObject cancelTrade() {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CANCEL_TRADE);
+
+		return packet;
+	}
 }

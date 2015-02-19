@@ -26,7 +26,9 @@ public final class STCHeader {
 	public final static int UPDATE_SKILL = 105;
 	public final static int REQUEST_TRADE = 106;
 	public final static int OPEN_TRADE_WINDOW = 107;
-	public final static int SET_TRADE_ITEM = 108;
+	public final static int LOAD_TRADE_ITEM = 108;
 	public final static int DROP_TRADE_ITEM = 109;
-	public final static int FINISH_TRADE = 110;
+	public final static int CHANGE_TRADE_GOLD = 110;
+	public final static int FINISH_TRADE = 111;
+	public final static int CANCEL_TRADE = 112;
 }
