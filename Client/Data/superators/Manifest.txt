@@ -1,0 +1,10 @@
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/superators
+lib/superators.rb
+lib/superators/macro.rb
+lib/superators/monkey_patch.rb
+lib/superators/version.rb
+spec/superator_spec.rb
