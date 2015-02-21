@@ -18,7 +18,7 @@ public class Field {
 
     private Vector<User> users = new Vector<User>();
     private Vector<Enemy> enemies = new Vector<Enemy>();
-    private Hashtable<Integer, NPC> npcs = new Hashtable<Integer, NPC>();
+    private Hashtable<Integer, Npc> npcs = new Hashtable<Integer, Npc>();
     private Vector<DropItem> dropItems = new Vector<DropItem>();
     private Vector<DropGold> dropGolds = new Vector<DropGold>();
 
@@ -56,7 +56,7 @@ public class Field {
     private void loadNPCs() {
         for (GameData.NPC npc : GameData.npc.values()) {
             if (npc.getMap() == mapNo) {
-                npcs.put(npc.getNo(), new NPC(npc));
+                npcs.put(npc.getNo(), new Npc(npc));
             }
         }
         logger.info(mapNo + "번 맵 (" + seed + ") NPC 등록 완료");
@@ -85,7 +85,7 @@ public class Field {
         }
 
         // NPC가 있을 경우 반환
-        for (NPC other : npcs.values()) {
+        for (Npc other : npcs.values()) {
             if (other.equals(c))
                 continue;
             if (other.getX() == x && other.getY() == y)
@@ -113,7 +113,7 @@ public class Field {
                 if (other.getX() == x && other.getY() == y)
                     blocked += 1;
 
-            for (NPC other : npcs.values())
+            for (Npc other : npcs.values())
                 if (other.getX() == x && other.getY() == y)
                     blocked += 1;
         }
@@ -134,7 +134,7 @@ public class Field {
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.ENEMY, other));
 
         // 모든 NPC를 보내자
-        for (NPC other : npcs.values())
+        for (Npc other : npcs.values())
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.NPC, other));
 
         // 떨어진 아이템을 보내자
@@ -175,6 +175,16 @@ public class Field {
             aliveUsers.addElement(user);
 
         return aliveUsers;
+    }
+
+    // 모든 NPC를 반환
+    public Vector<Npc> getNPCs() {
+        Vector<Npc> aliveNpcs = new Vector<Npc>();
+
+        for (Npc npc : npcs.values())
+            aliveNpcs.addElement(npc);
+
+        return aliveNpcs;
     }
 
     // 살아있는 모든 에너미를 반환

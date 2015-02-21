@@ -4,12 +4,12 @@ import database.GameData;
 
 import java.util.logging.Logger;
 
-public class NPC extends Character {
+public class Npc extends Character {
 
     private String function;
-    private static Logger logger = Logger.getLogger(NPC.class.getName());
+    private static Logger logger = Logger.getLogger(Npc.class.getName());
 
-    public NPC(GameData.NPC npc) {
+    public Npc(GameData.NPC npc) {
         no = npc.getNo();
         name = npc.getName();
         image = npc.getImage();
@@ -18,5 +18,9 @@ public class NPC extends Character {
         y = npc.getY();
         direction = npc.getDirection();
         function = npc.getFunction();
+    }
+
+    public String getFunction() {
+        return function;
     }
 }

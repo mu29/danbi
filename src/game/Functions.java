@@ -1,15 +1,14 @@
 package game;
 
 import database.*;
-import packet.Packet;
 
 import java.lang.reflect.Method;
 
 public class Functions {
-    public static Functions.EnemySkill enemySkill = new Functions.EnemySkill();
-    public static Functions.EnemyDie enemyDie = new Functions.EnemyDie();
-    public static Functions.Item item = new Functions.Item();
-    public static Functions.Skill skill = new Functions.Skill();
+    public static EnemyFunction enemy = new EnemyFunction();
+    public static NpcFunction npc = new NpcFunction();
+    public static ItemFunction item = new ItemFunction();
+    public static SkillFunction skill = new SkillFunction();
 
     public static Object execute(Object obj, String methodName, Object[] objList) {
         Method[] methods = obj.getClass().getMethods();
@@ -30,7 +29,7 @@ public class Functions {
         return null;
     }
 
-    public static class EnemySkill {
+    public static class EnemyFunction {
         public void chipmunkSkill(Enemy enemy) {
             if (enemy.getTarget() instanceof User) {
                 User u = (User) enemy.getTarget();
@@ -39,18 +38,30 @@ public class Functions {
         }
     }
 
-    public static class EnemyDie {
+    public static class NpcFunction {
+        public void testNpc(User user, Npc npc) {
+            User.Message msg = user.getMessage();
+            
+            if (!msg.isStart()) {
+                msg.open(npc.getNo(), 0);
+                return;
+            }
 
+            if (msg.getMessage() == 0)
+                msg.update(5, 0);
+            else if (msg.getMessage() == 5)
+                msg.update(10, -1);
+        }
     }
 
-    public static class Item {
+    public static class ItemFunction {
         public void potion(User user, GameData.Item _item) {
             GameData.ItemData item = GameData.item.get(_item.getNo());
             user.gainHp(item.getHp());
         }
     }
 
-    public static class Skill {
+    public static class SkillFunction {
         public void crossCut(User user, GameData.Skill _skill) {
             Field field = Map.getMap(user.getMap()).getField(user.getSeed());
             GameData.SkillData skill = GameData.skill.get(_skill.getNo());

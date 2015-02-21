@@ -364,11 +364,11 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject changeTradeGold(int no, int value) {
+	public static JSONObject changeTradeGold(int no, int amount) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHANGE_TRADE_GOLD);
 		packet.put("no", no);
-		packet.put("value", value);
+		packet.put("amount", amount);
 
 		return packet;
 	}
@@ -384,6 +384,17 @@ public final class Packet {
 	public static JSONObject cancelTrade() {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CANCEL_TRADE);
+
+		return packet;
+	}
+
+	// 닫기(-1), 다음(0), 선택지 갯수 (1~)
+	public static JSONObject openMessageWindow(int no, int message, int select) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.OPEN_MESSAGE_WINDOW);
+		packet.put("no", no);
+		packet.put("message", message);
+		packet.put("select", select);
 
 		return packet;
 	}

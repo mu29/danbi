@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import packet.Packet;
 import database.*;
+import database.GameData.*;
 
 public class User extends Character {
 	private static Hashtable<ChannelHandlerContext, User> users = new Hashtable<ChannelHandlerContext, User>();
@@ -37,14 +38,18 @@ public class User extends Character {
 	private int accessory = 0;
 
 	private int maxInventory = 35;
+
+	private Hashtable<Integer, Item> inventory = new Hashtable<>();
+	private Hashtable<Integer, Skill> skillList  = new Hashtable<>();
+
+	// 거래 관련
 	private int tradePartner;
-
-	private Hashtable<Integer, GameData.Item> inventory = new Hashtable<Integer, GameData.Item>();
-	private Hashtable<Integer, GameData.Skill> skillList  = new Hashtable<Integer, GameData.Skill>();
-
-	private Hashtable<Integer, GameData.Item>  tradeItemList = new Hashtable<Integer, GameData.Item>();
+	private Hashtable<Integer, Item>  tradeItemList = new Hashtable<>();
 	private int tradeGold;
 	private boolean isAcceptTrade = false;
+
+	// NPC 관련
+	private Message message = new Message();
 
 	private static Logger logger = Logger.getLogger(User.class.getName());
 
@@ -84,9 +89,9 @@ public class User extends Character {
 		return true;
 	}
 
-	public User(ChannelHandlerContext ct, ResultSet rs) {
+	public User(ChannelHandlerContext _ctx, ResultSet rs) {
 		try {
-			ctx = ct;
+			ctx = _ctx;
 			no = rs.getInt("no");
 			id = rs.getString("id");
 			pass = rs.getString("pass");
@@ -157,7 +162,7 @@ public class User extends Character {
 		image = _image;
 		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.IMAGE }, new String[]{ image }));
 		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
-				new int[]{Type.Status.IMAGE}, new String[]{image}));
+				new int[]{ Type.Status.IMAGE }, new String[]{ image }));
 	}
 	
 	public int getJob() {
@@ -168,7 +173,7 @@ public class User extends Character {
 		job = _job;
 		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.JOB }, new Integer[]{ job }));
 		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
-				new int[]{Type.Status.JOB}, new Integer[]{job}));
+				new int[]{ Type.Status.JOB }, new Integer[]{ job }));
 	}
 	
 	public int getStr() {
@@ -806,7 +811,7 @@ public class User extends Character {
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `item` WHERE `user_no` = '" + no + "';");
 
 			while (rs.next()) {
-				inventory.put(rs.getInt("index"), new GameData.Item(rs));
+				inventory.put(rs.getInt("index"), new Item(rs));
 				ctx.writeAndFlush(Packet.setItem(inventory.get(rs.getInt("index"))));
 			}
 
@@ -823,7 +828,7 @@ public class User extends Character {
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `skill` WHERE `user_no` = '" + no + "';");
 
 			while (rs.next()) {
-				skillList.put(rs.getInt("skill_no"), new GameData.Skill(no, rs.getInt("skill_no")));
+				skillList.put(rs.getInt("skill_no"), new Skill(no, rs.getInt("skill_no")));
 				ctx.writeAndFlush(Packet.setSkill(skillList.get(rs.getInt("skill_no"))));
 			}
 
@@ -899,8 +904,8 @@ public class User extends Character {
 		}
 
 		// 이전에 장착했던 아이템과 현재 장착한 아이템
-		GameData.Item lastEquippedItem = findItemByIndex(oldEquip);
-		GameData.Item nowEquipItem = findItemByIndex(index);
+		Item lastEquippedItem = findItemByIndex(oldEquip);
+		Item nowEquipItem = findItemByIndex(index);
 
 		// 장착 상태 변경 후 인벤토리 업데이트
 		if (lastEquippedItem != null) {
@@ -932,8 +937,8 @@ public class User extends Character {
 	public boolean gainItem(int itemNo, int num) {
 		int gap = 0;
 		int index = getEmptyIndex();
-		GameData.ItemData item = GameData.item.get(itemNo);
-		GameData.Item itemData = findLazyItemByNo(itemNo);
+		ItemData item = GameData.item.get(itemNo);
+		Item itemData = findLazyItemByNo(itemNo);
 
 		// 이미 있던 아이템일 경우 채워줌
 		if (itemData != null) {
@@ -950,7 +955,7 @@ public class User extends Character {
 				return false;
 			}
 			// 계속해서 아이템 채우자
-			inventory.put(index, new GameData.Item(no, itemNo, num, index, item.isTradeable() ? 1 : 0));
+			inventory.put(index, new Item(no, itemNo, num, index, item.isTradeable() ? 1 : 0));
 			ctx.writeAndFlush(Packet.setItem(inventory.get(index)));
 			index = getEmptyIndex();
 			num -= item.getMaxLoad();
@@ -960,13 +965,13 @@ public class User extends Character {
 	}
 
 	// 능력치 있는 장비 아이템 획득
-	public boolean gainItem(int itemNo, GameData.Item item) {
+	public boolean gainItem(int itemNo, Item item) {
 		int index = getEmptyIndex();
 
 		if (index == -1)
 			return false;
 
-		inventory.put(index, new GameData.Item(no, item.getNo(), index, item));
+		inventory.put(index, new Item(no, item.getNo(), index, item));
 		ctx.writeAndFlush(Packet.setItem(inventory.get(index)));
 
 		return true;
@@ -978,7 +983,7 @@ public class User extends Character {
 			return false;
 		
 		int gap = 0;
-		GameData.Item item = findItemByNo(itemNo);
+		Item item = findItemByNo(itemNo);
 
 		// 아이템이 없거나 잃을 갯수가 더 많은 경우
 		if (item == null || getTotalItemAmount(item.getNo()) < num)
@@ -1004,7 +1009,7 @@ public class User extends Character {
 
 	// Index로 아이템 잃음 (직접 드랍하는 경우)
 	public boolean loseItemByIndex(int index, int num) {
-		GameData.Item item = findItemByIndex(index);
+		Item item = findItemByIndex(index);
 
 		// 아이템이 없거나 잃을 갯수가 더 많은 경우
 		if (item == null || item.getAmount() < num)
@@ -1036,7 +1041,7 @@ public class User extends Character {
 	// 가지고 있는 아이템 총량을 획득
 	public int getTotalItemAmount(int itemNo) {
 		int num = 0;
-		for (GameData.Item item : inventory.values()) {
+		for (Item item : inventory.values()) {
 			if (item.getNo() == itemNo)
 				num += item.getAmount();
 		}
@@ -1045,7 +1050,7 @@ public class User extends Character {
 	}
 	
 	// Index로 아이템 검색
-	public GameData.Item findItemByIndex(int index) {
+	public Item findItemByIndex(int index) {
 		if (!inventory.containsKey(index))
 			return null;
 		
@@ -1053,8 +1058,8 @@ public class User extends Character {
 	}
 
 	// No로 아이템 검색
-	public GameData.Item findItemByNo(int itemNo) {
-		for (GameData.Item item : inventory.values()) {
+	public Item findItemByNo(int itemNo) {
+		for (Item item : inventory.values()) {
 			if (item.getNo() == itemNo)
 				return item;
 		}
@@ -1063,8 +1068,8 @@ public class User extends Character {
 	}
 
 	// No로 여유 있는 아이템 검색
-	public GameData.Item findLazyItemByNo(int itemNo) {
-		for (GameData.Item item : inventory.values()) {
+	public Item findLazyItemByNo(int itemNo) {
+		for (Item item : inventory.values()) {
 			// 아이템이 꽉 찬 경우가 아니라면
 			if (item.getNo() == itemNo && item.getAmount() < GameData.item.get(item.getNo()).getMaxLoad())
 				return item;
@@ -1075,8 +1080,8 @@ public class User extends Character {
 
 	// 아이템 인덱스 변경
 	public void changeItemIndex(int index1, int index2) {
-		GameData.Item presentItem = findItemByIndex(index1);
-		GameData.Item targetItem = findItemByIndex(index2);
+		Item presentItem = findItemByIndex(index1);
+		Item targetItem = findItemByIndex(index2);
 
 		// 아이템이 없으면 반환
 		if (presentItem == null)
@@ -1112,7 +1117,7 @@ public class User extends Character {
 
 	// Index로 아이템 사용
 	public boolean useItemByIndex(int index, int amount) {
-		GameData.Item item = findItemByIndex(index);
+		Item item = findItemByIndex(index);
 
 		// 아이템이 없으면 반환
 		if (item == null)
@@ -1122,7 +1127,7 @@ public class User extends Character {
 		if (item.getAmount() < amount)
 			return false;
 
-		GameData.ItemData itemData = GameData.item.get(item.getNo());
+		ItemData itemData = GameData.item.get(item.getNo());
 
 		// 레벨이 낮으면 반환
 		if (level < itemData.getLimitLevel())
@@ -1143,14 +1148,14 @@ public class User extends Character {
 		// 함수가 있을 경우 실행
 		String function = itemData.getFunction();
 		if (function != "")
-			Functions.execute(Functions.item, function, new Object[] { this, item });
+			Functions.execute(Functions.item, function, new Object[]{this, item});
 
 		return true;
 	}
 
 	// No로 아이템 사용
 	public boolean useItemByNo(int itemNo, int amount) {
-		GameData.Item item = findItemByNo(itemNo);
+		Item item = findItemByNo(itemNo);
 
 		// 아이템이 없으면 반환
 		if (item == null)
@@ -1160,7 +1165,7 @@ public class User extends Character {
 		if (item.getAmount() < amount)
 			return false;
 
-		GameData.ItemData itemData = GameData.item.get(item.getNo());
+		ItemData itemData = GameData.item.get(item.getNo());
 
 		// 레벨이 낮으면 반환
 		if (level < itemData.getLimitLevel())
@@ -1184,7 +1189,7 @@ public class User extends Character {
 
 	// No로 아이템 버리기
 	public boolean dropItemByNo(int itemNo, int amount) {
-		GameData.Item item = findItemByNo(itemNo);
+		Item item = findItemByNo(itemNo);
 
 		// 아이템이 없으면 반환
 		if (item == null)
@@ -1194,7 +1199,7 @@ public class User extends Character {
 		if (item.getAmount() < amount || amount <= 0)
 			return false;
 
-		GameData.ItemData itemData = GameData.item.get(item.getNo());
+		ItemData itemData = GameData.item.get(item.getNo());
 
 		loseItemByNo(itemNo, amount);
 		if (itemData.getType() == Type.Item.ITEM)
@@ -1207,7 +1212,7 @@ public class User extends Character {
 
 	// Index로 아이템 버리기
 	public boolean dropItemByIndex(int index, int amount) {
-		GameData.Item item = findItemByIndex(index);
+		Item item = findItemByIndex(index);
 
 		// 아이템이 없으면 반환
 		if (item == null)
@@ -1217,7 +1222,7 @@ public class User extends Character {
 		if (item.getAmount() < amount || amount <= 0)
 			return false;
 
-		GameData.ItemData itemData = GameData.item.get(item.getNo());
+		ItemData itemData = GameData.item.get(item.getNo());
 
 		loseItemByIndex(index, amount);
 		if (itemData.getType() == Type.Item.ITEM)
@@ -1268,7 +1273,7 @@ public class User extends Character {
 		if (index == -1)
 			return;
 
-		GameData.ItemData itemData = GameData.item.get(dropItem.getItemNo());
+		ItemData itemData = GameData.item.get(dropItem.getItemNo());
 
 		if (itemData.getType() != Type.Item.ITEM) {
 			// 장비 아이템일 경우 기존 능력치 얻어가자
@@ -1320,7 +1325,7 @@ public class User extends Character {
 		// 함수가 있을 경우 실행
 		String function = GameData.skill.get(skill.getNo()).getFunction();
 		if (function != "")
-			Functions.execute(Functions.skill, function, new Object[] { this, skill });
+			Functions.execute(Functions.skill, function, new Object[]{this, skill});
 
 		return true;
 	}
@@ -1380,10 +1385,10 @@ public class User extends Character {
 			return;
 
 		// 거래 종료 대기 중이라면 반환
-		if (isAcceptTrade)
+		if (isAcceptTrade || User.get(tradePartner).isAcceptTrade)
 			return;
 
-		GameData.Item item = findItemByIndex(index);
+		Item item = findItemByIndex(index);
 
 		// 아이템이 없다면 반환
 		if (item == null)
@@ -1406,7 +1411,7 @@ public class User extends Character {
 			return;
 
 		// 거래하려는 아이템을 거래 목록에 올림
-		GameData.Item tradeItem = item.clone();
+		Item tradeItem = item.clone();
 		tradeItem.setIndex(tradeIndex);
 		tradeItem.setAmount(amount);
 		tradeItemList.put(tradeIndex, tradeItem);
@@ -1426,15 +1431,15 @@ public class User extends Character {
 			return;
 
 		// 거래 종료 대기 중이라면 반환
-		if (isAcceptTrade)
+		if (isAcceptTrade || User.get(tradePartner).isAcceptTrade)
 			return;
 
 		// 아이템이 없으면 반환
 		if (!tradeItemList.containsKey(index))
 			return;
 
-		GameData.Item item = tradeItemList.get(index);
-		GameData.ItemData itemData = GameData.item.get(item.getNo());
+		Item item = tradeItemList.get(index);
+		ItemData itemData = GameData.item.get(item.getNo());
 
 		// 일반 아이템일 경우 그냥 얻고, 장비 아이템일 경우 능력치 보존
 		if (itemData.getType() == Type.Item.ITEM)
@@ -1457,7 +1462,7 @@ public class User extends Character {
 			return;
 
 		// 거래 종료 대기 중이라면 반환
-		if (isAcceptTrade)
+		if (isAcceptTrade || User.get(tradePartner).isAcceptTrade)
 			return;
 
 		// 가진 골드와 거래중인 골드의 합보다 많으면 반환
@@ -1500,8 +1505,8 @@ public class User extends Character {
 		User partner = User.get(tradePartner);
 
 		// 아이템 및 골드 획득
-		for (GameData.Item i : partner.tradeItemList.values()) {
-			GameData.ItemData iData = GameData.item.get(i.getNo());
+		for (Item i : partner.tradeItemList.values()) {
+			ItemData iData = GameData.item.get(i.getNo());
 
 			if (iData.getType() == Type.Item.ITEM)
 				gainItem(i.getNo(), i.getAmount());
@@ -1511,8 +1516,8 @@ public class User extends Character {
 		gainGold(partner.tradeGold);
 
 		// 파트너 아이템 및 골드 획득
-		for (GameData.Item i : tradeItemList.values()) {
-			GameData.ItemData iData = GameData.item.get(i.getNo());
+		for (Item i : tradeItemList.values()) {
+			ItemData iData = GameData.item.get(i.getNo());
 
 			if (iData.getType() == Type.Item.ITEM)
 				partner.gainItem(i.getNo(), i.getAmount());
@@ -1540,8 +1545,8 @@ public class User extends Character {
 			return;
 
 		// 아이템 및 골드 돌려받기
-		for (GameData.Item i : tradeItemList.values()) {
-			GameData.ItemData iData = GameData.item.get(i.getNo());
+		for (Item i : tradeItemList.values()) {
+			ItemData iData = GameData.item.get(i.getNo());
 
 			if (iData.getType() == Type.Item.ITEM)
 				gainItem(i.getNo(), i.getAmount());
@@ -1552,8 +1557,8 @@ public class User extends Character {
 
 		// 파트너 아이템 및 골드 돌려받기
 		User partner = User.get(tradePartner);
-		for (GameData.Item i : partner.tradeItemList.values()) {
-			GameData.ItemData iData = GameData.item.get(i.getNo());
+		for (Item i : partner.tradeItemList.values()) {
+			ItemData iData = GameData.item.get(i.getNo());
 
 			if (iData.getType() == Type.Item.ITEM)
 				partner.gainItem(i.getNo(), i.getAmount());
@@ -1590,8 +1595,16 @@ public class User extends Character {
 		return true;
 	}
 
+	public Message getMessage() {
+		return message;
+	}
+
 	// 스페이스바 누를 경우 액션
 	public void action() {
+		// 다른 작업 중이라면 반환
+		if (isBusy())
+			return;
+
 		int new_x = x + (direction == 6 ? 1 : direction == 4 ? -1 : 0);
 		int new_y = y + (direction == 2 ? 1 : direction == 8 ? -1 : 0);
 
@@ -1599,6 +1612,14 @@ public class User extends Character {
 		for (Enemy enemy : Map.getMap(map).getField(seed).getAliveEnemies()) {
 			if (enemy.getX() == new_x && enemy.getY() == new_y) {
 				assault(enemy);
+				return;
+			}
+		}
+
+		// NPC가 있을 경우 대화하고 반환
+		for (Npc npc : Map.getMap(map).getField(seed).getNPCs()) {
+			if (npc.getX() == new_x && npc.getY() == new_y) {
+				Functions.execute(Functions.npc, npc.getFunction(), new Object[]{ this, npc });
 				return;
 			}
 		}
@@ -1627,12 +1648,32 @@ public class User extends Character {
 		}
 	}
 
+	// 다른 작업을 하고 있는지 (대화, 거래)
+	private boolean isBusy() {
+		// 대화 중
+		if (message.getNpc() > 0)
+			return true;
+
+		// 거래 중
+		if (nowTrading())
+			return true;
+
+		return false;
+	}
+
 	public void update() {
 
 	}
 
 	// 좌표 이동
 	public void move(int type) {
+		// 다른 작업 중이라면 리프레쉬
+		if (isBusy()) {
+			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+			return;
+		}
+
+		// 이동
 		switch (type) {
 			case Type.Direction.DOWN:
 				moveDown();
@@ -1680,6 +1721,12 @@ public class User extends Character {
 
 	// 방향 전환
 	public void turn(int type) {
+		// 다른 작업 중이라면 리프레쉬
+		if (isBusy()) {
+			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+			return;
+		}
+
 		switch (type) {
 			case Type.Direction.DOWN:
 				turnDown();
@@ -1698,6 +1745,10 @@ public class User extends Character {
 
 	// 게임 종료
 	public void exitGracefully() {
+		// 거래중이라면 거래 종료
+		if (nowTrading())
+			cancelTrade();
+
 		// 맵에서 나가기
 		Map.getMap(map).getField(seed).removeUser(this);
 
@@ -1711,9 +1762,59 @@ public class User extends Character {
 		DataBase.deleteSkill(no);
 
 		// 가진 아이템과 스킬을 넣자
-		for (GameData.Item item : inventory.values())
+		for (Item item : inventory.values())
 			DataBase.insertItem(item);
 		for (GameData.Skill skill : skillList.values())
 			DataBase.insertSkill(skill);
+	}
+
+	public class Message {
+		private int npcNo;
+		private int npcMessage;
+		private int npcSelect;
+		private int mySelect;
+
+		public boolean isStart() {
+			return npcNo > 0;
+		}
+
+		public int getNpc() {
+			return npcNo;
+		}
+
+		public int getMessage() {
+			return npcMessage;
+		}
+
+		public int getSelect() {
+			return mySelect;
+		}
+
+		public void open(int _npcNo, int _npcSelect) {
+			npcNo = _npcNo;
+			npcMessage = 0;
+			npcSelect = _npcSelect;
+
+			ctx.writeAndFlush(Packet.openMessageWindow(npcNo, npcMessage, npcSelect));
+		}
+
+		public void close() {
+			npcNo = 0;
+		}
+
+		public void update(int message, int select) {
+			npcMessage = message;
+			npcSelect = select;
+
+			ctx.writeAndFlush(Packet.openMessageWindow(npcNo, npcMessage, npcSelect));
+		}
+
+		public void handle(int select) {
+			mySelect = select;
+
+			if (npcSelect == -1) {
+				npcNo = 0;
+			}
+		}
 	}
 }

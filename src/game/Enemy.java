@@ -180,7 +180,7 @@ public class Enemy extends Character {
             if (distance < range) {
                 // 스킬 사용
                 if (frequency > random.nextInt(100))
-                    Functions.execute(Functions.enemySkill, function, new Object[] { this });
+                    Functions.execute(Functions.enemy, function, new Object[]{this});
 
                 // 에너미 종류에 따라 분기
                 switch (type) {
@@ -222,7 +222,7 @@ public class Enemy extends Character {
                 if (r.getNo() == reward && r.getPer() > random.nextInt(10000))
                     Map.getMap(map).getField(seed).loadDropItem(r.getItemNo(), r.getNum(), x, y);
 
-            Functions.execute(Functions.enemyDie, dieFunction, new Object[] { this });
+            Functions.execute(Functions.enemy, dieFunction, new Object[]{this});
         }
         // 죽은 시간을 저장
         deadTime = System.currentTimeMillis() / 100;

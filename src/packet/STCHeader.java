@@ -31,4 +31,5 @@ public final class STCHeader {
 	public final static int CHANGE_TRADE_GOLD = 110;
 	public final static int FINISH_TRADE = 111;
 	public final static int CANCEL_TRADE = 112;
+	public final static int OPEN_MESSAGE_WINDOW = 113;
 }
