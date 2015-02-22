@@ -13,8 +13,6 @@ import database.*;
 import database.GameData.*;
 
 public class User extends Character {
-	private static Hashtable<ChannelHandlerContext, User> users = new Hashtable<ChannelHandlerContext, User>();
-
 	private ChannelHandlerContext ctx;
 	private String id;
 	private String pass;
@@ -39,8 +37,8 @@ public class User extends Character {
 
 	private int maxInventory = 35;
 
-	private Hashtable<Integer, Item> inventory = new Hashtable<>();
-	private Hashtable<Integer, Skill> skillList  = new Hashtable<>();
+	private Hashtable<Integer, Item> itemBag = new Hashtable<>();
+	private Hashtable<Integer, Skill> skillBag = new Hashtable<>();
 
 	// 거래 관련
 	private int tradePartner;
@@ -51,6 +49,7 @@ public class User extends Character {
 	// NPC 관련
 	private Message message = new Message();
 
+	private static Hashtable<ChannelHandlerContext, User> users = new Hashtable<ChannelHandlerContext, User>();
 	private static Logger logger = Logger.getLogger(User.class.getName());
 
 	public static User get(ChannelHandlerContext ctx) {
@@ -138,7 +137,8 @@ public class User extends Character {
 	public String getPass() {
 		return pass;
 	}
-	
+
+	// 타이틀
 	public int getTitle() {
 		return title;
 	}
@@ -158,13 +158,15 @@ public class User extends Character {
 		return mail;
 	}
 
+	// 이미지
 	public void setImage(String _image) {
 		image = _image;
 		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.IMAGE }, new String[]{ image }));
 		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
 				new int[]{ Type.Status.IMAGE }, new String[]{ image }));
 	}
-	
+
+	// 직업
 	public int getJob() {
 		return job;
 	}
@@ -775,7 +777,8 @@ public class User extends Character {
 	public int getMaxInventory() {
 		return maxInventory;
 	}
-	
+
+	// 정보 가져오기
 	public void loadData() {
 		loadEquipItem();
 		loadInventory();
@@ -811,8 +814,8 @@ public class User extends Character {
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `item` WHERE `user_no` = '" + no + "';");
 
 			while (rs.next()) {
-				inventory.put(rs.getInt("index"), new Item(rs));
-				ctx.writeAndFlush(Packet.setItem(inventory.get(rs.getInt("index"))));
+				itemBag.put(rs.getInt("index"), new Item(rs));
+				ctx.writeAndFlush(Packet.setItem(itemBag.get(rs.getInt("index"))));
 			}
 
 			rs.close();
@@ -828,8 +831,8 @@ public class User extends Character {
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `skill` WHERE `user_no` = '" + no + "';");
 
 			while (rs.next()) {
-				skillList.put(rs.getInt("skill_no"), new Skill(no, rs.getInt("skill_no")));
-				ctx.writeAndFlush(Packet.setSkill(skillList.get(rs.getInt("skill_no"))));
+				skillBag.put(rs.getInt("skill_no"), new Skill(no, rs.getInt("skill_no")));
+				ctx.writeAndFlush(Packet.setSkill(skillBag.get(rs.getInt("skill_no"))));
 			}
 
 			rs.close();
@@ -918,6 +921,7 @@ public class User extends Character {
 			ctx.writeAndFlush(Packet.updateItem(1, nowEquipItem));
 		}
 
+		// HP, MP 보정
 		if (getMaxHp() < hp)
 			hp = getMaxHp();
 
@@ -937,15 +941,15 @@ public class User extends Character {
 	public boolean gainItem(int itemNo, int num) {
 		int gap = 0;
 		int index = getEmptyIndex();
-		ItemData item = GameData.item.get(itemNo);
-		Item itemData = findLazyItemByNo(itemNo);
+		ItemData itemData = GameData.item.get(itemNo);
+		Item item = findLazyItemByNo(itemNo);
 
 		// 이미 있던 아이템일 경우 채워줌
-		if (itemData != null) {
-			gap = itemData.getAmount() + num - item.getMaxLoad();
-			itemData.addAmount(num);
+		if (item != null) {
+			gap = item.getAmount() + num - itemData.getMaxLoad();
+			item.addAmount(num);
 			num = gap;
-			ctx.writeAndFlush(Packet.updateItem(1, itemData));
+			ctx.writeAndFlush(Packet.updateItem(1, item));
 		}
 
 		while (num > 0) {
@@ -955,10 +959,10 @@ public class User extends Character {
 				return false;
 			}
 			// 계속해서 아이템 채우자
-			inventory.put(index, new Item(no, itemNo, num, index, item.isTradeable() ? 1 : 0));
-			ctx.writeAndFlush(Packet.setItem(inventory.get(index)));
+			itemBag.put(index, new Item(no, itemNo, num, index, itemData.isTradeable() ? 1 : 0));
+			ctx.writeAndFlush(Packet.setItem(itemBag.get(index)));
 			index = getEmptyIndex();
-			num -= item.getMaxLoad();
+			num -= itemData.getMaxLoad();
 		}
 
 		return true;
@@ -971,8 +975,8 @@ public class User extends Character {
 		if (index == -1)
 			return false;
 
-		inventory.put(index, new Item(no, item.getNo(), index, item));
-		ctx.writeAndFlush(Packet.setItem(inventory.get(index)));
+		itemBag.put(index, new Item(no, item.getNo(), index, item));
+		ctx.writeAndFlush(Packet.setItem(itemBag.get(index)));
 
 		return true;
 	}
@@ -995,7 +999,7 @@ public class User extends Character {
 			item.addAmount(-num);
 			if (item.getAmount() == 0) {
 				// 아이템 삭제
-				inventory.remove(item.getIndex());
+				itemBag.remove(item.getIndex());
 				ctx.writeAndFlush(Packet.updateItem(0, item));
 			} else {
 				// 아이템 갯수 업데이트
@@ -1018,7 +1022,7 @@ public class User extends Character {
 		item.addAmount(-num);
 		if (item.getAmount() == 0) {
 			// 아이템 삭제
-			inventory.remove(item.getIndex());
+			itemBag.remove(item.getIndex());
 			ctx.writeAndFlush(Packet.updateItem(0, item));
 		} else {
 			// 아이템 갯수 업데이트
@@ -1031,7 +1035,7 @@ public class User extends Character {
 	// 비어있는 인덱스를 획득
 	public int getEmptyIndex() {
 		for (int i = 1; i <= maxInventory; i++) {
-			if (!inventory.containsKey(i))
+			if (!itemBag.containsKey(i))
 				return i;
 		}
 		
@@ -1041,7 +1045,7 @@ public class User extends Character {
 	// 가지고 있는 아이템 총량을 획득
 	public int getTotalItemAmount(int itemNo) {
 		int num = 0;
-		for (Item item : inventory.values()) {
+		for (Item item : itemBag.values()) {
 			if (item.getNo() == itemNo)
 				num += item.getAmount();
 		}
@@ -1051,15 +1055,15 @@ public class User extends Character {
 	
 	// Index로 아이템 검색
 	public Item findItemByIndex(int index) {
-		if (!inventory.containsKey(index))
+		if (!itemBag.containsKey(index))
 			return null;
 		
-		return inventory.get(index);
+		return itemBag.get(index);
 	}
 
 	// No로 아이템 검색
 	public Item findItemByNo(int itemNo) {
-		for (Item item : inventory.values()) {
+		for (Item item : itemBag.values()) {
 			if (item.getNo() == itemNo)
 				return item;
 		}
@@ -1069,7 +1073,7 @@ public class User extends Character {
 
 	// No로 여유 있는 아이템 검색
 	public Item findLazyItemByNo(int itemNo) {
-		for (Item item : inventory.values()) {
+		for (Item item : itemBag.values()) {
 			// 아이템이 꽉 찬 경우가 아니라면
 			if (item.getNo() == itemNo && item.getAmount() < GameData.item.get(item.getNo()).getMaxLoad())
 				return item;
@@ -1095,21 +1099,21 @@ public class User extends Character {
 				return;
 
 			// 아이템 간 인덱스 변경
-			inventory.remove(index1);
-			inventory.remove(index2);
+			itemBag.remove(index1);
+			itemBag.remove(index2);
 			presentItem.setIndex(index2);
 			targetItem.setIndex(index1);
-			inventory.put(index2, presentItem);
-			inventory.put(index1, targetItem);
+			itemBag.put(index2, presentItem);
+			itemBag.put(index1, targetItem);
 
 			ctx.write(Packet.setItem(presentItem));
 			ctx.writeAndFlush(Packet.setItem(targetItem));
 		} else {
 			// 빈 곳으로 아이템 이동
 			ctx.write(Packet.updateItem(0, presentItem));
-			inventory.remove(index1);
+			itemBag.remove(index1);
 			presentItem.setIndex(index2);
-			inventory.put(index2, presentItem);
+			itemBag.put(index2, presentItem);
 			ctx.writeAndFlush(Packet.setItem(presentItem));
 		}
 
@@ -1288,30 +1292,30 @@ public class User extends Character {
 
 	// No로 스킬 검색
 	public GameData.Skill findSkillByNo(int skillNo) {
-		if (!skillList.containsKey(skillNo))
+		if (!skillBag.containsKey(skillNo))
 			return null;
 
-		return skillList.get(skillNo);
+		return skillBag.get(skillNo);
 	}
 
 	// 스킬 배우기
 	public boolean studySkill(int skillNo) {
-		if (skillList.containsKey(skillNo))
+		if (skillBag.containsKey(skillNo))
 			return false;
 
 		GameData.Skill skill = new GameData.Skill(no, skillNo);
-		skillList.put(skillNo, skill);
+		skillBag.put(skillNo, skill);
 		ctx.writeAndFlush(Packet.setSkill(skill));
 		return true;
 	}
 
 	// 스킬 지우기
 	public boolean forgetSkill(int skillNo) {
-		if (!skillList.containsKey(skillNo))
+		if (!skillBag.containsKey(skillNo))
 			return false;
 
-		ctx.writeAndFlush(Packet.updateSkill(0, skillList.get(skillNo)));
-		skillList.remove(skillNo);
+		ctx.writeAndFlush(Packet.updateSkill(0, skillBag.get(skillNo)));
+		skillBag.remove(skillNo);
 		return true;
 	}
 
@@ -1595,6 +1599,17 @@ public class User extends Character {
 		return true;
 	}
 
+	// 상점 열기
+	public void openShop(int no) {
+		for (Shop shop : GameData.shop) {
+			if (shop.getNo() == no) {
+				GameData.ItemData itemData = GameData.item.get(shop.getItemNo());
+				ctx.writeAndFlush(Packet.setShopItem(itemData.getNo(), itemData.getPrice()));
+			}
+		}
+	}
+
+	// 현재 대화 얻음
 	public Message getMessage() {
 		return message;
 	}
@@ -1651,7 +1666,7 @@ public class User extends Character {
 	// 다른 작업을 하고 있는지 (대화, 거래)
 	private boolean isBusy() {
 		// 대화 중
-		if (message.getNpc() > 0)
+		if (message.isStart())
 			return true;
 
 		// 거래 중
@@ -1762,9 +1777,9 @@ public class User extends Character {
 		DataBase.deleteSkill(no);
 
 		// 가진 아이템과 스킬을 넣자
-		for (Item item : inventory.values())
+		for (Item item : itemBag.values())
 			DataBase.insertItem(item);
-		for (GameData.Skill skill : skillList.values())
+		for (GameData.Skill skill : skillBag.values())
 			DataBase.insertSkill(skill);
 	}
 
@@ -1774,22 +1789,27 @@ public class User extends Character {
 		private int npcSelect;
 		private int mySelect;
 
+		// 대화 중 여부
 		public boolean isStart() {
 			return npcNo > 0;
 		}
 
+		// 현재 대화중인 NPC
 		public int getNpc() {
 			return npcNo;
 		}
 
+		// 현재 메시지
 		public int getMessage() {
 			return npcMessage;
 		}
 
+		// 선택한 선택지
 		public int getSelect() {
 			return mySelect;
 		}
 
+		// 대화 시작
 		public void open(int _npcNo, int _npcSelect) {
 			npcNo = _npcNo;
 			npcMessage = 0;
@@ -1798,23 +1818,19 @@ public class User extends Character {
 			ctx.writeAndFlush(Packet.openMessageWindow(npcNo, npcMessage, npcSelect));
 		}
 
+		// 대화 종료
 		public void close() {
 			npcNo = 0;
+
+			ctx.writeAndFlush(Packet.closeMessageWindow());
 		}
 
+		// 대화 진행
 		public void update(int message, int select) {
 			npcMessage = message;
 			npcSelect = select;
 
 			ctx.writeAndFlush(Packet.openMessageWindow(npcNo, npcMessage, npcSelect));
-		}
-
-		public void handle(int select) {
-			mySelect = select;
-
-			if (npcSelect == -1) {
-				npcNo = 0;
-			}
 		}
 	}
 }

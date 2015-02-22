@@ -32,4 +32,6 @@ public final class STCHeader {
 	public final static int FINISH_TRADE = 111;
 	public final static int CANCEL_TRADE = 112;
 	public final static int OPEN_MESSAGE_WINDOW = 113;
+	public final static int CLOSE_MESSAGE_WINDOW = 114;
+	public final static int SET_SHOP_ITEM = 115;
 }

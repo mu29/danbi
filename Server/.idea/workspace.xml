@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="" />
+    <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Items.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Items.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/States.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/States.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/System.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/System.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game/Functions.java" afterPath="$PROJECT_DIR$/src/game/Functions.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/database/GameData.java" afterPath="$PROJECT_DIR$/src/database/GameData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/packet/Packet.java" afterPath="$PROJECT_DIR$/src/packet/Packet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/packet/STCHeader.java" afterPath="$PROJECT_DIR$/src/packet/STCHeader.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game/User.java" afterPath="$PROJECT_DIR$/src/game/User.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../danbi.sql" afterPath="$PROJECT_DIR$/../danbi.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="Server.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -48,11 +68,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="User.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="User.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/game/User.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="26040" max-vertical-offset="26550">
-              <caret line="1788" column="22" selection-start-line="1788" selection-start-column="22" selection-end-line="1788" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.55572754" vertical-offset="23011" max-vertical-offset="26820">
+              <caret line="1602" column="14" selection-start-line="1602" selection-start-column="14" selection-end-line="1602" selection-end-column="14" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -60,20 +80,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Functions.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/game/Functions.java">
+      <file leaf-file-name="GameData.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/database/GameData.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="1185">
-              <caret line="57" column="60" selection-start-line="57" selection-start-column="60" selection-end-line="57" selection-end-column="60" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="285" max-vertical-offset="10665">
+              <caret line="60" column="39" selection-start-line="60" selection-start-column="39" selection-end-line="60" selection-end-column="39" />
+              <folding>
+                <element signature="e#10271#10272#0" expanded="true" />
+                <element signature="e#10304#10305#0" expanded="true" />
+                <element signature="e#17518#17519#0" expanded="true" />
+                <element signature="e#17536#17537#0" expanded="true" />
+                <element signature="e#17564#17565#0" expanded="true" />
+                <element signature="e#17586#17587#0" expanded="true" />
+                <element signature="e#17612#17613#0" expanded="true" />
+                <element signature="e#17632#17633#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Npc.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Npc.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/game/Npc.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.29049295" vertical-offset="0" max-vertical-offset="568">
+            <state vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="420">
               <caret line="13" column="29" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
               <folding />
             </state>
@@ -83,8 +112,8 @@
       <file leaf-file-name="STCHeader.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/packet/STCHeader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="495" max-vertical-offset="615">
-              <caret line="33" column="32" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="525" max-vertical-offset="645">
+              <caret line="35" column="48" selection-start-line="35" selection-start-column="48" selection-end-line="35" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -97,7 +126,6 @@
               <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#659#669#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -106,8 +134,8 @@
       <file leaf-file-name="Packet.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/packet/Packet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5380" max-vertical-offset="6105">
-              <caret line="390" column="33" selection-start-line="390" selection-start-column="33" selection-end-line="390" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="5605" max-vertical-offset="6345">
+              <caret line="412" column="25" selection-start-line="412" selection-start-column="25" selection-end-line="412" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -123,7 +151,7 @@
         <option value="mu29" />
       </list>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -135,18 +163,18 @@
         <option value="$PROJECT_DIR$/src/game/Character.java" />
         <option value="$PROJECT_DIR$/src/database/Type.java" />
         <option value="$PROJECT_DIR$/src/database/DataBase.java" />
-        <option value="$PROJECT_DIR$/src/database/GameData.java" />
         <option value="$PROJECT_DIR$/src/packet/CTSHeader.java" />
         <option value="$PROJECT_DIR$/src/network/Handler.java" />
         <option value="$PROJECT_DIR$/src/game/Function.java" />
         <option value="$PROJECT_DIR$/src/game/Enemy.java" />
         <option value="$PROJECT_DIR$/src/game/Field.java" />
+        <option value="$PROJECT_DIR$/src/game/NPC.java" />
+        <option value="$PROJECT_DIR$/src/game/Npc.java" />
+        <option value="$PROJECT_DIR$/src/game/Functions.java" />
+        <option value="$PROJECT_DIR$/src/database/GameData.java" />
         <option value="$PROJECT_DIR$/src/packet/STCHeader.java" />
         <option value="$PROJECT_DIR$/src/packet/Packet.java" />
         <option value="$PROJECT_DIR$/src/game/User.java" />
-        <option value="$PROJECT_DIR$/src/game/Functions.java" />
-        <option value="$PROJECT_DIR$/src/game/NPC.java" />
-        <option value="$PROJECT_DIR$/src/game/Npc.java" />
       </list>
     </option>
   </component>
@@ -154,8 +182,9 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
     <option name="width" value="1280" />
-    <option name="height" value="800" />
+    <option name="height" value="721" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -214,6 +243,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -249,6 +279,28 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="packet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="network" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -268,10 +320,27 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="database" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -281,7 +350,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Library/Netty 4/jar/all-in-one/netty-all-4.0.24.Final.jar!/" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/JRGSS-master" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
@@ -309,7 +378,7 @@
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="FullScreen" value="true" />
+    <property name="FullScreen" value="false" />
     <property name="SearchEverywhereHistoryKey" value="getter&#9;PSI&#9;JAVA://com.sun.javafx.fxml.builder.ProxyBuilder.Getter" />
   </component>
   <component name="RunManager" selected="Application.Danbi Server">
@@ -624,6 +693,8 @@
       <workItem from="1424132263616" duration="321000" />
       <workItem from="1424240660856" duration="16533000" />
       <workItem from="1424544679464" duration="368000" />
+      <workItem from="1424609830223" duration="2769000" />
+      <workItem from="1424614970523" duration="20000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1418927646178</created>
@@ -635,11 +706,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="279892000" />
+    <option name="totallyTimeSpent" value="282681000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1280" height="721" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -649,24 +720,24 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30278885" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32897604" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14242055" sideWeight="0.5005587" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294621" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297546" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32668713" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16484375" sideWeight="0.49944136" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16484375" sideWeight="0.49944136" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24079755" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2549801" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30278885" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32668713" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -760,7 +831,6 @@
           <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#659#669#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -824,7 +894,6 @@
           <caret line="22" column="52" selection-start-line="22" selection-start-column="52" selection-end-line="22" selection-end-column="52" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#659#669#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -888,7 +957,6 @@
           <caret line="22" column="52" selection-start-line="22" selection-start-column="52" selection-end-line="22" selection-end-column="52" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#659#669#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1041,7 +1109,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="576" max-vertical-offset="1224">
           <caret line="56" column="42" selection-start-line="56" selection-start-column="42" selection-end-line="56" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1080,21 +1147,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/database/GameData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5475" max-vertical-offset="10245">
-          <caret line="508" column="36" selection-start-line="508" selection-start-column="36" selection-end-line="508" selection-end-column="36" />
-          <folding>
-            <element signature="e#524#544#0" expanded="true" />
-            <element signature="e#610#626#0" expanded="true" />
-            <element signature="e#679#687#0" expanded="true" />
-            <element signature="e#749#763#0" expanded="true" />
-            <element signature="e#10217#10218#0" expanded="true" />
-            <element signature="e#10250#10251#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/packet/CTSHeader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="480">
@@ -1110,32 +1162,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/game/Field.java">
+    <entry file="file://$PROJECT_DIR$/src/game/Functions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2444" max-vertical-offset="5355">
-          <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+        <state vertical-scroll-proportion="1.075862" vertical-offset="0" max-vertical-offset="1215">
+          <caret line="54" column="28" selection-start-line="54" selection-start-column="28" selection-end-line="54" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/database/GameData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="285" max-vertical-offset="10665">
+          <caret line="60" column="39" selection-start-line="60" selection-start-column="39" selection-end-line="60" selection-end-column="39" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#659#669#0" expanded="true" />
+            <element signature="e#10271#10272#0" expanded="true" />
+            <element signature="e#10304#10305#0" expanded="true" />
+            <element signature="e#17518#17519#0" expanded="true" />
+            <element signature="e#17536#17537#0" expanded="true" />
+            <element signature="e#17564#17565#0" expanded="true" />
+            <element signature="e#17586#17587#0" expanded="true" />
+            <element signature="e#17612#17613#0" expanded="true" />
+            <element signature="e#17632#17633#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/packet/STCHeader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
-          <caret line="33" column="32" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
+          <caret line="35" column="48" selection-start-line="35" selection-start-column="48" selection-end-line="35" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/packet/Packet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5380" max-vertical-offset="6105">
-          <caret line="390" column="33" selection-start-line="390" selection-start-column="33" selection-end-line="390" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="5605" max-vertical-offset="6345">
+          <caret line="412" column="25" selection-start-line="412" selection-start-column="25" selection-end-line="412" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/game/Field.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2444" max-vertical-offset="5355">
+          <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/game/Npc.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="420">
+          <caret line="13" column="29" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1151,27 +1235,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/game/User.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="26335" max-vertical-offset="27180">
-          <caret line="1788" column="22" selection-start-line="1788" selection-start-column="22" selection-end-line="1788" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.55572754" vertical-offset="23011" max-vertical-offset="26820">
+          <caret line="1602" column="14" selection-start-line="1602" selection-start-column="14" selection-end-line="1602" selection-end-column="14" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/game/Functions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="1185">
-          <caret line="57" column="60" selection-start-line="57" selection-start-column="60" selection-end-line="57" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/game/Npc.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29049295" vertical-offset="0" max-vertical-offset="568">
-          <caret line="13" column="29" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>

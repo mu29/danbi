@@ -51,6 +51,8 @@ public class Functions {
                 msg.update(5, 0);
             else if (msg.getMessage() == 5)
                 msg.update(10, -1);
+            else if (msg.getMessage() == 10)
+                msg.close();
         }
     }
 

@@ -398,4 +398,20 @@ public final class Packet {
 
 		return packet;
 	}
+
+	public static JSONObject closeMessageWindow() {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CLOSE_MESSAGE_WINDOW);
+
+		return packet;
+	}
+
+	public static JSONObject setShopItem(int no, int price) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.SET_SHOP_ITEM);
+		packet.put("no", no);
+		packet.put("price", price);
+
+		return packet;
+	}
 }

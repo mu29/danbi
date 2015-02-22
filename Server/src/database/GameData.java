@@ -7,59 +7,59 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 public class GameData extends DataBase {
-	public static Hashtable<Integer, Job> job = new Hashtable<Integer, Job>();
-	public static Hashtable<Integer, Register> register = new Hashtable<Integer, Register>();
-	public static Hashtable<Integer, ItemData> item = new Hashtable<Integer, ItemData>();
-	public static Hashtable<Integer, SkillData> skill = new Hashtable<Integer, SkillData>();
-	public static Hashtable<Integer, Troop> troop = new Hashtable<Integer, Troop>();
-	public static Vector<Reward> reward = new Vector<Reward>();
-	public static Hashtable<Integer, NPC> npc = new Hashtable<Integer, NPC>();
+	public static Hashtable<Integer, Job> job = new Hashtable<>();
+	public static Hashtable<Integer, Register> register = new Hashtable<>();
+	public static Hashtable<Integer, ItemData> item = new Hashtable<>();
+	public static Hashtable<Integer, SkillData> skill = new Hashtable<>();
+	public static Hashtable<Integer, Troop> troop = new Hashtable<>();
+	public static Hashtable<Integer, NPC> npc = new Hashtable<>();
+	public static Vector<Reward> reward = new Vector<>();
+	public static Vector<Shop> shop = new Vector<>();
+
 	private static Logger logger = Logger.getLogger(GameData.class.getName());
 
 	public static void loadSettings() throws SQLException {
 		ResultSet rs;
 
 		rs = executeQuery("SELECT * FROM `setting_job`;");
-		while (rs.next()) {
+		while (rs.next())
 			job.put(rs.getInt("no"), new Job(rs));
-		}
 		logger.info("직업 정보 로드 완료.");
 		
 		rs = executeQuery("SELECT * FROM `setting_register`;");
-		while (rs.next()) {
+		while (rs.next())
 			register.put(rs.getInt("no"), new Register(rs));
-		}
 		logger.info("가입 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_item`;");
-		while (rs.next()) {
+		while (rs.next())
 			item.put(rs.getInt("no"), new ItemData(rs));
-		}
 		logger.info("아이템 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_skill`;");
-		while (rs.next()) {
+		while (rs.next())
 			skill.put(rs.getInt("no"), new SkillData(rs));
-		}
 		logger.info("스킬 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_npc`;");
-		while (rs.next()) {
+		while (rs.next())
 			npc.put(rs.getInt("no"), new NPC(rs));
-		}
 		logger.info("NPC 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_reward`;");
-		while (rs.next()) {
+		while (rs.next())
 			reward.addElement(new Reward(rs));
-		}
 		logger.info("보상 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_troop`;");
-		while (rs.next()) {
+		while (rs.next())
 			troop.put(rs.getInt("no"), new Troop(rs));
-		}
 		logger.info("에너미 정보 로드 완료.");
+
+		rs = executeQuery("SELECT * FROM `setting_shop`;");
+		while (rs.next())
+			shop.addElement(new Shop(rs));
+		logger.info("상점 정보 로드 완료.");
 
 		rs.close();
 	}
@@ -908,6 +908,34 @@ public class GameData extends DataBase {
 
 		public String getFunction() {
 			return function;
+		}
+	}
+
+	public static class Shop {
+		private int no;
+		private int itemNo;
+		private int rate;
+
+		public Shop(ResultSet rs) {
+			try {
+				no = rs.getInt("no");
+				itemNo = rs.getInt("item_no");
+				rate = rs.getInt("rate");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public int getNo() {
+			return no;
+		}
+
+		public int getItemNo() {
+			return itemNo;
+		}
+
+		public int getRate() {
+			return rate;
 		}
 	}
 }
