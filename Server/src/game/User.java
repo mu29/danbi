@@ -1614,6 +1614,17 @@ public class User extends Character {
 		return message;
 	}
 
+	// 대화 업데이트
+	public void updateMessage(int select) {
+		for (Npc npc : Map.getMap(map).getField(seed).getNPCs()) {
+			if (npc.getNo() == message.getNpc()) {
+				message.mySelect = select;
+				Functions.execute(Functions.npc, npc.getFunction(), new Object[]{ this, npc });
+				break;
+			}
+		}
+	}
+
 	// 스페이스바 누를 경우 액션
 	public void action() {
 		// 다른 작업 중이라면 반환

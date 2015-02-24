@@ -50,9 +50,13 @@ public class Functions {
             if (msg.getMessage() == 0)
                 msg.update(5, 0);
             else if (msg.getMessage() == 5)
-                msg.update(10, -1);
-            else if (msg.getMessage() == 10)
-                msg.close();
+                msg.update(10, 2);
+            else if (msg.getMessage() == 10) {
+                if (msg.getSelect() == 0)
+                    msg.close();
+                else if (msg.getSelect() == 1)
+                    msg.update(5, 0);
+            }
         }
     }
 

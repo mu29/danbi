@@ -1,5 +1,6 @@
 package network;
 import database.Crypto;
+import game.Functions;
 import game.Map;
 import game.User;
 import io.netty.channel.ChannelHandlerContext;
@@ -86,6 +87,9 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 				break;
 			case CTSHeader.CANCEL_TRADE:
 				User.get(ctx).cancelTrade();
+				break;
+			case CTSHeader.SELECT_MESSAGE:
+				User.get(ctx).updateMessage((int) packet.get("select"));
 				break;
     	}
     }

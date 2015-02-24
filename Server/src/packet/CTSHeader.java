@@ -23,4 +23,5 @@ public final class CTSHeader {
 	public final static int CHANGE_TRADE_GOLD = 106;
 	public final static int FINISH_TRADE = 107;
 	public final static int CANCEL_TRADE = 108;
+	public final static int SELECT_MESSAGE = 109;
 }
