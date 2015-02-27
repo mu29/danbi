@@ -429,4 +429,18 @@ public final class Packet {
 
 		return packet;
 	}
+	
+	public static JSONObject setPartyMember(User user) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.REQUEST_PARTY);
+		packet.put("no", user.getNo());
+		packet.put("name", user.getName());
+		packet.put("image", user.getImage());
+		packet.put("level", user.getLevel());
+		packet.put("job", user.getJob());
+		packet.put("hp", user.getHp());
+		packet.put("maxHp", user.getMaxHp());
+		
+		return packet;
+	}
 }

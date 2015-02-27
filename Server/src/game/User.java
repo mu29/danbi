@@ -711,7 +711,7 @@ public class User extends Character {
 			animation(25);
 		}
 
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.EXP }, new Integer[]{ exp }));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.EXP}, new Integer[]{exp}));
 	}
 
 	// 경험치 잃음
@@ -725,7 +725,7 @@ public class User extends Character {
 	public void gainGold(int value) {
 		gold += value;
 
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.GOLD }, new Integer[] { gold }));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.GOLD}, new Integer[]{gold}));
 	}
 
 	public boolean loseGold(int value) {
@@ -868,7 +868,7 @@ public class User extends Character {
 
 		// 스포 하나 까자
 		statPoint--;
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.STAT_POINT }, new Integer[]{ statPoint }));
+		ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.STAT_POINT}, new Integer[]{statPoint}));
 	}
 	
 	// 아이템 장착
@@ -1595,8 +1595,10 @@ public class User extends Character {
 			return false;
 
 		// 거래 상대 없다면
-		if (User.get(tradePartner) == null)
+		if (User.get(tradePartner) == null) {
+			cancelTrade();
 			return false;
+		}
 
 		return true;
 	}
@@ -1611,26 +1613,26 @@ public class User extends Character {
 		}
 	}
 
+	// 파티 번호 설정
+	public void setPartyNo(int _partyNo) {
+		partyNo = _partyNo;
+	}
+
 	// 파티 생성
 	public void createParty() {
 		// 이미 파티가 있다면 반환
-		if (partyNo > 0)
+		if (nowJoinParty())
 			return;
 
 		// 파티를 생성할 수 있다면
-		if (Party.add(no)) {
-			partyNo = no;
+		if (Party.add(no))
 			ctx.writeAndFlush(Packet.createParty());
-		}
 	}
 
 	// 파티 요청
 	public void requestParty(int _other) {
 		// 가입한 파티가 없다면 반환
-		if (partyNo == 0)
-			return;
-
-		if (Party.get(partyNo) == null)
+		if (!nowJoinParty())
 			return;
 
 		// 파티 멤버수가 최대라면 반환
@@ -1649,6 +1651,76 @@ public class User extends Character {
 
 		// 파티 요청
 		other.getCtx().writeAndFlush(Packet.requestParty(no));
+	}
+
+	// 파티 응답
+	public void responseParty(int type, int partyNo) {
+		// 이미 가입한 파티가 있다면 반환
+		if (nowJoinParty())
+			return;
+
+		switch (type) {
+			case 0:
+				// 수락
+				Party.get(partyNo).join(no);
+				break;
+			case 1:
+				// 거절
+				break;
+		}
+	}
+
+	// 파티 나가기
+	public void quitParty() {
+		// 가입한 파티가 없다면 반환
+		if (!nowJoinParty())
+			return;
+
+		// 파티 탈퇴
+		Party.get(partyNo).exit(no);
+	}
+
+	// 파티 강퇴
+	public void kickParty(int userNo) {
+		// 가입한 파티가 없다면 반환
+		if (!nowJoinParty())
+			return;
+
+		// 파티 마스터가 아니라면 반환
+		if (partyNo != no)
+			return;
+
+		Party.get(partyNo).exit(userNo);
+	}
+
+	// 파티 해체
+	public void breakUpParty() {
+		// 가입한 파티가 없다면 반환
+		if (!nowJoinParty())
+			return;
+
+		// 파티 마스터가 아니라면 반환
+		if (partyNo != no)
+			return;
+
+		Party.get(partyNo).breakUp();
+	}
+
+	// 파티 가입 여부
+	private boolean nowJoinParty() {
+		// 가입한 파티가 없다면
+		if (partyNo == 0)
+			return false;
+
+		Party party = Party.get(partyNo);
+
+		// 해당 파티가 없다면
+		if (party == null) {
+			partyNo = 0;
+			return false;
+		}
+
+		return true;
 	}
 
 	// 현재 대화 얻음

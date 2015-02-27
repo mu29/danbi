@@ -39,4 +39,5 @@ public final class STCHeader {
 	public final static int RESPONSE_PARTY = 118;
 	public final static int SET_PARTY_MEMBER = 119;
 	public final static int REMOVE_PARTY_MEMBER = 120;
+	public final static int BREAK_UP_PARTY = 121;
 }

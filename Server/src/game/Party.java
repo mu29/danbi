@@ -1,10 +1,12 @@
 package game;
 
+import packet.Packet;
+
 import java.util.Hashtable;
 import java.util.Vector;
 
 public class Party {
-    private Vector<Integer> users;
+    private Vector<Integer> members;
     private int master;
 
     private static Hashtable<Integer, Party> partyList = new Hashtable<>();
@@ -25,32 +27,44 @@ public class Party {
     }
 
     public Party(int masterNo) {
-        users = new Vector<>();
-        users.addElement(masterNo);
+        members = new Vector<>();
+        members.addElement(masterNo);
         master = masterNo;
+        User.get(master).setPartyNo(master);
     }
 
     public boolean join(int userNo) {
-        if (users.contains(userNo))
+        if (members.contains(userNo))
             return false;
 
-        users.addElement(userNo);
+        User newMember = User.get(userNo);
+        for (Integer member : members) {
+            User.get(member).getCtx().writeAndFlush(Packet.setPartyMember(newMember));
+        }
+
+        newMember.setPartyNo(master);
+        members.addElement(userNo);
         return true;
     }
 
     public boolean exit(int userNo) {
-        if (!users.contains(userNo))
+        if (!members.contains(userNo))
             return false;
 
-        users.removeElement(userNo);
+        User.get(userNo).setPartyNo(0);
+        members.removeElement(userNo);
         return true;
     }
 
     public void breakUp() {
-        //
+        for (Integer member : members) {
+            User.get(member).setPartyNo(0);
+        }
+        members.clear();
+        partyList.remove(master);
     }
 
     public Vector<Integer> getMembers() {
-        return users;
+        return members;
     }
 }

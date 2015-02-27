@@ -1,6 +1,5 @@
 package network;
 import database.Crypto;
-import game.Functions;
 import game.Map;
 import game.User;
 import io.netty.channel.ChannelHandlerContext;
@@ -98,7 +97,16 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 				User.get(ctx).requestParty((int) packet.get("other"));
 				break;
 			case CTSHeader.RESPONSE_PARTY:
-				User.get(ctx).responseParty((int) packet.get("master"));
+				User.get(ctx).responseParty((int) packet.get("type"), (int) packet.get("partyNo"));
+				break;
+			case CTSHeader.QUIT_PARTY:
+				User.get(ctx).quitParty();
+				break;
+			case CTSHeader.KICK_PARTY:
+				User.get(ctx).kickParty((int) packet.get("userNo"));
+				break;
+			case CTSHeader.BREAK_UP_PARTY:
+				User.get(ctx).breakUpParty();
 				break;
     	}
     }
