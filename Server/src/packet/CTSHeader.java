@@ -24,4 +24,11 @@ public final class CTSHeader {
 	public final static int FINISH_TRADE = 107;
 	public final static int CANCEL_TRADE = 108;
 	public final static int SELECT_MESSAGE = 109;
+	public final static int CREATE_PARTY = 110;
+	public final static int REQUEST_PARTY = 111;
+	public final static int RESPONSE_PARTY = 112;
+	public final static int QUIT_PARTY = 113;
+	public final static int KICK_PARTY = 114;
+	public final static int BREAK_PARTY = 115;
+	public final static int REQUEST_GUILD = 116;
 }

@@ -46,6 +46,8 @@ public class User extends Character {
 	private int tradeGold;
 	private boolean isAcceptTrade = false;
 
+	private int partyNo;
+
 	// NPC 관련
 	private Message message = new Message();
 
@@ -1607,6 +1609,46 @@ public class User extends Character {
 				ctx.writeAndFlush(Packet.setShopItem(itemData.getNo(), itemData.getPrice()));
 			}
 		}
+	}
+
+	// 파티 생성
+	public void createParty() {
+		// 이미 파티가 있다면 반환
+		if (partyNo > 0)
+			return;
+
+		// 파티를 생성할 수 있다면
+		if (Party.add(no)) {
+			partyNo = no;
+			ctx.writeAndFlush(Packet.createParty());
+		}
+	}
+
+	// 파티 요청
+	public void requestParty(int _other) {
+		// 가입한 파티가 없다면 반환
+		if (partyNo == 0)
+			return;
+
+		if (Party.get(partyNo) == null)
+			return;
+
+		// 파티 멤버수가 최대라면 반환
+		if (Party.get(partyNo).getMembers().size() >= 4)
+			return;
+
+		User other = User.get(_other);
+
+		// 상대 유저가 없다면 반환
+		if (other == null)
+			return;
+
+		// 상대에게 이미 파티가 있다면 반환
+		if (other.partyNo > 0)
+			return;
+
+		// 파티 요청
+		other.getCtx().writeAndFlush(Packet.requestParty(no));
 	}
 
 	// 현재 대화 얻음

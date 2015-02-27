@@ -414,4 +414,19 @@ public final class Packet {
 
 		return packet;
 	}
+
+	public static JSONObject createParty() {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CREATE_PARTY);
+
+		return packet;
+	}
+
+	public static JSONObject requestParty(int no) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.REQUEST_PARTY);
+		packet.put("no", no);
+
+		return packet;
+	}
 }

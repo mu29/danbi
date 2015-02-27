@@ -91,6 +91,15 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.SELECT_MESSAGE:
 				User.get(ctx).updateMessage((int) packet.get("select"));
 				break;
+			case CTSHeader.CREATE_PARTY:
+				User.get(ctx).createParty();
+				break;
+			case CTSHeader.REQUEST_PARTY:
+				User.get(ctx).requestParty((int) packet.get("other"));
+				break;
+			case CTSHeader.RESPONSE_PARTY:
+				User.get(ctx).responseParty((int) packet.get("master"));
+				break;
     	}
     }
 

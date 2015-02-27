@@ -34,4 +34,9 @@ public final class STCHeader {
 	public final static int OPEN_MESSAGE_WINDOW = 113;
 	public final static int CLOSE_MESSAGE_WINDOW = 114;
 	public final static int SET_SHOP_ITEM = 115;
+	public final static int CREATE_PARTY = 116;
+	public final static int REQUEST_PARTY = 117;
+	public final static int RESPONSE_PARTY = 118;
+	public final static int SET_PARTY_MEMBER = 119;
+	public final static int REMOVE_PARTY_MEMBER = 120;
 }
