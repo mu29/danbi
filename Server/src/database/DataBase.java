@@ -11,14 +11,12 @@ import java.util.logging.Logger;
 
 public class DataBase {
 	private static Connection connection = null;
-	private static Statement statement = null;
 	private static Logger logger = Logger.getLogger(DataBase.class.getName());
 	
 	public static void connect(String host, String id, String pass) throws Exception {
 		try {
 			Class.forName("com.mysql.jdbc.Driver"); 
 			connection = DriverManager.getConnection(host, id, pass);
-			statement = connection.createStatement();
 			logger.info("데이터베이스 연결 완료.");
 		} catch (SQLException sqex) {
 			logger.warning(sqex.getMessage());
@@ -27,28 +25,28 @@ public class DataBase {
 	
 	// Select
 	public static ResultSet executeQuery(String query) throws SQLException {
-		return statement.executeQuery(query);
+		return connection.createStatement().executeQuery(query);//statement.executeQuery(query);
 	}
 	
 	// Insert
 	public static int executeUpdate(String query) throws SQLException {
-		return statement.executeUpdate(query);
+		return connection.createStatement().executeUpdate(query);//statement.executeUpdate(query);
 	}
 	
 	public static void insertUser(String id, String pass, String name, String mail, String image, int job, 
 								int map, int x, int y, int level)  {
 		try {
-			statement.executeUpdate("INSERT `user` SET " +
-									"`id` = '" + id + "', " +
-									"`pass` = '" + pass + "', " +
-									"`name` = '" + name + "', " +
-									"`mail` = '" + mail + "', " +
-									"`image` = '" + image + "', " +
-									"`job` = '" + job + "', " +
-									"`map` = '" + map + "', " +
-									"`x` = '" + x + "', " +
-									"`y` = '" + y + "', " +
-									"`level` = '" + level + "';");
+			connection.createStatement().executeUpdate("INSERT `user` SET " +
+					"`id` = '" + id + "', " +
+					"`pass` = '" + pass + "', " +
+					"`name` = '" + name + "', " +
+					"`mail` = '" + mail + "', " +
+					"`image` = '" + image + "', " +
+					"`job` = '" + job + "', " +
+					"`map` = '" + map + "', " +
+					"`x` = '" + x + "', " +
+					"`y` = '" + y + "', " +
+					"`level` = '" + level + "';");
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}
@@ -56,7 +54,7 @@ public class DataBase {
 
 	public static void insertEquip(int userNo) {
 		try {
-			statement.executeUpdate("INSERT INTO `equip` (`user_no`) VALUES ('" + userNo + "');");
+			connection.createStatement().executeUpdate("INSERT INTO `equip` (`user_no`) VALUES ('" + userNo + "');");
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}
@@ -64,7 +62,7 @@ public class DataBase {
 
 	public static void insertItem(GameData.Item item) {
 		try {
-			statement.executeUpdate("INSERT `item` SET " +
+			connection.createStatement().executeUpdate("INSERT `item` SET " +
 					"`user_no` = '" + item.getUserNo() + "', " +
 					"`item_no` = '" + item.getNo() + "', " +
 					"`amount` = '" + item.getAmount() + "', " +
@@ -91,7 +89,7 @@ public class DataBase {
 
 	public static void insertSkill(GameData.Skill skill) {
 		try {
-			statement.executeUpdate("INSERT `skill` SET " +
+			connection.createStatement().executeUpdate("INSERT `skill` SET " +
 					"`user_no` = '" + skill.getUserNo() + "', " +
 					"`skill_no` = '" + skill.getNo() + "', " +
 					"`rank` = '" + skill.getRank() + "';");
@@ -102,26 +100,27 @@ public class DataBase {
 	
 	public static void updateUser(User user) {
 		try {
-			statement.executeUpdate("UPDATE `user` SET " +
-									"`image` = '" + user.getImage() + "', " +
-									"`job` = '" + user.getJob() + "', " +
-									"`str` = '" + user.getPureStr() + "', " +
-									"`dex` = '" + user.getPureDex() + "', " +
-									"`agi` = '" + user.getPureAgi() + "', " +
-									"`title` = '" + user.getTitle() + "', " +
-									"`hp` = '" + user.getHp() + "', " +
-									"`mp` = '" + user.getMp() + "', " +
-									"`level` = '" + user.getLevel() + "', " +
-									"`exp` = '" + user.getExp() + "', " +
-									"`gold` = '" + user.getGold() + "', " +
-									"`map` = '" + user.getMap() + "', " +
-									"`x` = '" + user.getX() + "', " +
-									"`y` = '" + user.getY() + "', " +
-									"`direction` = '" + user.getDirection() + "', " +
-									"`speed` = '" + user.getMoveSpeed() + "', " +
-									"`stat_point` = '" + user.getStatPoint() + "', " +
-									"`skill_point` = '" + user.getSkillPoint() + "' " +
-									"WHERE `no` = '" + user.getNo() +"';");
+			connection.createStatement().executeUpdate("UPDATE `user` SET " +
+					"`image` = '" + user.getImage() + "', " +
+					"`job` = '" + user.getJob() + "', " +
+					"`str` = '" + user.getPureStr() + "', " +
+					"`dex` = '" + user.getPureDex() + "', " +
+					"`agi` = '" + user.getPureAgi() + "', " +
+					"`title` = '" + user.getTitle() + "', " +
+					"`hp` = '" + user.getHp() + "', " +
+					"`mp` = '" + user.getMp() + "', " +
+					"`level` = '" + user.getLevel() + "', " +
+					"`exp` = '" + user.getExp() + "', " +
+					"`gold` = '" + user.getGold() + "', " +
+					"`map` = '" + user.getMap() + "', " +
+					"`x` = '" + user.getX() + "', " +
+					"`y` = '" + user.getY() + "', " +
+					"`direction` = '" + user.getDirection() + "', " +
+					"`speed` = '" + user.getMoveSpeed() + "', " +
+					"`stat_point` = '" + user.getStatPoint() + "', " +
+					"`skill_point` = '" + user.getSkillPoint() + "' " +
+					"WHERE `no` = '" + user.getNo() + "';");
+
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}
@@ -129,14 +128,15 @@ public class DataBase {
 	
 	public static void updateEquip(User user) {
 		try {
-			statement.executeUpdate("UPDATE `equip` SET `weapon` = '" + user.getWeapon() + "', " +
-									"`shield` = '" + user.getShield() + "', " +
-									"`helmet` = '" + user.getHelmet() + "', " +
-									"`armor` = '" + user.getArmor() + "', " +
-									"`cape` = '" + user.getCape() + "', " +
-									"`shoes` = '" + user.getShoes() + "', " +
-									"`accessory` = '" + user.getAccessory() + "' " +
-									"WHERE `user_no` = '" + user.getNo() + "';");
+			connection.createStatement().executeUpdate("UPDATE `equip` SET " +
+					"`weapon` = '" + user.getWeapon() + "', " +
+					"`shield` = '" + user.getShield() + "', " +
+					"`helmet` = '" + user.getHelmet() + "', " +
+					"`armor` = '" + user.getArmor() + "', " +
+					"`cape` = '" + user.getCape() + "', " +
+					"`shoes` = '" + user.getShoes() + "', " +
+					"`accessory` = '" + user.getAccessory() + "' " +
+					"WHERE `user_no` = '" + user.getNo() + "';");
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}
@@ -144,7 +144,7 @@ public class DataBase {
 
 	public static void deleteItem(int userNo) {
 		try {
-			statement.executeUpdate("DELETE FROM `item` WHERE `user_no` = '" + userNo + "';");
+			connection.createStatement().executeUpdate("DELETE FROM `item` WHERE `user_no` = '" + userNo + "';");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -152,7 +152,7 @@ public class DataBase {
 
 	public static void deleteSkill(int userNo) {
 		try {
-			statement.executeUpdate("DELETE FROM `skill` WHERE `user_no` = '" + userNo + "';");
+			connection.createStatement().executeUpdate("DELETE FROM `skill` WHERE `user_no` = '" + userNo + "';");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -213,8 +213,19 @@ public class Enemy extends Character {
         // 타겟이 유저인 경우
         if (target != null && target.getClass().getName().equals("game.User")) {
             User u = (User) target;
-            u.gainExp(exp);
-            //u.gainGold(gold);
+
+            // 파티가 있다면 경험치 분배
+            if (u.getPartyNo() > 0) {
+                int partyExp = exp / Party.get(u.getPartyNo()).getMembers().size();
+                for (int memberNo : Party.get(u.getPartyNo()).getMembers()) {
+                    User member = User.get(memberNo);
+                    if (member.getMap() == u.getMap())
+                        member.gainExp(partyExp);
+                }
+            } else {
+                u.gainExp(exp);
+            }
+            // 골드 드랍
             if (gold > 0)
                 Map.getMap(map).getField(seed).loadDropGold(gold, x, y);
             // 보상 목록에 있는 아이템을 드랍

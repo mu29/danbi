@@ -27,10 +27,9 @@ public class Party {
     }
 
     public Party(int masterNo) {
-        members = new Vector<>();
-        members.addElement(masterNo);
         master = masterNo;
-        User.get(master).setPartyNo(master);
+        members = new Vector<>();
+        join(master);
     }
 
     public boolean join(int userNo) {
@@ -39,8 +38,12 @@ public class Party {
 
         User newMember = User.get(userNo);
         for (Integer member : members) {
-            User.get(member).getCtx().writeAndFlush(Packet.setPartyMember(newMember));
+            User partyMember = User.get(member);
+
+            partyMember.getCtx().writeAndFlush(Packet.setPartyMember(newMember));
+            newMember.getCtx().writeAndFlush(Packet.setPartyMember(partyMember));
         }
+        newMember.getCtx().writeAndFlush(Packet.setPartyMember(newMember));
 
         newMember.setPartyNo(master);
         members.addElement(userNo);
@@ -51,6 +54,12 @@ public class Party {
         if (!members.contains(userNo))
             return false;
 
+        for (Integer member : members) {
+            User partyMember = User.get(member);
+
+            partyMember.getCtx().writeAndFlush(Packet.removePartyMember(userNo));
+        }
+
         User.get(userNo).setPartyNo(0);
         members.removeElement(userNo);
         return true;
@@ -58,10 +67,13 @@ public class Party {
 
     public void breakUp() {
         for (Integer member : members) {
-            User.get(member).setPartyNo(0);
+            User partyMember = User.get(member);
+
+            partyMember.setPartyNo(0);
         }
         members.clear();
-        partyList.remove(master);
+        if (partyList.containsKey(master))
+            partyList.remove(master);
     }
 
     public Vector<Integer> getMembers() {

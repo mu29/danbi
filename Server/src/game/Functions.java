@@ -1,6 +1,7 @@
 package game;
 
 import database.*;
+import packet.Packet;
 
 import java.lang.reflect.Method;
 
@@ -55,7 +56,7 @@ public class Functions {
                 if (msg.getSelect() == 0)
                     msg.close();
                 else if (msg.getSelect() == 1)
-                    msg.update(5, 0);
+                    user.getCtx().writeAndFlush(Packet.createGuild());
             }
         }
     }

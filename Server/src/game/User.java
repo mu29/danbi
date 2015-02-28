@@ -14,10 +14,11 @@ import database.GameData.*;
 
 public class User extends Character {
 	private ChannelHandlerContext ctx;
+	// 유저 정보
 	private String id;
 	private String pass;
 	private String mail;
-	private String guild;
+	private int guildNo;
 	private int job;
 	private int pureStr;
 	private int pureDex;
@@ -26,7 +27,7 @@ public class User extends Character {
 	private int skillPoint;
 	private int title;
 	private boolean admin;
-	
+	// 장착 아이템
 	private int weapon = 0;
 	private int shield = 0;
 	private int helmet = 0;
@@ -34,25 +35,30 @@ public class User extends Character {
 	private int cape = 0;
 	private int shoes = 0;
 	private int accessory = 0;
-
+    // 인벤토리 등
 	private int maxInventory = 35;
-
 	private Hashtable<Integer, Item> itemBag = new Hashtable<>();
 	private Hashtable<Integer, Skill> skillBag = new Hashtable<>();
-
 	// 거래 관련
 	private int tradePartner;
 	private Hashtable<Integer, Item>  tradeItemList = new Hashtable<>();
 	private int tradeGold;
 	private boolean isAcceptTrade = false;
-
+	// 커뮤니티 관련
 	private int partyNo;
-
 	// NPC 관련
 	private Message message = new Message();
 
 	private static Hashtable<ChannelHandlerContext, User> users = new Hashtable<ChannelHandlerContext, User>();
 	private static Logger logger = Logger.getLogger(User.class.getName());
+
+	public static boolean put(ChannelHandlerContext ctx, User user) {
+		if (users.containsKey(ctx))
+			return false;
+
+		users.put(ctx, user);
+		return true;
+	}
 
 	public static User get(ChannelHandlerContext ctx) {
 		if (!users.containsKey(ctx))
@@ -73,14 +79,6 @@ public class User extends Character {
 		return users;
 	}
 
-	public static boolean put(ChannelHandlerContext ctx, User user) {
-		if (users.containsKey(ctx))
-			return false;
-
-		users.put(ctx, user);
-		return true;
-	}
-
 	public static boolean remove(ChannelHandlerContext ctx) {
 		if (!users.containsKey(ctx))
 			return false;
@@ -98,7 +96,7 @@ public class User extends Character {
 			pass = rs.getString("pass");
 			name = rs.getString("name");
 			title = rs.getInt("title");
-			guild = "";
+			guildNo = rs.getInt("guild");
 			mail = rs.getString("mail");
 			image = rs.getString("image");
 			job = rs.getInt("job");
@@ -151,9 +149,15 @@ public class User extends Character {
 		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
 				new int[]{ Type.Status.TITLE }, new Integer[]{ title }));
 	}
-	
-	public String getGuild() {
-		return guild;
+
+	// 길드
+	public int getGuild() {
+		return guildNo;
+	}
+
+	public void setGuild(int _guild) {
+		guildNo = _guild;
+		ctx.writeAndFlush(Packet.setGuild(guildNo));
 	}
 	
 	public String getMail() {
@@ -785,6 +789,7 @@ public class User extends Character {
 		loadEquipItem();
 		loadInventory();
 		loadSkillList();
+		loadGuildMember();
 	}
 	
 	// 장착한 아이템 불러오기
@@ -835,6 +840,30 @@ public class User extends Character {
 			while (rs.next()) {
 				skillBag.put(rs.getInt("skill_no"), new Skill(no, rs.getInt("skill_no")));
 				ctx.writeAndFlush(Packet.setSkill(skillBag.get(rs.getInt("skill_no"))));
+			}
+
+			rs.close();
+		} catch (SQLException e) {
+			logger.warning(e.toString());
+		}
+	}
+
+	// 길드 멤버 불러오기
+	public void loadGuildMember() {
+		if (guildNo == 0)
+			return;
+
+		try {
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `user` WHERE `guild` = '" + guildNo + "';");
+
+			while (rs.next()) {
+				User member = User.get(rs.getInt("no"));
+
+				if (member == null)
+					ctx.writeAndFlush(Packet.setGuildMember(rs.getInt("no"), rs.getString("name"), rs.getString("image"),
+							rs.getInt("level"), rs.getInt("job"), rs.getInt("hp"), rs.getInt("maxHp")));
+				else
+					ctx.writeAndFlush(Packet.setGuildMember(member));
 			}
 
 			rs.close();
@@ -1616,6 +1645,12 @@ public class User extends Character {
 	// 파티 번호 설정
 	public void setPartyNo(int _partyNo) {
 		partyNo = _partyNo;
+		ctx.writeAndFlush(Packet.setParty(partyNo));
+	}
+
+	// 파티 번호 얻기
+	public int getPartyNo() {
+		return partyNo;
 	}
 
 	// 파티 생성
@@ -1624,13 +1659,12 @@ public class User extends Character {
 		if (nowJoinParty())
 			return;
 
-		// 파티를 생성할 수 있다면
-		if (Party.add(no))
-			ctx.writeAndFlush(Packet.createParty());
+		// 파티를 생성
+		Party.add(no);
 	}
 
 	// 파티 요청
-	public void requestParty(int _other) {
+	public void inviteParty(int _other) {
 		// 가입한 파티가 없다면 반환
 		if (!nowJoinParty())
 			return;
@@ -1640,6 +1674,11 @@ public class User extends Character {
 			return;
 
 		User other = User.get(_other);
+		User master = User.get(partyNo);
+
+		// 파티 마스터가 없다면 반환
+		if (master == null)
+			return;
 
 		// 상대 유저가 없다면 반환
 		if (other == null)
@@ -1650,7 +1689,7 @@ public class User extends Character {
 			return;
 
 		// 파티 요청
-		other.getCtx().writeAndFlush(Packet.requestParty(no));
+		other.getCtx().writeAndFlush(Packet.inviteParty(partyNo, master.getName()));
 	}
 
 	// 파티 응답
@@ -1681,7 +1720,7 @@ public class User extends Character {
 	}
 
 	// 파티 강퇴
-	public void kickParty(int userNo) {
+	public void kickParty(int member) {
 		// 가입한 파티가 없다면 반환
 		if (!nowJoinParty())
 			return;
@@ -1690,7 +1729,11 @@ public class User extends Character {
 		if (partyNo != no)
 			return;
 
-		Party.get(partyNo).exit(userNo);
+		// 마스터를 강퇴하려 하면 반환
+		if (member == partyNo)
+			return;
+
+		Party.get(partyNo).exit(member);
 	}
 
 	// 파티 해체
@@ -1723,6 +1766,37 @@ public class User extends Character {
 		return true;
 	}
 
+	// 길드 생성
+	public void createGuild(String guildName) {
+		// 가입한 길드가 있다면 반환
+		if (nowJoinGuild())
+			return;
+
+		// 소지금이 적으면 반환
+		if (gold < 100000)
+			return;
+
+		loseGold(100000);
+		Guild.add(no, guildName);
+	}
+
+	// 길드 가입 여부
+	private boolean nowJoinGuild() {
+		// 가입한 파티가 없다면
+		if (guildNo == 0)
+			return false;
+
+		Guild guild = Guild.get(guildNo);
+
+		// 해당 길드가 없다면
+		if (guild == null) {
+			guildNo = 0;
+			return false;
+		}
+
+		return true;
+	}
+	
 	// 현재 대화 얻음
 	public Message getMessage() {
 		return message;
@@ -1888,6 +1962,14 @@ public class User extends Character {
 		// 거래중이라면 거래 종료
 		if (nowTrading())
 			cancelTrade();
+
+		// 파티 가입중이라면 파티 탈퇴
+		if (nowJoinParty()) {
+			if (partyNo == no)
+				breakUpParty();
+			else
+				quitParty();
+		}
 
 		// 맵에서 나가기
 		Map.getMap(map).getField(seed).removeUser(this);

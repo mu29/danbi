@@ -30,5 +30,10 @@ public final class CTSHeader {
 	public final static int QUIT_PARTY = 113;
 	public final static int KICK_PARTY = 114;
 	public final static int BREAK_UP_PARTY = 115;
-	public final static int REQUEST_GUILD = 116;
+	public final static int CREATE_GUILD = 116;
+	public final static int REQUEST_GUILD = 117;
+	public final static int RESPONSE_GUILD = 118;
+	public final static int QUIT_GUILD = 119;
+	public final static int KICK_GUILD = 120;
+	public final static int BREAK_UP_GUILD = 121;
 }

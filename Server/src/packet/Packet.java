@@ -19,7 +19,7 @@ public final class Packet {
 		
 		return packet;
 	}
-	
+
 	public static JSONObject loginMessage(User user) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.LOGIN);
@@ -214,6 +214,39 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REMOVE_DROP_GOLD);
 		packet.put("no", gold.getNo());
+
+		return packet;
+	}
+
+	public static JSONObject notify(String text) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.NOTIFY);
+		packet.put("text", text);
+
+		return packet;
+	}
+
+	public static JSONObject notify(String text, int r, int g, int b) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.NOTIFY);
+		packet.put("text", text);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+
+		return packet;
+	}
+
+	public static JSONObject notify(String text, int r, int g, int b, int r2, int g2, int b2) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.NOTIFY);
+		packet.put("text", text);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		packet.put("r2", r2);
+		packet.put("g2", g2);
+		packet.put("b2", b2);
 
 		return packet;
 	}
@@ -415,24 +448,26 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject createParty() {
+	public static JSONObject setParty(int no) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.CREATE_PARTY);
-
-		return packet;
-	}
-
-	public static JSONObject requestParty(int no) {
-		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.REQUEST_PARTY);
+		packet.put("header", STCHeader.SET_PARTY);
 		packet.put("no", no);
 
 		return packet;
 	}
-	
+
+	public static JSONObject inviteParty(int partyNo, String master) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.INVITE_PARTY);
+		packet.put("master", master);
+		packet.put("partyNo", partyNo);
+
+		return packet;
+	}
+
 	public static JSONObject setPartyMember(User user) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.REQUEST_PARTY);
+		packet.put("header", STCHeader.SET_PARTY_MEMBER);
 		packet.put("no", user.getNo());
 		packet.put("name", user.getName());
 		packet.put("image", user.getImage());
@@ -440,7 +475,76 @@ public final class Packet {
 		packet.put("job", user.getJob());
 		packet.put("hp", user.getHp());
 		packet.put("maxHp", user.getMaxHp());
-		
+
+		return packet;
+	}
+
+	public static JSONObject removePartyMember(int no) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.REMOVE_PARTY_MEMBER);
+		packet.put("no", no);
+
+		return packet;
+	}
+
+	public static JSONObject createGuild(int amount) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CREATE_GUILD);
+		packet.put("amount", amount);
+
+		return packet;
+	}
+
+	public static JSONObject setGuild(int no) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.SET_GUILD);
+		packet.put("no", no);
+
+		return packet;
+	}
+
+	public static JSONObject inviteGuild(int guildNo, String master) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.INVITE_GUILD);
+		packet.put("master", master);
+		packet.put("guildNo", guildNo);
+
+		return packet;
+	}
+
+	public static JSONObject setGuildMember(User user) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.SET_GUILD_MEMBER);
+		packet.put("no", user.getNo());
+		packet.put("name", user.getName());
+		packet.put("image", user.getImage());
+		packet.put("level", user.getLevel());
+		packet.put("job", user.getJob());
+		packet.put("hp", user.getHp());
+		packet.put("maxHp", user.getMaxHp());
+
+		return packet;
+	}
+
+	public static JSONObject setGuildMember(int no, String name, String image, int level, int job, int hp, int maxHp) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.SET_GUILD_MEMBER);
+		packet.put("no", no);
+		packet.put("name", name);
+		packet.put("image", image);
+		packet.put("level", level);
+		packet.put("job", job);
+		packet.put("hp", hp);
+		packet.put("maxHp", maxHp);
+
+		return packet;
+	}
+
+	public static JSONObject removeGuildMember(int no) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.REMOVE_GUILD_MEMBER);
+		packet.put("no", no);
+
 		return packet;
 	}
 }

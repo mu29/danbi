@@ -1,5 +1,7 @@
 package database;
 
+import game.Guild;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -62,6 +64,8 @@ public class GameData extends DataBase {
 		logger.info("상점 정보 로드 완료.");
 
 		rs.close();
+
+		Guild.load();
 	}
 
 	public static class Job {

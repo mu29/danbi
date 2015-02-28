@@ -17,6 +17,7 @@ public final class STCHeader {
 	public final static int LOAD_DROP_GOLD = 13;
 	public final static int REMOVE_DROP_ITEM = 14;
 	public final static int REMOVE_DROP_GOLD = 15;
+	public final static int NOTIFY = 16;
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int UPDATE_STATUS = 101;
@@ -34,10 +35,13 @@ public final class STCHeader {
 	public final static int OPEN_MESSAGE_WINDOW = 113;
 	public final static int CLOSE_MESSAGE_WINDOW = 114;
 	public final static int SET_SHOP_ITEM = 115;
-	public final static int CREATE_PARTY = 116;
-	public final static int REQUEST_PARTY = 117;
-	public final static int RESPONSE_PARTY = 118;
-	public final static int SET_PARTY_MEMBER = 119;
-	public final static int REMOVE_PARTY_MEMBER = 120;
-	public final static int BREAK_UP_PARTY = 121;
+	public final static int SET_PARTY  = 116;
+	public final static int INVITE_PARTY = 117;
+	public final static int SET_PARTY_MEMBER = 118;
+	public final static int REMOVE_PARTY_MEMBER = 119;
+	public final static int CREATE_GUILD = 120;
+	public final static int SET_GUILD = 121;
+	public final static int INVITE_GUILD = 122;
+	public final static int SET_GUILD_MEMBER = 123;
+	public final static int REMOVE_GUILD_MEMBER = 124;
 }
