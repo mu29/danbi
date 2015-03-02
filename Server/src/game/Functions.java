@@ -55,8 +55,10 @@ public class Functions {
             else if (msg.getMessage() == 10) {
                 if (msg.getSelect() == 0)
                     msg.close();
-                else if (msg.getSelect() == 1)
-                    user.getCtx().writeAndFlush(Packet.createGuild());
+                else if (msg.getSelect() == 1) {
+                    user.getCtx().writeAndFlush(Packet.createGuild(100000));
+                    msg.close();
+                }
             }
         }
     }

@@ -93,7 +93,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.CREATE_PARTY:
 				User.get(ctx).createParty();
 				break;
-			case CTSHeader.REQUEST_PARTY:
+			case CTSHeader.INVITE_PARTY:
 				User.get(ctx).inviteParty((int) packet.get("other"));
 				break;
 			case CTSHeader.RESPONSE_PARTY:
@@ -111,20 +111,20 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.CREATE_GUILD:
 				User.get(ctx).createGuild((String) packet.get("name"));
 				break;
-			case CTSHeader.REQUEST_GUILD:
-				//User.get(ctx).inviteGuild((int) packet.get("other"));
+			case CTSHeader.INVITE_GUILD:
+				User.get(ctx).inviteGuild((int) packet.get("other"));
 				break;
 			case CTSHeader.RESPONSE_GUILD:
-				//User.get(ctx).responseGuild((int) packet.get("type"), (int) packet.get("partyNo"));
+				User.get(ctx).responseGuild((int) packet.get("type"), (int) packet.get("guildNo"));
 				break;
 			case CTSHeader.QUIT_GUILD:
-				//User.get(ctx).quitGuild();
+				User.get(ctx).quitGuild();
 				break;
 			case CTSHeader.KICK_GUILD:
-				//User.get(ctx).kickGuild((int) packet.get("member"));
+				User.get(ctx).kickGuild((int) packet.get("member"));
 				break;
 			case CTSHeader.BREAK_UP_GUILD:
-				//User.get(ctx).breakUpGuild();
+				User.get(ctx).breakUpGuild();
 				break;
     	}
     }

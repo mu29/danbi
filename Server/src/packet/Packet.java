@@ -2,6 +2,7 @@ package packet;
 
 import database.Type;
 import game.Field;
+import game.Guild;
 import game.User;
 import game.Character;
 
@@ -30,6 +31,8 @@ public final class Packet {
 		packet.put("title", user.getTitle());
 		packet.put("image", user.getImage());
 		packet.put("job", user.getJob());
+		packet.put("guild", Guild.get(user.getGuild()).getName());
+		packet.put("guildNo", user.getGuild());
 		packet.put("str", user.getStr());
 		packet.put("dex", user.getDex());
 		packet.put("agi", user.getAgi());
@@ -87,7 +90,7 @@ public final class Packet {
 
 		if (type == Type.Character.USER) {
 			User u = (User) c;
-			packet.put("guild", u.getGuild());
+			packet.put("guild", Guild.get(u.getGuild()).getName());
 			packet.put("title", u.getTitle());
 		}
 		

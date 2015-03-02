@@ -21,12 +21,12 @@ public class Guild {
         ResultSet rs = DataBase.executeQuery("SELECT * FROM `guild`;");
         while (rs.next()) {
             int masterNo = rs.getInt("master");
-            String guildName = rs.getString("name");
+            String guildName = rs.getString("guild_name");
             Guild guild = new Guild(masterNo, guildName, true);
 
             ResultSet memberRs = DataBase.executeQuery("SELECT * FROM `user` WHERE `guild` = '" + masterNo +"';");
             while (memberRs.next())
-                guild.members.addElement(rs.getInt("no"));
+                guild.members.addElement(memberRs.getInt("no"));
             memberRs.close();
 
             guildList.put(masterNo, guild);
@@ -55,6 +55,7 @@ public class Guild {
         name = _name;
         members = new Vector<>();
         join(master);
+        DataBase.insertGuild(master, name);
     }
 
     public Guild(int _master, String _name, boolean loading) {
@@ -65,11 +66,11 @@ public class Guild {
             join(master);
     }
 
-    public boolean join(int userNo) {
-        if (members.contains(userNo))
+    public boolean join(int _userNo) {
+        if (members.contains(_userNo))
             return false;
 
-        User newMember = User.get(userNo);
+        User newMember = User.get(_userNo);
         for (Integer member : members) {
             User guildMember = User.get(member);
 
@@ -79,22 +80,30 @@ public class Guild {
         newMember.getCtx().writeAndFlush(Packet.setGuildMember(newMember));
 
         newMember.setGuild(master);
-        members.addElement(userNo);
+        members.addElement(_userNo);
+        DataBase.insertGuildMember(master, _userNo);
         return true;
     }
 
-    public boolean exit(int userNo) {
-        if (!members.contains(userNo))
+    public boolean exit(int _userNo) {
+        if (!members.contains(_userNo))
             return false;
 
         for (Integer member : members) {
             User guildMember = User.get(member);
 
-            guildMember.getCtx().writeAndFlush(Packet.removeGuildMember(userNo));
+            if (guildMember != null)
+                guildMember.getCtx().writeAndFlush(Packet.removeGuildMember(_userNo));
         }
 
-        User.get(userNo).setGuild(0);
-        members.removeElement(userNo);
+        User exitUser = User.get(_userNo);
+        if (exitUser != null)
+            exitUser.setGuild(0);
+        else
+            DataBase.updateGuildExit(_userNo);
+
+        members.removeElement(_userNo);
+        DataBase.deleteGuildMember(master, _userNo);
         return true;
     }
 
@@ -107,6 +116,14 @@ public class Guild {
         members.clear();
         if (guildList.containsKey(master))
             guildList.remove(master);
+    }
+
+    public int getMaster() {
+        return master;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Vector<Integer> getMembers() {

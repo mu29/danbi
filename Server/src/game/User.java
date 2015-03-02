@@ -861,7 +861,7 @@ public class User extends Character {
 
 				if (member == null)
 					ctx.writeAndFlush(Packet.setGuildMember(rs.getInt("no"), rs.getString("name"), rs.getString("image"),
-							rs.getInt("level"), rs.getInt("job"), rs.getInt("hp"), rs.getInt("maxHp")));
+							rs.getInt("level"), rs.getInt("job"), rs.getInt("hp"), rs.getInt("hp")));
 				else
 					ctx.writeAndFlush(Packet.setGuildMember(member));
 			}
@@ -1693,15 +1693,15 @@ public class User extends Character {
 	}
 
 	// 파티 응답
-	public void responseParty(int type, int partyNo) {
+	public void responseParty(int _type, int _partyNo) {
 		// 이미 가입한 파티가 있다면 반환
 		if (nowJoinParty())
 			return;
 
-		switch (type) {
+		switch (_type) {
 			case 0:
 				// 수락
-				Party.get(partyNo).join(no);
+				Party.get(_partyNo).join(no);
 				break;
 			case 1:
 				// 거절
@@ -1720,7 +1720,7 @@ public class User extends Character {
 	}
 
 	// 파티 강퇴
-	public void kickParty(int member) {
+	public void kickParty(int _member) {
 		// 가입한 파티가 없다면 반환
 		if (!nowJoinParty())
 			return;
@@ -1730,10 +1730,10 @@ public class User extends Character {
 			return;
 
 		// 마스터를 강퇴하려 하면 반환
-		if (member == partyNo)
+		if (_member == partyNo)
 			return;
 
-		Party.get(partyNo).exit(member);
+		Party.get(partyNo).exit(_member);
 	}
 
 	// 파티 해체
@@ -1767,7 +1767,7 @@ public class User extends Character {
 	}
 
 	// 길드 생성
-	public void createGuild(String guildName) {
+	public void createGuild(String _guildName) {
 		// 가입한 길드가 있다면 반환
 		if (nowJoinGuild())
 			return;
@@ -1777,7 +1777,97 @@ public class User extends Character {
 			return;
 
 		loseGold(100000);
-		Guild.add(no, guildName);
+		Guild.add(no, _guildName);
+	}
+
+	// 길드 요청
+	public void inviteGuild(int _other) {
+		// 가입한 길드가 없다면 반환
+		if (!nowJoinGuild())
+			return;
+
+		// 길드 멤버수가 최대라면 반환
+		if (Guild.get(guildNo).getMembers().size() >= 40)
+			return;
+
+		User other = User.get(_other);
+		User master = User.get(Guild.get(guildNo).getMaster());
+
+		// 마스터가 없다면 반환
+		if (master == null)
+			return;
+
+		// 자신이 마스터가 아니라면 반환
+		if (!this.equals(master))
+			return;
+
+		// 상대 유저가 없다면 반환
+		if (other == null)
+			return;
+
+		// 상대에게 이미 길드가 있다면 반환
+		if (other.guildNo > 0)
+			return;
+
+		// 길드 요청
+		other.getCtx().writeAndFlush(Packet.inviteGuild(guildNo, master.getName()));
+	}
+
+	// 길드 응답
+	public void responseGuild(int _type, int _guildNo) {
+		// 이미 가입한 파티가 있다면 반환
+		if (nowJoinGuild())
+			return;
+
+		switch (_type) {
+			case 0:
+				// 수락
+				Guild.get(_guildNo).join(no);
+				break;
+			case 1:
+				// 거절
+				break;
+		}
+	}
+	
+	// 길드 나가기
+	public void quitGuild() {
+		// 가입한 길드가 없다면 반환
+		if (!nowJoinGuild())
+			return;
+
+		// 길드 탈퇴
+		Guild.get(guildNo).exit(no);
+	}
+
+	// 길드 강퇴
+	public void kickGuild(int _member) {
+		// 가입한 길드가 없다면 반환
+		if (!nowJoinGuild())
+			return;
+
+		// 길드 마스터가 아니라면 반환
+		if (guildNo != no)
+			return;
+
+		// 마스터를 강퇴하려 하면 반환
+		if (_member == guildNo)
+			return;
+
+		Guild.get(guildNo).exit(_member);
+	}
+
+	// 길드 해체
+	public void breakUpGuild() {
+		// 가입한 길드가 없다면 반환
+		if (!nowJoinGuild())
+			return;
+
+		// 길드 마스터가 아니라면 반환
+		if (guildNo != no)
+			return;
+
+		Guild.get(guildNo).breakUp();
 	}
 
 	// 길드 가입 여부
