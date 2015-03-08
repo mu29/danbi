@@ -24,7 +24,7 @@ public class JsonEncoder extends MessageToMessageEncoder {
         int dataLength = data.length;
 
         ByteBuf buf = Unpooled.buffer();
-        buf.writeInt(dataLength);
+        //buf.writeInt(dataLength);
         buf.writeBytes(data);
         out.add(buf);
 	}
@@ -33,7 +33,7 @@ public class JsonEncoder extends MessageToMessageEncoder {
         ObjectMapper mapper = new ObjectMapper();
         Throwable t;
         try {
-                return mapper.writeValueAsString(msg);
+            return mapper.writeValueAsString(msg);
         } catch (JsonGenerationException e) {
                 t = e;
         } catch (JsonMappingException e) {
