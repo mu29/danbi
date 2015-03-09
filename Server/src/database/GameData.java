@@ -63,6 +63,11 @@ public class GameData extends DataBase {
 			shop.addElement(new Shop(rs));
 		logger.info("상점 정보 로드 완료.");
 
+		rs = executeQuery("SELECT * FROM `setting_portal`;");
+		while (rs.next())
+			shop.addElement(new Shop(rs));
+		logger.info("상점 정보 로드 완료.");
+
 		rs.close();
 
 		Guild.load();
@@ -940,6 +945,28 @@ public class GameData extends DataBase {
 
 		public int getRate() {
 			return rate;
+		}
+	}
+
+	public static class Portal {
+		private int map;
+		private int x;
+		private int y;
+		private int nextMap;
+		private int nextX;
+		private int nextY;
+
+		public Portal(ResultSet rs) {
+			try {
+				map = rs.getInt("map");
+				x = rs.getInt("x");
+				y = rs.getInt("y");
+				nextMap = rs.getInt("next_map");
+				nextX = rs.getInt("next_x");
+				nextY = rs.getInt("next_y");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

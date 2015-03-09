@@ -24,7 +24,7 @@ public class JsonEncoder extends MessageToMessageEncoder {
         int dataLength = data.length;
 
         ByteBuf buf = Unpooled.buffer();
-        //buf.writeInt(dataLength);
+        buf.writeInt(dataLength);
         buf.writeBytes(data);
         out.add(buf);
 	}
