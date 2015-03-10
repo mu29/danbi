@@ -32,7 +32,7 @@ public final class Packet {
 		packet.put("title", user.getTitle());
 		packet.put("image", user.getImage());
 		packet.put("job", user.getJob());
-		packet.put("guild", Guild.get(user.getGuild()).getName());
+		packet.put("guild", Guild.get(user.getGuild()) == null ? "길드 없음" : Guild.get(user.getGuild()).getName());
 		packet.put("guildNo", user.getGuild());
 		packet.put("str", user.getStr());
 		packet.put("dex", user.getDex());
