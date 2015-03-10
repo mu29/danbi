@@ -17,6 +17,7 @@ public class GameData extends DataBase {
 	public static Hashtable<Integer, NPC> npc = new Hashtable<>();
 	public static Vector<Reward> reward = new Vector<>();
 	public static Vector<Shop> shop = new Vector<>();
+	public static Vector<Portal> portal = new Vector<>();
 
 	private static Logger logger = Logger.getLogger(GameData.class.getName());
 
@@ -65,8 +66,8 @@ public class GameData extends DataBase {
 
 		rs = executeQuery("SELECT * FROM `setting_portal`;");
 		while (rs.next())
-			shop.addElement(new Shop(rs));
-		logger.info("상점 정보 로드 완료.");
+			portal.addElement(new Portal(rs));
+		logger.info("포탈 정보 로드 완료.");
 
 		rs.close();
 
@@ -967,6 +968,30 @@ public class GameData extends DataBase {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+
+		public int getMap() {
+			return map;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public int getY() {
+			return y;
+		}
+
+		public int getNextMap() {
+			return nextMap;
+		}
+
+		public int getNextX() {
+			return nextX;
+		}
+
+		public int getNextY() {
+			return nextY;
 		}
 	}
 }

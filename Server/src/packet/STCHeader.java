@@ -18,6 +18,7 @@ public final class STCHeader {
 	public final static int REMOVE_DROP_ITEM = 14;
 	public final static int REMOVE_DROP_GOLD = 15;
 	public final static int NOTIFY = 16;
+	public final static int MOVE_MAP = 17;
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int UPDATE_STATUS = 101;

@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: danbi
 Target Host: localhost
 Target Database: danbi
-Date: 2015-03-08 ���� 11:40:47
+Date: 2015-03-10 ���� 6:11:04
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -121,6 +121,18 @@ CREATE TABLE `setting_npc` (
   `y` int(11) DEFAULT NULL,
   `direction` int(11) DEFAULT NULL,
   `function` char(255) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for setting_portal
+-- ----------------------------
+CREATE TABLE `setting_portal` (
+  `map` int(11) DEFAULT NULL,
+  `x` int(11) DEFAULT NULL,
+  `y` int(11) DEFAULT NULL,
+  `next_map` int(11) DEFAULT NULL,
+  `next_x` int(11) DEFAULT NULL,
+  `next_y` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -258,7 +270,7 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records 
 -- ----------------------------
-INSERT INTO `equip` VALUES ('1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('1', '2', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('2', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('3', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('4', '0', '0', '0', '0', '0', '0', '0');
@@ -269,17 +281,10 @@ INSERT INTO `equip` VALUES ('11', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('12', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('13', '1', '0', '0', '0', '0', '0', '0');
 INSERT INTO `guild` VALUES ('1', '메롱메롱ㅇㅇ');
-INSERT INTO `item` VALUES ('13', '1', '1', '6', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('13', '1', '1', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('13', '1', '1', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('13', '1', '1', '3', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('13', '8', '5', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('13', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1');
-INSERT INTO `item` VALUES ('12', '1', '1', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('12', '1', '1', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('12', '1', '1', '3', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('12', '8', '2', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
-INSERT INTO `item` VALUES ('12', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
+INSERT INTO `item` VALUES ('1', '8', '1', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
+INSERT INTO `item` VALUES ('1', '1', '1', '3', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
+INSERT INTO `item` VALUES ('1', '1', '1', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1');
+INSERT INTO `item` VALUES ('1', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `setting_item` VALUES ('1', '목도', '나무로 만든 검', '001-Weapon01', '0', '1', '0', '100', '10', '10', '10', '10', '5', '4', '3', '2', '1', '10', '5', '5', '2', '0', '1', '1', null);
 INSERT INTO `setting_item` VALUES ('2', '냄비 뚜껑', '방패가 없으니 이거라도 쓰자', '009-Shield01', '0', '1', '1', '10', '0', '0', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', null);
 INSERT INTO `setting_item` VALUES ('3', '밀짚모자', '난 해적왕이 될 사나이!', '010-Head01', '0', '1', '2', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0', '1', '1', null);
@@ -292,6 +297,8 @@ INSERT INTO `setting_job` VALUES ('1', '전사', '1000', '5', '1', '0', '0');
 INSERT INTO `setting_job` VALUES ('2', '마법사', '5', '10', '0', '0', '1');
 INSERT INTO `setting_job` VALUES ('3', '도적', '7', '7', '0', '1', '0');
 INSERT INTO `setting_npc` VALUES ('1', '테스트', '003-Fighter03', '1', '10', '4', '2', 'testNpc');
+INSERT INTO `setting_portal` VALUES ('1', '19', '8', '2', '0', '14');
+INSERT INTO `setting_portal` VALUES ('2', '0', '14', '1', '19', '8');
 INSERT INTO `setting_register` VALUES ('1', '1', '001-Fighter01', '1', '0', '0', '1');
 INSERT INTO `setting_register` VALUES ('2', '1', '002-Fighter02', '1', '0', '0', '1');
 INSERT INTO `setting_register` VALUES ('3', '2', '004-Fighter04', '1', '0', '0', '1');
@@ -300,7 +307,7 @@ INSERT INTO `setting_reward` VALUES ('1', '8', '1', '10000');
 INSERT INTO `setting_shop` VALUES ('1', '8', '50');
 INSERT INTO `setting_skill` VALUES ('1', '크로스 컷', '전사의 기본적인 기술. 적을 두차례 벤다.', '근접 공격', '1', '20', '5', '10', '0', '67', '050-Skill07', 'crossCut');
 INSERT INTO `setting_troop` VALUES ('1', '다람쥐', '168-Small10', '4', '0', '1', '10', '10', '10', '4', '3', '1', '1', '1', '10', '50', '50', '5', '5', '1', '5', '5', '2', '30', '1', '10', '100', '1', 'chipmunkSkill', '50', null);
-INSERT INTO `user` VALUES ('1', '1', 'PPAkXhcIYGcDVjdCgY/hHg==', '테스트', '0', '1', '1', '001-Fighter01', '1', '30', '19', '20', '56', '18', '10000', '30', '6', '280', '200000', '1', '0', '2', '11', '4', '4', '0');
+INSERT INTO `user` VALUES ('1', '1', 'PPAkXhcIYGcDVjdCgY/hHg==', '테스트', '0', '1', '1', '001-Fighter01', '1', '33', '19', '20', '58', '19', '4454', '36', '7', '160', '202000', '1', '0', '15', '8', '4', '4', '0');
 INSERT INTO `user` VALUES ('2', '22', '2', '22', '0', '0', '2', '002-Fighter02', '1', '0', '0', '0', '0', '0', '10000', '0', '1', '0', '0', '1', '0', '3', '9', '2', '4', '0');
 INSERT INTO `user` VALUES ('3', '3', '3', '3', '0', '0', '3', '004-Fighter04', '2', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '13', '7', '2', '4', '0');
 INSERT INTO `user` VALUES ('4', '11', '1', '1', '0', '0', '1', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '4', '6', '4', '0');

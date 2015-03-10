@@ -16,11 +16,12 @@ public class Field {
     private Random random;
     private int dropItemNo = 0;
 
-    private Vector<User> users = new Vector<User>();
-    private Vector<Enemy> enemies = new Vector<Enemy>();
-    private Hashtable<Integer, Npc> npcs = new Hashtable<Integer, Npc>();
-    private Vector<DropItem> dropItems = new Vector<DropItem>();
-    private Vector<DropGold> dropGolds = new Vector<DropGold>();
+    private Vector<User> users = new Vector<>();
+    private Vector<Enemy> enemies = new Vector<>();
+    private Hashtable<Integer, Npc> npcs = new Hashtable<>();
+    private Vector<GameData.Portal> portals = new Vector<>();
+    private Vector<DropItem> dropItems = new Vector<>();
+    private Vector<DropGold> dropGolds = new Vector<>();
 
     private static Logger logger = Logger.getLogger(Field.class.getName());
 
@@ -31,6 +32,7 @@ public class Field {
 
         loadTroops();
         loadNPCs();
+        loadPortals();
     }
 
     // Enemy 로드
@@ -60,6 +62,16 @@ public class Field {
             }
         }
         logger.info(mapNo + "번 맵 (" + seed + ") NPC 등록 완료");
+    }
+
+    // Portal 로드
+    private void loadPortals() {
+        for (GameData.Portal portal : GameData.portal) {
+            if (portal.getMap() == mapNo) {
+                portals.addElement(portal);
+            }
+        }
+        logger.info(mapNo + "번 맵 (" + seed + ") 포탈 등록 완료");
     }
 
     // 통행 가능 여부
@@ -123,6 +135,9 @@ public class Field {
 
     // 맵에 유저 들어옴
     public void addUser(User u) {
+        // 맵 이동 패킷
+        u.getCtx().writeAndFlush(Packet.moveMap(u));
+
         // 캐릭터를 생성하자
         for (User other : users) {
             other.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.USER, u));
@@ -196,6 +211,11 @@ public class Field {
                 aliveEnemies.addElement(enemy);
 
         return aliveEnemies;
+    }
+
+    // 모든 포탈을 반환
+    public Vector<GameData.Portal> getPortals() {
+        return portals;
     }
 
     // 아이템 드랍

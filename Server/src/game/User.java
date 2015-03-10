@@ -1992,6 +1992,18 @@ public class User extends Character {
 				moveUp();
 				break;
 		}
+
+		// 맵 이동 여부 판정
+		Field gameField = Map.getMap(map).getField(seed);
+		for (Portal portal : gameField.getPortals()) {
+			if (portal.getX() == x && portal.getY() == y) {
+				gameField.removeUser(this);
+				map = portal.getNextMap();
+				x = portal.getNextX();
+				y = portal.getNextY();
+				Map.getMap(portal.getNextMap()).getField(seed).addUser(this);
+			}
+		}
 	}
 
 	// 이동이 불가능한 경우 리프레쉬

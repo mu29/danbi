@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 
 import database.GameData;
 
+@SuppressWarnings("unchecked")
 public final class Packet {
 	
 	// success(0), id/pass error(1), sql error(2)
@@ -250,6 +251,16 @@ public final class Packet {
 		packet.put("r2", r2);
 		packet.put("g2", g2);
 		packet.put("b2", b2);
+
+		return packet;
+	}
+
+	public static JSONObject moveMap(User u) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.MOVE_MAP);
+		packet.put("map", u.getMap());
+		packet.put("x", u.getX());
+		packet.put("y", u.getY());
 
 		return packet;
 	}
