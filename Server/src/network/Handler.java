@@ -60,6 +60,9 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.PICK_ITEM:
 				User.get(ctx).pickItem();
 				break;
+			case CTSHeader.CHAT:
+				User.get(ctx).chat((String) packet.get("message"));
+				break;
 	    	case CTSHeader.OPEN_REGISTER_WINDOW:
 				ctx.writeAndFlush(Packet.openRegisterWindow());
 				break;
@@ -233,6 +236,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		ctx.fireExceptionCaught(cause);
+		//ctx.fireExceptionCaught(cause);
 	}
 }

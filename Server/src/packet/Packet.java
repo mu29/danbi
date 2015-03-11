@@ -32,7 +32,7 @@ public final class Packet {
 		packet.put("title", user.getTitle());
 		packet.put("image", user.getImage());
 		packet.put("job", user.getJob());
-		packet.put("guild", Guild.get(user.getGuild()) == null ? "길드 없음" : Guild.get(user.getGuild()).getName());
+		packet.put("guild", Guild.get(user.getGuild()) != null ? Guild.get(user.getGuild()).getName() : "");
 		packet.put("guildNo", user.getGuild());
 		packet.put("str", user.getStr());
 		packet.put("dex", user.getDex());
@@ -91,7 +91,7 @@ public final class Packet {
 
 		if (type == Type.Character.USER) {
 			User u = (User) c;
-			packet.put("guild", Guild.get(u.getGuild()).getName());
+			packet.put("guild", Guild.get(u.getGuild()) != null ? Guild.get(u.getGuild()).getName() : "");
 			packet.put("title", u.getTitle());
 		}
 		
@@ -222,18 +222,18 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject notify(String text) {
+	public static JSONObject notify(String message) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.NOTIFY);
-		packet.put("text", text);
+		packet.put("message", message);
 
 		return packet;
 	}
 
-	public static JSONObject notify(String text, int r, int g, int b) {
+	public static JSONObject notify(String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.NOTIFY);
-		packet.put("text", text);
+		packet.put("message", message);
 		packet.put("r", r);
 		packet.put("g", g);
 		packet.put("b", b);
@@ -241,10 +241,10 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject notify(String text, int r, int g, int b, int r2, int g2, int b2) {
+	public static JSONObject notify(String message, int r, int g, int b, int r2, int g2, int b2) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.NOTIFY);
-		packet.put("text", text);
+		packet.put("message", message);
 		packet.put("r", r);
 		packet.put("g", g);
 		packet.put("b", b);
@@ -261,6 +261,39 @@ public final class Packet {
 		packet.put("map", u.getMap());
 		packet.put("x", u.getX());
 		packet.put("y", u.getY());
+
+		return packet;
+	}
+
+	public static JSONObject chat(String message) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT);
+		packet.put("message", message);
+
+		return packet;
+	}
+
+	public static JSONObject chat(String message, int r, int g, int b) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+
+		return packet;
+	}
+
+	public static JSONObject chat(String message, int r, int g, int b, int r2, int g2, int b2) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		packet.put("r2", r2);
+		packet.put("g2", g2);
+		packet.put("b2", b2);
 
 		return packet;
 	}

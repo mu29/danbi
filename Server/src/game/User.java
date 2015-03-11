@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Random;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import packet.Packet;
@@ -1963,6 +1964,23 @@ public class User extends Character {
 			return true;
 
 		return false;
+	}
+
+	public void chat(String _message) {
+		Vector<User> mapUsers = Map.getMap(map).getField(seed).getUsers();
+		switch (_message.split(" ")[0]) {
+			case "/공지":
+				if (!admin)
+					return;
+				
+				for (User u : users.values())
+					u.getCtx().writeAndFlush(Packet.chat("[공지] " + _message.replace("/공지 ", ""), 255, 255, 255, 255, 0, 0));
+				break;
+			default:
+				for (User u : mapUsers)
+					u.getCtx().writeAndFlush(Packet.chat(name + " : " + _message));
+				break;
+		}
 	}
 
 	public void update() {
