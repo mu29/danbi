@@ -32,7 +32,7 @@ public final class Packet {
 		packet.put("title", user.getTitle());
 		packet.put("image", user.getImage());
 		packet.put("job", user.getJob());
-		packet.put("guild", Guild.get(user.getGuild()) != null ? Guild.get(user.getGuild()).getName() : "");
+		packet.put("guild", Guild.get(user.getGuild()) != null ? Guild.get(user.getGuild()).getName() : "길드 없음");
 		packet.put("guildNo", user.getGuild());
 		packet.put("str", user.getStr());
 		packet.put("dex", user.getDex());
@@ -91,7 +91,7 @@ public final class Packet {
 
 		if (type == Type.Character.USER) {
 			User u = (User) c;
-			packet.put("guild", Guild.get(u.getGuild()) != null ? Guild.get(u.getGuild()).getName() : "");
+			packet.put("guild", Guild.get(u.getGuild()) != null ? Guild.get(u.getGuild()).getName() : "길드 없음");
 			packet.put("title", u.getTitle());
 		}
 		

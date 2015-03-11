@@ -34,7 +34,8 @@ public class Functions {
         public void chipmunkSkill(Enemy enemy) {
             if (enemy.getTarget() instanceof User) {
                 User u = (User) enemy.getTarget();
-                u.jump(u.getDirection(), 0);
+                if (enemy.getRandom().nextInt(100) < 1)
+                    u.jump(u.getDirection(), 0);
             }
         }
     }

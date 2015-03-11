@@ -1972,7 +1972,7 @@ public class User extends Character {
 			case "/공지":
 				if (!admin)
 					return;
-				
+
 				for (User u : users.values())
 					u.getCtx().writeAndFlush(Packet.chat("[공지] " + _message.replace("/공지 ", ""), 255, 255, 255, 255, 0, 0));
 				break;

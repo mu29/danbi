@@ -110,6 +110,10 @@ public class Character {
         return 0;
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
     protected void displayDamage(int value, boolean cri) {
         Map.getMap(map).getField(seed).sendToAll(Packet.damageCharacter(characterType, no, value, cri));
     }

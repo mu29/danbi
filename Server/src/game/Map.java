@@ -97,8 +97,11 @@ public class Map {
 	}
 
 	public void update() {
-		for (Field field : fields.values()) {
-			field.update();
+		try {
+			for (Field field : fields.values())
+				field.update();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

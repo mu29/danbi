@@ -151,13 +151,17 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 				readPass = Crypto.encrypt(readPass);
 				// 비밀번호가 같다면
 	    		if (readPass.equals(rs.getString("pass"))) {
+					// 먼저 접속중인 계정이 있다면
+					if (User.get(rs.getInt("no")) != null)
+						return;
+
 					// 로그인 처리
 					User u = new User(ctx, rs);
 	    			User.put(ctx, u);
-	    			u.loadData();
 
 	    			ctx.writeAndFlush(Packet.loginMessage(u));
 	    	    	Map.getMap(u.getMap()).getField(u.getSeed()).addUser(u);
+					u.loadData();
 	    		} else {
 	    			ctx.writeAndFlush(Packet.loginMessage(1));
 	    		}
@@ -236,6 +240,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		//ctx.fireExceptionCaught(cause);
+		ctx.fireExceptionCaught(cause);
 	}
 }
