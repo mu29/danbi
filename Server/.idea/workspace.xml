@@ -5,51 +5,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/database/GameData.java" line="998" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/game/Functions$ItemFunction.class" afterPath="$PROJECT_DIR$/bin/game/Functions$ItemFunction.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/game/Functions$NpcFunction.class" afterPath="$PROJECT_DIR$/bin/game/Functions$NpcFunction.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/game/Functions$SkillFunction.class" afterPath="$PROJECT_DIR$/bin/game/Functions$SkillFunction.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/game/Functions.class" afterPath="$PROJECT_DIR$/bin/game/Functions.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$Item.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$Item.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$ItemData.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$ItemData.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$Job.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$Job.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$NPC.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$NPC.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$Portal.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$Portal.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$Register.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$Register.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$Reward.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$Reward.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$Shop.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$Shop.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$Skill.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$Skill.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$SkillData.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$SkillData.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData$Troop.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData$Troop.class" />
-      <change type="MODIFICATION" beforePath="D:\GitHub\danbi\Server\bin\database\GameData.class" afterPath="D:\GitHub\danbi\Server\bin\database\GameData.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Items.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Items.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ClientRGSS3/Data/MapInfos.rxdata" afterPath="$PROJECT_DIR$/../ClientRGSS3/Data/MapInfos.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ClientRGSS3/Data/Scripts.rxdata" afterPath="$PROJECT_DIR$/../ClientRGSS3/Data/Scripts.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/States.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/States.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ClientRGSS3/Data/System.rxdata" afterPath="$PROJECT_DIR$/../ClientRGSS3/Data/System.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/System.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/System.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/game/User$Message.class" afterPath="$PROJECT_DIR$/bin/game/User$Message.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/game/User.class" afterPath="$PROJECT_DIR$/bin/game/User.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" afterPath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/packet/CTSHeader.java" afterPath="$PROJECT_DIR$/src/packet/CTSHeader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game/Enemy.java" afterPath="$PROJECT_DIR$/src/game/Enemy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game/Functions.java" afterPath="$PROJECT_DIR$/src/game/Functions.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/database/GameData.java" afterPath="$PROJECT_DIR$/src/database/GameData.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/network/Handler.java" afterPath="$PROJECT_DIR$/src/network/Handler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/packet/Packet.java" afterPath="$PROJECT_DIR$/src/packet/Packet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/packet/STCHeader.java" afterPath="$PROJECT_DIR$/src/packet/STCHeader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game/User.java" afterPath="$PROJECT_DIR$/src/game/User.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/.idea/workspace.xml" afterPath="$PROJECT_DIR$/bin/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="" />
     <ignored path="Server.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -724,7 +680,7 @@
       <workItem from="1426088292260" duration="459000" />
       <workItem from="1426088802673" duration="41000" />
       <workItem from="1426141797571" duration="1873000" />
-      <workItem from="1426332426752" duration="6175000" />
+      <workItem from="1426332426752" duration="7454000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1418927646178</created>
@@ -736,7 +692,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="384078000" />
+    <option name="totallyTimeSpent" value="385357000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
