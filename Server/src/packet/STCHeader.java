@@ -46,4 +46,5 @@ public final class STCHeader {
 	public final static int INVITE_GUILD = 122;
 	public final static int SET_GUILD_MEMBER = 123;
 	public final static int REMOVE_GUILD_MEMBER = 124;
+	public final static int OPEN_SHOP_WINDOW = 125;
 }

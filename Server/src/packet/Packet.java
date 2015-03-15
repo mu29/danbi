@@ -486,6 +486,14 @@ public final class Packet {
 		return packet;
 	}
 
+	public static JSONObject openShopWindow(int no) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.OPEN_SHOP_WINDOW);
+		packet.put("no", no);
+
+		return packet;
+	}
+
 	public static JSONObject setShopItem(int no, int price) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.SET_SHOP_ITEM);

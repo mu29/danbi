@@ -1634,13 +1634,35 @@ public class User extends Character {
 	}
 
 	// 상점 열기
-	public void openShop(int no) {
-		for (Shop shop : GameData.shop) {
-			if (shop.getNo() == no) {
-				GameData.ItemData itemData = GameData.item.get(shop.getItemNo());
-				ctx.writeAndFlush(Packet.setShopItem(itemData.getNo(), itemData.getPrice()));
-			}
+	public void openShop(int _no) {
+		ctx.writeAndFlush(Packet.openShopWindow(_no));
+		for (ItemData shopItem : GameData.shop.get(_no).getAllItems().values()) {
+			ctx.writeAndFlush(Packet.setShopItem(shopItem.getNo(), shopItem.getPrice()));
 		}
+	}
+
+	// 상점 아이템 구매
+	public void buyShopItem(int _shopNo, int _index, int _amount) {
+		if (!GameData.shop.containsKey(_shopNo))
+			return;
+
+		Shop shop = GameData.shop.get(_shopNo);
+
+		if (shop.getItem(_index) == null)
+			return;
+
+		ItemData item = shop.getItem(_index);
+
+		if (item.getType() == Type.Item.ITEM)
+			_amount = _amount > item.getMaxLoad() ? item.getMaxLoad() : _amount;
+		else
+			_amount = 1;
+
+		if (gold < item.getPrice() * _amount)
+			return;
+
+		loseGold(item.getPrice() * _amount);
+		gainItem(item.getNo(), _amount);
 	}
 
 	// 파티 번호 설정
@@ -1953,19 +1975,7 @@ public class User extends Character {
 		}
 	}
 
-	// 다른 작업을 하고 있는지 (대화, 거래)
-	private boolean isBusy() {
-		// 대화 중
-		if (message.isStart())
-			return true;
-
-		// 거래 중
-		if (nowTrading())
-			return true;
-
-		return false;
-	}
-
+	// 채팅
 	public void chat(String _message) {
 		Vector<User> mapUsers = Map.getMap(map).getField(seed).getUsers();
 		switch (_message.split(" ")[0]) {
@@ -1981,6 +1991,19 @@ public class User extends Character {
 					u.getCtx().writeAndFlush(Packet.chat(name + " : " + _message));
 				break;
 		}
+	}
+
+	// 다른 작업을 하고 있는지 (대화, 거래)
+	private boolean isBusy() {
+		// 대화 중
+		if (message.isStart())
+			return true;
+
+		// 거래 중
+		if (nowTrading())
+			return true;
+
+		return false;
 	}
 
 	public void update() {

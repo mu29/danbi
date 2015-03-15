@@ -4,6 +4,7 @@ import game.Guild;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -15,8 +16,8 @@ public class GameData extends DataBase {
 	public static Hashtable<Integer, SkillData> skill = new Hashtable<>();
 	public static Hashtable<Integer, Troop> troop = new Hashtable<>();
 	public static Hashtable<Integer, NPC> npc = new Hashtable<>();
+	public static Hashtable<Integer, Shop> shop = new Hashtable<>();
 	public static Vector<Reward> reward = new Vector<>();
-	public static Vector<Shop> shop = new Vector<>();
 	public static Vector<Portal> portal = new Vector<>();
 
 	private static Logger logger = Logger.getLogger(GameData.class.getName());
@@ -59,9 +60,17 @@ public class GameData extends DataBase {
 			troop.put(rs.getInt("no"), new Troop(rs));
 		logger.info("에너미 정보 로드 완료.");
 
+		ArrayList<ShopItem> shopItems = new ArrayList<>();
 		rs = executeQuery("SELECT * FROM `setting_shop`;");
 		while (rs.next())
-			shop.addElement(new Shop(rs));
+			shopItems.add(new ShopItem(rs));
+
+		for (ShopItem shopItem : shopItems) {
+			int shopNo = shopItem.getNo();
+			if (!shop.containsKey(shopNo))
+				shop.put(shopNo, new Shop(shopNo));
+			shop.get(shopNo).addItem(shopItem.getItemNo());
+		}
 		logger.info("상점 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_portal`;");
@@ -923,14 +932,41 @@ public class GameData extends DataBase {
 
 	public static class Shop {
 		private int no;
-		private int itemNo;
-		private int rate;
+		private Hashtable<Integer, ItemData> items;
 
-		public Shop(ResultSet rs) {
+		public Shop(int _no) {
+			no = _no;
+			items = new Hashtable<>();
+		}
+
+		public int getNo() {
+			return no;
+		}
+
+		public void addItem(int itemNo) {
+			items.put(items.size() + 1, item.get(itemNo));
+		}
+
+		public ItemData getItem(int index) {
+			if (items.containsKey(index))
+				return items.get(index);
+
+			return null;
+		}
+
+		public Hashtable<Integer, ItemData> getAllItems() {
+			return items;
+		}
+	}
+
+	public static class ShopItem {
+		private int no;
+		private int itemNo;
+
+		public ShopItem(ResultSet rs) {
 			try {
 				no = rs.getInt("no");
 				itemNo = rs.getInt("item_no");
-				rate = rs.getInt("rate");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -942,10 +978,6 @@ public class GameData extends DataBase {
 
 		public int getItemNo() {
 			return itemNo;
-		}
-
-		public int getRate() {
-			return rate;
 		}
 	}
 

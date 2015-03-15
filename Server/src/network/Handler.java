@@ -129,6 +129,9 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.BREAK_UP_GUILD:
 				User.get(ctx).breakUpGuild();
 				break;
+			case CTSHeader.BUY_SHOP_ITEM:
+				User.get(ctx).buyShopItem((int) packet.get("shopNo"), (int) packet.get("index"), (int) packet.get("amount"));
+				break;
     	}
     }
 

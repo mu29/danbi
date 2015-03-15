@@ -309,9 +309,12 @@ public class Enemy extends Character {
         target.animation(attackAnimation);
 
         // 실 데미지를 계산
-        int attackDamage = (damage - target.getDefense()) * (damage - target.getDefense());
+        int attackDamage = damage - target.getDefense();
         boolean isFatal = critical > random.nextInt(100);
         if (isFatal) attackDamage *= 2;
+
+        if (attackDamage < 0)
+            attackDamage = 0;
 
         if (target.getClass().getName().equals("game.User")) {
             // 타겟이 유저인 경우

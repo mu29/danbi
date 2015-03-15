@@ -37,4 +37,5 @@ public final class CTSHeader {
 	public final static int QUIT_GUILD = 119;
 	public final static int KICK_GUILD = 120;
 	public final static int BREAK_UP_GUILD = 121;
+	public final static int BUY_SHOP_ITEM = 122;
 }
