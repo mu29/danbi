@@ -1,0 +1,17 @@
+﻿IME.dll		--  by Kaede
+
+NoInput.dll	--  by Cremno
+ http://www.hbgames.org/forums/viewtopic.php?t=61932
+
+NoPause.dll	--  by Unknown or kiddy3399
+ http://blog.naver.com/kiddy3399/130167697897
+
+Tilemap.dll	--  by KK20
+ http://forum.chaos-project.com/index.php?topic=14638.0
+
+Wheel.dll	--  by 紫苏
+ http://bbs.66rpg.com/forum.php?mod=viewthread&tid=153612&page=2&authorid=65003
+
+RGSS103J.dll	--  joe5491 (Origin : RGSS300.dll)
+RTP.dll		--  joe5491
+ http://bbs.66rpg.com/thread-307319-1-1.html
