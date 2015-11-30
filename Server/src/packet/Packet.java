@@ -602,4 +602,13 @@ public final class Packet {
 
 		return packet;
 	}
+
+	public static JSONObject playMusic(int type, String name) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.PLAY_MUSIC);
+		packet.put("type", type);
+        packet.put("name", name);
+
+		return packet;
+	}
 }
