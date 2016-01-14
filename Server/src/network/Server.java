@@ -18,7 +18,7 @@ public class Server {
 	private final Logger logger = Logger.getLogger(Server.class.getName());
 	
     public static void main(String[] args) throws Exception {
-        new Server(Integer.parseInt(args[0])).run();
+		new Server(Integer.parseInt(args[0])).run();
     }
 	
 	public Server(int port) {

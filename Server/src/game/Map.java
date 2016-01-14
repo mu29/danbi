@@ -17,6 +17,8 @@ public class Map {
 	private static Logger logger = Logger.getLogger(Map.class.getName());
 
 	public Map(String fileName) {
+		//String[] test = getClass().getResource("").getPath().split("\\!");
+		//loadMapData(test[0].substring(6) + fileName);
 		loadMapData(fileName);
 	}
 
@@ -46,6 +48,7 @@ public class Map {
 
 	// 모든 맵을 로드
 	public static void loadMap(int num) {
+
 		for (int i = 1; i <= num; i++) {
 			maps.put(i, new Map("./Map/MAP" + i + ".map"));
 		}
