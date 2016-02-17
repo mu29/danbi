@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import database.DataBase;
 import database.GameData;
 import game.*;
+import setting.Setting;
 
 public class Server {
 	
@@ -47,7 +48,9 @@ public class Server {
             
             logger.info("서버를 시작합니다. (" + port + ")");
             ChannelFuture f = bootStrap.bind(port).sync();
-            DataBase.connect("jdbc:mysql://localhost:3306/danbi", "root", "projectDanbi");
+            DataBase.connect("jdbc:mysql://" + Setting.load().getProperty("Database.host") + "/" + Setting.load().getProperty("Database.database") + "?characterEncoding=utf8"
+			     , Setting.load().getProperty("Database.username")
+			     , Setting.load().getProperty("Database.password"));
 			GameData.loadSettings();
             Map.loadMap(2);
 
