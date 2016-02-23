@@ -22,6 +22,9 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     
     @Override
 	public void channelRead (ChannelHandlerContext ctx, Object msg) {
+        if (User.get(ctx) == null)
+            return;
+
 		JSONObject packet = (JSONObject) msg;
 		switch ((int) packet.get("header")) {
 	    	case CTSHeader.LOGIN:
