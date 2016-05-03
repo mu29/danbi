@@ -448,16 +448,20 @@ public class Enemy extends Character {
         d = (d + 1) * 2;
         switch (d) {
             case Type.Direction.UP:
-                moveUp();
+                if (!super.moveUp())
+                    moveUp();
                 break;
             case Type.Direction.DOWN:
-                moveDown();
+                if (!super.moveDown())
+                    moveDown();
                 break;
             case Type.Direction.LEFT:
-                moveLeft();
+                if (!super.moveLeft())
+                    moveLeft();
                 break;
             case Type.Direction.RIGHT:
-                moveRight();
+                if (!super.moveRight())
+                    moveRight();
                 break;
         }
     }
