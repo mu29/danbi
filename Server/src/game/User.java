@@ -1992,6 +1992,46 @@ public class User extends Character {
 				break;
 		}
 	}
+	
+	// 파티 채팅
+	public void partyChat(String _message) {
+ 		if (!nowJoinParty())
+ 			return;
+ 		for (int members : Party.get(partyNo).getMembers()) {
+ 			User u = User.get(members);
+ 			u.getCtx().writeAndFlush(Packet.chat("[파티] " + name + " : " + _message, 0, 255, 0));
+ 		}
+ 	}
+ 
+ 	// 길드 채팅
+ 	public void guildChat(String _message) {
+ 		if (!nowJoinGuild())
+ 			return;
+ 		for (int members : Guild.get(guildNo).getMembers()) {
+ 			User u = User.get(members);
+ 			u.getCtx().writeAndFlush(Packet.chat("[길드] " + name + " : " + _message, 255, 255, 0));
+ 		}
+ 	}
+ 	
+ 	// 귓속말
+ 	public void whistle(String _target, String _message) {
+ 		// 타겟이 본인일 경우
+ 		if (name.equals(_target))
+ 			return;
+ 		// 메세지가 존재하지 않을 경우
+ 		if (_message == null)
+ 			return;
+ 		
+ 		for (User u : users.values()) {
+ 			if (u.getName().equals(_target)) {
+ 				u.getCtx().writeAndFlush(Packet.chat("[From:" + name + "] " + _message));
+ 				ctx.writeAndFlush(Packet.chat("[To:" + _target + "] " + _message));
+ 				return;
+ 			}
+ 		}
+ 		// 타겟이 접속중이 아닐 경우
+ 		return;
+ 	}
 
 	// 다른 작업을 하고 있는지 (대화, 거래)
 	private boolean isBusy() {
