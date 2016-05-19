@@ -30,8 +30,8 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 	    		login(ctx, packet);
 				break;
 	    	case CTSHeader.REGISTER:
-				if (User.get(ctx) == null)
-					return;
+				//if (User.get(ctx) == null)
+			//		return;
 	    		register(ctx, packet);
 				break;
 			case CTSHeader.MOVE_CHARACTER:
@@ -229,8 +229,9 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 		readPass = Crypto.encrypt(readPass);
 		// 직업 정보 불러오기
     	GameData.Register r = GameData.register.get(readNo);
+		GameData.Job j = GameData.job.get(r.getJob());
 		// 데이터베이스에 넣자
-    	DataBase.insertUser(readID, readPass, readName, readMail, r.getImage(), r.getJob(), r.getMap(), r.getX(), r.getY(), r.getLevel());
+    	DataBase.insertUser(readID, readPass, readName, readMail, r.getImage(), r.getJob(), r.getMap(), r.getX(), r.getY(), r.getLevel(), j.getHp());
     	ctx.writeAndFlush(Packet.registerMessage(0));
     }
 

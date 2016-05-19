@@ -34,7 +34,7 @@ public class DataBase {
 	}
 	
 	public static void insertUser(String _id, String _pass, String _name, String _mail, String _image, int _job,
-								int _map, int _x, int _y, int _level)  {
+								int _map, int _x, int _y, int _level, int _hp)  {
 		try {
 			connection.createStatement().executeUpdate("INSERT `user` SET " +
 					"`id` = '" + _id + "', " +
@@ -46,7 +46,8 @@ public class DataBase {
 					"`map` = '" + _map + "', " +
 					"`x` = '" + _x + "', " +
 					"`y` = '" + _y + "', " +
-					"`level` = '" + _level + "';");
+					"`level` = '" + _level + "', " +
+					"`hp` = '" + _hp + "';");
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}
