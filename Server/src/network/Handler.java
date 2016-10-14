@@ -136,6 +136,12 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.BUY_SHOP_ITEM:
 				User.get(ctx).buyShopItem((int) packet.get("shopNo"), (int) packet.get("index"), (int) packet.get("amount"));
 				break;
+			case CTSHeader.SET_SLOT:
+				User.get(ctx).setSlot((int) packet.get("index"), (int) packet.get("itemidx"));
+				break;
+			case CTSHeader.DEL_SLOT:
+				User.get(ctx).delSlot((int) packet.get("index"));
+				break;
     	}
     }
 
