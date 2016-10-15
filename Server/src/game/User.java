@@ -50,6 +50,11 @@ public class User extends Character {
 	// NPC 관련
 	private Message message = new Message();
 
+	public Cooltime coolTime = new Cooltime();
+	public Cooltime getCoolTime() { return coolTime; }
+
+	private long lastTime = System.currentTimeMillis() / 100;
+
 	private static Hashtable<ChannelHandlerContext, User> users = new Hashtable<ChannelHandlerContext, User>();
 	private static Logger logger = Logger.getLogger(User.class.getName());
 
@@ -791,6 +796,7 @@ public class User extends Character {
 		loadInventory();
 		loadSkillList();
 		loadGuildMember();
+		loadSlot();
 	}
 	
 	// 장착한 아이템 불러오기
@@ -1330,6 +1336,15 @@ public class User extends Character {
 		return skillBag.get(skillNo);
 	}
 
+	// Index로 스킬 검색
+	public GameData.Skill findSkillByIndex(int itemNo) {
+		for (GameData.Skill skill : skillBag.values())
+			if (skill.getNo() == itemNo)
+				return skill;
+
+		return null;
+	}
+
 	// 스킬 배우기
 	public boolean studySkill(int skillNo) {
 		if (skillBag.containsKey(skillNo))
@@ -1356,6 +1371,9 @@ public class User extends Character {
 		GameData.Skill skill = findSkillByNo(skillNo);
 
 		if (skill == null)
+			return false;
+
+		if (coolTime.getCooltime(skill.getNo()) > 0)
 			return false;
 
 		// 함수가 있을 경우 실행
@@ -2047,7 +2065,12 @@ public class User extends Character {
 	}
 
 	public void update() {
-
+		long nowTime = System.currentTimeMillis() / 100;
+		if (nowTime > lastTime + 1)
+		{
+			lastTime = System.currentTimeMillis() / 100;
+			coolTime.coolDown();
+		}
 	}
 
 	// 좌표 이동
@@ -2140,6 +2163,46 @@ public class User extends Character {
 		}
 	}
 
+	// 슬롯 불러오기
+	public void loadSlot() {
+		try {
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `slot` WHERE `no` = '" + no + "';");
+
+			if (!rs.next()) {
+				DataBase.executeUpdate("INSERT `slot` SET " +
+						"`no` = '" + no + "';");
+			} else {
+				for (int i = 2; i < 12; ++i) {
+					ctx.writeAndFlush(Packet.setSlot(i - 2, rs.getInt(i)));
+				}
+
+				for (int i = 2; i < 12; ++i) {
+					if (rs.getInt(i) != -1) {
+						coolTime.initCooltime(i - 2, GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getNo());
+					}
+				}
+			}
+
+			rs.close();
+		} catch (SQLException e) {
+			logger.warning(e.toString());
+		}
+	}
+
+	public void setSlot(int index, int itemidx) {
+		if (GameData.skill.get(findSkillByIndex(itemidx).getNo()).getLimitLevel() > level)
+			return;
+
+		DataBase.setSlot(this, index, itemidx);
+		coolTime.initCooltime(index, GameData.skill.get(findSkillByIndex(itemidx).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(itemidx).getNo()).getNo());
+		loadSlot();
+	}
+
+	public void delSlot(int index) {
+		DataBase.delSlot(this, index);
+		loadSlot();
+	}
+
 	// 게임 종료
 	public void exitGracefully() {
 		// 거래중이라면 거래 종료
@@ -2223,4 +2286,70 @@ public class User extends Character {
 			ctx.writeAndFlush(Packet.openMessageWindow(npcNo, npcMessage, npcSelect));
 		}
 	}
+
+	class Cooltime
+	{
+		public Vector<int[]> slot = new Vector<>();
+		public int BasicAttack;
+		public int Global;
+
+		public Cooltime() {
+			for (int i = 0; i < 10; ++i) {
+				int[] a = new int[3];
+				slot.add(i, a);
+			}
+		}
+
+		public int getSkillNo(int index) {
+			return slot.get(index - 1)[0];
+		}
+
+		public int getBasicAttack() {
+			return BasicAttack;
+		}
+
+		public void setBasicAttack(int iValue) { BasicAttack = iValue; }
+
+		public void setGlobal(int value) { Global = value; }
+
+		public int getGlobal() { return Global; }
+
+		public void initCooltime(int index, int value, int no) {
+			slot.get(index)[0] = no;
+			slot.get(index)[1] = 0;
+			slot.get(index)[2] = value;
+			ctx.writeAndFlush(Packet.setCooltime(slot.get(index)[1], slot.get(index)[2], index));
+		}
+
+		public int getCooltime(int no) {
+			for (int i = 0; i < 10; ++i) {
+				if (slot.get(i)[0] == no) {
+					return slot.get(i)[1];
+				}
+			}
+
+			return -1;
+		}
+
+		public void setCooltime(int value, int no) {
+			for (int i = 0; i < 10; ++i) {
+				if (slot.get(i)[0] == no) {
+					slot.get(i)[1] = value;
+					ctx.writeAndFlush(Packet.setCooltime(slot.get(i)[1], slot.get(i)[2], i));
+				}
+			}
+		}
+
+		public void coolDown() {
+			for (int i = 0; i < 10; ++i) {
+				if (slot.get(i)[1] > 0) {
+					--slot.get(i)[1];
+					ctx.writeAndFlush(Packet.setCooltime(slot.get(i)[1], slot.get(i)[2], i));
+				}
+			}
+			if (BasicAttack > 0) { --BasicAttack; }
+			if (Global > 0) { --Global; }
+		}
+	}
 }
+

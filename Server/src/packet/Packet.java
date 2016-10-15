@@ -611,4 +611,25 @@ public final class Packet {
 
 		return packet;
 	}
+
+	public static JSONObject setCooltime(int nowCooltime, int fullCooltime, int idx)
+	{
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.SET_COOLTIME);
+		packet.put("index", idx);
+		packet.put("nowCooltime", nowCooltime);
+		packet.put("fullCooltime", fullCooltime);
+
+		return packet;
+	}
+
+	public static JSONObject setSlot(int index, int slot) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.SET_SLOT);
+
+		packet.put("index", index);
+		packet.put("slot", slot);
+
+		return packet;
+	}
 }

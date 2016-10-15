@@ -206,4 +206,52 @@ public class DataBase {
 			e.printStackTrace();
 		}
 	}
+
+	public static void setSlot(User _user, int slotIdx, int index) {
+		try {
+			ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM `slot` WHERE `no` = '" + _user.getNo() + "';");
+			if (!rs.next()) {
+				connection.createStatement().executeUpdate("INSERT `slot` SET " +
+						"`no` = '" + _user.getNo() + "';");
+				rs.close();
+			}
+
+			if (!(slotIdx >= 0 && slotIdx <= 9))
+				return;
+
+			String itemType;
+			itemType = "slot" + (slotIdx + 1);
+
+			connection.createStatement().executeUpdate("UPDATE `slot` SET " +
+					"`" + itemType + "` = '" + index + "' " +
+					"WHERE `no` = '" + _user.getNo() + "';");
+
+		} catch (SQLException e) {
+			logger.warning(e.toString());
+		}
+	}
+
+	public static void delSlot(User _user, int slotIdx) {
+		try {
+			ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM `slot` WHERE `no` = '" + _user.getNo() + "';");
+			if (!rs.next()) {
+				connection.createStatement().executeUpdate("INSERT `slot` SET " +
+						"`no` = '" + _user.getNo() + "';");
+				rs.close();
+			}
+
+			if (!(slotIdx >= 0 && slotIdx <= 9))
+				return;
+
+			String itemType;
+			itemType = "slot" + (slotIdx + 1);
+
+			connection.createStatement().executeUpdate("UPDATE `slot` SET " +
+					"`" + itemType + "` = '" + -1 + "' " +
+					"WHERE `no` = '" + _user.getNo() + "';");
+
+		} catch (SQLException e) {
+			logger.warning(e.toString());
+		}
+	}
 }

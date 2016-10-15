@@ -1,10 +1,10 @@
-/*
+﻿/*
 MySQL Data Transfer
 Source Host: localhost
 Source Database: danbi
 Target Host: localhost
 Target Database: danbi
-Date: 2015-03-15 ���� 10:32:56
+Date: 2016-10-15 오후 5:09:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,7 +21,7 @@ CREATE TABLE `equip` (
   `shoes` int(11) NOT NULL DEFAULT '0',
   `accessory` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for guild
@@ -62,7 +62,7 @@ CREATE TABLE `item` (
   `reinforce` int(11) NOT NULL DEFAULT '0',
   `trade` int(11) NOT NULL DEFAULT '1',
   `equipped` int(11) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for setting_item
@@ -94,7 +94,7 @@ CREATE TABLE `setting_item` (
   `trade` int(11) NOT NULL DEFAULT '1',
   `function` char(255) DEFAULT NULL,
   PRIMARY KEY (`no`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for setting_job
@@ -107,7 +107,7 @@ CREATE TABLE `setting_job` (
   `str` int(11) NOT NULL DEFAULT '0',
   `dex` int(11) NOT NULL DEFAULT '0',
   `agi` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for setting_npc
@@ -165,7 +165,7 @@ CREATE TABLE `setting_reward` (
 CREATE TABLE `setting_shop` (
   `no` int(11) DEFAULT NULL,
   `item_no` int(11) DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for setting_skill
@@ -234,6 +234,23 @@ CREATE TABLE `skill` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Table structure for slot
+-- ----------------------------
+CREATE TABLE `slot` (
+  `no` int(11) NOT NULL,
+  `slot1` int(11) NOT NULL DEFAULT '-1',
+  `slot2` int(11) NOT NULL DEFAULT '-1',
+  `slot3` int(11) NOT NULL DEFAULT '-1',
+  `slot4` int(11) NOT NULL DEFAULT '-1',
+  `slot5` int(11) NOT NULL DEFAULT '-1',
+  `slot6` int(11) NOT NULL DEFAULT '-1',
+  `slot7` int(11) NOT NULL DEFAULT '-1',
+  `slot8` int(11) NOT NULL DEFAULT '-1',
+  `slot9` int(11) NOT NULL DEFAULT '-1',
+  `slot10` int(11) NOT NULL DEFAULT '-1'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 -- Table structure for user
 -- ----------------------------
 CREATE TABLE `user` (
@@ -264,7 +281,7 @@ CREATE TABLE `user` (
   `speed` int(11) NOT NULL DEFAULT '4',
   `admin` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`no`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records 
@@ -281,6 +298,7 @@ INSERT INTO `equip` VALUES ('12', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('13', '1', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('15', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('16', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('17', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `item` VALUES ('12', '1', '1', '6', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `item` VALUES ('12', '1', '1', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `item` VALUES ('12', '1', '1', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
@@ -315,9 +333,10 @@ INSERT INTO `setting_register` VALUES ('3', '2', '004-Fighter04', '1', '0', '0',
 INSERT INTO `setting_reward` VALUES ('1', '1', '1', '10000');
 INSERT INTO `setting_reward` VALUES ('1', '8', '1', '10000');
 INSERT INTO `setting_shop` VALUES ('1', '8');
-INSERT INTO `setting_skill` VALUES ('1', '크로스 컷', '전사의 기본적인 기술. 적을 두차례 벤다.', '근접 공격', '1', '20', '5', '10', '0', '67', '050-Skill07', 'crossCut');
+INSERT INTO `setting_skill` VALUES ('1', '크로스 컷', '전사의 기본적인 기술. 적을 두차례 벤다.', '근접 공격', '1', '20', '1', '10', '0', '67', '050-Skill07', 'crossCut');
 INSERT INTO `setting_troop` VALUES ('1', '다람쥐', '168-Small10', '4', '0', '10', '10', '10', '10', '4', '1', '1', '1', '1', '10', '50', '50', '5', '5', '2', '5', '5', '2', '30', '1', '10', '100', '1', 'chipmunkSkill', '50', null);
-INSERT INTO `user` VALUES ('1', '1', 'PPAkXhcIYGcDVjdCgY/hHg==', '테스트', '0', '0', '1', '001-Fighter01', '1', '33', '19', '20', '68', '21', '9002', '46', '9', '800', '212000', '2', '0', '3', '11', '2', '4', '0');
+INSERT INTO `skill` VALUES ('17', '1', '1');
+INSERT INTO `user` VALUES ('1', '1', '1', '테스트', '0', '0', '1', '001-Fighter01', '1', '33', '19', '20', '68', '21', '9002', '46', '9', '800', '212000', '2', '0', '3', '11', '2', '4', '0');
 INSERT INTO `user` VALUES ('2', '22', '2', '22', '0', '0', '2', '002-Fighter02', '1', '0', '0', '0', '0', '0', '10000', '0', '1', '0', '0', '1', '0', '3', '9', '2', '4', '0');
 INSERT INTO `user` VALUES ('3', '3', '3', '3', '0', '0', '3', '004-Fighter04', '2', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '13', '7', '2', '4', '0');
 INSERT INTO `user` VALUES ('4', '11', '1', '1', '0', '0', '1', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '4', '6', '4', '0');

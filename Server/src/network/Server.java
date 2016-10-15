@@ -56,6 +56,11 @@ public class Server {
 
 			while (Handler.isRunning) {
 				Thread.sleep(100);
+
+				for (User user : User.getAll().values()) {
+					user.update();
+				}
+
 				for (Map map : Map.getAll().values()) {
 					map.update();
 				}
