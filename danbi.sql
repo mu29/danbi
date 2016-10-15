@@ -1,10 +1,10 @@
-/*
+﻿/*
 MySQL Data Transfer
 Source Host: localhost
-Source Database: danbi2
+Source Database: danbi
 Target Host: localhost
-Target Database: danbi2
-Date: 2016-10-14 ���� 11:34:44
+Target Database: danbi
+Date: 2016-10-15 오후 5:09:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -352,4 +352,3 @@ INSERT INTO `user` VALUES ('13', 'test', 'MMobYwa4me92vrmWJTDIow==', 'test', '0'
 INSERT INTO `user` VALUES ('14', '한글안되냐', 'PPAkXhcIYGcDVjdCgY/hHg==', '한글안되냐', '0', '0', '1', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
 INSERT INTO `user` VALUES ('15', 'linja', 'A8BiSgM3VJ+dnGJ/C+st8Q==', '린자', '0', '0', 'linja0@naver.com', '001-Fighter01', '1', '0', '0', '0', '10', '2', '2991', '15', '3', '20', '0', '1', '0', '18', '8', '4', '4', '0');
 INSERT INTO `user` VALUES ('16', '마니아', '3Kzn9z+j4YQPX+NoV4KkWA==', '마니아', '0', '0', 'mania@co.kr', '001-Fighter01', '1', '0', '0', '0', '5', '1', '2000', '10', '2', '0', '0', '1', '0', '13', '3', '6', '4', '0');
-INSERT INTO `user` VALUES ('17', 'q', 'BlcAlPgncOvGF7H9qfj5Qw==', 'q', '0', '0', 'q', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '12', '3', '2', '4', '0');

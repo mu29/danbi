@@ -50,8 +50,8 @@ public class User extends Character {
 	// NPC 관련
 	private Message message = new Message();
 
-	public CoolTimes CoolTime = new CoolTimes();
-	public CoolTimes getCoolTime() { return CoolTime; }
+	public Cooltime coolTime = new Cooltime();
+	public Cooltime getCoolTime() { return coolTime; }
 
 	private long lastTime = System.currentTimeMillis() / 100;
 
@@ -1373,7 +1373,7 @@ public class User extends Character {
 		if (skill == null)
 			return false;
 
-		if (CoolTime.getCooltime(skill.getNo()) > 0)
+		if (coolTime.getCooltime(skill.getNo()) > 0)
 			return false;
 
 		// 함수가 있을 경우 실행
@@ -2069,7 +2069,7 @@ public class User extends Character {
 		if (nowTime > lastTime + 1)
 		{
 			lastTime = System.currentTimeMillis() / 100;
-			CoolTime.CoolDown();
+			coolTime.coolDown();
 		}
 	}
 
@@ -2177,8 +2177,8 @@ public class User extends Character {
 				}
 
 				for (int i = 2; i < 12; ++i) {
-					if (rs.getInt(i) != 99) {
-						CoolTime.initCooltime(i - 2, GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getNo());
+					if (rs.getInt(i) != -1) {
+						coolTime.initCooltime(i - 2, GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getNo());
 					}
 				}
 			}
@@ -2194,7 +2194,7 @@ public class User extends Character {
 			return;
 
 		DataBase.setSlot(this, index, itemidx);
-		CoolTime.initCooltime(index, GameData.skill.get(findSkillByIndex(itemidx).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(itemidx).getNo()).getNo());
+		coolTime.initCooltime(index, GameData.skill.get(findSkillByIndex(itemidx).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(itemidx).getNo()).getNo());
 		loadSlot();
 	}
 
@@ -2287,14 +2287,14 @@ public class User extends Character {
 		}
 	}
 
-	class CoolTimes
+	class Cooltime
 	{
 		public Vector<int[]> slot = new Vector<>();
 		public int BasicAttack;
 		public int Global;
 
-		public CoolTimes() {
-			for (int i = 0; i < 16; ++i) {
+		public Cooltime() {
+			for (int i = 0; i < 10; ++i) {
 				int[] a = new int[3];
 				slot.add(i, a);
 			}
@@ -2322,7 +2322,7 @@ public class User extends Character {
 		}
 
 		public int getCooltime(int no) {
-			for (int i = 0; i < 16; ++i) {
+			for (int i = 0; i < 10; ++i) {
 				if (slot.get(i)[0] == no) {
 					return slot.get(i)[1];
 				}
@@ -2332,7 +2332,7 @@ public class User extends Character {
 		}
 
 		public void setCooltime(int value, int no) {
-			for (int i = 0; i < 16; ++i) {
+			for (int i = 0; i < 10; ++i) {
 				if (slot.get(i)[0] == no) {
 					slot.get(i)[1] = value;
 					ctx.writeAndFlush(Packet.setCooltime(slot.get(i)[1], slot.get(i)[2], i));
@@ -2340,8 +2340,8 @@ public class User extends Character {
 			}
 		}
 
-		public void CoolDown() {
-			for (int i = 0; i < 16; ++i) {
+		public void coolDown() {
+			for (int i = 0; i < 10; ++i) {
 				if (slot.get(i)[1] > 0) {
 					--slot.get(i)[1];
 					ctx.writeAndFlush(Packet.setCooltime(slot.get(i)[1], slot.get(i)[2], i));
