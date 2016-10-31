@@ -1,6 +1,7 @@
 package game;
 
 import database.GameData;
+import database.Type;
 
 import java.util.logging.Logger;
 
@@ -18,6 +19,8 @@ public class Npc extends Character {
         y = npc.getY();
         direction = npc.getDirection();
         function = npc.getFunction();
+
+        characterType = Type.Character.NPC;
     }
 
     public String getFunction() {
