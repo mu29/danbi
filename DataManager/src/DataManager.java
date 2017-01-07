@@ -25,7 +25,7 @@ public class DataManager {
                 switch (command) {
                     case "0":
                         // 아이템
-                        rs = statement.executeQuery("SELECT * FROM `item`");
+                        rs = statement.executeQuery("SELECT * FROM `setting_item`");
                         bw = new BufferedWriter(new FileWriter("./item.txt"));
                         bw.write("0||||0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0");
                         while (rs.next()) {
@@ -61,7 +61,7 @@ public class DataManager {
                         break;
                     case "1":
                         // 스킬
-                        rs = statement.executeQuery("SELECT * FROM `skill`");
+                        rs = statement.executeQuery("SELECT * FROM `setting_skill`");
                         bw = new BufferedWriter(new FileWriter("./skill.txt"));
                         while (rs.next()) {
                             bw.write("\n"
