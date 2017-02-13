@@ -17,7 +17,7 @@
 #include <tchar.h>
 
 static const wchar_t* pWndClassName  = L"RGSS Player";
-static const wchar_t* pDefaultLibrary = L"RGSS103J.dll";
+static const wchar_t* pDefaultLibrary = L"RGSS301.dll";
 static const wchar_t* pDefaultTitle  = L"Danbi";
 static const wchar_t* pDefaultScripts = L"Data\\Scripts.rxdata";
 

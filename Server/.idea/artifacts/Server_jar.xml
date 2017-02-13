@@ -3,12 +3,12 @@
     <output-path>$PROJECT_DIR$/classes/artifacts/Server_jar</output-path>
     <root id="archive" name="Server.jar">
       <element id="module-output" name="Server" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../Library/Netty 4/jar/all-in-one/netty-all-4.0.24.Final.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../Library/JSON/json-simple-1.1.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../Library/MySQL/mysql-connector-java-5.1.33-bin.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../Library/Jackson JSON/jackson-annotations-2.4.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../Library/Jackson JSON/jackson-core-2.4.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../Library/Jackson JSON/jackson-databind-2.4.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../../Library/Netty 4/jar/all-in-one/netty-all-4.0.24.Final.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
