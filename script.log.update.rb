@@ -18,7 +18,7 @@ def create_log(filename, logname)
 
 	for i in 0...data.size
 		script = Zlib::Inflate.inflate(data[i][2]).force_encoding("UTF-8")
-		script.gsub!("\r\n", "\r")
+		script.gsub!("\r\n", "\n")
 		log << script + "\n"
 	end
 
