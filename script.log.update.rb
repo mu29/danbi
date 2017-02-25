@@ -29,5 +29,5 @@ def create_log(filename, logname)
 
 end
 
-create_log("ClientRGSS3/Data/Scripts.rxdata", "rgss1.script.log.rb")
-create_log("Client/Data/Scripts.rxdata", "rgss3.script.log.rb")
+create_log("ClientRGSS3/Data/Scripts.rxdata", "rgss3.script.log.rb")
+create_log("Client/Data/Scripts.rxdata", "rgss1.script.log.rb")
