@@ -142,6 +142,7 @@ class Win32API
   InitEmptyTile             = new(Config::DLL_PATH + 'Tilemap', 'InitEmptyTile', 'l', 'i')
   Wheel                     = new(Config::DLL_PATH + 'Wheel', 'intercept', 'v', 'l')
   FindFirstFile             = new(Config::DLL_PATH + 'RTP', 'FFF', 'p', 'p')
+  
   RtlMoveMemory             = new('kernel32', 'RtlMoveMemory', 'ppl', '')
   MultiByteToWideChar       = new('kernel32', 'MultiByteToWideChar', 'llplpl', 'l')
   WideCharToMultiByte       = new('kernel32', 'WideCharToMultiByte', 'llplplpp', 'l')
@@ -214,8 +215,6 @@ class Win32API
   RegQueryValueExW          = new('advapi32', 'RegQueryValueExW', 'lplppp', 'l')
   FindNextFile              = new('kernel32', 'FindNextFileW', 'lp', 'i')
 end
-Game.SubClassing
-
 #───────────────────────────────────────────────────────────────────────────────
 # ▶ Color
 # ------------------------------------------------------------------------------
@@ -327,6 +326,36 @@ module Game
   # 게임 타이틀
   CAPTION = Game.getCaption()
 end
+
+# 非アクティブ時にも動作継続 (RGSS3)
+#
+# 使い方   : 同梱の"StarInput.dll"をゲ??と同じフォル?に置きスクリプトを導入
+#          : 必要があればカス??イズ?目を編集
+#
+# 規約     : ご自由にどうぞ
+#-------------------------------------------------------
+# 12/07/14 VX版を移植、公開
+#-------------------------------------------------------
+
+module STARINPUT
+# カス??イズ?目  ------------------------------------
+
+  # DLLのフ?イル名 ( .dll は含みません、DLLのフ?イル名を変更した場合のみ変更 )
+DLLNAME = Config::DLL_PATH + "StarInput"
+
+# カス??イズ?目ここまで -----------------------------
+end
+
+begin
+  $starinput_e.call if $starinput_e
+  $starinput = Win32API.new(STARINPUT::DLLNAME, '?start@@YGHPAUHWND__@@@Z', %w(l), 'l')
+  $starinput_e = Win32API.new(STARINPUT::DLLNAME, '?end@@YGHXZ', %w(v), 'l')
+rescue
+  raise(LoadError, STARINPUT::DLLNAME + '.dllが見つかりません')
+  exit
+end
+
+$starinput.call(Game::HWND)
 
 #────────────────────────────────────────────────────────────────────────────
 # * Rect, jubin
@@ -1030,6 +1059,11 @@ module Graphics
   VK_RETURN = 0x0D
   KEY_LALT = 0xA4
   KEY_RETURN = 0x0D
+  
+  # 윈도우 Active 여부
+  def focus
+    return Win32API::GetForegroundWindow.call == Game::HWND
+  end
   
   # 윈도우 스타일
   def getWindowStyle
