@@ -1,6 +1,6 @@
 ﻿# encoding: utf-8
 
-$:.push(Dir.pwd)
+app_path = File.dirname(__FILE__)
 
 require "zlib"
 
@@ -29,5 +29,7 @@ def create_log(filename, logname)
 
 end
 
-create_log("ClientRGSS3/Data/Scripts.rxdata", "rgss1.script.log.rb")
-create_log("Client/Data/Scripts.rxdata", "rgss3.script.log.rb")
+create_log(app_path + "/ClientRGSS3/Data/Scripts.rxdata", app_path + "/rgss3.script.log.rb")
+create_log(app_path + "/Client/Data/Scripts.rxdata", app_path + "/rgss1.script.log.rb")
+
+puts "finished"

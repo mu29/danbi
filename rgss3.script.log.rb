@@ -1,56 +1,73 @@
+=begin
+
+  단비, RPGXP 전용 온라인 게임 엔진
+  
+  Client Version:
+    RGSS3
+  
+  Wiki:
+    github.com/mu29/danbi/wiki
+  
+  Dev Team:
+    tinystar.co.kr
+  
+=end
+
+#────────────────────────────────────────────────────────────────────────────
+# * Config
+#────────────────────────────────────────────────────────────────────────────
+
 module Config
   
-  # 서버
-  SERVER =
-  ["127.0.0.1", 50000, "뮤 서버", "1"],
-  ["172.30.1.2", 50000, "다람쥐 서버", "4"],
-  ["172.30.1.3", 50000, "서버 3", "2"],
-  ["172.30.1.4", 50000, "서버 4", "3"]
+  # 서버 리스트를 작성해 보세요.
+  SERVER = [
+    ["127.0.0.1", 50000, "뮤", "1.png"],
+    ["58.127.170.60", 50000, "다람쥐", "2.png"],
+    ["172.30.1.3", 50000, "서버 3", "3.png"],
+    ["172.30.1.4", 50000, "서버 4", "4.png"]
+  ]
   
-  # 맵 추출
-  EXTRACT_MAP = false
+  # 게임 해상도를 설정하세요. (너비, 높이 순)
+  WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
+  
+  # "Alt + Enter" 키 사용의 허용 여부를 설정하세요.
+  USE_ALT_ENTER = true
+
+  # 폰트를 설정하세요.
+  FONT = ["나눔고딕", "나눔고딕 ExtraBold"]
+  FONT_SMALL_SIZE = 13
+  FONT_NORMAL_SIZE = 14
+  
+  # 마우스 커서의 파일명을 입력하세요.
+  # 파일은 Graphics/Icons 폴더에서 불러옵니다.
+  MOUSE = "cursor.png"
+  
+  # 결정 SE(사운드 이펙트)를 설정하세요.
+  DECISION_SE = RPG::AudioFile.new("002-System02", 100, 100)#032-Switch01
+  # 취소 SE를 설정하세요.
+  BUZZER_SE   = RPG::AudioFile.new("004-System04", 100, 100)#021-Dive01
+  
+  # 디버그 콘솔의 제목과 위치를 설정하세요.
+  CONSOLE_TITLE = "Debug"
+  CONSOLE_RECT = Rect.new(128, 128, 256, 480)
+  
+  # 옵션값 저장 경로를 설정하세요.
+  OPTION_PATH = "./User.ini"
+  # 옵션 키 이름을 입력하세요.
+  OPTION_KEY = "Option"
+  
+  # 외부 라이브러리 경로
+  DLL_PATH = './Library/'
   
   # 부활 위치
   ReBirth_ID = 4
   ReBirth_X = 9
   ReBirth_Y = 7
-  
-  DECISION_SE = RPG::AudioFile.new("002-System02", 80, 100)
-  BUZZER_SE   = RPG::AudioFile.new("004-System04", 80, 100)
-  
-# --* UI *--
-  
-  # 폰트
-  FONT = "나눔고딕"
-  FONT2 = "나눔고딕 ExtraBold"
-  FONT_SMALL_SIZE = 13
-  FONT_NORMAL_SIZE = 14
-  FONT_DIR = "./Fonts/"
-  
-  # 커서
-  MOUSE = "001-Weapon01"
-  
-  # 콘솔 제목
-  CONSOLE_TITLE = "Debug"
-  CONSOLE_RECT = [32, 32, 256, 480]
-  
-  # 옵션값 저장 경로
-  OPTION_PATH = "./User.ini"
-  
-  
-  # 너비
-  WINDOW_WIDTH = 800
-  
-  # 높이
-  WINDOW_HEIGHT = 600
-  
-  # 시작시 풀스크린 사용 여부
-  WINDOW_FULL = false
-  
-  # Alt + Enter 사용 여부
-  WINDOW_ALTENTER = true
+end
 
-  # 파일명 설정
+module Config # HUD 설정
+  
+  # 파일명
   FILE_HUD = "HUD.png"
   FILE_HP = "HPBAR.png"
   FILE_MP = "MPBAR.png"
@@ -58,276 +75,943 @@ module Config
   FILE_B_HP = "hp_balloon.png"
   FILE_B_MP = "mp_balloon.png"
   
-  # 게이지바 설정
-  HP_X = 70
-  HP_Y = 557
-  MP_X = 70
-  MP_Y = 574
-  EXP_X = 0
-  EXP_Y = 593
+  # 게이지바 위치
+  HP_X = 70; HP_Y = 557
+  MP_X = 70; MP_Y = 574
+  EXP_X = 0; EXP_Y = 593
+  # 왼쪽, 오른쪽 게이지바 굵기
+  HP_BORDER = [1, 1]
+  MP_BORDER = [1, 1]
+  EXP_BORDER = [1, 1]
+  # 게이지바 속도
+  BAR_SPEED = 5
   
-  # 단축키 윈도우 설정
-  SHORTCUT_WINDOW_X = 213
-  SHORTCUT_WINDOW_Y = 557
-  # 단축키 아이콘 설정
-  SHORTCUT_ICON_X = 6
-  SHORTCUT_ICON_Y = 6
+  # 레벨 텍스트 위치
+  LV_TEXT_X = 12
+  LV_TEXT_Y = 560
+  # HP 텍스트 위치
+  HP_TEXT_X = 70
+  HP_TEXT_Y = 553
+  # MP 텍스트 위치
+  MP_TEXT_X = 70
+  MP_TEXT_Y = 570
+  # EXP 텍스트 위치
+  EXP_TEXT_X = 0
+  EXP_TEXT_Y = 588
+  
+  # 메뉴 아이콘 위치, 간격
+  MENU_ICON_X = 560
+  MENU_ICON_Y = 558
+  MENU_ICON_GAP = 40
 
-  # 채팅창 RECT 설정
-  CHAT_X = 10
-  CHAT_Y = 450
-  CHAT_WIDTH = 300
-  CHAT_HEIGHT = 80
+  # 단축키 위치, 크기
+  SHORTCUT_RECT = []
+  COOLTIME_RECT = []
+  for n in 0...10
+    SHORTCUT_RECT[n] = Rect.new(214 + n * 30, 558, 24, 24)
+    COOLTIME_RECT[n] = Rect.new(214 + n * 30, 557, 24, 25)
+  end
+end
+
+module Config # 채팅창 설정
+  # 채팅창 RECT 설정 (x, y, width, height)
+  RECT_CHATBOX = Rect.new(490, 425, 300, 94)
+  RECT_INPUT = Rect.new(490, 520, 300, 20)
+  # 채팅창 그래픽
+  FILE_CHAT = "chatbox.png"
+end
+
+module Config # 스위치
+  # 맵 파일 추출
+  EXTRACT_MAP = false
 end
 
 
 
-
 #────────────────────────────────────────────────────────────────────────────
-# * Win32API Librarys, @cheapmunk.naver
+# * Win32API
 #────────────────────────────────────────────────────────────────────────────
 
-  # Exterior Librarys
-  NoF1                    = Win32API.new('NoInput', 'NoF1', 'l', 'v')
-  NoF12                   = Win32API.new('NoInput', 'NoF12', 'l', 'v')
-  NoAltEnter              = Win32API.new('NoInput', 'NoAltEnter', 'l', 'v')
-  StartGraphics           = Win32API.new('NoPause', 'StartGraphics', 'l', 'l')
-  EndGraphics             = Win32API.new('NoPause', 'EndGraphics', 'l', 'l')
-  DrawMapsBitmap          = Win32API.new('Tilemap', 'DrawMapsBitmap', 'pppp', 'i')
-  DrawMapsBitmap2         = Win32API.new('Tilemap', 'DrawMapsBitmap2', 'pppp', 'i')
-  UpdateAutotiles         = Win32API.new('Tilemap', 'UpdateAutotiles', 'pppp', 'i')
-  InitEmptyTile           = Win32API.new('Tilemap', 'InitEmptyTile', 'l', 'i')
-  Wheel                   = Win32API.new('Wheel', 'intercept', 'v', 'l')
+class Win32API
   
-  # Interior Librarys
-  MultiByteToWideChar       = Win32API.new('kernel32', 'MultiByteToWideChar', 'llplpl', 'l')
-  WideCharToMultiByte       = Win32API.new('kernel32', 'WideCharToMultiByte', 'llplplpp', 'l')
-  GetPrivateProfileString   = Win32API.new('kernel32', 'GetPrivateProfileString', 'pppplp', 'l')
-  WritePrivateProfileString = Win32API.new('kernel32', 'WritePrivateProfileString', 'pppp', 'l')
-  DeleteFile                = Win32API.new('kernel32', 'DeleteFile', 'p', 'l')
-  GetActiveWindow           = Win32API.new('user32', 'GetActiveWindow', 'v', 'l')
-  GetForegroundWindow       = Win32API.new('user32', 'GetForegroundWindow', 'v', 'l')
-  GetWindowText             = Win32API.new('user32', 'GetWindowText', 'lpl', 'l')
-  GetWindowTextLength       = Win32API.new('user32', 'GetWindowTextLength', 'l', 'l')
-  MessageBox                = Win32API.new('user32', 'MessageBox', 'lppl', 'l')
-  SendMessage               = Win32API.new('user32', 'SendMessageA', 'llll', 'l')
-  LoadImageA                = Win32API.new('user32', 'LoadImageA', 'lpllll', 'l')
-  LoadImageW                = Win32API.new('user32', 'LoadImageW', 'lpllll', 'l')
-  FlashWindow               = Win32API.new('user32', 'FlashWindow', 'll', 'l')
-  FindWindow                = Win32API.new('user32', 'FindWindow', 'pp', 'l')
-  GetWindowRect             = Win32API.new('user32', 'GetWindowRect', 'lp', 'l')
-  GetSystemMetrics          = Win32API.new('user32', 'GetSystemMetrics', 'l', 'l')
-  GetAsyncKeyState          = Win32API.new('user32', 'GetAsyncKeyState', 'l', 'l')
-  AdjustWindowRect          = Win32API.new('user32', 'AdjustWindowRect', 'pll', 'l')
-  GetClientRect             = Win32API.new('user32', 'GetClientRect', 'lp','i')
-  ChangeDisplaySettings     = Win32API.new('user32', 'ChangeDisplaySettingsW', 'pl', 'l')
-  EnumDisplaySettings       = Win32API.new('user32', 'EnumDisplaySettings', 'llp', 'l')
-  SetWindowLong             = Win32API.new('user32', 'SetWindowLongA', 'pll', 'l')
-  GetWindowLong             = Win32API.new('user32', 'GetWindowLongA', 'll', 'l')
-  SetWindowPos              = Win32API.new('user32', 'SetWindowPos', 'lllllll', 'l')
-  RegisterHotKey            = Win32API.new('user32', 'RegisterHotKey', 'llll', 'l')
-  ScreenToClient            = Win32API.new('user32', 'ScreenToClient', 'lp', 'i')
-  GetCursorPos              = Win32API.new('user32', 'GetCursorPos', 'p', 'i')
-  ShowCursor                = Win32API.new('user32', 'ShowCursor', 'l', 'l')
-  ImmGetDefaultIMEWnd       = Win32API.new('Imm32', 'ImmGetDefaultIMEWnd', 'l', 'l')  
-  ImmGetContext             = Win32API.new('imm32','ImmGetContext', 'l', 'l')
-  ImmSetConversionStatus    = Win32API.new('imm32','ImmSetConversionStatus','lll','l')
-  ImmReleaseContext         = Win32API.new('imm32','ImmReleaseContext','ll','l')
-  URLDownloadToFile         = Win32API.new('urlmon', 'URLDownloadToFile', 'lppll', 'l')
-  DeleteUrlCacheEntry       = Win32API.new('Wininet', 'DeleteUrlCacheEntry', 'p', 'l')
-  GetLastError              = Win32API.new('kernel32', 'GetLastError', 'v', 'l')
-  CopyFile                  = Win32API.new('kernel32', 'CopyFile', 'ppl', 'l')
-  ShellExecute              = Win32API.new('shell32', 'ShellExecute', 'lppppl','l')
-  AllocConsole              = Win32API.new('kernel32', 'AllocConsole', 'v', 'l')
-  SetForegroundWindow       = Win32API.new('user32', 'SetForegroundWindow', 'l', 'l')
-  SetConsoleTitle           = Win32API.new('kernel32','SetConsoleTitleA', 'p', 'l')
-  GetConsoleWindow          = Win32API.new('kernel32', 'GetConsoleWindow', 'v', 'l')
-  PathFileExists            = Win32API.new('Shlwapi', 'PathFileExists', 'p', 'l')
-  PathIsDirectory           = Win32API.new('Shlwapi', 'PathIsDirectory', 'p', 'l')
-  CreateFile                = Win32API.new('kernel32', 'CreateFile', 'pllllll', 'l')
-  GetFileSize               = Win32API.new('kernel32', 'GetFileSize', 'll', 'l')
-  CloseHandle               = Win32API.new('kernel32', 'CloseHandle', 'l', 'l')
-  GetOpenFileName           = Win32API.new('comdlg32', 'GetOpenFileName', 'p', 'l')
-  IsWindowEnabled           = Win32API.new('user32', 'IsWindowEnabled', 'l', 'l')
-  IsWindowVisible           = Win32API.new('user32', 'IsWindowVisible', 'l', 'l')
-  GetWindowPlacement        = Win32API.new('user32', 'GetWindowPlacement', 'lp', 'l')
-  GetKeyState               = Win32API.new('user32', 'GetAsyncKeyState', 'i', 'i')
-  GetKeyboardState          = Win32API.new('user32', 'GetKeyState', 'i', 'i')
-  GetSetKeyState            = Win32API.new('user32', 'SetKeyboardState', 'i', 'i')
-  SendNotifyMessage         = Win32API.new('user32', 'SendNotifyMessage', 'llll', 'l')
-  AddFontResource           = Win32API.new('gdi32', 'AddFontResource', 'p', 'l')
-  AddFontResourceEx         = Win32API.new('gdi32', 'AddFontResourceEx', 'PLL', 'L')
-  RemoveFontResource        = Win32API.new('gdi32', 'RemoveFontResource', 'p', 'l')
-  RemoveFontResourceEx      = Win32API.new('gdi32', 'RemoveFontResourceEx', 'pll', 'l')
-  RegCreateKey              = Win32API.new('advapi32', 'RegCreateKey', 'lpp', '')
-  RegSetValueEx             = Win32API.new('advapi32', 'RegSetValueEx', 'ppllpl', 'l')
-  RegCloseKey               = Win32API.new('advapi32', 'RegCloseKey', 'p', 'l')
-#────────────────────────────────────────────────────────────────────────────
-# * String Class, @cheapmunk.naver, 2015. 01. 19
+  NoF1                      = new(Config::DLL_PATH + 'NoInput', 'NoF1', 'l', 'v')
+  NoF12                     = new(Config::DLL_PATH + 'NoInput', 'NoF12', 'l', 'v')
+  NoAltEnter                = new(Config::DLL_PATH + 'NoInput', 'NoAltEnter', 'l', 'v')
+  
+  DrawMapsBitmap2           = new(Config::DLL_PATH + 'XPA_Tilemap', 'DrawMapsBitmap2', 'pppp', 'i')
+  UpdateAutotiles           = new(Config::DLL_PATH + 'XPA_Tilemap', 'UpdateAutotiles', 'pppp', 'i')
+  DrawMapsBitmap            = new(Config::DLL_PATH + 'XPA_Tilemap', 'DrawMapsBitmap', 'pppp', 'i')
+  InitEmptyTile             = new(Config::DLL_PATH + 'XPA_Tilemap','InitEmptyTile','l','i')
+  InitBlackTile             = new(Config::DLL_PATH + 'XPA_Tilemap','InitBlackTile','l','i')
+
+  Wheel                     = new(Config::DLL_PATH + 'Wheel', 'intercept', 'v', 'l')
+  FindFirstFile             = new(Config::DLL_PATH + 'RTP', 'FFF', 'p', 'p')
+  
+  RtlMoveMemory             = new('kernel32', 'RtlMoveMemory', 'ppl', '')
+  MultiByteToWideChar       = new('kernel32', 'MultiByteToWideChar', 'llplpl', 'l')
+  WideCharToMultiByte       = new('kernel32', 'WideCharToMultiByte', 'llplplpp', 'l')
+  GetPrivateProfileString   = new('kernel32', 'GetPrivateProfileString', 'pppplp', 'l')
+  WritePrivateProfileString = new('kernel32', 'WritePrivateProfileString', 'pppp', 'l')
+  DeleteFile                = new('kernel32', 'DeleteFile', 'p', 'l')
+  GetActiveWindow           = new('user32', 'GetActiveWindow', 'v', 'l')
+  GetForegroundWindow       = new('user32', 'GetForegroundWindow', 'v', 'l')
+  GetWindowText             = new('user32', 'GetWindowText', 'lpl', 'l')
+  GetWindowTextLength       = new('user32', 'GetWindowTextLength', 'l', 'l')
+  MessageBox                = new('user32', 'MessageBox', 'lppl', 'l')
+  SendMessage               = new('user32', 'SendMessageA', 'llll', 'l')
+  LoadImageA                = new('user32', 'LoadImageA', 'lpllll', 'l')
+  LoadImageW                = new('user32', 'LoadImageW', 'lpllll', 'l')
+  FlashWindow               = new('user32', 'FlashWindow', 'll', 'l')
+  FindWindow                = new('user32', 'FindWindow', 'pp', 'l')
+  GetWindowRect             = new('user32', 'GetWindowRect', 'lp', 'l')
+  GetSystemMetrics          = new('user32', 'GetSystemMetrics', 'l', 'l')
+  GetAsyncKeyState          = new('user32', 'GetAsyncKeyState', 'l', 'l')
+  AdjustWindowRect          = new('user32', 'AdjustWindowRect', 'pll', 'l')
+  GetClientRect             = new('user32', 'GetClientRect', 'lp','i')
+  ChangeDisplaySettings     = new('user32', 'ChangeDisplaySettingsW', 'pl', 'l')
+  EnumDisplaySettings       = new('user32', 'EnumDisplaySettings', 'llp', 'l')
+  SetWindowLong             = new('user32', 'SetWindowLongA', 'pll', 'l')
+  GetWindowLong             = new('user32', 'GetWindowLongA', 'll', 'l')
+  SetWindowPos              = new('user32', 'SetWindowPos', 'lllllll', 'l')
+  RegisterHotKey            = new('user32', 'RegisterHotKey', 'llll', 'l')
+  ScreenToClient            = new('user32', 'ScreenToClient', 'lp', 'i')
+  ClientToScreen            = new('user32', 'ClientToScreen', 'lp', 'i')
+  ClipCursor                = new('user32', 'ClipCursor', 'p', 'l')
+  GetCursorPos              = new('user32', 'GetCursorPos', 'p', 'i')
+  SetCursorPos              = new('user32', 'SetCursorPos', 'll', 'l')
+  ShowCursor                = new('user32', 'ShowCursor', 'l', 'l')
+  ImmGetDefaultIMEWnd       = new('Imm32', 'ImmGetDefaultIMEWnd', 'l', 'l')  
+  ImmGetContext             = new('imm32','ImmGetContext', 'l', 'l')
+  ImmSetConversionStatus    = new('imm32','ImmSetConversionStatus','lll','l')
+  ImmReleaseContext         = new('imm32','ImmReleaseContext','ll','l')
+  URLDownloadToFile         = new('urlmon', 'URLDownloadToFile', 'lppll', 'l')
+  DeleteUrlCacheEntry       = new('Wininet', 'DeleteUrlCacheEntry', 'p', 'l')
+  GetLastError              = new('kernel32', 'GetLastError', 'v', 'l')
+  CopyFile                  = new('kernel32', 'CopyFile', 'ppl', 'l')
+  ShellExecute              = new('shell32', 'ShellExecute', 'lppppl','l')
+  AllocConsole              = new('kernel32', 'AllocConsole', 'v', 'l')
+  SetForegroundWindow       = new('user32', 'SetForegroundWindow', 'l', 'l')
+  SetConsoleTitle           = new('kernel32','SetConsoleTitleA', 'p', 'l')
+  GetConsoleWindow          = new('kernel32', 'GetConsoleWindow', 'v', 'l')
+  PathFileExists            = new('Shlwapi', 'PathFileExists', 'p', 'l')
+  PathIsDirectory           = new('Shlwapi', 'PathIsDirectory', 'p', 'l')
+  CreateFile                = new('kernel32', 'CreateFile', 'pllllll', 'l')
+  GetFileSize               = new('kernel32', 'GetFileSize', 'll', 'l')
+  CloseHandle               = new('kernel32', 'CloseHandle', 'l', 'l')
+  GetOpenFileName           = new('comdlg32', 'GetOpenFileName', 'p', 'l')
+  IsWindowEnabled           = new('user32', 'IsWindowEnabled', 'l', 'l')
+  IsWindowVisible           = new('user32', 'IsWindowVisible', 'l', 'l')
+  GetWindowPlacement        = new('user32', 'GetWindowPlacement', 'lp', 'l')
+  GetKeyState               = new('user32', 'GetAsyncKeyState', 'i', 'i')
+  GetKeyboardState          = new('user32', 'GetKeyState', 'i', 'i')
+  GetSetKeyState            = new('user32', 'SetKeyboardState', 'i', 'i')
+  SendNotifyMessage         = new('user32', 'SendNotifyMessage', 'llll', 'l')
+  AddFontResource           = new('gdi32', 'AddFontResource', 'p', 'l')
+  AddFontResourceEx         = new('gdi32', 'AddFontResourceEx', 'PLL', 'L')
+  RemoveFontResource        = new('gdi32', 'RemoveFontResource', 'p', 'l')
+  RemoveFontResourceEx      = new('gdi32', 'RemoveFontResourceEx', 'pll', 'l')
+  RegCreateKey              = new('advapi32', 'RegCreateKey', 'lpp', '')
+  RegSetValueEx             = new('advapi32', 'RegSetValueEx', 'ppllpl', 'l')
+  RegCloseKey               = new('advapi32', 'RegCloseKey', 'p', 'l')
+  GetParent                 = new('user32', 'GetParent', 'l', 'l')
+  GetMenu                   = new('user32', 'GetMenu', 'l', 'l')
+  RegOpenKeyEx              = new('advapi32', 'RegOpenKeyEx', 'lpllp', 'l')
+  RegQueryValueExW          = new('advapi32', 'RegQueryValueExW', 'lplppp', 'l')
+  FindNextFile              = new('kernel32', 'FindNextFileW', 'lp', 'i')
+end
+Game.SubClassing
+
+#───────────────────────────────────────────────────────────────────────────────
+# ▶ Color
+# ------------------------------------------------------------------------------
+# Author    jubin
+# Date      2016. 01. 10
+# ------------------------------------------------------------------------------
+# Description
+# 
+#    색깔 클래스입니다. alpha는 투명도 입니다.
+#───────────────────────────────────────────────────────────────────────────────
+
+class Color
+  def self.black(alpha=255)  new(0, 0, 0, alpha); end
+  def self.white(alpha=255)  new(255, 255, 255, alpha); end
+  def self.gray(alpha=255)   new(96, 96, 96, alpha); end
+  def self.red(alpha=255)    new(255, 0, 0, alpha); end
+  def self.system(alpha=255) new(0, 96, 255, alpha); end
+  def self.yellow(alpha=255) new(255, 255, 0, alpha); end
+end
+
+#───────────────────────────────────────────────────────────────────────────────
+# * String, 66rpg, joe59491, 2015. 01. 19
 #
 #   "가".to_m       => "\260\241"
 #   "\260\241".to_u => "가"
-#────────────────────────────────────────────────────────────────────────────
+#───────────────────────────────────────────────────────────────────────────────
 
 class String
+  
   CP_UTF8 = 65001
   
   def to_u
-    len = MultiByteToWideChar.call(0, 0, self, -1, nil, 0)
-    buf = 0.chr * (len*2)
-    MultiByteToWideChar.call(0, 0, self, -1, buf, buf.size/2)
-    len = WideCharToMultiByte.call(CP_UTF8, 0, buf, -1, nil, 0, nil, nil)
-    ret = 0.chr * len
-    WideCharToMultiByte.call(CP_UTF8, 0, buf, -1, ret, ret.size, nil, nil)
-    ret.gsub!(0.chr, "")
-    return ret
+    len = Win32API::MultiByteToWideChar.call(0, 0, self, -1, nil, 0)
+    buf = "\0" * (len*2)
+    Win32API::MultiByteToWideChar.call(0, 0, self, -1, buf, buf.size/2)
+    len = Win32API::WideCharToMultiByte.call(CP_UTF8, 0, buf, -1, nil, 0, nil, nil)
+    ret = "\0" * (len*2)
+    Win32API::WideCharToMultiByte.call(CP_UTF8, 0, buf, -1, ret, ret.size, nil, nil)
+    return ret.unpack('C*').select{|s| s != 0}.pack('C*')
   end
   
   def to_m
-    len = MultiByteToWideChar.call(CP_UTF8, 0, self, -1, nil, 0)
-    buf = 0.chr * (len*2)
-    MultiByteToWideChar.call(CP_UTF8, 0, self, -1, buf, buf.size/2)
-    len = WideCharToMultiByte.call(0, 0, buf, -1, nil, 0, nil, nil)
-    ret = 0.chr * len
-    WideCharToMultiByte.call(0, 0, buf, -1, ret, ret.size, nil, nil)
-    ret.gsub!(0.chr, "")
+    len = Win32API::MultiByteToWideChar.call(CP_UTF8, 0, self, -1, nil, 0)
+    buf = "\0" * (len*2)
+    Win32API::MultiByteToWideChar.call(CP_UTF8, 0, self, -1, buf, buf.size/2)
+    len = Win32API::WideCharToMultiByte.call(0, 0, buf, -1, nil, 0, nil, nil)
+    ret = "\0" * len
+    Win32API::WideCharToMultiByte.call(0, 0, buf, -1, ret, ret.size, nil, nil)
     return ret
   end
+
+  def to_unicode
+    len = Win32API::MultiByteToWideChar.call(CP_UTF8, 0, self, -1, 0, 0) << 1
+    buf = "\0" * len
+    Win32API::MultiByteToWideChar.call(CP_UTF8, 0, self, -1, buf, len)
+    return buf
+  end
   
+  def to_UTF8
+    len = Win32API::WideCharToMultiByte.call(CP_UTF8, 0, self, -1, 0, 0, 0, 0)
+    buf = "\0" * len
+    Win32API::WideCharToMultiByte.call(CP_UTF8, 0, self, -1, buf, len, 0, 0)
+    buf.slice!(-1, 1)
+    return buf
+  end
+
   def to_b
     return self == 'true'
   end
 end
+
 #────────────────────────────────────────────────────────────────────────────
-# * Device Module, @cheapmunk.naver
+# * Game, jubin
 #────────────────────────────────────────────────────────────────────────────
 
-module Device
-  # 핸들
-  def self.getHwnd
-    GetPrivateProfileString.call('Game', 'Title', '', buf = 0.chr * 1024, 1024, './Game.ini')
-    handle = FindWindow.call('RGSS Player', buf.gsub(0.chr, ''))
-    handle = GetActiveWindow.call if handle.zero?
-    return handle
-  end; HWND = Device.getHwnd
-
-  # 게임 캡션
-  def self.getCaption
-    length = GetWindowTextLength.call(getHwnd)
-    str = 0.chr * (length)
-    GetWindowText.call(getHwnd, str, length + 1)
-    return str.to_u
-  end
-  
-  # Rect(w, h)
-  def self.getRect
-    rect = [0, 0, 0, 0].pack('l4')
-    GetClientRect.call(getHwnd, rect)
-    return rect.unpack('l4')[2..3]
-  end
-end
-#────────────────────────────────────────────────────────────────────────────
-# * OutPut, ForeverZer0, @cheapmunk.naver
-#────────────────────────────────────────────────────────────────────────────
-
-if $DEBUG
-  AllocConsole.call
-  $stdout.reopen('CONOUT$')
-  SetForegroundWindow.call(Device::HWND)
-  title = Device::getCaption + " - " + Config::CONSOLE_TITLE
-  SetConsoleTitle.call(title.to_m)
-  dim = Config::CONSOLE_RECT
-  SetWindowPos.call(GetConsoleWindow.call, 0, dim[0], dim[1], dim[2], dim[3], 1)
-  dim = nil; title = nil
-end
-
-module Kernel
-  alias :puts_ :puts
-  def puts(*args)
-    if $DEBUG
-      args.collect {|arg| puts_(arg.inspect.to_m + "\n") }
-    end
-  end
-  
-  alias :p_ :p
-  def p(*args)
-    ShowCursor.call(1)
-    puts(*args)
-    p_(*args)
-    ShowCursor.call(0)
-  end
-  
-  alias :print_ :print
-  def print(*args)
-    ShowCursor.call(1)
-    puts(*args)
-    print_(*args)
-    ShowCursor.call(0)
-  end
-end
-#────────────────────────────────────────────────────────────────────────────
-# * msgbox, @cheapmunk.naver, 2014. 08. 31
-#────────────────────────────────────────────────────────────────────────────
-
-module MB
-  # 버튼
-  OK                = 0
-  OKCANCEL          = 1
-  ABORTRETRYIGNORE  = 2
-  YESNOCANCEL       = 3
-  YESNO             = 4
-  RETRYCANCEL       = 5
-  CANCELTRYCONTINUE = 6
-  HELP              = 0x00004000
-  
-  # 아이콘
-  ICONSTOP          = 16
-  ICONQUESTION      = 32
-  ICONEXCLAMATION   = 48
-  ICONINFORMATION   = 64
-  
-  # 스타일
-  DEFBUTTON1        = 0x00000000
-  DEFBUTTON2        = 0x00000100
-  DEFBUTTON3        = 0x00000200
-  DEFBUTTON4        = 0x00000300
-  RIGHT             = 0x00080000
-  RTLREADING        = 0x00100000
-  TOPMOST           = 0x00040000
-  
-  # 리턴 값
-  IDOK              = 1
-  IDCANCEL          = 2
-  IDABORT           = 3
-  IDRETRY           = 4
-  IDIGNORE          = 5
-  IDYES             = 6
-  IDNO              = 7
-  IDTRYAGAIN        = 10
-  IDCONTINUE        = 11
-end
-
-module Kernel
-  def msgbox(lpText, wType = 0, lpCaption = Device.getCaption)
-    puts(lpText)
-    ShowCursor.call(1)
-    id = MessageBox.call(Device::HWND, lpText.to_s.to_m, lpCaption.to_s.to_m, wType)
-    ShowCursor.call(0)
-    return id
-  end
-end
-#────────────────────────────────────────────────────────────────────────────
-# * Graphics Module, Various Scripters, @cheapmunk.naver, 2015. 01. 23
-#────────────────────────────────────────────────────────────────────────────
-
-module Graphics
+module Game
   
   module_function
   
-  def state
-    GetForegroundWindow.call == Device::HWND
+  def getHwnd
+    buffer = "\0" * 1024
+    Win32API::GetPrivateProfileString.call('Game', 'Title', '', buffer, buffer.size, './Game.ini')
+    hwnd = Win32API::FindWindow.call('RGSS Player', buffer)
+    hwnd = Win32API::GetActiveWindow.call if hwnd == 0
+    return hwnd
+  end
+
+  def getCaption
+    length = Win32API::GetWindowTextLength.call(HWND)
+    str = "\0" * (length)
+    Win32API::GetWindowText.call(HWND, str, length + 1)
+    return str.to_u
   end
   
+  def getRect
+    rect = [0, 0, 0, 0].pack('l4')
+    Win32API::GetWindowRect.call(Game::HWND, rect)
+    return rect.unpack('l4')
+  end
+  
+  def getClientRect
+    rect = [0, 0, 0, 0].pack('l4')
+    Win32API::GetClientRect.call(Game::HWND, rect)
+    return rect.unpack('l4')
+  end
+  
+  # 핸들
+  HWND = Game.getHwnd()
+  # 게임 타이틀
+  CAPTION = Game.getCaption()
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# * Rect, jubin
+#────────────────────────────────────────────────────────────────────────────
+
+class Rect
+  def to_a
+    [self.x, self.y, self.width, self.height]
+  end
+  
+  def src_rect
+    Rect.new(0, 0, self.width, self.height)
+  end
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# * Debug, ForeverZer0
+#────────────────────────────────────────────────────────────────────────────
+
+def openDebugWindow
+  if $DEBUG || $TEST
+    Win32API::AllocConsole.call
+    $stdout.reopen('CONOUT$')
+    Win32API::SetForegroundWindow.call(Game::HWND)
+    title = Game::CAPTION + " - " + Config::CONSOLE_TITLE
+    Win32API::SetConsoleTitle.call(title.to_m)
+    Win32API::SetWindowPos.call(Win32API::GetConsoleWindow.call, 0, *Config::CONSOLE_RECT.to_a, 1)
+  end
+  undef openDebugWindow
+end; openDebugWindow
+
+#────────────────────────────────────────────────────────────────────────────
+# * Kernel, jubin, 2015. 03. 15
+#────────────────────────────────────────────────────────────────────────────
+
+module Kernel
+  
+  module MB
+    OK                = 0
+    OKCANCEL          = 1
+    ABORTRETRYIGNORE  = 2
+    YESNOCANCEL       = 3
+    YESNO             = 4
+    RETRYCANCEL       = 5
+    CANCELTRYCONTINUE = 6
+    HELP              = 0x00004000
+  
+    ICONSTOP          = 16
+    ICONQUESTION      = 32
+    ICONEXCLAMATION   = 48
+    ICONINFORMATION   = 64
+  
+    DEFBUTTON1        = 0x00000000
+    DEFBUTTON2        = 0x00000100
+    DEFBUTTON3        = 0x00000200
+    DEFBUTTON4        = 0x00000300
+    RIGHT             = 0x00080000
+    RTLREADING        = 0x00100000
+    TOPMOST           = 0x00040000
+  
+    IDOK              = 1
+    IDCANCEL          = 2
+    IDABORT           = 3
+    IDRETRY           = 4
+    IDIGNORE          = 5
+    IDYES             = 6
+    IDNO              = 7
+    IDTRYAGAIN        = 10
+    IDCONTINUE        = 11
+  end
+  
+  alias :_puts_ :puts if !$@
+  alias :_msgbox_p_ :msgbox_p if !$@
+  
+  def puts(*args)
+    args.collect {|arg| _puts_(arg.inspect + "\n") }
+  end
+  
+  def msgbox(*args)
+    arg = String.new
+    args.each{ |a| arg << (a.nil? ? "nil" : a.to_s) + "\n" }
+    puts(*args)
+    Win32API::ShowCursor.call(1)
+    Win32API::MessageBox.call(Game::HWND, arg.to_m, Game::CAPTION, 0 )
+    Win32API::ShowCursor.call(0)
+  end
+  
+  def msgbox_p(*args)
+    puts(*args)
+    Win32API::ShowCursor.call(1)
+    _msgbox_p_(*args)
+    Win32API::ShowCursor.call(0)
+  end
+  
+  # Custom msgbox
+  def msgbox_c(arg, type=0, caption=Game::CAPTION)
+    puts(arg)
+    Win32API::ShowCursor.call(1)
+    id = Win32API::MessageBox.call(Game::HWND, arg.to_s.to_m, caption.to_s.to_m, type)
+    Win32API::ShowCursor.call(0)
+    return id
+  end
+  
+  def print(*args)
+    msgbox(*args)
+  end
+  
+  def p(*args)
+    msgbox_p(*args)
+  end
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# * File, jubin, 2014. 12. 29
+#────────────────────────────────────────────────────────────────────────────
+
+class File
+  def self.download(url, filename)
+    value = Win32API::URLDownloadToFile.call(0, url.to_m, filename.to_m, 0, 0)
+    if value == 0
+      Win32API::DeleteUrlCacheEntry.call(url.to_m)
+    else
+      msgbox_c "다운로드 에러\n(code : #{Win32API::GetLastError.call})", MB::ICONSTOP
+    end
+  end
+  
+  def self.copy(from, to, cover=true)
+    Win32API::CopyFile.call(from.to_m, to.to_m, cover == true ? 0 : (1 if cover == false))
+  end
+  
+  def self.execute(filename, sw=1, operation='open')
+    filename = filename.to_a
+    Win32API::ShellExecute.call(0, operation.to_m, filename[0].to_m, filename[1].nil? ? 0 : filename[1].to_m, 0, sw)
+  end
+  
+  def self.setClipboard(type, *args)
+    file = File.new('tmp.txt', 'w')
+    file.write args.join(type)
+    file.close
+    system('clip.exe < tmp.txt')
+    File.delete('tmp.txt')
+  end
+  
+  def self.iniGet(lpFileName, lpAppName, lpKeyName, lpDefault, nSize)
+    buf = "\0" * nSize
+    Win32API::GetPrivateProfileString.call(lpAppName, lpKeyName, lpDefault.to_s, buf, nSize, lpFileName)
+    buf.delete!("\0")
+    if buf.to_i.to_s == buf # 정수
+      buf = buf.to_i
+    elsif buf == 'false' # false
+      buf = false
+    elsif buf == 'true' # true
+      buf = true
+    end    
+    return buf
+  end
+
+  def self.iniWrite(lpFileName, lpAppName, lpKeyName, lpString)
+    return Win32API::WritePrivateProfileString.call(lpAppName, lpKeyName, lpString.to_s, lpFileName)
+  end
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# * FileTest, jubin, 2014. 12. 29
+#────────────────────────────────────────────────────────────────────────────
+
+module FileTest
+  module_function
+  
+  def exist?(filename)
+    Win32API::PathFileExists.call(filename.to_m) == 0x1
+  end
+  
+  def directory?(filename)
+    Win32API::PathIsDirectory.call(filename.to_m) == 0x10
+  end
+  
+  def file?(filename)
+    Win32API::PathIsDirectory.call(filename.to_m) == 0
+  end
+  
+  def size(filename)
+    h = Win32API::CreateFile.call(filename.to_m, 0x80000000, 0, 0, 3, 0, 0)
+    size = Win32API::GetFileSize.call(h, 0)
+    Win32API::CloseHandle.call(h)
+    size
+  end
+end
+#────────────────────────────────────────────────────────────────────────────
+# * FPS, Zeus81, 2012. 08. 03
+#   http://forums.rpgmakerweb.com/index.php?/topic/3738-fps-display-isnt-very-accurate/
+#────────────────────────────────────────────────────────────────────────────
+
+module Graphics
+  @fps, @fps_tmp = 0, []
+  
+  class << self
+    attr_reader :fps
+    alias :fps_update :update unless method_defined?(:fps_update)
+    def update
+      t = Time.now
+      fps_update
+      @fps_tmp[frame_count % frame_rate] = Time.now != t
+      @fps = 0
+      frame_rate.times {|i| @fps += 1 if @fps_tmp[i]}
+      fps_sprite.src_rect.y = @fps * 16
+    end
+    
+    def fps_sprite
+      if !@fps_sprite or @fps_sprite.disposed?
+        @fps_sprite = Sprite.new
+        @fps_sprite.z = 0x7FFFFFFF
+        @fps_sprite.bitmap = Bitmap.new(24, 16*120)
+        @fps_sprite.bitmap.font.name = "Arial"
+        @fps_sprite.bitmap.font.size = 16
+        @fps_sprite.bitmap.font.color.set(255, 255, 255)
+        @fps_sprite.bitmap.fill_rect(@fps_sprite.bitmap.rect, Color.new(0, 0, 0, 128))
+        120.times {|i|
+          case i
+          when 0..24
+            @fps_sprite.bitmap.font.color = Color.red
+          when 25..39
+            @fps_sprite.bitmap.font.color = Color.new(255, 128, 0)
+          else
+            @fps_sprite.bitmap.font.color = Color.white
+          end
+          @fps_sprite.bitmap.draw_text(0, i*16, 24, 16, "% 3d"%i, 1)
+        }
+        @fps_sprite.src_rect.height = 16
+      end
+      return @fps_sprite
+    end
+  end
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# * Regedit, joe59491
+#────────────────────────────────────────────────────────────────────────────
+
+module Regedit
+  module_function
+  
+  Wow6432Node            = 0x0200
+  HKEY_LOCAL_MACHINE     = 0x80000002
+  STANDARD_RIGHTS_READ   = 0x00020000
+  KEY_QUERY_VALUE        = 0x0001
+  KEY_ENUMERATE_SUB_KEYS = 0x0008
+  KEY_NOTIFY             = 0x0010
+  KEY_READ               = STANDARD_RIGHTS_READ | KEY_QUERY_VALUE |
+                           KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY
+  KEY_EXECUTE            = KEY_READ | Wow6432Node
+  
+  # 맨 위로
+  def OpenKey(hkey, name, opt, desired)
+    result = packdw(0)
+    check Win32API::RegOpenKeyEx.call(hkey, name, opt, desired, result)
+    @reg_jb = unpackdw(result)
+  end
+  
+  def QueryValue(hkey, name)
+    size = [256].pack('l')
+    data = "\0" * 256
+    Win32API::RegQueryValueExW.call(hkey, name.to_unicode, 0, 0, data, size)
+    check(data, name)
+    data = data.to_UTF8
+    return data
+  end
+  
+  def check(data, name="")
+    if data == "\0" * 256
+      p "RTP：#{name}를 찾을 수 없습니다."
+      exit
+    end
+  end
+  
+  def packdw(dw)
+    [dw].pack("V")
+  end
+  
+  def unpackdw(dw)
+    dw += [0].pack("V")
+    dw.unpack("V")[0]
+  end
+  
+  def get_jb
+    return @reg_jb if @reg_jb != nil
+  end
+  
+  def getRTPPath(rtpname)
+    return "" if rtpname == "" || rtpname == nil
+    Regedit.OpenKey(HKEY_LOCAL_MACHINE, "SOFTWARE\\Enterbrain\\RGSS\\RTP", 0, KEY_EXECUTE)
+    rp = Regedit.QueryValue(Regedit.get_jb, rtpname)
+    return "" if rp == "" || rp == nil
+    rp = File.expand_path(rp) + "/"
+    return rp
+  end
+  
+  $RTP ||= []
+  for i in 0...3
+    $RTP[i] = Regedit::getRTPPath(File.iniGet("./Game.ini", "Game", "RTP#{i+1}", "", 256))
+  end
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# ▶ Bitmap
+# --------------------------------------------------------------------------
+# Author    jubin
+# Date      2016. 01. 10
+# --------------------------------------------------------------------------
+# Description
+# 
+#    확장된 함수가 추가된 비트맵 클래스입니다.
+#────────────────────────────────────────────────────────────────────────────
+
+class Bitmap
+  alias :_initialize_ :initialize if !$@
+  def initialize(*args)
+    if args.size == 1 && args[0].is_a?(String)
+      args[0] = RPG::Path::RTP(args[0])
+    end
+    _initialize_(*args)
+  end
+  
+  # 테두리 텍스트
+  def draw_outline_text(x, y, width, height, str,
+                       color = Color.white, color2 = Color.black, align = 0, multi = false)
+    font.color = color2
+    str = str.to_s if !str.is_a?(String)
+    for i in -1..1
+      for j in -1..1
+        if i*j == 0 and i+j != 0
+          multi ? draw_multi_text(x + i, y + j, width, height, str, align) : 
+            draw_text(x + i, y + j, width, height, str, align)
+        end
+      end
+    end
+    font.color = color
+    multi ? draw_multi_text(x, y, width, height, str, align) : draw_text(x, y, width, height, str, align)
+  end
+  
+  # 멀티라인(\n) 테두리 텍스트
+  def draw_multi_outline_text(x, y, width, height, str, color = Color.white, color2 = Color.black, align = 0)
+    draw_outline_text(x, y, width, height, str, color, color2, align, true)
+  end
+  
+  # 텍스트 덩어리
+  # esn : Escape Sequence '\n' 으로 나누거나(true), 혹은 width에 맞추거나(false)
+  def get_divided_text(width, str, esn = false)
+    line, text, x = Array.new, String.new, 0
+    return line if not str
+    for char in str.split(//)
+      # \n은 문자열에 더하고, 사이즈는 더하지 않는다.
+      text += char
+      if char != "\n"
+        rect = text_size(char)
+        x += rect.width
+      end
+      if esn
+        if char == "\n"
+          text.gsub!("\n", "")
+          line.push(text)
+          text = ""
+          x = 0
+        end
+      elsif !esn
+        if x + rect.width > width or char == "\n"
+          text.gsub!("\n", "")
+          line.push(text)
+          text = ""
+          x = 0
+        end
+      end      
+    end
+    line.push(text)
+    return line
+  end
+  
+  # 멀티라인(\n) 텍스트
+  def draw_multi_text(x, y, width, height, str, align = 0, esn = false)
+    text = get_divided_text(width, str, esn)
+    text.each_index do |n|
+      next if text[n] == ""
+      # 비트맵 세로 크기보다 크면 중단
+      return if y + n * text_size(text[n]).height >= height
+      draw_text(x, y + n * text_size(text[n]).height, 
+      width, text_size(text[n]).height, text[n], align)
+=begin
+      # 정렬 변수
+      xa = case align
+      when 0; x
+      when 1; (width - text_size(text[n]).width) / 2.0
+      when 2; width - text_size(text[n]).width end
+      # 비트맵 세로 크기보다 크면 중단
+      return if y + n * text_size(text[n]).height >= height
+      # 텍스트 생성
+      draw_text(
+        x + xa, y + n * text_size(text[n]).height,
+        text_size(text[n]).width + 1, text_size(text[n]).height, text[n])
+=end
+    end
+  end
+  
+  # xalign // 0 : 왼, 1 : 중간, 2 : 오른
+  # yalign // 0 : 위, 1 : 중간, 2 : 아래
+  # 선
+  def fill_line(str, color = Color.new(0, 0, 0), xalign = 0, yalign = 2, esn = false)
+    return if color.nil?
+    # 굵기
+    thick = (text_size(str).height / 12.0).round
+    thick = 1 if thick == 0
+    # 글자
+    text = get_divided_text(self.width, str, esn)
+    text.each_index do |n|
+      # 정렬
+      xa = case xalign
+      when 0; 0
+      when 1; (width - text_size(text[n]).width) / 2.0
+      when 2; width - text_size(text[n]).width end
+      ya = case yalign
+      when 0; 0
+      when 1; text_size(text[n]).height / 2.0
+      when 2; text_size(text[n]).height - thick end
+      # 선 그리기
+      fill_rect(
+        xa, 
+        ya + n * text_size(text[n]).height,
+        text_size(text[n]).width,
+        thick,
+        color)
+    end
+  end
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# * RTP, joe59491
+#────────────────────────────────────────────────────────────────────────────
+module RPG::Path
+  
+  module_function
+
+  def findP(*paths)
+    for p in paths
+      findFileData = Win32API::FindFirstFile.call(p.to_unicode)
+      unless findFileData == "" # INVALID_HANDLE_VALUE
+        return File.dirname(p) + "/" + findFileData
+      end
+    end
+    return ""
+  end
+
+  def RTP(path)
+    @list ||= Hash.new
+    return @list[path] if @list.include?(path)
+    check = File.extname(path).empty?
+    rtp = []
+    for i in 0...3
+      unless $RTP[i].empty?
+        rtp.push($RTP[i] + path)
+        if check
+          rtp.push($RTP[i] + path + ".*")
+        end
+      end
+    end
+    pa = findP(*rtp)
+    if pa == ""
+      @list[path] = path
+    else
+      @list[path] = pa
+    end
+    return @list[path]
+  end
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# * Audio, joe59491
+#────────────────────────────────────────────────────────────────────────────
+
+module Audio
+  class << self
+    alias :bgm_play_path :bgm_play if !$@
+    alias :bgs_play_path :bgs_play if !$@
+    alias :se_play_path :se_play if !$@
+    alias :me_play_path :me_play if !$@
+  end
+  
+  module_function
+  
+  def bgm_play(filename, volume=100, pitch=1)
+    path = filename
+    path = RPG::Path::RTP(path)
+    bgm_play_path(path, volume.to_i, pitch)
+  end
+  
+  def bgs_play(filename, volume=100, pitch=1)
+    path = filename
+    path = RPG::Path::RTP(path)
+    bgs_play_path(path, volume.to_i, pitch)
+  end
+  
+  def me_play(filename, volume=100, pitch=1)
+    path = filename
+    path = RPG::Path::RTP(path)
+    me_play_path(path, volume.to_i, pitch)
+  end
+  
+  def se_play(filename, volume=100, pitch=1)
+    path = filename
+    path = RPG::Path::RTP(path)
+    se_play_path(path, volume.to_i, pitch)
+  end
+end
+
+#===============================================================================
+# Proper Graphics Disposal
+# Author: Blizzard
+# Version: 1.0
+#-------------------------------------------------------------------------------
+# [ Description ]
+# RPG Maker VX Ace came with a somewhat unknown problem revolving around sprites
+# assigned to viewports. If a viewport is disposed before disposing the sprites
+# on it, it can lead to unexpected crashes. This was normally handled in RMXP
+# but this can cause memory leaks in RMVXA. As such, this script ensures that
+# any sprites attached to a viewport are disposed first before the viewport is
+# disposed.
+#
+# For more information, please read the topic discussion:
+#   http://forums.rpgmakerweb.com/index.php?/topic/17400-hidden-gameexe-crash-
+#   debugger-graphical-object-global-reference-ace/
+#
+# [ Instructions ]
+# There is nothing to do here.
+# Please keep this script in its current location.
+#
+# It is highly advised to not modify this script unless you know what you are
+# doing.
+#===============================================================================
+#==============================================================================
+# Sprite
+#==============================================================================
+
+class Sprite
+  class << Sprite
+    alias new_xpa_sprite_fix new
+    def new(*args)
+      object = new_xpa_sprite_fix(*args)
+      if !object.disposed? && object.viewport != nil
+        object.viewport.register_sprite(object)
+      end
+      return object
+    end
+  end 
+  
+  alias dispose_xpa_sprite_fix dispose
+  def dispose
+    if !self.disposed? && self.viewport != nil
+      self.viewport.unregister_sprite(self)
+    end
+    dispose_xpa_sprite_fix
+  end
+  
+end
+  
+#==============================================================================
+# Viewport
+#==============================================================================
+
+class Viewport
+  
+  alias dispose_xpa_sprite_fix dispose
+  def dispose
+    if @_sprites != nil
+      @_sprites.clone.each {|sprite| sprite.dispose if !sprite.disposed? }
+      @_sprites = []
+    end
+    dispose_xpa_sprite_fix
+  end
+  
+  def register_sprite(sprite)
+    @_sprites ||= []
+    @_sprites.push(sprite)
+  end
+  
+  def unregister_sprite(sprite)
+    @_sprites ||= []
+    @_sprites.delete(sprite)
+  end
+  
+end
+
+
+=begin
+#===============================================================================
+ Title: Unlimited Resolution
+ Date: Oct 24, 2013
+ Author: Hime
+--------------------------------------------------------------------------------   
+ Terms of Use
+ Free
+--------------------------------------------------------------------------------
+ Description
+ 
+ This script modifies Graphics.resize_screen to overcome the 640x480 limitation.
+ It also includes some modifications to module Graphics such as allowing the
+ default fade transition to cover the entire screen.
+ 
+ Now you can have arbitrarily large game resolutions.
+--------------------------------------------------------------------------------
+ Credits
+ 
+ Unknown author for overcoming the 640x480 limitation
+ Lantier, from RMW forums for posting the snippet above
+ Esrever for handling the viewport
+ Jet, for the custom Graphics code
+ FenixFyre, for the Plane class fix
+ Kaelan, for several bug fixes
+
+#===============================================================================
+=end  
+
+module Graphics
+  
+  @@super_sprite = Sprite.new
+  @@super_sprite.z = (2 ** (0.size * 8 - 2) - 1)
+
+  class << self
+    alias :th_large_screen_resize_screen :resize_screen
+  end
+
+  #-----------------------------------------------------------------------------
+  # Unknown Scripter. Copied from http://pastebin.com/sM2MNJZj 
+  #-----------------------------------------------------------------------------
+  def self.resize_screen(width, height)
+    wt, ht = width.divmod(32), height.divmod(32)
+    wh = -> w, h, off = 0 { [w + off, h + off].pack('l2').scan /.{4}/ }
+    w, h = wh.(width, height)
+    ww, hh = wh.(width, height, 32)
+    www, hhh = wh.(wt.first.succ, ht.first.succ)
+    base = 0x10000000
+    mod = -> adr, val { DL::CPtr.new(base + adr)[0, val.size] = val }
+    mod.(0x195F, "\x90" * 5)
+    mod.(0x19A4, h)
+    mod.(0x19A9, w)
+    mod.(0x1A56, h)
+    mod.(0x1A5B, w)
+    mod.(0x20F6, w)
+    mod.(0x20FF, w)
+    mod.(0x2106, h)
+    mod.(0x210F, h)
+    zero = [0].pack ?l
+    mod.(0x1C5E3, zero)
+    mod.(0x1C5E8, zero)
+    mod.(0x1F477, h)
+    mod.(0x1F47C, w)
+    mod.(0x211FF, hh)
+    mod.(0x21204, ww)
+    mod.(0x21D7D, hhh[0])
+    mod.(0x21E01, www[0])
+    mod.(0x10DEA8, h)
+    mod.(0x10DEAD, w)
+    mod.(0x10DEDF, h)
+    mod.(0x10DEF0, w)
+    mod.(0x10DF14, h)
+    mod.(0x10DF18, w)
+    mod.(0x10DF48, h)
+    mod.(0x10DF4C, w)
+    mod.(0x10E6A7, w)
+    mod.(0x10E6C3, h)
+    mod.(0x10EEA9, w)
+    mod.(0x10EEB9, h)
+    th_large_screen_resize_screen(width, height)
+  end
+end
+
+#────────────────────────────────────────────────────────────────────────────
+# * Graphics, 紫苏, jubin, 2015. 03. 15
+#────────────────────────────────────────────────────────────────────────────
+
+module Graphics
+  module_function
+   
   @width  = Config::WINDOW_WIDTH
   @height = Config::WINDOW_HEIGHT
 
@@ -335,7 +1019,6 @@ module Graphics
   WS_BORDER         = 0x800000
   WS_DLGFRAME       = 0x400000
   SWP_SHOWWINDOW    = 0x40
-  HWND_TOP          = 0
   HWND_TOPMOST      = -1
   HWND_NOTOPMOST    = -2
 
@@ -355,19 +1038,20 @@ module Graphics
   
   # 윈도우 스타일
   def getWindowStyle
-    return GetWindowLong.call(Device::HWND, GWL_STYLE)
+    return Win32API::GetWindowLong.call(Game::HWND, GWL_STYLE)
   end
   
   # 컴퓨터 해상도
   def getMonitorRect
-    return [GetSystemMetrics.call(0), GetSystemMetrics.call(1)]
+    return [Win32API::GetSystemMetrics.call(0), Win32API::GetSystemMetrics.call(1)]
   end
   
   # 작업표시줄
   def getTaskBarRect
-    GetWindowRect.call(FindWindow.call('Shell_TrayWnd', 0), buf='\0'*8)
-    buf = buf.unpack('l4')
-    w, h = (buf[2] - buf[0]).abs, (buf[3] - buf[1]).abs
+    rect = [0, 0, 0, 0].pack('l4')
+    Win32API::GetWindowRect.call(Win32API::FindWindow.call('Shell_TrayWnd', 0), rect)
+    rect = rect.unpack('l4')
+    w, h = (rect[2] - rect[0]).abs, (rect[3] - rect[1]).abs
     return [(w >= WIN_RECT[0] ? 0 : w), (h >= WIN_RECT[1] ? 0 : h)]
   end
   
@@ -375,7 +1059,7 @@ module Graphics
   def getMonitorsRect
     display, devmode, n = [], '\0'*64, 0
     loop do
-      if EnumDisplaySettings.call(0, n, devmode) == 0
+      if Win32API::EnumDisplaySettings.call(0, n, devmode) == 0
         break
       else
         setting = devmode.unpack("l*")
@@ -385,28 +1069,43 @@ module Graphics
     end
     return display
   end
-  
+    
   WIN_STYLE = getWindowStyle
   WIN_RECT  = getMonitorRect
   TASKSIZE  = getTaskBarRect
   DISPLAYS  = getMonitorsRect
     
   # 해상도 변경
-  def resize_screen(width, height, fullscreen = false)
+  def resize_screen2(width, height, fullscreen = false)
     @width, @height = width, height
     if fullscreen
-      case ChangeDisplaySettings.call(getDevmode(width, height), CDS_FULLSCREEN)
+      unless DISPLAYS.include?([width, height])
+        if defined? MUI_Dialog
+          dialog = MUI_Dialog.new(Dialog::RESOLUTION, "알림", "#{width}*#{height} 의 해상도는 풀스크린을 지원하지 않습니다.", ["확인"]) do
+            dialog.dispose if dialog.value == 0
+          end
+        end
+        return false
+      end
+      case Win32API::ChangeDisplaySettings.call(getDevmode(width, height), CDS_FULLSCREEN)
       when DISP_CHANGE_SUCCESSFUL
-        SetWindowLong.call(Device::HWND, GWL_STYLE, WIN_STYLE ^ (WS_BORDER | WS_DLGFRAME))
-        SetWindowPos.call(Device::HWND, HWND_TOPMOST, 0, 0, width, height, SWP_SHOWWINDOW)
+        Win32API::SetWindowLong.call(Game::HWND, GWL_STYLE, WIN_STYLE ^ (WS_BORDER | WS_DLGFRAME))
+        Win32API::SetWindowPos.call(Game::HWND, HWND_TOPMOST, 0, 0, width, height, SWP_SHOWWINDOW)
+        Win32API::ChangeDisplaySettings.call(0, 0x40000000)
+        Win32API::ClipCursor.call([0, 0, self.width, self.height].pack('l4'))
+        Win32API::SetCursorPos.call(Game.getClientRect[2] + Graphics.width / 2, Game.getClientRect[3] + Graphics.height / 2)
         return true
       when DISP_CHANGE_BADMODE
-        ChangeDisplaySettings.call(0, 0)
+        Win32API::ClipCursor.call(0)
+        Win32API::ChangeDisplaySettings.call(0, 0)
+        Win32API::SetCursorPos.call(Game.getClientRect[2] + Graphics.width / 2, Game.getClientRect[3] + Graphics.height / 2)
         return false
       end
     else
-      SetWindowLong.call(Device::HWND, GWL_STYLE, WIN_STYLE)
-      ChangeDisplaySettings.call(0, 0)
+      Win32API::ClipCursor.call(0)
+      Win32API::ChangeDisplaySettings.call(0, 0)
+      Win32API::SetWindowLong.call(Game::HWND, GWL_STYLE, WIN_STYLE)
+      Win32API::SetCursorPos.call(WIN_RECT[0] / 2, WIN_RECT[1] / 2)
       return setCenterWindow(width, height) == 1
     end
   end
@@ -416,268 +1115,1637 @@ module Graphics
     devmode =
     [0,0,0,0,0,0,0,0,0,220,0,BITSPERPEL|PELSWIDTH|PELSHEIGHT|PEDTH,
      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,bit,width,height,0,0,0,0,0]
-    return devmode.pack('Q8LS2LQ2S5Q8SL3Q5')
+    return devmode.pack('Q8 L S2 L Q2 S5 Q8 S L3 Q5')
   end
 
   # 윈도우 가운데 정렬
   def setCenterWindow(width, height)
-    AdjustWindowRect.call(rect=[0, 0, width, height].pack('l4'), WIN_STYLE, 0)
+    Win32API::AdjustWindowRect.call(rect=[0, 0, width, height].pack('l4'), WIN_STYLE, 0)
     rect = rect.unpack('l4'); rect = rect[2] - rect[0], rect[3] - rect[1]
     x = WIN_RECT[0] - TASKSIZE[0] - rect[0]
     y = WIN_RECT[1] - TASKSIZE[1] - rect[1]
-    SetWindowPos.call(Device::HWND, HWND_NOTOPMOST, x/2, y/2, rect[0], rect[1], SWP_SHOWWINDOW)
+    Win32API::SetWindowPos.call(Game::HWND, HWND_NOTOPMOST, x/2, y/2, rect[0], rect[1], SWP_SHOWWINDOW)
   end
 
   # 풀스크린 상태
   def isFullScreen
-    GetWindowRect.call(Device::HWND, buf = '\0'*8)
-    buf.unpack('l4') == [0, 0, *Device.getRect]
-    return buf.unpack('l4') == [0, 0, *Device.getRect]
+    rect = [0, 0, 0, 0].pack('l4')
+    Win32API::GetWindowRect.call(Game::HWND, rect)
+    return rect.unpack('l4') == [0, 0, *WIN_RECT]
   end
-  
-  def width; @width end
-  def height; @height end
-  
+    
+  # Rect
+  def getRect
+    return [Graphics.width, Graphics.height]
+  end
+
   class << self
-    alias :_update :update
+    alias :_update_ :update if !$@
     def update
-      _update
-      if defined? Key and Config::WINDOW_ALTENTER and Graphics.state
+      _update_
+      if defined? Key and Config::USE_ALT_ENTER and Graphics.focus
         if Key.press?(KEY_LALT) and Key.trigger?(KEY_RETURN)
-          Graphics.resize_screen(self.width, self.height, !isFullScreen)
+          Graphics.resize_screen2(self.width, self.height, !isFullScreen)
+        end
+        exit if Key.press?(KEY_LALT) and Key.trigger?(KEY_F4)
+      end
+    end
+  end
+end
+
+Win32API::RegisterHotKey.call(Game::HWND, 0, Graphics::MOD_ALT, Graphics::VK_RETURN)
+Graphics.resize_screen(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT)
+Graphics.resize_screen2(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, File.iniGet(Config::OPTION_PATH, Config::OPTION_KEY, "fullscreen", false, 10))
+
+
+
+
+#────────────────────────────────────────────────────────────────────────────
+# * RPG, EnterBrain
+#────────────────────────────────────────────────────────────────────────────
+
+module RPG
+  module Cache
+    @cache = {}
+    def self.load_bitmap(folder_name, filename, hue = 0)
+      return if not filename
+      path = folder_name + filename
+      path = RPG::Path::RTP(path)
+      if not @cache.include?(path) or @cache[path].disposed?
+        if filename != ""
+          @cache[path] = Bitmap.new(path)
+        else
+          @cache[path] = Bitmap.new(32, 32)
+        end
+      end
+      if hue == 0
+        @cache[path]
+      else
+        key = [path, hue]
+        if not @cache.include?(key) or @cache[key].disposed?
+          @cache[key] = @cache[path].clone
+          @cache[key].hue_change(hue)
+        end
+        @cache[key]
+      end
+    end
+  end
+  class Sprite < ::Sprite
+    def animation_process_timing(timing, hit)
+      if (timing.condition == 0) or
+        (timing.condition == 1 and hit == true) or
+        (timing.condition == 2 and hit == false)
+        if timing.se.name != ""
+          se = timing.se
+          path = RPG::Path::RTP("Audio/SE/" + se.name)
+          Audio.se_play(path, Game.system.se_volume, se.pitch)
+        end
+        case timing.flash_scope
+        when 1
+          self.flash(timing.flash_color, timing.flash_duration * 2)
+        when 2
+          if self.viewport != nil
+            self.viewport.flash(timing.flash_color, timing.flash_duration * 2)
+          end
+        when 3
+          self.flash(nil, timing.flash_duration * 2)
         end
       end
     end
   end
-
-  # 윈도우 내 Alt + Enter 금지
-  RegisterHotKey.call(Device::HWND, 0, MOD_ALT, VK_RETURN)
-  
-  # 초기 세팅
-  GetPrivateProfileString.call("Option", "fullscreen", Config::WINDOW_FULL.to_s, buf = 0.chr*10, buf.size, Config::OPTION_PATH)
-  buf.gsub!(0.chr, "")
-  Config.const_set(:WINDOW_FULL, buf.to_b)
-  !Config::WINDOW_FULL ? setCenterWindow(@width, @height) : resize_screen(@width, @height, Config::WINDOW_FULL)
 end
-#────────────────────────────────────────────────────────────────────────────
-# * File Class, @cheapmunk.naver, 2014. 12. 29
-#────────────────────────────────────────────────────────────────────────────
 
-class File
-  def File.download(url, filename)
-    value = URLDownloadToFile.call(0, url.to_m, filename.to_m, 0, 0)
-    if value.zero?
-      DeleteUrlCacheEntry.call(url.to_m)
-    else
-      msgbox "다운로드 에러\n(code : #{GetLastError.call})", MB::ICONSTOP
+module RPG
+  class Sprite < ::Sprite
+    @@_animations = []
+    @@_reference_count = {}
+    def initialize(viewport = nil)
+      super(viewport)
+      @_whiten_duration = 0
+      @_appear_duration = 0
+      @_escape_duration = 0
+      @_collapse_duration = 0
+      @_damage_duration = 0
+      @_animation_duration = 0
+      @_blink = false
     end
-  end
-  
-  def File.copy(from, to, cover = true)
-    CopyFile.call(from.to_m, to.to_m, cover == true ? 0 : (1 if cover == false))
-  end
-  
-  def File.execute(filename, sw = 1, operation = 'open')
-    filename = filename.to_a
-    ShellExecute.call(0, operation.to_m, filename[0].to_m, filename[1].nil? ? 0 : filename[1].to_m, 0, sw)
-  end
-  
-  def File.SetClipboard(type, *args)
-    file = File.new('tmp.txt', 'w')
-    file.write args.join(type)
-    file.close
-    system('clip.exe < tmp.txt')
-    File.delete('tmp.txt')
-  end
-end
-
-#────────────────────────────────────────────────────────────────────────────
-# * FileTest Module, @cheapmunk.naver, 2014. 12. 29
-#────────────────────────────────────────────────────────────────────────────
-
-module FileTest  
-  module_function
-  
-  def exist?(filename)
-    PathFileExists.call(filename.to_m) == 0x1
-  end
-  
-  def directory?(filename)
-    PathIsDirectory.call(filename.to_m) == 0x10
-  end
-
-  def file?(filename)
-    PathIsDirectory.call(filename.to_m) == 0
-  end
-
-  def size(filename)
-    h = CreateFile.call(filename.to_m, 0x80000000, 0, 0, 3, 0, 0)
-    size = GetFileSize.call(h, 0)
-    CloseHandle.call(h)
-    size
-  end
-end
-#────────────────────────────────────────────────────────────────────────────
-# * Font Class, @cheapmunk.naver, 2015. 02. 08
-#────────────────────────────────────────────────────────────────────────────
-
-class Font
-  
-  HKEY_LOCAL_MACHINE = 0x80000002
-  REG_SZ = 1
-  
-  Dir.mkdir(Config::FONT_DIR) if !(FileTest.exist?(Config::FONT_DIR) and FileTest.directory?(Config::FONT_DIR))
-  
-  def self.FontView(filename)
-    while (hwnd = FindWindow.call('FontViewWClass', 0)) != 0
-      break if hwnd == 0
-      SendMessage.call(hwnd, 2, 0, 0) # WM_DESTROY
-      SendMessage.call(hwnd, 16, 0, 0) # WM_CLOSE
-      SendMessage.call(hwnd, 18, 0, 0) # WM_QUIT
-      SendMessage.call(hwnd, 130, 0, 0) # WM_NCDESTROY
-      CloseHandle.call(hwnd)
+    def dispose
+      dispose_damage
+      dispose_animation
+      dispose_loop_animation
+      super
     end
-    File.execute(["Fontview.exe", filename], 0); sleep 0.1
-    hwnd = FindWindow.call('FontViewWClass', 0)
-    length = GetWindowTextLength.call(hwnd)
-    str = 0.chr * (length)
-    GetWindowText.call(hwnd, str, length)
-    return str.to_u
-  end
-  
-  def self.to_name(filename)
-    FontView(filename).gsub(/(.*)\(트루타입\)|(.*) \(OpenType\)/) do
-      if $1 and $1 != ""
-        return $1
-      elsif $2 and $2 != ""
-        return $2
+    def whiten
+      self.blend_type = 0
+      self.color.set(255, 255, 255, 128)
+      self.opacity = 255
+      @_whiten_duration = 16
+      @_appear_duration = 0
+      @_escape_duration = 0
+      @_collapse_duration = 0
+    end
+    def appear
+      self.blend_type = 0
+      self.color.set(0, 0, 0, 0)
+      self.opacity = 0
+      @_appear_duration = 16
+      @_whiten_duration = 0
+      @_escape_duration = 0
+      @_collapse_duration = 0
+    end
+    def escape
+      self.blend_type = 0
+      self.color.set(0, 0, 0, 0)
+      self.opacity = 255
+      @_escape_duration = 32
+      @_whiten_duration = 0
+      @_appear_duration = 0
+      @_collapse_duration = 0
+    end
+    def collapse
+      self.blend_type = 1
+      self.color.set(255, 64, 64, 255)
+      self.opacity = 255
+      @_collapse_duration = 48
+      @_whiten_duration = 0
+      @_appear_duration = 0
+      @_escape_duration = 0
+    end
+    def damage(value, critical)
+      dispose_damage
+      if value.is_a?(Numeric)
+        damage_string = value.abs.to_s
+      else
+        damage_string = value.to_s
+      end
+      bitmap = Bitmap.new(160, 48)
+      bitmap.font.name = "Arial Black"
+      bitmap.font.size = 32
+      bitmap.font.color.set(0, 0, 0)
+      bitmap.draw_text(-1, 12-1, 160, 36, damage_string, 1)
+      bitmap.draw_text(+1, 12-1, 160, 36, damage_string, 1)
+      bitmap.draw_text(-1, 12+1, 160, 36, damage_string, 1)
+      bitmap.draw_text(+1, 12+1, 160, 36, damage_string, 1)
+      if value.is_a?(Numeric) and value < 0
+        bitmap.font.color.set(176, 255, 144)
+      else
+        bitmap.font.color.set(255, 255, 255)
+      end
+      bitmap.draw_text(0, 12, 160, 36, damage_string, 1)
+      if critical
+        bitmap.font.size = 20
+        bitmap.font.color.set(0, 0, 0)
+        bitmap.draw_text(-1, -1, 160, 20, "CRITICAL", 1)
+        bitmap.draw_text(+1, -1, 160, 20, "CRITICAL", 1)
+        bitmap.draw_text(-1, +1, 160, 20, "CRITICAL", 1)
+        bitmap.draw_text(+1, +1, 160, 20, "CRITICAL", 1)
+        bitmap.font.color.set(255, 255, 255)
+        bitmap.draw_text(0, 0, 160, 20, "CRITICAL", 1)
+      end
+      @_damage_sprite = ::Sprite.new(self.viewport)
+      @_damage_sprite.bitmap = bitmap
+      @_damage_sprite.ox = 80
+      @_damage_sprite.oy = 20
+      @_damage_sprite.x = self.x
+      @_damage_sprite.y = self.y - self.oy / 2
+      @_damage_sprite.z = 3000
+      @_damage_duration = 40
+    end
+    def animation(animation, hit)
+      dispose_animation
+      @_animation = animation
+      return if @_animation == nil
+      @_animation_hit = hit
+      @_animation_duration = @_animation.frame_max
+      animation_name = @_animation.animation_name
+      animation_hue = @_animation.animation_hue
+      bitmap = RPG::Cache.animation(animation_name, animation_hue)
+      if @@_reference_count.include?(bitmap)
+        @@_reference_count[bitmap] += 1
+      else
+        @@_reference_count[bitmap] = 1
+      end
+      @_animation_sprites = []
+      if @_animation.position != 3 or not @@_animations.include?(animation)
+        for i in 0..15
+          sprite = ::Sprite.new(self.viewport)
+          sprite.bitmap = bitmap
+          sprite.visible = false
+          @_animation_sprites.push(sprite)
+        end
+        unless @@_animations.include?(animation)
+          @@_animations.push(animation)
+        end
+      end
+      update_animation
+    end
+    def loop_animation(animation)
+      return if animation == @_loop_animation
+      dispose_loop_animation
+      @_loop_animation = animation
+      return if @_loop_animation == nil
+      @_loop_animation_index = 0
+      animation_name = @_loop_animation.animation_name
+      animation_hue = @_loop_animation.animation_hue
+      bitmap = RPG::Cache.animation(animation_name, animation_hue)
+      if @@_reference_count.include?(bitmap)
+        @@_reference_count[bitmap] += 1
+      else
+        @@_reference_count[bitmap] = 1
+      end
+      @_loop_animation_sprites = []
+      for i in 0..15
+        sprite = ::Sprite.new(self.viewport)
+        sprite.bitmap = bitmap
+        sprite.visible = false
+        @_loop_animation_sprites.push(sprite)
+      end
+      update_loop_animation
+    end
+    def dispose_damage
+      if @_damage_sprite != nil
+        @_damage_sprite.bitmap.dispose
+        @_damage_sprite.dispose
+        @_damage_sprite = nil
+        @_damage_duration = 0
       end
     end
-  end
-  
-  def self.to_type(filename)
-    return "TrueType" if (FontView(filename) =~ /\(트루타입\)/)
-    return "OpenType" if (FontView(filename) =~ / \(OpenType\)/)
-  end
-  
-  def self.setup(filename)
-    # 문자 변환
-    fontname = to_name(filename)
-    # 폰트 존재시, 설치 중단
-    return if Font.exist?(fontname)
-    value = "" + (filename.split "/").last
-    keyname = fontname + " (" + to_type(filename) + ")"
-    # 폰트 추가
-    AddFontResource.call(filename.to_m)
-    AddFontResourceEx.call(filename.to_m, 16, 0)
-    # 메세지 전송
-    SendMessage.call(0xffff, 0x1D, 0, 0)
-    SendNotifyMessage.call(0xffff, 0x1D, 0, 0)
-    # 레지스트리 등록
-    RegCreateKey.call(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\\", keyhand = 0.chr * 4)
-    keyhand = keyhand.unpack('l*').to_s.to_i
-    RegSetValueEx.call(keyhand, keyname.to_m, 0, REG_SZ, value.to_m, value.size * 2)
-    RegCloseKey.call(keyhand)
-    # 재시작
-    if not Font.exist?(fontname)
-      msgbox "'#{fontname}' 폰트 설치를 위해 게임을 재시작 합니다.", MB::ICONINFORMATION
-      Thread.new {system('game.exe')}
-      exit
+    def dispose_animation
+      if @_animation_sprites != nil
+        sprite = @_animation_sprites[0]
+        if sprite != nil
+          @@_reference_count[sprite.bitmap] -= 1
+          if @@_reference_count[sprite.bitmap] == 0
+            sprite.bitmap.dispose
+          end
+        end
+        for sprite in @_animation_sprites
+          sprite.dispose
+        end
+        @_animation_sprites = nil
+        @_animation = nil
+      end
     end
-  end
-  
-  # 폰트 삭제
-  def self.delete(filename)
-    RemoveFontResource.call(filename.to_m)
-    RemoveFontResourceEx.call(filename.to_m, 16, 0)
-    SendMessage.call(0xffff, 0x1D, 0, 0)
-    SendNotifyMessage.call(0xffff, 0x1D, 0, 0)
-  end
-  
-  # 실행용 폰트 설치
-  def self.setup2
-    
-    font_url = 'http://cdn.naver.com/naver/NanumFont/setup/NanumFontSetup_TTF_GOTHIC_hangeulcamp.exe'
-    font_name = "나눔고딕.exe"#font_url.split('/').last
-    
-    comment = [*0..3]
-    comment[0] = "'#{font_name}' 파일이 발견되었습니다.\n지금 실행하시겠습니까?"
-    comment[1] = "'#{font_name}' 파일이 없습니다.\n다운로드를 시작하시겠습니까?"
-    comment[2] = "'#{font_name}' 다운로드가 완료되었습니다.\n확인을 누르면 셋업파일을 실행합니다."
-    comment[3] = "'#{font_name}' 다운로드 중 에러가 발생하였습니다."
-    
-    unless Font.exist?(Config::FONT) and Font.exist?(Config::FONT2)
-      if FileTest.exist?(Config::FONT_DIR + font_name)
-        if msgbox(comment[0], MB::YESNO + MB::ICONQUESTION) == MB::IDYES
-          File.execute([File.expand_path(".") + Config::FONT_DIR + font_name])
+    def dispose_loop_animation
+      if @_loop_animation_sprites != nil
+        sprite = @_loop_animation_sprites[0]
+        if sprite != nil
+          @@_reference_count[sprite.bitmap] -= 1
+          if @@_reference_count[sprite.bitmap] == 0
+            sprite.bitmap.dispose
+          end
+        end
+        for sprite in @_loop_animation_sprites
+          sprite.dispose
+        end
+        @_loop_animation_sprites = nil
+        @_loop_animation = nil
+      end
+    end
+    def blink_on
+      unless @_blink
+        @_blink = true
+        @_blink_count = 0
+      end
+    end
+    def blink_off
+      if @_blink
+        @_blink = false
+        self.color.set(0, 0, 0, 0)
+      end
+    end
+    def blink?
+      @_blink
+    end
+    def effect?
+      @_whiten_duration > 0 or
+      @_appear_duration > 0 or
+      @_escape_duration > 0 or
+      @_collapse_duration > 0 or
+      @_damage_duration > 0 or
+      @_animation_duration > 0
+    end
+    def update
+      super
+      if @_whiten_duration > 0
+        @_whiten_duration -= 1
+        self.color.alpha = 128 - (16 - @_whiten_duration) * 10
+      end
+      if @_appear_duration > 0
+        @_appear_duration -= 1
+        self.opacity = (16 - @_appear_duration) * 16
+      end
+      if @_escape_duration > 0
+        @_escape_duration -= 1
+        self.opacity = 256 - (32 - @_escape_duration) * 10
+      end
+      if @_collapse_duration > 0
+        @_collapse_duration -= 1
+        self.opacity = 256 - (48 - @_collapse_duration) * 6
+      end
+      if @_damage_duration > 0
+        @_damage_duration -= 1
+        case @_damage_duration
+        when 38..39
+          @_damage_sprite.y -= 4
+        when 36..37
+          @_damage_sprite.y -= 2
+        when 34..35
+          @_damage_sprite.y += 2
+        when 28..33
+          @_damage_sprite.y += 4
+        end
+        @_damage_sprite.opacity = 256 - (12 - @_damage_duration) * 32
+        if @_damage_duration == 0
+          dispose_damage
+        end
+      end
+      if @_animation != nil and (Graphics.frame_count % 2 == 0)
+        @_animation_duration -= 1
+        update_animation
+      end
+      if @_loop_animation != nil and (Graphics.frame_count % 2 == 0)
+        update_loop_animation
+        @_loop_animation_index += 1
+        @_loop_animation_index %= @_loop_animation.frame_max
+      end
+      if @_blink
+        @_blink_count = (@_blink_count + 1) % 32
+        if @_blink_count < 16
+          alpha = (16 - @_blink_count) * 6
+        else
+          alpha = (@_blink_count - 16) * 6
+        end
+        self.color.set(255, 255, 255, alpha)
+      end
+      @@_animations.clear
+    end
+    def update_animation
+      if @_animation_duration > 0
+        frame_index = @_animation.frame_max - @_animation_duration
+        cell_data = @_animation.frames[frame_index].cell_data
+        position = @_animation.position
+        animation_set_sprites(@_animation_sprites, cell_data, position)
+        for timing in @_animation.timings
+          if timing.frame == frame_index
+            animation_process_timing(timing, @_animation_hit)
+          end
         end
       else
-        if msgbox(comment[1], MB::YESNO + MB::ICONQUESTION) == MB::IDYES
-          if File.download(font_url, Config::FONT_DIR + font_name)
-            if msgbox(comment[2], MB::OK + MB::ICONINFORMATION) == 1
-              File.execute([File.expand_path(".") + Config::FONT_DIR + font_name])
-            end
+        dispose_animation
+      end
+    end
+    def update_loop_animation
+      frame_index = @_loop_animation_index
+      cell_data = @_loop_animation.frames[frame_index].cell_data
+      position = @_loop_animation.position
+      animation_set_sprites(@_loop_animation_sprites, cell_data, position)
+      for timing in @_loop_animation.timings
+        if timing.frame == frame_index
+          animation_process_timing(timing, true)
+        end
+      end
+    end
+    def animation_set_sprites(sprites, cell_data, position)
+      for i in 0..15
+        sprite = sprites[i]
+        pattern = cell_data[i, 0]
+        if sprite == nil or pattern == nil or pattern == -1
+          sprite.visible = false if sprite != nil
+          next
+        end
+        sprite.visible = true
+        sprite.src_rect.set(pattern % 5 * 192, pattern / 5 * 192, 192, 192)
+        if position == 3
+          if self.viewport != nil
+            sprite.x = self.viewport.rect.width / 2
+            sprite.y = self.viewport.rect.height - 160
           else
-            msgbox(comment[3], MB::OK + MB::ICONEXCLAMATION)
+            sprite.x = Config::WINDOW_WIDTH / 2
+            sprite.y = Config::WINDOW_HEIGHT / 2
+          end
+        else
+          sprite.x = self.x - self.ox + self.src_rect.width / 2
+          sprite.y = self.y - self.oy + self.src_rect.height / 2
+          sprite.y -= self.src_rect.height / 4 if position == 0
+          sprite.y += self.src_rect.height / 4 if position == 2
+        end
+        sprite.x += cell_data[i, 1]
+        sprite.y += cell_data[i, 2]
+        sprite.z = 2000
+        sprite.ox = 96
+        sprite.oy = 96
+        sprite.zoom_x = cell_data[i, 3] / 100.0
+        sprite.zoom_y = cell_data[i, 3] / 100.0
+        sprite.angle = cell_data[i, 4]
+        sprite.mirror = (cell_data[i, 5] == 1)
+        sprite.opacity = cell_data[i, 6] * self.opacity / 255.0
+        sprite.blend_type = cell_data[i, 7]
+      end
+    end
+    def animation_process_timing(timing, hit)
+      if (timing.condition == 0) or
+         (timing.condition == 1 and hit == true) or
+         (timing.condition == 2 and hit == false)
+        if timing.se.name != ""
+          se = timing.se
+          Audio.se_play("Audio/SE/" + se.name, se.volume, se.pitch)
+        end
+        case timing.flash_scope
+        when 1
+          self.flash(timing.flash_color, timing.flash_duration * 2)
+        when 2
+          if self.viewport != nil
+            self.viewport.flash(timing.flash_color, timing.flash_duration * 2)
+          end
+        when 3
+          self.flash(nil, timing.flash_duration * 2)
+        end
+      end
+    end
+    def x=(x)
+      sx = x - self.x
+      if sx != 0
+        if @_animation_sprites != nil
+          for i in 0..15
+            @_animation_sprites[i].x += sx
+          end
+        end
+        if @_loop_animation_sprites != nil
+          for i in 0..15
+            @_loop_animation_sprites[i].x += sx
           end
         end
       end
-      exit
+      super
+    end
+    def y=(y)
+      sy = y - self.y
+      if sy != 0
+        if @_animation_sprites != nil
+          for i in 0..15
+            @_animation_sprites[i].y += sy
+          end
+        end
+        if @_loop_animation_sprites != nil
+          for i in 0..15
+            @_loop_animation_sprites[i].y += sy
+          end
+        end
+      end
+      super
     end
   end
-  
 end
 
-module Config
-  #FONT = "민9"
+module RPG
+  class Weather
+    def initialize(viewport = nil)
+      @type = 0
+      @max = 0
+      @ox = 0
+      @oy = 0
+      color1 = Color.new(255, 255, 255, 255)
+      color2 = Color.new(255, 255, 255, 128)
+      @rain_bitmap = Bitmap.new(7, 56)
+      for i in 0..6
+        @rain_bitmap.fill_rect(6-i, i*8, 1, 8, color1)
+      end
+      @storm_bitmap = Bitmap.new(34, 64)
+      for i in 0..31
+        @storm_bitmap.fill_rect(33-i, i*2, 1, 2, color2)
+        @storm_bitmap.fill_rect(32-i, i*2, 1, 2, color1)
+        @storm_bitmap.fill_rect(31-i, i*2, 1, 2, color2)
+      end
+      @snow_bitmap = Bitmap.new(6, 6)
+      @snow_bitmap.fill_rect(0, 1, 6, 4, color2)
+      @snow_bitmap.fill_rect(1, 0, 4, 6, color2)
+      @snow_bitmap.fill_rect(1, 2, 4, 2, color1)
+      @snow_bitmap.fill_rect(2, 1, 2, 4, color1)
+      @sprites = []
+      for i in 1..40
+        sprite = Sprite.new(viewport)
+        sprite.z = 1000
+        sprite.visible = false
+        sprite.opacity = 0
+        @sprites.push(sprite)
+      end
+    end
+    def dispose
+      for sprite in @sprites
+        sprite.dispose
+      end
+      @rain_bitmap.dispose
+      @storm_bitmap.dispose
+      @snow_bitmap.dispose
+    end
+    def type=(type)
+      return if @type == type
+      @type = type
+      case @type
+      when 1
+        bitmap = @rain_bitmap
+      when 2
+        bitmap = @storm_bitmap
+      when 3
+        bitmap = @snow_bitmap
+      else
+        bitmap = nil
+      end
+      for i in 1..40
+        sprite = @sprites[i]
+        if sprite != nil
+          sprite.visible = (i <= @max)
+          sprite.bitmap = bitmap
+        end
+      end
+    end
+    def ox=(ox)
+      return if @ox == ox;
+      @ox = ox
+      for sprite in @sprites
+        sprite.ox = @ox
+      end
+    end
+    def oy=(oy)
+      return if @oy == oy;
+      @oy = oy
+      for sprite in @sprites
+        sprite.oy = @oy
+      end
+    end
+    def max=(max)
+      return if @max == max;
+      @max = [[max, 0].max, 40].min
+      for i in 1..40
+        sprite = @sprites[i]
+        if sprite != nil
+          sprite.visible = (i <= @max)
+        end
+      end
+    end
+    def update
+      return if @type == 0
+      for i in 1..@max
+        sprite = @sprites[i]
+        if sprite == nil
+          break
+        end
+        if @type == 1
+          sprite.x -= 2
+          sprite.y += 16
+          sprite.opacity -= 8
+        end
+        if @type == 2
+          sprite.x -= 8
+          sprite.y += 16
+          sprite.opacity -= 12
+        end
+        if @type == 3
+          sprite.x -= 2
+          sprite.y += 8
+          sprite.opacity -= 8
+        end
+        x = sprite.x - @ox
+        y = sprite.y - @oy
+        if sprite.opacity < 64 or x < -50 or x > 750 or y < -300 or y > 500
+          sprite.x = rand(800) - 50 + @ox
+          sprite.y = rand(800) - 200 + @oy
+          sprite.opacity = 255
+        end
+      end
+    end
+    attr_reader :type
+    attr_reader :max
+    attr_reader :ox
+    attr_reader :oy
+  end
 end
 
-#fontfile = "C:/Users/user/Desktop/단비/Project1/민9체.ttf"
-#Font.setup(fontfile)   # 폰트 설치
-#puts Font.to_type(fontfile) #=> TrueType
-#puts Font.to_name(fontfile) # => 바보
-#Font.default_name = [Font.to_name(fontfile), "굴림"]
-
-#p ENV['windir'] + '/Fonts/' + Font.to_name(fontfile)
-#puts File.copy(fontfile, ENV['windir'] + '/Fonts/' + Font.to_name(fontfile) + ".ttf", true)
-
-#Font.delete(fontfile)
-
-
-#p ENV['windir'] + '/Fonts'
-#────────────────────────────────────────────────────────────────────────────
-# * Thread Class, Yukihiro Matsumoto, @cheapmunk.naver, 2015. 02. 14
-#
-#   https://bugs.ruby-lang.org/issues/6647
-#────────────────────────────────────────────────────────────────────────────
-
-class << Thread
-  alias :new_ :new
-  def new(*args, &block)
-    new_(*args) do |*args|
-      begin
-        block.call(*args)
-      rescue Exception => e
-        raise if Thread.abort_on_exception || Thread.current.abort_on_exception        
-        message = e.backtrace[0].split ":"
-        name = $RGSS_SCRIPTS.at(message.first.sub(/Section/, '').to_i).at(1)
-        line = message[1]
-        msgbox "Thread Error\n스크립트 '#{name}'의 #{line} 번째 줄에서 #{e.class}가 발생했습니다.\n#{e.message}", MB::ICONEXCLAMATION
-        Kernel.exit
+module RPG
+  module Cache
+    @cache = {}
+    def self.animation(filename, hue)
+      self.load_bitmap("Graphics/Animations/", filename, hue)
+    end
+    #def self.autotile(filename)
+    #  self.load_bitmap("Graphics/Autotiles/", filename)
+    #end
+    def self.battleback(filename)
+      self.load_bitmap("Graphics/Battlebacks/", filename)
+    end
+    def self.battler(filename, hue)
+      self.load_bitmap("Graphics/Battlers/", filename, hue)
+    end
+    def self.character(filename, hue)
+      self.load_bitmap("Graphics/Characters/", filename, hue)
+    end
+    def self.fog(filename, hue)
+      self.load_bitmap("Graphics/Fogs/", filename, hue)
+    end
+    def self.gameover(filename)
+      self.load_bitmap("Graphics/Gameovers/", filename)
+    end
+    def self.icon(filename)
+      self.load_bitmap("Graphics/Icons/", filename)
+    end
+    def self.panorama(filename, hue)
+      self.load_bitmap("Graphics/Panoramas/", filename, hue)
+    end
+    def self.picture(filename)
+      self.load_bitmap("Graphics/Pictures/", filename)
+    end
+    def self.tileset(filename)
+      self.load_bitmap("Graphics/Tilesets/", filename)
+    end
+    def self.title(filename)
+      self.load_bitmap("Graphics/Titles/", filename)
+    end
+    def self.windowskin(filename)
+      self.load_bitmap("Graphics/Windowskins/", filename)
+    end
+    def self.tile(filename, tile_id, hue)
+      key = [filename, tile_id, hue]
+      if not @cache.include?(key) or @cache[key].disposed?
+        @cache[key] = Bitmap.new(32, 32)
+        x = (tile_id - 384) % 8 * 32
+        y = (tile_id - 384) / 8 * 32
+        rect = Rect.new(x, y, 32, 32)
+        @cache[key].blt(0, 0, self.tileset(filename), rect)
+        @cache[key].hue_change(hue)
+      end
+      @cache[key]
+    end
+    def self.clear
+      @cache = {}
+      GC.start
+    end
+  end
+end
+module RPG
+  class Map
+    def initialize(width, height)
+      @tileset_id = 1
+      @width = width
+      @height = height
+      @autoplay_bgm = false
+      @bgm = RPG::AudioFile.new
+      @autoplay_bgs = false
+      @bgs = RPG::AudioFile.new("", 80)
+      @encounter_list = []
+      @encounter_step = 30
+      @data = Table.new(width, height, 3)
+      @events = {}
+    end
+    attr_accessor :tileset_id
+    attr_accessor :width
+    attr_accessor :height
+    attr_accessor :autoplay_bgm
+    attr_accessor :bgm
+    attr_accessor :autoplay_bgs
+    attr_accessor :bgs
+    attr_accessor :encounter_list
+    attr_accessor :encounter_step
+    attr_accessor :data
+    attr_accessor :events
+  end
+end
+module RPG
+  class MapInfo
+    def initialize
+      @name = ""
+      @parent_id = 0
+      @order = 0
+      @expanded = false
+      @scroll_x = 0
+      @scroll_y = 0
+    end
+    attr_accessor :name
+    attr_accessor :parent_id
+    attr_accessor :order
+    attr_accessor :expanded
+    attr_accessor :scroll_x
+    attr_accessor :scroll_y
+  end
+end
+module RPG
+  class Event
+    def initialize(x, y)
+      @id = 0
+      @name = ""
+      @x = x
+      @y = y
+      @pages = [RPG::Event::Page.new]
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :x
+    attr_accessor :y
+    attr_accessor :pages
+  end
+end
+module RPG
+  class Event
+    class Page
+      def initialize
+        @condition = RPG::Event::Page::Condition.new
+        @graphic = RPG::Event::Page::Graphic.new
+        @move_type = 0
+        @move_speed = 3
+        @move_frequency = 3
+        @move_route = RPG::MoveRoute.new
+        @walk_anime = true
+        @step_anime = false
+        @direction_fix = false
+        @through = false
+        @always_on_top = false
+        @trigger = 0
+        @list = [RPG::EventCommand.new]
+      end
+      attr_accessor :condition
+      attr_accessor :graphic
+      attr_accessor :move_type
+      attr_accessor :move_speed
+      attr_accessor :move_frequency
+      attr_accessor :move_route
+      attr_accessor :walk_anime
+      attr_accessor :step_anime
+      attr_accessor :direction_fix
+      attr_accessor :through
+      attr_accessor :always_on_top
+      attr_accessor :trigger
+      attr_accessor :list
+    end
+  end
+end
+module RPG
+  class Event
+    class Page
+      class Condition
+        def initialize
+          @switch1_valid = false
+          @switch2_valid = false
+          @variable_valid = false
+          @self_switch_valid = false
+          @switch1_id = 1
+          @switch2_id = 1
+          @variable_id = 1
+          @variable_value = 0
+          @self_switch_ch = "A"
+        end
+        attr_accessor :switch1_valid
+        attr_accessor :switch2_valid
+        attr_accessor :variable_valid
+        attr_accessor :self_switch_valid
+        attr_accessor :switch1_id
+        attr_accessor :switch2_id
+        attr_accessor :variable_id
+        attr_accessor :variable_value
+        attr_accessor :self_switch_ch
       end
     end
   end
 end
+module RPG
+  class Event
+    class Page
+      class Graphic
+        def initialize
+          @tile_id = 0
+          @character_name = ""
+          @character_hue = 0
+          @direction = 2
+          @pattern = 0
+          @opacity = 255
+          @blend_type = 0
+        end
+        attr_accessor :tile_id
+        attr_accessor :character_name
+        attr_accessor :character_hue
+        attr_accessor :direction
+        attr_accessor :pattern
+        attr_accessor :opacity
+        attr_accessor :blend_type
+      end
+    end
+  end
+end
+module RPG
+  class EventCommand
+    def initialize(code = 0, indent = 0, parameters = [])
+      @code = code
+      @indent = indent
+      @parameters = parameters
+    end
+    attr_accessor :code
+    attr_accessor :indent
+    attr_accessor :parameters
+  end
+end
+module RPG
+  class MoveCommand
+    def initialize(code = 0, parameters = [])
+      @code = code
+      @parameters = parameters
+    end
+    attr_accessor :code
+    attr_accessor :parameters
+  end
+end
+module RPG
+  class MoveRoute
+    def initialize
+      @repeat = true
+      @skippable = false
+      @list = [RPG::MoveCommand.new]
+    end
+    attr_accessor :repeat
+    attr_accessor :skippable
+    attr_accessor :list
+  end
+end
+module RPG
+  class Actor
+    def initialize
+      @id = 0
+      @name = ""
+      @class_id = 1
+      @initial_level = 1
+      @final_level = 99
+      @exp_basis = 30
+      @exp_inflation = 30
+      @character_name = ""
+      @character_hue = 0
+      @battler_name = ""
+      @battler_hue = 0
+      @parameters = Table.new(6,100)
+      for i in 1..99
+        @parameters[0,i] = 500+i*50
+        @parameters[1,i] = 500+i*50
+        @parameters[2,i] = 50+i*5
+        @parameters[3,i] = 50+i*5
+        @parameters[4,i] = 50+i*5
+        @parameters[5,i] = 50+i*5
+      end
+      @weapon_id = 0
+      @armor1_id = 0
+      @armor2_id = 0
+      @armor3_id = 0
+      @armor4_id = 0
+      @weapon_fix = false
+      @armor1_fix = false
+      @armor2_fix = false
+      @armor3_fix = false
+      @armor4_fix = false
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :class_id
+    attr_accessor :initial_level
+    attr_accessor :final_level
+    attr_accessor :exp_basis
+    attr_accessor :exp_inflation
+    attr_accessor :character_name
+    attr_accessor :character_hue
+    attr_accessor :battler_name
+    attr_accessor :battler_hue
+    attr_accessor :parameters
+    attr_accessor :weapon_id
+    attr_accessor :armor1_id
+    attr_accessor :armor2_id
+    attr_accessor :armor3_id
+    attr_accessor :armor4_id
+    attr_accessor :weapon_fix
+    attr_accessor :armor1_fix
+    attr_accessor :armor2_fix
+    attr_accessor :armor3_fix
+    attr_accessor :armor4_fix
+  end
+end
+module RPG
+  class Class
+    def initialize
+      @id = 0
+      @name = ""
+      @position = 0
+      @weapon_set = []
+      @armor_set = []
+      @element_ranks = Table.new(1)
+      @state_ranks = Table.new(1)
+      @learnings = []
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :position
+    attr_accessor :weapon_set
+    attr_accessor :armor_set
+    attr_accessor :element_ranks
+    attr_accessor :state_ranks
+    attr_accessor :learnings
+  end
+end
+module RPG
+  class Class
+    class Learning
+      def initialize
+        @level = 1
+        @skill_id = 1
+      end
+      attr_accessor :level
+      attr_accessor :skill_id
+    end
+  end
+end
+module RPG
+  class Skill
+    def initialize
+      @id = 0
+      @name = ""
+      @icon_name = ""
+      @description = ""
+      @scope = 0
+      @occasion = 1
+      @animation1_id = 0
+      @animation2_id = 0
+      @menu_se = RPG::AudioFile.new("", 80)
+      @common_event_id = 0
+      @sp_cost = 0
+      @power = 0
+      @atk_f = 0
+      @eva_f = 0
+      @str_f = 0
+      @dex_f = 0
+      @agi_f = 0
+      @int_f = 100
+      @hit = 100
+      @pdef_f = 0
+      @mdef_f = 100
+      @variance = 15
+      @element_set = []
+      @plus_state_set = []
+      @minus_state_set = []
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :icon_name
+    attr_accessor :description
+    attr_accessor :scope
+    attr_accessor :occasion
+    attr_accessor :animation1_id
+    attr_accessor :animation2_id
+    attr_accessor :menu_se
+    attr_accessor :common_event_id
+    attr_accessor :sp_cost
+    attr_accessor :power
+    attr_accessor :atk_f
+    attr_accessor :eva_f
+    attr_accessor :str_f
+    attr_accessor :dex_f
+    attr_accessor :agi_f
+    attr_accessor :int_f
+    attr_accessor :hit
+    attr_accessor :pdef_f
+    attr_accessor :mdef_f
+    attr_accessor :variance
+    attr_accessor :element_set
+    attr_accessor :plus_state_set
+    attr_accessor :minus_state_set
+  end
+end
+module RPG
+  class Item
+    def initialize
+      @id = 0
+      @name = ""
+      @icon_name = ""
+      @description = ""
+      @scope = 0
+      @occasion = 0
+      @animation1_id = 0
+      @animation2_id = 0
+      @menu_se = RPG::AudioFile.new("", 80)
+      @common_event_id = 0
+      @price = 0
+      @consumable = true
+      @parameter_type = 0
+      @parameter_points = 0
+      @recover_hp_rate = 0
+      @recover_hp = 0
+      @recover_sp_rate = 0
+      @recover_sp = 0
+      @hit = 100
+      @pdef_f = 0
+      @mdef_f = 0
+      @variance = 0
+      @element_set = []
+      @plus_state_set = []
+      @minus_state_set = []
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :icon_name
+    attr_accessor :description
+    attr_accessor :scope
+    attr_accessor :occasion
+    attr_accessor :animation1_id
+    attr_accessor :animation2_id
+    attr_accessor :menu_se
+    attr_accessor :common_event_id
+    attr_accessor :price
+    attr_accessor :consumable
+    attr_accessor :parameter_type
+    attr_accessor :parameter_points
+    attr_accessor :recover_hp_rate
+    attr_accessor :recover_hp
+    attr_accessor :recover_sp_rate
+    attr_accessor :recover_sp
+    attr_accessor :hit
+    attr_accessor :pdef_f
+    attr_accessor :mdef_f
+    attr_accessor :variance
+    attr_accessor :element_set
+    attr_accessor :plus_state_set
+    attr_accessor :minus_state_set
+  end
+end
+module RPG
+  class Weapon
+    def initialize
+      @id = 0
+      @name = ""
+      @icon_name = ""
+      @description = ""
+      @animation1_id = 0
+      @animation2_id = 0
+      @price = 0
+      @atk = 0
+      @pdef = 0
+      @mdef = 0
+      @str_plus = 0
+      @dex_plus = 0
+      @agi_plus = 0
+      @int_plus = 0
+      @element_set = []
+      @plus_state_set = []
+      @minus_state_set = []
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :icon_name
+    attr_accessor :description
+    attr_accessor :animation1_id
+    attr_accessor :animation2_id
+    attr_accessor :price
+    attr_accessor :atk
+    attr_accessor :pdef
+    attr_accessor :mdef
+    attr_accessor :str_plus
+    attr_accessor :dex_plus
+    attr_accessor :agi_plus
+    attr_accessor :int_plus
+    attr_accessor :element_set
+    attr_accessor :plus_state_set
+    attr_accessor :minus_state_set
+  end
+end
+module RPG
+  class Armor
+    def initialize
+      @id = 0
+      @name = ""
+      @icon_name = ""
+      @description = ""
+      @kind = 0
+      @auto_state_id = 0
+      @price = 0
+      @pdef = 0
+      @mdef = 0
+      @eva = 0
+      @str_plus = 0
+      @dex_plus = 0
+      @agi_plus = 0
+      @int_plus = 0
+      @guard_element_set = []
+      @guard_state_set = []
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :icon_name
+    attr_accessor :description
+    attr_accessor :kind
+    attr_accessor :auto_state_id
+    attr_accessor :price
+    attr_accessor :pdef
+    attr_accessor :mdef
+    attr_accessor :eva
+    attr_accessor :str_plus
+    attr_accessor :dex_plus
+    attr_accessor :agi_plus
+    attr_accessor :int_plus
+    attr_accessor :guard_element_set
+    attr_accessor :guard_state_set
+  end
+end
+module RPG
+  class Enemy
+    def initialize
+      @id = 0
+      @name = ""
+      @battler_name = ""
+      @battler_hue = 0
+      @maxhp = 500
+      @maxsp = 500
+      @str = 50
+      @dex = 50
+      @agi = 50
+      @int = 50
+      @atk = 100
+      @pdef = 100
+      @mdef = 100
+      @eva = 0
+      @animation1_id = 0
+      @animation2_id = 0
+      @element_ranks = Table.new(1)
+      @state_ranks = Table.new(1)
+      @actions = [RPG::Enemy::Action.new]
+      @exp = 0
+      @gold = 0
+      @item_id = 0
+      @weapon_id = 0
+      @armor_id = 0
+      @treasure_prob = 100
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :battler_name
+    attr_accessor :battler_hue
+    attr_accessor :maxhp
+    attr_accessor :maxsp
+    attr_accessor :str
+    attr_accessor :dex
+    attr_accessor :agi
+    attr_accessor :int
+    attr_accessor :atk
+    attr_accessor :pdef
+    attr_accessor :mdef
+    attr_accessor :eva
+    attr_accessor :animation1_id
+    attr_accessor :animation2_id
+    attr_accessor :element_ranks
+    attr_accessor :state_ranks
+    attr_accessor :actions
+    attr_accessor :exp
+    attr_accessor :gold
+    attr_accessor :item_id
+    attr_accessor :weapon_id
+    attr_accessor :armor_id
+    attr_accessor :treasure_prob
+  end
+end
+module RPG
+  class Enemy
+    class Action
+      def initialize
+        @kind = 0
+        @basic = 0
+        @skill_id = 1
+        @condition_turn_a = 0
+        @condition_turn_b = 1
+        @condition_hp = 100
+        @condition_level = 1
+        @condition_switch_id = 0
+        @rating = 5
+      end
+      attr_accessor :kind
+      attr_accessor :basic
+      attr_accessor :skill_id
+      attr_accessor :condition_turn_a
+      attr_accessor :condition_turn_b
+      attr_accessor :condition_hp
+      attr_accessor :condition_level
+      attr_accessor :condition_switch_id
+      attr_accessor :rating
+    end
+  end
+end
+module RPG
+  class Troop
+    def initialize
+      @id = 0
+      @name = ""
+      @members = []
+      @pages = [RPG::BattleEventPage.new]
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :members
+    attr_accessor :pages
+  end
+end
+module RPG
+  class Troop
+    class Member
+      def initialize
+        @enemy_id = 1
+        @x = 0
+        @y = 0
+        @hidden = false
+        @immortal = false
+      end
+      attr_accessor :enemy_id
+      attr_accessor :x
+      attr_accessor :y
+      attr_accessor :hidden
+      attr_accessor :immortal
+    end
+  end
+end
+module RPG
+  class Troop
+    class Page
+      def initialize
+        @condition = RPG::Troop::Page::Condition.new
+        @span = 0
+        @list = [RPG::EventCommand.new]
+      end
+      attr_accessor :condition
+      attr_accessor :span
+      attr_accessor :list
+    end
+  end
+end
+module RPG
+  class Troop
+    class Page
+      class Condition
+        def initialize
+          @turn_valid = false
+          @enemy_valid = false
+          @actor_valid = false
+          @switch_valid = false
+          @turn_a = 0
+          @turn_b = 0
+          @enemy_index = 0
+          @enemy_hp = 50
+          @actor_id = 1
+          @actor_hp = 50
+          @switch_id = 1
+        end
+        attr_accessor :turn_valid
+        attr_accessor :enemy_valid
+        attr_accessor :actor_valid
+        attr_accessor :switch_valid
+        attr_accessor :turn_a
+        attr_accessor :turn_b
+        attr_accessor :enemy_index
+        attr_accessor :enemy_hp
+        attr_accessor :actor_id
+        attr_accessor :actor_hp
+        attr_accessor :switch_id
+      end
+    end
+  end
+end
+module RPG
+  class State
+    def initialize
+      @id = 0
+      @name = ""
+      @animation_id = 0
+      @restriction = 0
+      @nonresistance = false
+      @zero_hp = false
+      @cant_get_exp = false
+      @cant_evade = false
+      @slip_damage = false
+      @rating = 5
+      @hit_rate = 100
+      @maxhp_rate = 100
+      @maxsp_rate = 100
+      @str_rate = 100
+      @dex_rate = 100
+      @agi_rate = 100
+      @int_rate = 100
+      @atk_rate = 100
+      @pdef_rate = 100
+      @mdef_rate = 100
+      @eva = 0
+      @battle_only = true
+      @hold_turn = 0
+      @auto_release_prob = 0
+      @shock_release_prob = 0
+      @guard_element_set = []
+      @plus_state_set = []
+      @minus_state_set = []
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :animation_id
+    attr_accessor :restriction
+    attr_accessor :nonresistance
+    attr_accessor :zero_hp
+    attr_accessor :cant_get_exp
+    attr_accessor :cant_evade
+    attr_accessor :slip_damage
+    attr_accessor :rating
+    attr_accessor :hit_rate
+    attr_accessor :maxhp_rate
+    attr_accessor :maxsp_rate
+    attr_accessor :str_rate
+    attr_accessor :dex_rate
+    attr_accessor :agi_rate
+    attr_accessor :int_rate
+    attr_accessor :atk_rate
+    attr_accessor :pdef_rate
+    attr_accessor :mdef_rate
+    attr_accessor :eva
+    attr_accessor :battle_only
+    attr_accessor :hold_turn
+    attr_accessor :auto_release_prob
+    attr_accessor :shock_release_prob
+    attr_accessor :guard_element_set
+    attr_accessor :plus_state_set
+    attr_accessor :minus_state_set
+  end
+end
+module RPG
+  class Animation
+    def initialize
+      @id = 0
+      @name = ""
+      @animation_name = ""
+      @animation_hue = 0
+      @position = 1
+      @frame_max = 1
+      @frames = [RPG::Animation::Frame.new]
+      @timings = []
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :animation_name
+    attr_accessor :animation_hue
+    attr_accessor :position
+    attr_accessor :frame_max
+    attr_accessor :frames
+    attr_accessor :timings
+  end
+end
+module RPG
+  class Animation
+    class Frame
+      def initialize
+        @cell_max = 0
+        @cell_data = Table.new(0, 0)
+      end
+      attr_accessor :cell_max
+      attr_accessor :cell_data
+    end
+  end
+end
+module RPG
+  class Animation
+    class Timing
+      def initialize
+        @frame = 0
+        @se = RPG::AudioFile.new("", 80)
+        @flash_scope = 0
+        @flash_color = Color.new(255,255,255,255)
+        @flash_duration = 5
+        @condition = 0
+      end
+      attr_accessor :frame
+      attr_accessor :se
+      attr_accessor :flash_scope
+      attr_accessor :flash_color
+      attr_accessor :flash_duration
+      attr_accessor :condition
+    end
+  end
+end
+module RPG
+  class Tileset
+    def initialize
+      @id = 0
+      @name = ""
+      @tileset_name = ""
+      @autotile_names = [""]*7
+      @panorama_name = ""
+      @panorama_hue = 0
+      @fog_name = ""
+      @fog_hue = 0
+      @fog_opacity = 64
+      @fog_blend_type = 0
+      @fog_zoom = 200
+      @fog_sx = 0
+      @fog_sy = 0
+      @battleback_name = ""
+      @passages = Table.new(384)
+      @priorities = Table.new(384)
+      @priorities[0] = 5
+      @terrain_tags = Table.new(384)
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :tileset_name
+    attr_accessor :autotile_names
+    attr_accessor :panorama_name
+    attr_accessor :panorama_hue
+    attr_accessor :fog_name
+    attr_accessor :fog_hue
+    attr_accessor :fog_opacity
+    attr_accessor :fog_blend_type
+    attr_accessor :fog_zoom
+    attr_accessor :fog_sx
+    attr_accessor :fog_sy
+    attr_accessor :battleback_name
+    attr_accessor :passages
+    attr_accessor :priorities
+    attr_accessor :terrain_tags
+  end
+end
+module RPG
+  class CommonEvent
+    def initialize
+      @id = 0
+      @name = ""
+      @trigger = 0
+      @switch_id = 1
+      @list = [RPG::EventCommand.new]
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :trigger
+    attr_accessor :switch_id
+    attr_accessor :list
+  end
+end
+module RPG
+  class System
+    def initialize
+      @magic_number = 0
+      @party_members = [1]
+      @elements = [nil, ""]
+      @switches = [nil, ""]
+      @variables = [nil, ""]
+      @windowskin_name = ""
+      @title_name = ""
+      @gameover_name = ""
+      @battle_transition = ""
+      @title_bgm = RPG::AudioFile.new
+      @battle_bgm = RPG::AudioFile.new
+      @battle_end_me = RPG::AudioFile.new
+      @gameover_me = RPG::AudioFile.new
+      @cursor_se = RPG::AudioFile.new("", 80)
+      @decision_se = RPG::AudioFile.new("", 80)
+      @cancel_se = RPG::AudioFile.new("", 80)
+      @buzzer_se = RPG::AudioFile.new("", 80)
+      @equip_se = RPG::AudioFile.new("", 80)
+      @shop_se = RPG::AudioFile.new("", 80)
+      @save_se = RPG::AudioFile.new("", 80)
+      @load_se = RPG::AudioFile.new("", 80)
+      @battle_start_se = RPG::AudioFile.new("", 80)
+      @escape_se = RPG::AudioFile.new("", 80)
+      @actor_collapse_se = RPG::AudioFile.new("", 80)
+      @enemy_collapse_se = RPG::AudioFile.new("", 80)
+      @words = RPG::System::Words.new
+      @test_battlers = []
+      @test_troop_id = 1
+      @start_map_id = 1
+      @start_x = 0
+      @start_y = 0
+      @battleback_name = ""
+      @battler_name = ""
+      @battler_hue = 0
+      @edit_map_id = 1
+    end
+    attr_accessor :magic_number
+    attr_accessor :party_members
+    attr_accessor :elements
+    attr_accessor :switches
+    attr_accessor :variables
+    attr_accessor :windowskin_name
+    attr_accessor :title_name
+    attr_accessor :gameover_name
+    attr_accessor :battle_transition
+    attr_accessor :title_bgm
+    attr_accessor :battle_bgm
+    attr_accessor :battle_end_me
+    attr_accessor :gameover_me
+    attr_accessor :cursor_se
+    attr_accessor :decision_se
+    attr_accessor :cancel_se
+    attr_accessor :buzzer_se
+    attr_accessor :equip_se
+    attr_accessor :shop_se
+    attr_accessor :save_se
+    attr_accessor :load_se
+    attr_accessor :battle_start_se
+    attr_accessor :escape_se
+    attr_accessor :actor_collapse_se
+    attr_accessor :enemy_collapse_se
+    attr_accessor :words
+    attr_accessor :test_battlers
+    attr_accessor :test_troop_id
+    attr_accessor :start_map_id
+    attr_accessor :start_x
+    attr_accessor :start_y
+    attr_accessor :battleback_name
+    attr_accessor :battler_name
+    attr_accessor :battler_hue
+    attr_accessor :edit_map_id
+  end
+end
+module RPG
+  class System
+    class Words
+      def initialize
+        @gold = ""
+        @hp = ""
+        @sp = ""
+        @str = ""
+        @dex = ""
+        @agi = ""
+        @int = ""
+        @atk = ""
+        @pdef = ""
+        @mdef = ""
+        @weapon = ""
+        @armor1 = ""
+        @armor2 = ""
+        @armor3 = ""
+        @armor4 = ""
+        @attack = ""
+        @skill = ""
+        @guard = ""
+        @item = ""
+        @equip = ""
+      end
+      attr_accessor :gold
+      attr_accessor :hp
+      attr_accessor :sp
+      attr_accessor :str
+      attr_accessor :dex
+      attr_accessor :agi
+      attr_accessor :int
+      attr_accessor :atk
+      attr_accessor :pdef
+      attr_accessor :mdef
+      attr_accessor :weapon
+      attr_accessor :armor1
+      attr_accessor :armor2
+      attr_accessor :armor3
+      attr_accessor :armor4
+      attr_accessor :attack
+      attr_accessor :skill
+      attr_accessor :guard
+      attr_accessor :item
+      attr_accessor :equip
+    end
+  end
+end
 
+module RPG
+  class System
+    class TestBattler
+      def initialize
+        @actor_id = 1
+        @level = 1
+        @weapon_id = 0
+        @armor1_id = 0
+        @armor2_id = 0
+        @armor3_id = 0
+        @armor4_id = 0
+      end
+      attr_accessor :actor_id
+      attr_accessor :level
+      attr_accessor :weapon_id
+      attr_accessor :armor1_id
+      attr_accessor :armor2_id
+      attr_accessor :armor3_id
+      attr_accessor :armor4_id
+    end
+  end
+end
 
-
-
+module RPG
+  class AudioFile
+    def initialize(name = "", volume = 100, pitch = 100)
+      @name = name
+      @volume = volume
+      @pitch = pitch
+    end
+    attr_accessor :name
+    attr_accessor :volume
+    attr_accessor :pitch
+  end
+end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ Game
 # --------------------------------------------------------------------------
 # Author    뮤 (mu29gl@gmail.com)
 # Date      2015. 1. 8
 #────────────────────────────────────────────────────────────────────────────
+
 module Game
   module_function
   def init
@@ -688,6 +2756,8 @@ module Game
     @gameSystem = System.new
     @gamePlayer = Player.new
     @gameMap = Map.new
+    @slot = Slot.new
+    @cooltime = Cooltime.new
     Damage.loadCache
   end
   
@@ -705,6 +2775,14 @@ module Game
   
   def map
     return @gameMap
+  end
+  
+  def slot
+    return @slot
+  end
+  
+  def cooltime
+    return @cooltime
   end
   
   def load
@@ -890,6 +2968,7 @@ end
 # Author    뮤 (mu29gl@gmail.com)
 # Date      2015. 1. 9
 #────────────────────────────────────────────────────────────────────────────
+
 class ItemData
   attr_accessor :no
   attr_accessor :name
@@ -1034,18 +3113,76 @@ end
 # Date      2015. 1. 7
 #────────────────────────────────────────────────────────────────────────────
 class System
+  
+  include Config
+  
   attr_accessor :timer
   attr_accessor :timer_working
+  attr_accessor :optKey
   
   def initialize
     @timer = 0
     @timer_working = false
+    # 옵션 키
+    @optKey = {}
+    @optKey[:fullscreen] = self.fullscreen_load
+    @optKey[:bgm]        = self.bgm_load
+    @optKey[:bgs]        = self.bgs_load
+    @optKey[:me]         = self.me_load
+    @optKey[:se]         = self.se_load
+  end
+
+  def fullscreen_load
+    File.iniGet(OPTION_PATH, OPTION_KEY, "fullscreen", false, 10)
+  end
+  
+  def fullscreen_save(value)
+    File.iniWrite(OPTION_PATH, OPTION_KEY, "fullscreen", value)
+    @optKey[:fullscreen] = value
+  end
+  
+  def bgm_load
+    File.iniGet(OPTION_PATH, OPTION_KEY, "bgm", 100, 6)
+  end
+  
+  def bgm_save(volume)
+    File.iniWrite(OPTION_PATH, OPTION_KEY, "bgm", volume)
+    @optKey[:bgm] = volume
+    bgm_play(@playing_bgm)
+  end
+  
+  def bgs_load
+    File.iniGet(OPTION_PATH, OPTION_KEY, "bgs", 100, 6)
+  end
+  
+  def bgs_save(volume)
+    File.iniWrite(OPTION_PATH, OPTION_KEY, "bgs", volume)
+    @optKey[:bgs] = volume
+    bgs_play(@playing_bgs)
+  end
+  
+  def me_load
+    File.iniGet(OPTION_PATH, OPTION_KEY, "me", 100, 6)
+  end
+  
+  def me_save(volume)
+    File.iniWrite(OPTION_PATH, OPTION_KEY, "me", volume)
+    @optKey[:me] = volume
+  end
+  
+  def se_load
+    File.iniGet(OPTION_PATH, OPTION_KEY, "se", 100, 6)
+  end
+  
+  def se_save(volume)
+    File.iniWrite(OPTION_PATH, OPTION_KEY, "se", volume)
+    @optKey[:se] = volume
   end
 
   def bgm_play(bgm)
     @playing_bgm = bgm
     if bgm != nil and bgm.name != ""
-      Audio.bgm_play("Audio/BGM/" + bgm.name, bgm.volume, bgm.pitch)
+      Audio.bgm_play("Audio/BGM/" + bgm.name, @optKey[:bgm], bgm.pitch)
     else
       Audio.bgm_stop
     end
@@ -1072,7 +3209,7 @@ class System
   def bgs_play(bgs)
     @playing_bgs = bgs
     if bgs != nil and bgs.name != ""
-      Audio.bgs_play("Audio/BGS/" + bgs.name, bgs.volume, bgs.pitch)
+      Audio.bgs_play("Audio/BGS/" + bgs.name, @optKey[:bgs], bgs.pitch)
     else
       Audio.bgs_stop
     end
@@ -1094,7 +3231,7 @@ class System
 
   def me_play(me)
     if me != nil and me.name != ""
-      Audio.me_play("Audio/ME/" + me.name, me.volume, me.pitch)
+      Audio.me_play("Audio/ME/" + me.name, @optKey[:me], me.pitch)
     else
       Audio.me_stop
     end
@@ -1103,7 +3240,7 @@ class System
 
   def se_play(se)
     if se != nil and se.name != ""
-      Audio.se_play("Audio/SE/" + se.name, se.volume, se.pitch)
+      Audio.se_play("Audio/SE/" + se.name, @optKey[:se], se.pitch)
     end
   end
 
@@ -1125,7 +3262,6 @@ class System
     end
   end
 end
-
 #────────────────────────────────────────────────────────────────────────────
 # ▶ Screen
 # --------------------------------------------------------------------------
@@ -1304,13 +3440,13 @@ class Map
     @display_y = 0
     @need_refresh = false
     @events = {}
+    for i in @map.events.keys
+      @events[i] = Event.new(@map_id, @map.events[i])
+    end
     @netplayers = {}
     @npcs = {}
     @enemies = {}
     @items = {}
-    for i in @map.events.keys
-      @events[i] = Event.new(@map_id, @map.events[i])
-    end
     @fog_ox = 0
     @fog_oy = 0
     @fog_tone = Tone.new(0, 0, 0, 0)
@@ -1602,7 +3738,6 @@ class Map
     end
   end
 end
-
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MapSprite
 # --------------------------------------------------------------------------
@@ -2601,8 +4736,7 @@ class CharacterSprite < RPG::Sprite
           @cw = bitmap.width
           @ch = bitmap.height
         else
-          self.bitmap = RPG::Cache.character(@character.character_name,
-            @character.character_hue)
+          self.bitmap = RPG::Cache.character(@character.character_name, @character.character_hue)
           @cw = bitmap.width / 4
           @ch = bitmap.height / 4
         end
@@ -2655,6 +4789,7 @@ end
 # --------------------------------------------------------------------------
 # Author    뮤 (mu29gl@gmail.com)
 # Date      2015. 1. 31
+# --------------------------------------------------------------------------
 # Description
 # 
 #    데미지를 표시하는 클래스입니다.
@@ -3365,7 +5500,7 @@ end
 # ▶ Event
 # --------------------------------------------------------------------------
 # Author    EnterBrain
-# Modify    뮤 (mu29gl@gmail.com)
+# Modify    뮤(mu29gl@gmail.com)
 # Date      2015. 1. 7
 #────────────────────────────────────────────────────────────────────────────
 class Event < Character
@@ -3395,7 +5530,7 @@ class Event < Character
     if @character_name != "" and not @through
       return false
     end
-    unless Game.map.passable? (@x, @y, 0)
+    unless Game.map.passable?(@x, @y, 0)
       return false
     end
     return true
@@ -3572,117 +5707,264 @@ class Timer < Sprite
   end
 end
 
+=begin
+================================================================================
+XPA Tilemap                                                      Version 0.34
+by KK20                                                          4 May 2017
+________________________________________________________________________________
+
+ [ Version History ]
+ 
+ Ver.      Date            Notes
+ -----     -----------     ----------------------------------------------------
+ 0.34  ... 04 May 2017 ... Bug fixes:
+                            - CallBackController was not disposing its contents,
+                              causing a memory leak whenever a new Tilemap was
+                              created (and eventually crashing the game)
+ 0.33  ... 30 Apr 2017 ... Bug fixes:
+                            - Maps with empty autotiles would crash the game
+                            - Tilesets without a graphic would crash the game
+                            - The creation of empty autotiles would continually
+                              spawn disposed Bitmap objects (related to above)
+                            - 32x32 autotiles that animated would crash the game
+ 0.32  ... 25 Feb 2017 ... Bug fixes:
+                            - Child viewports were having display issues when
+                              tone changes were involved
+                            - Viewport#flash had missing parameters
+                            - Added more compatibility for XP games (thanks
+                              LiTTleDRAgo!)
+ 0.31  ... 08 Feb 2017 ... Bug fixes:
+                            - Bad logic with border sprites for non-wrapping map
+                            - Problem with Plane objects not initialized with a
+                              viewport, causing children-creation to crash
+                            - Disable Graphics.resize_screen in Hime's script
+                              for XP games as this method does not exist nor is
+                              the code necessary to "break" the resolution limit
+                            - RGSS does not support Array#cover?
+                           Changes:
+                            - The Resolution module is disabled for XPA
+                            - If WEATHER_ADJUSTMENT is false, it will disable
+                              all of the RPG::Weather and Screen classes
+                              from loading rather than only some methods
+                            - Input module for supporting different game window
+                              sizes is disabled for XP as this feature does not
+                              work in RGSS
+ 0.3   ... 04 Feb 2017 ... Bug fixes:
+                            - A graphical bug involving priority tiles if the
+                              MAX_PRIORITY_LAYERS is set to less than 5
+                            - Loading autotiles in RPG::Cache has been revised
+                              for better compatibility
+                            - CallBackController added to replace the method 
+                              implemented in v0.2b which prevented saving games
+                           Additions:
+                            - Commented out a majority of the anonymous scripter
+                              code that breaks the resolution limit for RGSS3;
+                              its ramifications are unknown at this point
+                            - A new Plane rewrite which is merely just creating
+                              more Plane objects
+                            - Maps that do not wrap have a high z-level black 
+                              sprite positioned around the map's borders
+                            - New fullscreen and other window size options for
+                              XPA games (will not work for XP)
+                            - Tilesets that are not divisible by 32 will raise
+                              an error rather than crash
+                            - Maps with invalid tile ID's (caused when a tile
+                              was placed with a taller tileset graphic, but then
+                              the map uses a shorter tileset) no longer crash
+                              the game
+ 0.13b ... 23 Oct 2016 ... Bug fixes:
+                            - Resolutions not divisible by 32 would not show the
+                              last row/column of tiles entirely
+                           ** Fix added on top of v0.12b, not v0.2b, but is
+                           ** included in all versions above this one
+ 0.2b  ... 07 Jun 2016 ... Bug fixes:
+                            - Shaking still had issues
+                           Additions:
+                            - Maps can now wrap by putting [WRAP] in the map
+                              name, due to a new way of drawing the map
+                            - ...which also fixed the shaking above
+                            - ...and can also allow vertical shaking
+                            - Added Unlimited Resolution, an RMVXA script with
+                              some changes
+                            - Changing tileset and autotile bitmaps in-game will
+                              not crash (assuming you know how to do that)
+                            - Overall cleaning of code
+ 0.12b ... 27 Feb 2016 ... Bug fixes:
+                            - Tiles with some transparency and priority were
+                              being redrawn continuously on each other
+                            - Setting the Plane bitmap to nil would crash
+ 0.11b ... 03 Nov 2014 ... Bug fixes:
+                            - Table did not take in parameters upon initialize
+                            - Centering of maps now shrinks Viewport sizes
+                            - Fixed Tilemap#oy= logic
+ 0.1b  ... 02 Nov 2014 ... Initial release
+________________________________________________________________________________
+
+ [ Introduction ]
+ 
+ In light of recent discoveries regarding the usage of RGSS3 in RPG Maker XP
+ games, many users were left with a dilemma in choosing which Tilemap rewrite to
+ use due to the vast differences between RGSS1's and RGSS3's Tilemap classes
+ that would cause complications in this transition. I aimed to find the best
+ Tilemap rewrite and decided that I would have to make my own. Like every other
+ Tilemap rewrite before it, this implementation is in no ways perfect, boasting
+ PROs and CONs.
+ 
+ This script is intended to be used for RPG Maker XP games using the RGSS3
+ library (unofficially coined RPG Maker XP Ace); however, it is entirely
+ compatible with RPG Maker XP games in the RGSS1 library.
+________________________________________________________________________________
+
+ [ License ]
+ 
+ This work is protected by the following license: 
+ http://creativecommons.org/licenses/by-nc-sa/3.0/
+ 
+********************************************************************************
+
+You are free:
+
+to Share - to copy, distribute and transmit the work
+to Remix - to adapt the work
+
+Under the following conditions:
+
+Attribution:
+You must attribute the work in the manner specified by the author or licensor, 
+but not in any way that suggests that they endorse you or your use of the work.
+
+Noncommercial:
+You may not use this work for commercial purposes.
+
+Share alike:
+If you alter, transform, or build upon this work, you may distribute the 
+resulting work only under the same or similar license to this one.
+
+- For any reuse or distribution, you must make clear to others the license terms 
+  of this work. The best way to do this is with a link to this web page.
+
+- Any of the above conditions can be waived if you get permission from the 
+  copyright holder.
+
+- Nothing in this license impairs or restricts the author's moral rights.
+
+********************************************************************************
+
+ [ Instructions ]
+ 
+ - Place this script below the default scripts but above Main.
+ - Move 'XPATilemap.dll' into your project folder (same directory as 'Game.exe')
+ - Configure values at the start of the script
+________________________________________________________________________________
+
+ [ Features ]
+ 
+ About the script:
+ - XP and XPA (RGSS1 and RGSS3) compatible, though designed for XPA
+ - Define your own custom resolution
+ - Adds new tilemap features
+ - Maps that are smaller than the game resolution are automatically centered
+ - Drawing methods written in C-language, which has faster pixel-by-pixel
+   operations than Ruby
+ 
+ Add-ons:
+ - Customize frame rate animation and define unique patterns for your autotiles
+ - Remove unnecessary priority layers to boost frames-per-second (FPS)
+ - Extend the default RPG::Weather class to fit larger screens, or not
+ - Change the way fullscreen works (or disable it), including a double and half-
+   size window option (only for XPA)
+ - more to add later...
+________________________________________________________________________________
+
+ [ Compatibility ]
+ 
+ - There have been reports of Screen Flash not working for some users, though I
+   have yet to receive any valid proof or ways to reproduce this issue
+ - Your tileset must have dimensions divisible by 32. The game will raise an
+   error otherwise.
+________________________________________________________________________________
+
+ [ Credits ]
+ 
+ KK20 - Author of this script and DLL
+ Blizzard - Tester and providing bug fixes
+ LiTTleDRAgo - Reusing code from his edits to Custom Resolution and bug fixes
+ Zexion - Tester and morale support
+ ForeverZer0 - Reusing code from his Custom Resolution script, found here:
+                http://forum.chaos-project.com/index.php/topic,7814.0.html
+________________________________________________________________________________
+
+ [ Contact ]
+ 
+ To contact the author of this script, please visit 
+                http://forum.chaos-project.com/index.php
+                
+ or send an email to
+                        tscrane20@gmail.com
+                        
+================================================================================
+=end
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                                       B E G I N   C O N F I G U R A T I O N
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#-------------------------------------------------------------------------------
+# The game window's screen resolution. RPG Maker XP's default is [640, 480].
+# Do note that a larger resolution is prone to sprite lag.
+# Anything larger than the default resolution will enable the custom Plane class.
+#-------------------------------------------------------------------------------
+SCREEN_RESOLUTION = [Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT]
+
+#-------------------------------------------------------------------------------
+# The largest level of priority your game uses. This value should be between
+# 1 and 5. If using a large resolution, lowering the number of priority layers
+# will help in reducing the lag.
+#-------------------------------------------------------------------------------
 MAX_PRIORITY_LAYERS = 5
 
-#===============================================================================
-# ** Viewport
-#===============================================================================
+#-------------------------------------------------------------------------------
+# If using a larger resolution than 640x480, the default weather effects will
+# not cover the entire map. It is recommended that you set this to true to
+# compensate for that, unless you are using some custom weather script that can
+# address this.
+#-------------------------------------------------------------------------------
+WEATHER_ADJUSTMENT = false
 
-class Viewport
-  alias initialize_ initialize
-  def initialize(x=0, y=0, width=Graphics.width, height=Graphics.height, override=false)
-    if x.is_a?(Rect)
-      initialize_(x)
-    elsif [x, y, width, height] == [0, 0, 640, 480] && !override 
-      initialize_(Rect.new(0, 0, Graphics.width, Graphics.height))
-    else
-      initialize_(Rect.new(x, y, width, height))
-    end
-  end
-  
-  def resize(*args)
-    self.rect = args[0].is_a?(Rect) ? args[0] : Rect.new(*args)
-  end
-end
+#-------------------------------------------------------------------------------
+# When the map’s display_x/y variables extend beyond its borders, the map wraps 
+# around to fill in the gaps. Setting this to true will prevent that, showing 
+# black borders instead.
+# If you want some maps to wrap around, putting [WRAP] in a map's name will
+# allow this.
+# Note that the custom Plane class will be enabled in order to create this
+# effect regardless of your resolution size.
+#-------------------------------------------------------------------------------
+DISABLE_WRAP = false
 
-#===============================================================================
-# ** Tilemap
-#===============================================================================
-
-class Tilemap
-  
-  attr_accessor :tileset, :autotiles, :map_data, :priorities, :ground_sprite
-  #---------------------------------------------------------------------------
-  # Initialize
-  #---------------------------------------------------------------------------
-  def initialize(viewport = nil)
-    @viewport = viewport
-    @layer_sprites = []
-    @autotile_frame = []      #[[ANIMATION_DRAW_INDEX, CURRENT_LOGICAL_FRAME], ... ]
-    @autotile_framedata = []  #[[DATA_FROM_CONFIGURATION_ABOVE], ... ]
-    
-    # Ensures that the bitmap width accounts for an extra tile
-    # and is divisible by 32
-    bitmap_width = ((Graphics.width / 32.0).ceil + 1) * 32
-    # Create the priority layers
-    ((Graphics.height/32.0).ceil + MAX_PRIORITY_LAYERS).times{ |i|
-      s = Sprite.new(@viewport)
-      s.y = i*32 - (MAX_PRIORITY_LAYERS - 1) * 32
-      s.z = 32 * (i+2)
-      s.bitmap = Bitmap.new(bitmap_width, MAX_PRIORITY_LAYERS * 32)
-      @layer_sprites.push(s)
-    }
-    
-    # Same reasons as bitmap_width, but for height
-    bitmap_height = ((Graphics.height / 32.0).ceil + 1) * 32
-    # Create the ground layer (priority 0)
-    s = Sprite.new(@viewport)
-    s.bitmap = Bitmap.new(bitmap_width, bitmap_height)
-    @ground_sprite = s
-    @ground_sprite.z = 0
-    
-    # Initialize Autotile data
-    Game.map.autotile_names.each_index {|i| filename = Game.map.autotile_names[i]
-      # Get animation frame rate of the autotile
-      frames = autotile_framerate(filename)
-      # If autotile doesn't animate
-      if frames.nil?
-        @autotile_frame[i] = [0,0]
-        @autotile_framedata[i] = nil
-      else
-        # Save the frame rate data
-        @autotile_framedata[i] = frames
-        # Determine how long one animation cycle takes and indicate at what time
-        # the next frame of animation occurs
-        total = 0
-        frame_checkpoints = []
-        frames.each_index{|j| f = frames[j]
-          total += f
-          frame_checkpoints[j] = total
-        }
-        # Get animation frame for this autotile based on game time passed
-        current_frame = Graphics.frame_count % total
-        frame_checkpoints.each_index{|j| c = frame_checkpoints[j]
-          next if c.nil?
-          if c > current_frame
-            @autotile_frame[i] = [j, c - current_frame]
-            break
-          end
-        }
-      end
-    }
-    
-    # Initialize remaining variables
-    @first_update = true
-    @tileset = nil
-    @autotiles = []
-    @map_data = nil
-    @priorities = nil
-    @old_ox = 0
-    @old_oy = 0
-    @ox = 0
-    @oy = 0
-    @shift = 0
-    
-    # Set up the DLL calls
-    @@update = DrawMapsBitmap2
-    @@autotile_update = UpdateAutotiles
-    @@initial_draw = DrawMapsBitmap
-    @empty_tile = Bitmap.new(32,32)
-    InitEmptyTile.call(@empty_tile.object_id)
-  end
-  
-  def autotile_framerate(filename)
+#-------------------------------------------------------------------------------
+# Set the animation frame rate for autotiles. By default, all autotiles will
+# update on the 16th frame. You can change that by providing an array of numbers
+# that represent how many frames that particular frame of animation will be
+# visible for.
+# Format:
+#   when AUTOTILE_FILENAME then FRAME_DATA
+# where FRAME_DATA is an array containing the number of frames that particular
+# animation will play for before moving onto the next frame. Be sure to match
+# the number of autotile animation frames with the number of elements you put
+# into the array.
+# Check the examples below.
+#-------------------------------------------------------------------------------
+def autotile_framerate(filename)
+  case filename
+  #------------------------------------------------------ START ------
+  when '001-G_Water01' then [8, 8, 8, 8]      # Animates twice as fast
+  when '009-G2_Water01' then [20, 20, 20, 20] # Animates a bit slower
+  when '024-Ocean01' then [32, 16, 32, 16]    # Sine wave effect
+  #------------------------------------------------------- END -------
+  # Don't touch any of this below
+  else
+    return nil if filename == ''
+    # Generates array of [16, 16, ...] based on autotile width 
+    # (or nil if not animating autotile)
     w = RPG::Cache.autotile(filename).width
     h = RPG::Cache.autotile(filename).height
     if (h == 32 && w / 32 == 1) || (h == 192 && w / 256 == 1)
@@ -3691,31 +5973,485 @@ class Tilemap
       return h == 32 ? Array.new(w/32){|i| 16} : Array.new(w/256){|i| 16}
     end
   end
+end
+
+XPACE = RUBY_VERSION == "1.9.2"
+
+MAX_PRIORITY_LAYERS = 5 unless (1..5).include?(MAX_PRIORITY_LAYERS)
+
+#===============================================================================
+# ** NilClass
+#===============================================================================
+class NilClass
+  unless method_defined?(:dispose)
+    def dispose; end
+    def disposed?; end
+  end
+end
+#===============================================================================
+# ** Bitmap
+#===============================================================================
+class Bitmap
+  attr_accessor :filename
+  alias set_filename_of_bitmap initialize
+  def initialize(*args)
+    # Associate the bitmap with the filename of the graphic; empty string otherwise
+    @filename = args.size == 1 ? File.basename(args[0], '.*') : ''
+    set_filename_of_bitmap(*args)
+  end
+end
+#===============================================================================
+# ** RPG::Cache
+#===============================================================================
+module RPG::Cache
   
+  AUTO_INDEX = [
+  
+  [27,28,33,34],  [5,28,33,34],  [27,6,33,34],  [5,6,33,34],
+  [27,28,33,12],  [5,28,33,12],  [27,6,33,12],  [5,6,33,12],
+  [27,28,11,34],  [5,28,11,34],  [27,6,11,34],  [5,6,11,34],
+  [27,28,11,12],  [5,28,11,12],  [27,6,11,12],  [5,6,11,12],
+  [25,26,31,32],  [25,6,31,32],  [25,26,31,12], [25,6,31,12],
+  [15,16,21,22],  [15,16,21,12], [15,16,11,22], [15,16,11,12],
+  [29,30,35,36],  [29,30,11,36], [5,30,35,36],  [5,30,11,36],
+  [39,40,45,46],  [5,40,45,46],  [39,6,45,46],  [5,6,45,46],
+  [25,30,31,36],  [15,16,45,46], [13,14,19,20], [13,14,19,12],
+  [17,18,23,24],  [17,18,11,24], [41,42,47,48], [5,42,47,48],
+  [37,38,43,44],  [37,6,43,44],  [13,18,19,24], [13,14,43,44],
+  [37,42,43,48],  [17,18,47,48], [13,18,43,48], [13,18,43,48]
+    
+  ]
+  
+  def self.autotile(filename)
+    key = "Graphics/Autotiles/#{filename}"
+    if !@cache.include?(key) || @cache[key].disposed? 
+      # Load the autotile graphic.
+      orig_bm = self.load_bitmap('Graphics/Autotiles/', filename)
+      # Cache each configuration of this autotile.
+      new_bm = self.format_autotiles(orig_bm, filename)
+      if new_bm != orig_bm
+        @cache[key].dispose
+        @cache[key] = new_bm
+      end
+    end
+    @cache[key]
+  end
+
+  def self.format_autotiles(bitmap, filename)
+    if bitmap.height > 32 && bitmap.height < 256
+      frames = bitmap.width / 96
+      template = Bitmap.new(256*frames,192)
+      template.filename = filename
+      # Create a bitmap to use as a template for creation.
+      (0..frames-1).each{|frame|
+      (0...6).each {|i| (0...8).each {|j| AUTO_INDEX[8*i+j].each {|number|
+        number -= 1
+        x, y = 16 * (number % 6), 16 * (number / 6)
+        rect = Rect.new(x + (frame * 96), y, 16, 16)
+        template.blt((32 * j + x % 32) + (frame * 256), 32 * i + y % 32, bitmap, rect)
+      }}}}
+      return template
+    else
+      return bitmap
+    end
+  end
+  
+end
+#===============================================================================
+# ** CallBackController
+#===============================================================================
+module CallBackController
+  @@callback = {}
+  
+  def self.clear
+    @@callback.clear
+  end
+  
+  def self.setup_callback(obj, proc)
+    @@callback[obj.object_id] = proc
+  end
+  
+  def self.call(obj, *args)
+    @@callback[obj.object_id].call(*args) if @@callback[obj.object_id]
+    true
+  end
+  
+  def self.delete(obj)
+    @@callback.delete(obj.object_id)
+  end
+  
+end
+
+#===============================================================================
+# ** Viewport
+#===============================================================================
+class Viewport
+  attr_accessor :offset_x, :offset_y
+  
+  alias zer0_viewport_resize_init initialize
+  def initialize(x=0, y=0, width=SCREEN_RESOLUTION[0], height=SCREEN_RESOLUTION[1], override=false)
+    # Variables needed for Viewport children (for the Plane rewrite); ignore if
+    # your game resolution is not larger than 640x480
+    @offset_x = @offset_y = 0
+    if x.is_a?(Rect)
+      # If first argument is a Rectangle, just use it as the argument.
+      zer0_viewport_resize_init(x)
+    elsif [x, y, width, height] == [0, 0, 640, 480] && !override 
+      # Resize fullscreen viewport, unless explicitly overridden.
+      zer0_viewport_resize_init(Rect.new(0, 0, SCREEN_RESOLUTION[0], SCREEN_RESOLUTION[1]))
+    else
+      # Call method normally.
+      zer0_viewport_resize_init(Rect.new(x, y, width, height))
+    end
+  end
+  
+  def resize(*args)
+    # Resize the viewport. Can call with (X, Y, WIDTH, HEIGHT) or (RECT).
+    if args[0].is_a?(Rect)
+      args[0].x += @offset_x
+      args[0].y += @offset_y
+      self.rect = args[0]
+    else
+      args[0] += @offset_x
+      args[1] += @offset_y
+      self.rect = Rect.new(*args)
+    end
+  end
+end
+
+#===============================================================================
+# ** Tilemap
+#===============================================================================
+class Tilemap
+  
+  attr_accessor :tileset, :autotiles, :map_data, :priorities, :ground_sprite
+  attr_reader :wrapping
+  #---------------------------------------------------------------------------
+  # Initialize
+  #---------------------------------------------------------------------------
+  def initialize(viewport = nil)
+    # Ensure that all callbacks are removed to prevent memory leaks
+    CallBackController.clear
+    
+    @viewport = viewport
+    @layer_sprites = []
+    @autotile_frame = []      #[[ANIMATION_DRAW_INDEX, CURRENT_LOGICAL_FRAME], ... ]
+    @autotile_framedata = []  #[[DATA_FROM_CONFIGURATION_ABOVE], ... ]
+    
+    # Ensures that the bitmap width accounts for an extra tile
+    # and is divisible by 32
+    bitmap_width = ((SCREEN_RESOLUTION[0] / 32.0).ceil + 1) * 32
+    # Create the priority layers
+    ((SCREEN_RESOLUTION[1]/32.0).ceil + MAX_PRIORITY_LAYERS).times{ |i|
+      s = Sprite.new(@viewport)
+      s.bitmap = Bitmap.new(bitmap_width, MAX_PRIORITY_LAYERS * 32)
+      @layer_sprites.push(s)
+    }
+    
+    # Same reasons as bitmap_width, but for height
+    bitmap_height = ((SCREEN_RESOLUTION[1] / 32.0).ceil + 1) * 32
+    # Create the ground layer (priority 0)
+    s = Sprite.new(@viewport)
+    s.bitmap = Bitmap.new(bitmap_width, bitmap_height)
+    @ground_sprite = s
+    @ground_sprite.z = 0
+
+    # Initialize remaining variables
+    @redraw_tilemap = true
+    @tileset = nil
+    @autotiles = []
+    proc = Proc.new { |x,y| @redraw_tilemap = true; setup_autotile(x) }
+    CallBackController.setup_callback(@autotiles, proc)
+    
+    @map_data = nil
+    
+    @priorities = nil
+    @old_ox = 0
+    @old_oy = 0
+    @ox = 0
+    @oy = 0
+    @ox_float = 0.0
+    @oy_float = 0.0
+    @shift = 0
+    @wrapping = (!DISABLE_WRAP || (XPAT_MAP_INFOS[Game.map.map_id].name =~ /.*\[[Ww][Rr][Aa][Pp]\].*/) == 0) ? 1 : 0
+    create_border_sprites
+    
+    # Set up the DLL calls
+    @@update = Win32API::DrawMapsBitmap2
+    @@autotile_update = Win32API::UpdateAutotiles
+    @@initial_draw = Win32API::DrawMapsBitmap
+    @empty_tile = Bitmap.new(32,32)
+    Win32API::InitEmptyTile.call(@empty_tile.object_id)
+    @black_tile = Bitmap.new(32,32)
+    @black_tile.fill_rect(0,0,32,32,Color.new(0,0,0))
+    Win32API::InitBlackTile.call(@black_tile.object_id)
+    
+  end
+  #---------------------------------------------------------------------------
+  # Setup autotile animation data
+  #---------------------------------------------------------------------------
+  def setup_autotile(i)
+    # Get animation frame rate of the autotile
+    bitmap = @autotiles[i]
+    frames = bitmap.nil? ? nil : autotile_framerate(bitmap.filename)
+    # If autotile doesn't animate
+    if frames.nil?
+      @autotile_frame[i] = [0,0]
+      @autotile_framedata[i] = nil
+    else
+      # Save the frame rate data
+      @autotile_framedata[i] = frames
+      # Determine how long one animation cycle takes and indicate at what time
+      # the next frame of animation occurs
+      total = 0
+      frame_checkpoints = []
+      
+      frames.each_index{|j| f = frames[j]
+        total += f
+        frame_checkpoints[j] = total
+      }
+      # Get animation frame for this autotile based on game time passed
+      current_frame = Graphics.frame_count % total
+      frame_checkpoints.each_index{|j| c = frame_checkpoints[j]
+        next if c.nil?
+        if c > current_frame
+          @autotile_frame[i] = [j, c - current_frame]
+          break
+        end
+      }
+    end
+  end
+  #---------------------------------------------------------------------------
+  # Creates four 32-pixel thick black sprites to surround the map. This is
+  # only applied to maps that do not have wrapping enabled. This helps those
+  # who have screen shaking in their maps.
+  #---------------------------------------------------------------------------
+  def create_border_sprites
+    @border_sprites = []
+    return if @wrapping == 1
+    for i in 0..3
+      s = Sprite.new(@viewport)
+      s.z = 99999
+      if i % 2 == 0
+        b = Bitmap.new(SCREEN_RESOLUTION[0] + 64,32)
+        s.x = -32
+        s.y = i == 0 ? -32 : Game.map.height * 32
+      else
+        b = Bitmap.new(32,SCREEN_RESOLUTION[1] + 64)
+        s.x = i == 1 ? -32 : Game.map.width * 32
+        s.y = -32
+      end
+      b.fill_rect(0, 0, b.width, b.height, Color.new(0,0,0))
+      s.bitmap = b
+      @border_sprites.push(s)
+    end
+  end
   #---------------------------------------------------------------------------
   # Dispose tilemap
   #---------------------------------------------------------------------------
   def dispose
     @layer_sprites.each{|sprite| sprite.dispose}
     @ground_sprite.dispose
+    @border_sprites.each{|sprite| sprite.dispose}
+    CallBackController.clear
   end
   #---------------------------------------------------------------------------
   # Check if disposed tilemap
   #---------------------------------------------------------------------------
   def disposed?
-    return @layer_sprites[0].disposed?
+    @layer_sprites[0].disposed?
   end
   #---------------------------------------------------------------------------
   # Get viewport
   #---------------------------------------------------------------------------
   def viewport
-    return @viewport
+    @viewport
+  end
+  #---------------------------------------------------------------------------
+  # Return if tilemap is visible
+  #---------------------------------------------------------------------------
+  def visible
+    layer_sprites[0].visible
+  end
+  #---------------------------------------------------------------------------
+  # Show or hide tilemap
+  #---------------------------------------------------------------------------
+  def visible=(bool)
+    @layer_sprites.each{|sprite| sprite.visible = bool}
+    @ground_sprite.visible = bool
+  end
+  #---------------------------------------------------------------------------
+  # Set tileset
+  #---------------------------------------------------------------------------
+  def tileset=(bitmap)
+    @tileset = bitmap
+    if @tileset.width % 32 != 0 || @tileset.height % 32 != 0
+      file = bitmap.filename
+      raise "Your tileset graphic #{file} needs to be divisible by 32!"
+    end
+    @redraw_tilemap = true
+  end
+  #---------------------------------------------------------------------------
+  # Set autotiles
+  #---------------------------------------------------------------------------
+  def autotiles=(array)
+    CallBackController.delete(@autotiles)
+    @autotiles = array
+    proc = Proc.new { |i| @redraw_tilemap = true; setup_autotile(i) }
+    CallBackController.setup_callback(@autotiles, proc)
+    @redraw_tilemap = true
+  end
+  #---------------------------------------------------------------------------
+  # Set map data
+  #---------------------------------------------------------------------------
+  def map_data=(table)
+    CallBackController.delete(@map_data)
+    @map_data = table
+    proc = Proc.new { @redraw_tilemap = true }
+    CallBackController.setup_callback(@map_data, proc)
+    @redraw_tilemap = true
+  end
+  #---------------------------------------------------------------------------
+  # Set map priorities
+  #---------------------------------------------------------------------------
+  def priorities=(table)
+    CallBackController.delete(@priorities)
+    @priorities = table
+    proc = Proc.new { @redraw_tilemap = true }
+    CallBackController.setup_callback(@priorities, proc)
+    @redraw_tilemap = true
+  end
+  #---------------------------------------------------------------------------
+  # Get horizontal shift
+  #---------------------------------------------------------------------------
+  def ox
+    @ox + @ox_float
+  end
+  #---------------------------------------------------------------------------
+  # Get vertical shift
+  #---------------------------------------------------------------------------
+  def oy
+    @oy + @oy_float
+  end
+  #---------------------------------------------------------------------------
+  # Shift tilemap horizontally
+  #---------------------------------------------------------------------------
+  def ox=(ox)
+    @ox_float = (ox - ox.to_i) % 1
+    @ox = ox.floor
+    @border_sprites.each{ |s| 
+      next if s.bitmap.height == 32
+      s.ox = @ox
+    }
+  end
+  #---------------------------------------------------------------------------
+  # Shift tilemap vertically
+  #---------------------------------------------------------------------------
+  def oy=(oy)
+    @oy_float = (oy - oy.to_i) % 1
+    @oy = oy.floor
+    @border_sprites.each{ |s| 
+      next if s.bitmap.width == 32
+      s.oy = @oy
+    }
   end
   #---------------------------------------------------------------------------
   # Update tilemap graphics
   #---------------------------------------------------------------------------
-  def update
-    # t = Time.now
+  def update; end;
+  def draw
+    # Figure out what the new X and Y coordinates for the ground layer would be
+    x = @old_ox - @ox
+    @old_ox = @ox
+    x += @ground_sprite.x
+
+    y = @old_oy - @oy
+    @old_oy = @oy
+    y += @ground_sprite.y
+
+    # No reason to do sprite shifting if we're just redrawing everything
+    if !@redraw_tilemap
+      # If layers would be too far to the left
+      if x < @viewport.ox - 31
+        # If still too far, then force redraw
+        if x + 32 < @viewport.ox - 31
+          @redraw_tilemap = true
+        else
+          # Shift all layers right by 32 and clear out left-most column
+          x += 32
+          @ground_sprite.bitmap.fill_rect(0, 0, 32, @ground_sprite.bitmap.height, Color.new(0,0,0,0))
+          @layer_sprites.each{|sprite| 
+            sprite.bitmap.fill_rect(0, 0, 32, sprite.bitmap.height, Color.new(0,0,0,0))
+          }
+          @shift += 1 # Redraw right column bit-flag (0001)
+        end
+      # If layers would be too far to the right
+      elsif x > @viewport.ox
+        # If still too far, then force redraw
+        if x - 32 > @viewport.ox
+          @redraw_tilemap = true
+        else
+          # Shift all layers left by 32 and clear out right-most column
+          x -= 32
+          @ground_sprite.bitmap.fill_rect(@ground_sprite.bitmap.width - 32, 0, 32, @ground_sprite.bitmap.height, Color.new(0,0,0,0))
+          @layer_sprites.each{|sprite| 
+            sprite.bitmap.fill_rect(sprite.bitmap.width - 32, 0, 32, sprite.bitmap.height, Color.new(0,0,0,0))
+          }
+          @shift += 2 # Redraw left column bit-flag (0010)
+        end
+      end
+      # Apply the change in X to the layers
+      if !@redraw_tilemap
+        @ground_sprite.x = x
+        @layer_sprites.each{|sprite| sprite.x = x}
+
+        # If layers would be too far up
+        if y < @viewport.oy - 31
+          # If still too far, then force redraw
+          if y + 32 < @viewport.oy - 31
+            @redraw_tilemap = true
+          else 
+            y += 32
+            layer = @layer_sprites.shift
+            layer.bitmap.clear
+            @layer_sprites.push(layer)
+            # Clear out the rows in the layers to prepare for drawing in #update
+            width = @layer_sprites[0].bitmap.width
+            num = @layer_sprites.size
+            (1...MAX_PRIORITY_LAYERS).each{ |index|
+              @layer_sprites[num-index].bitmap.fill_rect(0, (index - 1) * 32, width, 32, Color.new(0,0,0,0))
+            }
+            @shift += 4 # Redraw bottom row bit-flag (0100)
+          end
+        # If layers would be too far down
+        elsif y > @viewport.oy
+          # If still too far, then force redraw
+          if y - 32 > @viewport.oy
+            @redraw_tilemap = true
+          else
+            y -= 32
+            layer = @layer_sprites.pop
+            layer.bitmap.clear
+            @layer_sprites.unshift(layer)
+            # Clear out the rows in the layers to prepare for drawing in #update
+            width = @layer_sprites[0].bitmap.width
+            (1...MAX_PRIORITY_LAYERS).each{ |index|
+              @layer_sprites[index].bitmap.fill_rect(0, (MAX_PRIORITY_LAYERS - 1 - index) * 32, width, 32, Color.new(0,0,0,0))
+            }
+            @shift += 8 # Redraw top row bit-flag (1000)
+          end
+        end
+        # Apply the change to layers' Y and Z values
+        if !@redraw_tilemap
+          @ground_sprite.y = y
+          @layer_sprites.each_index{ |i| sprite = @layer_sprites[i]
+            sprite.y = y - 32 * (MAX_PRIORITY_LAYERS - 1 - i)
+            sprite.z = sprite.y + (192 - (5 - MAX_PRIORITY_LAYERS) * 32)
+          }
+        end
+      end
+    end
+
     autotile_need_update = []
     # Update autotile animation frames
     for i in 0..6
@@ -3731,14 +6467,10 @@ class Tilemap
         autotile_need_update[i] = true
       end
     end
-    # If Game.data[]= script call was used, force redraw on entire map
-    if self.map_data.changed
-      @first_update = true
-      self.map_data.changed = false
-    end
     
-    # Stop the update unless updating for first time or there are no shifting
-    return if (!@first_update && @shift == 0 && autotile_need_update.index(true).nil?)
+    
+    # Stop the update unless redrawing, there is shifting, or an autotile needs to update
+    return unless @redraw_tilemap || @shift != 0 || !autotile_need_update.index(true).nil?
 
     # Set up the array for the priority layers
     layers = [@layer_sprites.size + 1]
@@ -3756,326 +6488,127 @@ class Tilemap
       autotiledata.push(autotile_need_update[i] ? 1 : 0)
     end
     # Fills in remaining information of other tilemaps
-    misc_data = [@ox + Game.screen.shake.to_i, @oy, self.map_data.object_id, self.priorities.object_id, @shift, MAX_PRIORITY_LAYERS]
+    misc_data = [@ox + @viewport.ox, @oy + @viewport.oy,
+      self.map_data.object_id, self.priorities.object_id, @shift, 
+      MAX_PRIORITY_LAYERS, @wrapping]
     
     # If forcing fresh redraw of the map (or drawing for first time)
-    if @first_update
+    if @redraw_tilemap
       # Initialize layer sprite positions and clear them for drawing
+      @ground_sprite.bitmap.clear
+      @ground_sprite.x = (@viewport.ox - @viewport.ox % 32) - (@ox % 32)
+      @ground_sprite.x += 32 if @ground_sprite.x < @viewport.ox - 31
+      @ground_sprite.y = (@viewport.oy - @viewport.oy % 32) - (@oy % 32)
+      @ground_sprite.y += 32 if @ground_sprite.y < @viewport.oy - 31
+
+      y_buffer = 32 * (MAX_PRIORITY_LAYERS - 1)
+      z_buffer = MAX_PRIORITY_LAYERS * 32 + 32
       @layer_sprites.each_index{|i| layer = @layer_sprites[i]
         layer.bitmap.clear
-        layer.x = -(@ox % 32)
-        if layer.x <= -32 + Game.screen.shake.to_i
-          layer.x += 32
-        elsif layer.x > Game.screen.shake.to_i
-          layer.x -= 32
-        end
-        layer.y = (i * 32) - (@oy % 32) - (MAX_PRIORITY_LAYERS-1) * 32
+        layer.x = @ground_sprite.x
+        layer.y = @ground_sprite.y - y_buffer + 32 * i
+        layer.z = layer.y + z_buffer
       }
-      @ground_sprite.bitmap.clear
-      @ground_sprite.x = -(@ox % 32)
-      if @ground_sprite.x <= -32 + Game.screen.shake.to_i
-        @ground_sprite.x += 32
-      elsif @ground_sprite.x > Game.screen.shake.to_i
-        @ground_sprite.x -= 32
-      end
-      @ground_sprite.y = -(@oy % 32)
-      # Turn off flag to prevent calling this portion of code again
-      @first_update = false
       # Make DLL call
       @@initial_draw.call(layers.pack("L*"), tile_bms.pack("L*"), autotiledata.pack("L*"), misc_data.pack("L*"))
     elsif @shift != 0
       # Update for shifting
       @@update.call(layers.pack("L*"), tile_bms.pack("L*"), autotiledata.pack("L*"), misc_data.pack("L*"))
     end
-    # Check for autotile updates
-    if !autotile_need_update.index(true).nil?
+    # Check for autotile updates (at least one autotile needs an update)
+    # No need if redrawn tilemap since it already handled the updated autotiles
+    if !@redraw_tilemap && !autotile_need_update.index(true).nil?
       @@autotile_update.call(layers.pack("L*"), tile_bms.pack("L*"), autotiledata.pack("L*"), misc_data.pack("L*"))
     end
+    # Turn off flag
+    @redraw_tilemap = false
     # Reset shift flag
     @shift = 0
   end
   
-  #---------------------------------------------------------------------------
-  # Return if tilemap is visible
-  #---------------------------------------------------------------------------
-  def visible
-    return layer_sprites[0].visible
-  end
-  #---------------------------------------------------------------------------
-  # Show or hide tilemap
-  #---------------------------------------------------------------------------
-  def visible=(bool)
-    @layer_sprites.each{|sprite| sprite.visible = bool}
-    @ground_sprite.visible = bool
-  end
-  
-  #---------------------------------------------------------------------------
-  # Shift tilemap horizontally
-  #---------------------------------------------------------------------------
-  def ox=(ox)
-    # No shift = no need to continue
-    return if @ox == ox && !Game.screen.shaking?
-    # Compute difference and save change
-    diff = @ox - ox
-    @ox = ox
-    # If forcing redraw, no need to shift layer sprites around
-    return if @first_update
-    
-    # If shift is too big, force redraw
-    if diff.abs > 32
-      @first_update = true
-      return
-    end
-    # Shift sprites
-    @ground_sprite.x += diff
-    @layer_sprites.each{|sprite| sprite.x += diff}
-
-    # If sprites are out of bounds, reposition and redraw (make DLL call)
-    if @ground_sprite.x <= -32 + Game.screen.shake.to_i
-      @ground_sprite.x += 32
-      @ground_sprite.bitmap.fill_rect(0, 0, 32, @ground_sprite.bitmap.height, Color.new(0,0,0,0))
-      @layer_sprites.each{|sprite| 
-        sprite.x += 32
-        sprite.bitmap.fill_rect(0, 0, 32, sprite.bitmap.height, Color.new(0,0,0,0))
-      }
-      @shift += 1 # Redraw right column
-    elsif @ground_sprite.x > 0 + Game.screen.shake.to_i
-      @ground_sprite.x -= 32
-      @ground_sprite.bitmap.fill_rect(@ground_sprite.bitmap.width - 32, 0, 32, @ground_sprite.bitmap.height, Color.new(0,0,0,0))
-      @layer_sprites.each{|sprite| 
-        sprite.x -= 32
-        sprite.bitmap.fill_rect(sprite.bitmap.width - 32, 0, 32, sprite.bitmap.height, Color.new(0,0,0,0))
-      }
-      @shift += 2 # Redraw left column
-    end
-  end
-  #---------------------------------------------------------------------------
-  # Shift tilemap vertically
-  #---------------------------------------------------------------------------
-  def oy=(oy)
-    return if @oy == oy
-    diff = @oy - oy
-    @oy = oy
-    # If shift is too big, force redraw
-    if diff.abs > 32
-      @first_update = true
-      return
-    end
-    # Shift sprites
-    @ground_sprite.y += diff
-    @layer_sprites.each{ |sprite|
-      sprite.y += diff
-      sprite.z += diff
-    }
-    # If ground is out of bounds, reshift and redraw (make DLL call)
-    if @ground_sprite.y <= -32
-      @ground_sprite.y += 32
-      @shift += 4 # Redraw bottom row
-    elsif @ground_sprite.y > 0
-      @ground_sprite.y -= 32
-      @shift += 8 # Redraw top row
-    end
-
-    # If layer is too far up screen, need to move it down
-    if @layer_sprites[0].y <= -(MAX_PRIORITY_LAYERS * 32)
-      shift_amt = ((Graphics.height/32.0).ceil + MAX_PRIORITY_LAYERS) * 32
-      layer = @layer_sprites.shift
-      layer.y += shift_amt
-      layer.z += shift_amt
-      layer.bitmap.clear
-      @layer_sprites.push(layer)
-    end
-    # If layer is too far down screen, need to move it up
-    if @layer_sprites[-1].y > ((Graphics.height/32.0).ceil * 32)
-      shift_amt = ((Graphics.height/32.0).ceil + MAX_PRIORITY_LAYERS) * -32
-      layer = @layer_sprites.pop
-      layer.y += shift_amt
-      layer.z += shift_amt
-      layer.bitmap.clear
-      @layer_sprites.unshift(layer)
-    end
-  end
 end
-
 #===============================================================================
-# ** Game.player
+# ** Player
 #===============================================================================
-
 class Player
   
-  CENTER_X = ((Graphics.width / 2) - 16) * 4
-  CENTER_Y = ((Graphics.height / 2) - 16) * 4
+  CENTER_X = ((SCREEN_RESOLUTION[0] / 2) - 16) * 4    # Center screen x-coordinate * 4
+  CENTER_Y = ((SCREEN_RESOLUTION[1] / 2) - 16) * 4    # Center screen y-coordinate * 4
   
   def center(x, y)
-    max_x = (Game.map.width - (Graphics.width / 32.0).ceil) * 128
-    max_y = (Game.map.height - (Graphics.height / 32.0).ceil) * 128
+    # Recalculate the screen center based on the new resolution.
+    max_x = ((Game.map.width - (SCREEN_RESOLUTION[0]/32.0)) * 128).to_i
+    max_y = ((Game.map.height - (SCREEN_RESOLUTION[1]/32.0)) * 128).to_i
     Game.map.display_x = [0, [x * 128 - CENTER_X, max_x].min].max
     Game.map.display_y = [0, [y * 128 - CENTER_Y, max_y].min].max
-  end  
+  end
 end
-
 #===============================================================================
-# ** Game_Map
+# ** Map
 #===============================================================================
 class Map
-  alias setup_ setup
+  alias zer0_map_edge_setup setup
   def setup(map_id)
-    setup_(map_id)
-    @map_edge = [self.width - (Graphics.width/32.0).ceil, self.height - (Graphics.height/32.0).ceil]
+    zer0_map_edge_setup(map_id)
+    # Find the displayed area of the map in tiles. No calcualting every step.
+    @map_edge = [self.width - (SCREEN_RESOLUTION[0]/32.0), self.height - (SCREEN_RESOLUTION[1]/32.0)]
     @map_edge.collect! {|size| size * 128 }
-    if Game.map.width < Graphics.width / 32
-      Player.const_set(:CENTER_X, Graphics.width * 128)
+    # Change the map center if map is smaller than the resolution
+    if Game.map.width < SCREEN_RESOLUTION[0] / 32
+      Player.const_set(:CENTER_X, Game.map.width * 128)
     else
-      Player.const_set(:CENTER_X, ((Graphics.width / 2) - 16) * 4)
+      Player.const_set(:CENTER_X, ((SCREEN_RESOLUTION[0] / 2) - 16) * 4)
     end
-    if Game.map.height < Graphics.height / 32
-      Player.const_set(:CENTER_Y, Graphics.height * 128)
+    if Game.map.height < SCREEN_RESOLUTION[1] / 32
+      Player.const_set(:CENTER_Y, Game.map.height * 128)
     else
-      Player.const_set(:CENTER_Y, ((Graphics.height / 2) - 16) * 4)
+      Player.const_set(:CENTER_Y, ((SCREEN_RESOLUTION[1] / 2) - 16) * 4)
     end
   end
 
   def scroll_down(distance)
+    # Find point that the map edge meets the screen edge, using custom size.
     @display_y = [@display_y + distance, @map_edge[1]].min
   end
 
   def scroll_right(distance)
+    # Find point that the map edge meets the screen edge, using custom size.
     @display_x = [@display_x + distance, @map_edge[0]].min
   end
 end
 
+# Override set-methods to allow callbacks (necessary for Tilemap)
 #===============================================================================
-# ** Plane
+# ** Array
 #===============================================================================
-
-Object.send(:remove_const, :Plane)
-
-class Plane < Sprite
- 
-  def z=(z)
-    super(z * 1000)
+class Array
+  alias flag_changes_to_set []=
+  def []=(x, y)
+    flag_changes_to_set(x, y)
+    CallBackController.call(self, x, y)
   end
- 
-  def ox=(ox)
-    return if @bitmap == nil
-    super(ox % @bitmap.width)
-  end
- 
-  def oy=(oy)
-    return if @bitmap == nil
-    super(oy % @bitmap.height)
-  end
- 
-  def bitmap
-    return @bitmap
-  end
- 
-  def bitmap=(tile)
-    @bitmap = tile
-    xx = 1 + (Graphics.width.to_f / tile.width).ceil
-    yy = 1 + (Graphics.height.to_f / tile.height).ceil
-    plane = Bitmap.new(@bitmap.width * xx, @bitmap.height * yy)
-    (0..xx).each {|x| (0..yy).each {|y|
-      plane.blt(x * @bitmap.width, y * @bitmap.height, @bitmap, @bitmap.rect)
-    }}
-    super(plane)
-  end
- 
-  def x; end
-  def y; end
-  def x=(x); end
-  def y=(y); end
 end
-
 #===============================================================================
 # ** Table
 #===============================================================================
-
 class Table
-  attr_accessor :changed
-  
-  alias init_for_changed initialize
-  def initialize(*args)
-    init_for_changed(*args)
-    @changed = false
-  end
-  
   alias flag_changes_to_set []=
-  def []=(x, y, z=nil, v=nil)
-    if v.nil?
-      if z.nil?
-        flag_changes_to_set(x, y)
-      else
-        flag_changes_to_set(x, y, z)
-      end
-    else
-      @changed = true
-      flag_changes_to_set(x, y, z, v)
-    end
+  def []=(*args)
+    flag_changes_to_set(*args)
+    CallBackController.call(self, *args)
   end
-  
 end
 
-module RPG::Cache
-
-  AUTO_INDEX = 
-  
-  [27,28,33,34],  [5,28,33,34],  [27,6,33,34],  [5,6,33,34],
-  [27,28,33,12],  [5,28,33,12],  [27,6,33,12],  [5,6,33,12],
-  [27,28,11,34],  [5,28,11,34],  [27,6,11,34],  [5,6,11,34],
-  [27,28,11,12],  [5,28,11,12],  [27,6,11,12],  [5,6,11,12],
-  [25,26,31,32],  [25,6,31,32],  [25,26,31,12], [25,6,31,12],
-  [15,16,21,22],  [15,16,21,12], [15,16,11,22], [15,16,11,12],
-  [29,30,35,36],  [29,30,11,36], [5,30,35,36],  [5,30,11,36],
-  [39,40,45,46],  [5,40,45,46],  [39,6,45,46],  [5,6,45,46],
-  [25,30,31,36],  [15,16,45,46], [13,14,19,20], [13,14,19,12],
-  [17,18,23,24],  [17,18,11,24], [41,42,47,48], [5,42,47,48],
-  [37,38,43,44],  [37,6,43,44],  [13,18,19,24], [13,14,43,44],
-  [37,42,43,48],  [17,18,47,48], [13,18,43,48], [13,18,43,48]
-  
-  def self.autotile(filename)
-    key = "Graphics/Autotiles/#{filename}"
-    if !@cache.include?(key) || @cache[key].disposed? 
-      # Cache the autotile graphic.
-      @cache[key] = (filename == '') ? Bitmap.new(128, 96) : Bitmap.new(key)
-      # Cache each configuration of this autotile.
-      new_bm = self.format_autotiles(@cache[key], filename)
-      @cache[key].dispose
-      @cache[key] = new_bm
-    end
-    return @cache[key]
-  end
-
-  def self.format_autotiles(bitmap, filename)
-    if bitmap.height > 32 && bitmap.height < 256
-      frames = bitmap.width / 96
-      template = Bitmap.new(256*frames,192)
-      # Create a bitmap to use as a template for creation.
-      (0..frames-1).each{|frame|
-      (0...6).each {|i| (0...8).each {|j| AUTO_INDEX[8*i+j].each {|number|
-        number -= 1
-        x, y = 16 * (number % 6), 16 * (number / 6)
-        rect = Rect.new(x + (frame * 96), y, 16, 16)
-        template.blt((32 * j + x % 32) + (frame * 256), 32 * i + y % 32, bitmap, rect)
-      }}}}
-      return template
-    else
-      return bitmap
-    end
-  end
-  
-end
-
+if WEATHER_ADJUSTMENT
 #===============================================================================
 # ** RPG::Weather
 #===============================================================================
-
 class RPG::Weather
   
   alias add_more_weather_sprites initialize
   def initialize(vp = nil)
     add_more_weather_sprites(vp)
-    total_sprites = Graphics.width * Graphics.height / 7680
+    total_sprites = SCREEN_RESOLUTION[0] * SCREEN_RESOLUTION[1] / 7680
     if total_sprites > 40
       for i in 1..(total_sprites - 40)
         sprite = Sprite.new(vp)
@@ -4145,22 +6678,24 @@ class RPG::Weather
       x = sprite.x - @ox
       y = sprite.y - @oy
       if sprite.opacity < 64
-        sprite.x = rand(Graphics.width + 100) - 100 + @ox
-        sprite.y = rand(Graphics.width + 200) - 200 + @oy
+        sprite.x = rand(SCREEN_RESOLUTION[0] + 100) - 100 + @ox
+        sprite.y = rand(SCREEN_RESOLUTION[0] + 200) - 200 + @oy
         sprite.opacity = 160 + rand(96)
       end
     end
   end
   
 end
-
-
 #===============================================================================
 # ** Screen
 #===============================================================================
-
 class Screen
-  
+  #--------------------------------------------------------------------------
+  # * Set Weather
+  #     type : type
+  #     power : strength
+  #     duration : time
+  #--------------------------------------------------------------------------
   def weather(type, power, duration)
     @weather_type_target = type
     if @weather_type_target != 0
@@ -4169,11 +6704,7 @@ class Screen
     if @weather_type_target == 0
       @weather_max_target = 0.0
     else
-      if WEATHER_ADJUSTMENT
-        num = Graphics.width * Graphics.height / 76800.0
-      else
-        num = 4.0
-      end
+      num = SCREEN_RESOLUTION[0] * SCREEN_RESOLUTION[1] / 76800.0
       @weather_max_target = (power + 1) * num
     end
     @weather_duration = duration
@@ -4183,37 +6714,378 @@ class Screen
     end
   end
   
-  def shaking?
-    return @shake_duration > 0 || @shake != 0
-  end
-  
 end
 
+end # if WEATHER_ADJUSTMENT
 #===============================================================================
 # ** MapSprite
 #===============================================================================
-
 class MapSprite
-  
+
   alias init_for_centered_small_maps initialize
+  #---------------------------------------------------------------------------
+  # Resize and reposition viewport so that it fits smaller maps
+  #---------------------------------------------------------------------------
   def initialize
     @center_offsets = [0,0]
-    if Graphics.width < Graphics.width / 32
-      x = (Graphics.width - Graphics.width * 32) / 2
+    if Game.map.width < SCREEN_RESOLUTION[0] / 32
+      x = (SCREEN_RESOLUTION[0] - Game.map.width * 32) / 2
     else
       x = 0
     end
-    if Graphics.height < Graphics.height / 32
-      y = (Graphics.height - Graphics.height * 32) / 2
+    if Game.map.height < SCREEN_RESOLUTION[1] / 32
+      y = (SCREEN_RESOLUTION[1] - Game.map.height * 32) / 2
     else
       y = 0
     end
     init_for_centered_small_maps
-    w = [Graphics.width  * 32 , Graphics.width].min
-    h = [Graphics.height * 32 , Graphics.height].min
+    w = [Game.map.width  * 32 , SCREEN_RESOLUTION[0]].min
+    h = [Game.map.height * 32 , SCREEN_RESOLUTION[1]].min
     @viewport1.resize(x,y,w,h)
   end
+  #---------------------------------------------------------------------------
+  # Puts the tilemap update method at the end, ensuring that both
+  # @tilemap.ox/oy and @viewport1.ox/oy are set.
+  #---------------------------------------------------------------------------
+  alias update_tilemap_for_real update
+  def update
+    update_tilemap_for_real
+    @tilemap.draw
+  end
+end
+
+# The following script will only be enabled if the resolution is bigger than the
+# default OR if the game does not want certain maps to wrap around.
+if DISABLE_WRAP || SCREEN_RESOLUTION[0] > 640 || SCREEN_RESOLUTION[1] > 480
+#--------------------------------------------[Unlimited Resolution by Hime]-----
+=begin
+#===============================================================================
+ Title: Unlimited Resolution 
+ Date: Oct 24, 2013
+ Author: Hime ( ** Modified by KK20 ** )
+--------------------------------------------------------------------------------   
+ Terms of Use
+ Free
+--------------------------------------------------------------------------------
+ Description
+ 
+ This script modifies Graphics.resize_screen to overcome the 640x480 limitation.
+ It also includes some modifications to module Graphics such as allowing the
+ default fade transition to cover the entire screen.
+ 
+ Now you can have arbitrarily large game resolutions.
+--------------------------------------------------------------------------------
+ Credits
+ 
+ Unknown author for overcoming the 640x480 limitation
+ Lantier, from RMW forums for posting the snippet above
+ Esrever for handling the viewport
+ Jet, for the custom Graphics code
+ FenixFyre, for the Plane class fix
+ Kaelan, for several bug fixes
+--------------------------------------------------------------------------------
+ KK20 Notes:
+ - Plane class was rewritten from the original script. Certain lines in the
+   unknown scripter's code can be omitted entirely to allow this implementation.
+ - Likewise, the Viewport class needed new methods to handle this Plane rewrite.
+ - This entire script only applies to games that go beyond the default 640x480
+   resolution.
+ 
+#===============================================================================
+=end
+unless XPACE
+class Bitmap
+  #----------------------------------------------------------------------------
+  # ● New method: address
+  #----------------------------------------------------------------------------
+  def address
+    @rtlmemory_pi ||= Win32API.new('kernel32','RtlMoveMemory','pii','i')
+    @address ||= (  @rtlmemory_pi.call(a="\0"*4, __id__*2+16, 4)
+                      @rtlmemory_pi.call(a, a.unpack('L')[0]+8, 4)
+                      @rtlmemory_pi.call(a, a.unpack('L')[0]+16, 4)
+                      a.unpack('L')[0]    )
+  end
+end
+end
+#===============================================================================
+# ** Viewport
+#===============================================================================
+class Viewport
+  attr_accessor :parent, :children
   
+  alias init_children_vps initialize
+  def initialize(*args)
+    @children = []
+    @parent = false
+    init_children_vps(*args)
+  end
+  
+  alias dispose_parent dispose
+  def dispose
+    @children.each{|child| child.dispose} if @parent
+    dispose_parent
+  end
+  
+  alias flash_parent flash
+  def flash(color, duration)
+    if @parent
+      @children.each{|child| child.flash_parent(color, duration)}
+    else
+      flash_parent(color, duration)
+    end
+  end
+  
+  alias update_parent update
+  def update
+    @children.each{|child| child.update} if @parent
+    update_parent
+  end
+  
+  alias resize_trigger resize
+  def resize(*args)
+    @children.each{ |child| 
+      if args[0].is_a?(Rect)
+        rect = args[0]
+        new_args = Rect.new(rect.x,rect.y,child.rect.width,child.rect.height)
+      else
+        new_args = [args[0],args[1]]
+        new_args[2] = child.rect.width
+        new_args[3] = child.rect.height
+      end
+      child.resize_trigger(*new_args)
+    } if @parent
+    resize_trigger(*args)
+  end
+  
+  alias set_trigger_vp_ox ox=
+  def ox=(nx)
+    return if self.ox == nx
+    set_trigger_vp_ox(nx)
+    @children.each{|child| child.ox = nx}
+  end
+  
+  alias set_trigger_vp_oy oy=
+  def oy=(ny)
+    return if self.oy == ny
+    set_trigger_vp_oy(ny)
+    @children.each{|child| child.oy = ny}
+  end
+  
+  alias tone_parent tone=
+  def tone=(t)
+    if @parent
+      @children.each{|child| child.tone_parent(t)}
+    else
+      tone_parent(t)
+    end
+  end
+
+end
+#===============================================================================
+# ** Plane
+#===============================================================================
+class Plane
+  attr_accessor :offset_x, :offset_y
+  
+  alias parent_initialize initialize
+  def initialize(viewport=nil,parent=true)
+    @parent = parent
+    @children = []
+    parent_initialize(viewport)
+    @offset_x = 0
+    @offset_y = 0
+    # If the parent Plane object; but don't make more children if already have
+    # some. This occurs in MapSprite when initializing the Panorama and Fog
+    if @parent && viewport
+      viewport.parent = true
+      create_children
+    end
+  end
+  
+  def create_children
+    gw = [SCREEN_RESOLUTION[0], Game.map.width * 32].min
+    gh = [SCREEN_RESOLUTION[1], Game.map.height * 32].min
+    w = (gw - 1) / 640
+    h = (gh - 1) / 480
+    for y in 0..h
+      for x in 0..w
+        # This is the top-left default/parent Plane, so skip it
+        #next if x == 0 && y == 0
+        # Create viewport unless it already exists
+        width = w > 0 && x == w ? gw - 640 : 640
+        height = h > 0 && y == h ? gh - 480 : 480
+        vp = Viewport.new(x * 640, y * 480, width, height, true)
+        vp.offset_x = x * 640
+        vp.offset_y = y * 480
+        # Have to do this in order to prevent overlapping with the parent
+        # (for MapSprite viewport1 mainly)
+        vp.z = self.viewport.z - 1
+        self.viewport.children.push(vp)
+        # Create the child Plane
+        plane = Plane.new(vp,false)
+        plane.offset_x = x * 640
+        plane.ox = 0
+        plane.offset_y = y * 480
+        plane.oy = 0
+        # Push to array
+        @children.push(plane)
+      end
+    end
+  end
+  
+  # For the remaining Plane properties, if the parent changes, so do its children
+  
+  alias dispose_parent dispose
+  def dispose
+    @children.each{|child| child.dispose} if @parent
+    dispose_parent
+  end
+  
+  alias zoom_x_parent zoom_x=
+  def zoom_x=(new_val)
+    new_val = 0 if new_val < 0
+    @children.each{|child| child.zoom_x_parent(new_val)} if @parent
+    zoom_x_parent(new_val)
+  end
+  
+  alias zoom_y_parent zoom_y=
+  def zoom_y=(new_val)
+    new_val = 0 if new_val < 0
+    @children.each{|child| child.zoom_y_parent(new_val)} if @parent
+    zoom_y_parent(new_val)
+  end
+  
+  alias ox_parent ox=
+  def ox=(new_val)
+    @children.each{|child| child.ox = new_val} if @parent
+    ox_parent(new_val + @offset_x)
+  end
+  
+  alias oy_parent oy=
+  def oy=(new_val)
+    @children.each{|child| child.oy = new_val} if @parent
+    oy_parent(new_val + @offset_y)
+  end
+  
+  alias bitmap_parent bitmap=
+  def bitmap=(new_val)
+    @children.each{|child| child.bitmap_parent(new_val)} if @parent
+    #bitmap_parent(new_val)
+  end
+  
+  alias visible_parent visible=
+  def visible=(new_val)
+    @children.each{|child| child.visible_parent(new_val)} if @parent
+    visible_parent(new_val)
+  end
+  
+  alias z_parent z=
+  def z=(new_val)
+    # Because the children spawn new Viewports, they have to be lower than the
+    # parent's viewport to prevent drawing OVER the parent...unless the Plane's
+    # z-value is more than zero, in which case the children viewports NEED to be
+    # higher than the parent's. By doing this, we can have panoramas be below
+    # the tilemap and fogs be over the tilemap.
+    if @parent && @children[0]
+      child = @children[0]
+      if new_val > 0 && child.viewport.z < self.viewport.z
+        @children.each{|child| child.viewport.z += 1}
+      elsif new_val <= 0 && child.viewport.z >= self.viewport.z
+        @children.each{|child| child.viewport.z -= 1}
+      end
+    end
+    
+    @children.each{|child| child.z_parent(new_val)} if @parent
+    z_parent(new_val)
+  end
+  
+  alias opacity_parent opacity=
+  def opacity=(new_val)
+    @children.each{|child| child.opacity_parent(new_val)} if @parent
+    opacity_parent(new_val)
+  end
+  
+  alias color_parent color=
+  def color=(new_val)
+    if @parent
+      @children.each{|child| child.color_parent(new_val)}
+    else
+      color_parent(new_val)
+    end
+  end
+  
+  alias blend_type_parent blend_type=
+  def blend_type=(new_val)
+    @children.each{|child| child.blend_type_parent(new_val)} if @parent
+    blend_type_parent(new_val)
+  end 
+  
+  alias tone_parent tone=
+  def tone=(new_val)
+    if @parent
+      @children.each{|child| child.tone_parent(new_val)}
+    else
+      tone_parent(new_val)
+    end
+  end
+  
+end
+#------------------------------------------[End of Unlimited Resolution]--------
+end
+
+XPAT_MAP_INFOS = load_data("Data/MapInfos.rxdata")
+class Slot
+  attr_accessor :slot
+  
+  def initialize
+    @slot = []
+    
+    for i in 0...10
+      @slot[i] = -1
+    end
+  end
+  
+  def setSlot(index, slot)
+    @slot[index] = slot
+  end
+  
+  def getSlot(n)
+    return @slot[n]
+  end
+  
+  def getKey(n)
+    return Key::SLOT[n]
+  end
+end
+class Cool
+  attr_accessor :nowCooltime
+  attr_accessor :fullCooltime
+  
+  def initialize(nowCooltime, fullCooltime)
+    @nowCooltime = nowCooltime
+    @fullCooltime = fullCooltime
+  end
+end
+
+class Cooltime
+  attr_accessor :slot
+  
+  def initialize
+    @slot = []
+    
+    for i in 0...10
+      @slot[i] = Cool.new(0, 0)
+    end
+  end
+  
+  def setCool(i, nowCooltime, fullCooltime)
+    @slot[i].nowCooltime = nowCooltime
+    @slot[i].fullCooltime = fullCooltime
+  end
+  
+  def getCool(i)
+    return @slot[i]
+  end
 end
 
 
@@ -4281,47 +7153,15 @@ class Scene_Logo
   end
 end
 #────────────────────────────────────────────────────────────────────────────
-# ▶ Scene_Login
-# --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com)
-# Date      2014. 1. 18
-#────────────────────────────────────────────────────────────────────────────
-
-class Scene_Login
-  def main
-    @sprite = Sprite.new
-    @sprite.bitmap = RPG::Cache.title("Title")
-    Graphics.transition
-    MUI_Login.new
-    loop do
-      MUI.update
-      Graphics.update
-      update
-      if $scene != self
-        break
-      end
-    end
-    MUI.getForm(MUI_Login).dispose if MUI.include?(MUI_Login)
-    MUI.getForm(MUI_Register).dispose if MUI.include?(MUI_Register)
-    Graphics.freeze    
-    @sprite.bitmap.dispose
-    @sprite.dispose
-  end
-  
-  def update
-    Socket.update
-  end
-end
-#────────────────────────────────────────────────────────────────────────────
 # ▶ Scene_Server
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 2
 #────────────────────────────────────────────────────────────────────────────
-
 class Scene_Server
   def initialize
-    @cache = RPG::Cache.title("Title.png"), RPG::Cache.title("cloud.png")
+    Game.system.bgm_play(RPG::AudioFile.new("Rain.mp3"))
+    @cache = RPG::Cache.title("title.png"), RPG::Cache.title("cloud.png")
     @sprite = []
     # title
     @sprite[0] = Sprite.new
@@ -4330,24 +7170,25 @@ class Scene_Server
     @sprite[1] = Sprite.new
     @sprite[1].ox = @cache[1].width / 2
     @sprite[1].oy = @cache[1].height / 2
-    @sprite[1].x = 372 + @sprite[1].ox
-    @sprite[1].y = 85 + @sprite[1].oy
+    @sprite[1].x = 400
+    @sprite[1].y = 85
     @sprite[1].bitmap = @cache[1]
     @sprite[1].opacity = 0
-    @viewport = Viewport.new(383, 135, 25, 25)
+    @viewport = Viewport.new(390, 135, 25, 25)
     # rain
     @rain = true
     @sprite[2] = Sprite.new(@viewport)
     @sprite[2].bitmap = Bitmap.new(25, @viewport.rect.height * 2)
+    @sprite[2].opacity = 0
     # comment
     @sprite[3] = Sprite.new
     @sprite[3].y = 212
     @sprite[3].opacity = 0
-    @sprite[3].bitmap = Bitmap.new(*Device::getRect)
-    @sprite[3].bitmap.font.name = Config::FONT
+    @sprite[3].bitmap = Bitmap.new(800, 20)
+    @sprite[3].bitmap.font.name = Config::FONT[0]
     @sprite[3].bitmap.font.size = 20
     @sprite[3].bitmap.draw_multi_text(0, 0, @sprite[3].bitmap.width, @sprite[3].bitmap.height,
-    "안녕하세요.\n단비 프로젝트에 오신 것을 환영합니다.", 1)
+    "RPGXP 온라인 엔진", 1)
     MUI_Server.new
   end
   
@@ -4366,7 +7207,8 @@ class Scene_Server
       end
     end
     Graphics.freeze
-    @sprite.each_index { |n| @sprite[n].dispose }
+    @sprite.each_index { |n| @sprite[n].bitmap.dispose; @sprite[n].dispose }
+    #@cache.each_index { |n| @cache[n].dispose }
     MUI.getForm(MUI_Server).dispose
   end
   
@@ -4420,12 +7262,42 @@ class Scene_Server
   end
 end
 #────────────────────────────────────────────────────────────────────────────
+# ▶ Scene_Login
+# --------------------------------------------------------------------------
+# Author    뮤 (mu29gl@gmail.com)
+# Date      2014. 1. 18
+#────────────────────────────────────────────────────────────────────────────
+class Scene_Login
+  def main
+    @sprite = Sprite.new
+    @sprite.bitmap = RPG::Cache.title("Title")
+    Graphics.transition
+    MUI_Login.new
+    loop do
+      MUI.update
+      Graphics.update
+      update
+      if $scene != self
+        break
+      end
+    end
+    MUI.getForm(MUI_Login).dispose if MUI.include?(MUI_Login)
+    MUI.getForm(MUI_Register).dispose if MUI.include?(MUI_Register)
+    Graphics.freeze    
+    @sprite.bitmap.dispose
+    @sprite.dispose
+  end
+  
+  def update
+    Socket.update
+  end
+end
+#────────────────────────────────────────────────────────────────────────────
 # ▶ Scene_Title
 # --------------------------------------------------------------------------
 # Author    뮤 (mu29gl@gmail.com)
 # Date      2015. 2
 #────────────────────────────────────────────────────────────────────────────
-
 class Scene_Title
   def main
     $data_tilesets      = load_data("Data/Tilesets.rxdata")
@@ -4453,7 +7325,7 @@ class Scene_Title
     if Input.trigger?(Input::C)
       Audio.bgm_stop
       Graphics.frame_count = 0
-      Game.map.setup(1)
+      Game.map.setup(2)
       # 플레이어를 초기 위치에 이동
       Game.player.moveto(9, 7)
       # 플레이어를 리프레쉬
@@ -4474,6 +7346,8 @@ end
 # Date      2015
 #────────────────────────────────────────────────────────────────────────────
 class Scene_Map
+  attr_accessor :hud
+  
   def initialize
     @mapSprite = MapSprite.new
     @hud = MUI_HUD.new
@@ -4595,404 +7469,117 @@ end
 # Author    Ruby
 # Version   1.8.1
 #────────────────────────────────────────────────────────────────────────────
-
 module Win32
-  #--------------------------------------------------------------------------
-  # Retrieves data from a pointer.
-  #--------------------------------------------------------------------------
   def copymem(len)
-    buf = "\0" * len
-    Win32API.new("kernel32", "RtlMoveMemory", "ppl", "").call(buf, self, len)
+    buf = '\0' * len
+    Win32API::RtlMoveMemory.call(buf, self, len)
     buf
   end
 end
 
-# Extends the numeric class.
 class Numeric
   include Win32
+  def ref(length)
+    buffer = "\\" * length
+    Win32API::RtlMoveMemory.call(buffer, self, length)
+    return buffer
+  end
 end
 
-# Extends the string class.
 class String
   include Win32
-end
-
-module Winsock
-  #--------------------------------------------------------------------------
-  # * Accept Connection
-  #--------------------------------------------------------------------------
-  def self.accept(*args)
-    Win32API.new("ws2_32", "accept", "ppl", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Bind
-  #--------------------------------------------------------------------------
-  def self.bind(*args)
-    Win32API.new("ws2_32", "bind", "ppl", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Close Socket
-  #--------------------------------------------------------------------------
-  def self.closesocket(*args)
-    Win32API.new("ws2_32", "closesocket", "p", "l").call(*args)
-  end  
-  #--------------------------------------------------------------------------
-  # * Connect
-  #--------------------------------------------------------------------------
-  def self.connect(*args)
-    Win32API.new("ws2_32", "connect", "ppl", "l").call(*args)
-  end    
-  #--------------------------------------------------------------------------
-  # * Get host (Using Adress)
-  #--------------------------------------------------------------------------
-  def self.gethostbyaddr(*args)
-    Win32API.new("ws2_32", "gethostbyaddr", "pll", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Get host (Using Name)
-  #-------------------------------------------------------------------------- 
-  def self.gethostbyname(*args)
-    Win32API.new("ws2_32", "gethostbyname", "p", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Get host's Name
-  #--------------------------------------------------------------------------
-  def self.gethostname(*args)
-    Win32API.new("ws2_32", "gethostname", "pl", "").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Get Server (Using Name)
-  #--------------------------------------------------------------------------
-  def self.getservbyname(*args)
-    Win32API.new("ws2_32", "getservbyname", "pp", "p").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * HT OnL
-  #--------------------------------------------------------------------------
-  def self.htonl(*args)
-    Win32API.new("ws2_32", "htonl", "l", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * HT OnS
-  #--------------------------------------------------------------------------
-  def self.htons(*args)
-    Win32API.new("ws2_32", "htons", "l", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Inet Adress
-  #--------------------------------------------------------------------------
-  def self.inet_addr(*args)
-    Win32API.new("ws2_32", "inet_addr", "p", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Inet NtOA
-  #--------------------------------------------------------------------------
-  def self.inet_ntoa(*args)
-    Win32API.new("ws2_32", "inet_ntoa", "l", "p").call(*args)
-  end  
-  #--------------------------------------------------------------------------
-  # * Listen
-  #--------------------------------------------------------------------------
-  def self.listen(*args)
-    Win32API.new("ws2_32", "listen", "pl", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Recieve
-  #--------------------------------------------------------------------------
-  def self.recv(*args)
-    Win32API.new("ws2_32", "recv", "ppll", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Select
-  #--------------------------------------------------------------------------
-  def self.select(*args)
-    Win32API.new("ws2_32", "select", "lpppp", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Send
-  #--------------------------------------------------------------------------
-  def self.send(*args)
-    Win32API.new("ws2_32", "send", "ppll", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Set Socket Options
-  #--------------------------------------------------------------------------
-  def self.setsockopt(*args)
-    Win32API.new("ws2_32", "setsockopt", "pllpl", "l").call(*args)
-  end  
-  #--------------------------------------------------------------------------
-  # * Shutdown
-  #--------------------------------------------------------------------------
-  def self.shutdown(*args)
-    Win32API.new("ws2_32", "shutdown", "pl", "l").call(*args)
-  end
-  #--------------------------------------------------------------------------
-  # * Socket
-  #--------------------------------------------------------------------------
-  def self.socket(*args)
-    Win32API.new("ws2_32", "socket", "lll", "l").call(*args)  
-  end
-  #--------------------------------------------------------------------------
-  # * Get Last Error
-  #--------------------------------------------------------------------------
-  def self.WSAGetLastError(*args)
-    Win32API.new("ws2_32", "WSAGetLastError", "", "l").call(*args)
+  def ref(length)
+    buffer = "\\" * length
+    Win32API::RtlMoveMemory.call(buffer, self, length)
+    return buffer
   end
 end
 
-class APISocket
-  #--------------------------------------------------------------------------
-  # * Returns the associated IP address for the given hostname.
-  #--------------------------------------------------------------------------  
-  def self.getaddress(host)
-    return gethostbyname(host)[3].unpack("C4").join(".")
+class Network
+  def self.call
+    @closesocket = Win32API.new('ws2_32.dll', 'closesocket', 'p', 'l')
+    @connect = Win32API.new('ws2_32.dll', 'connect', 'ppl', 'l')
+    @gethostbyname = Win32API.new('ws2_32.dll', 'gethostbyname', 'p', 'l')
+    @recv = Win32API.new('ws2_32.dll', 'recv', 'ppll', 'l')
+    @select = Win32API.new('ws2_32.dll', 'select', 'lpppp', 'l')
+    @send = Win32API.new('ws2_32.dll', 'send', 'ppll', 'l')
+    @socket = Win32API.new('ws2_32.dll', 'socket', 'lll', 'l')
+    @wsagetlasterror = Win32API.new('ws2_32.dll', 'WSAGetLastError', '', 'l')
   end
-  #--------------------------------------------------------------------------
-  # * Returns the associated IP address for the given hostname.
-  #--------------------------------------------------------------------------  
-  def self.getservice(serv)
-    case serv
-    when Numeric
-      return serv
-    when String
-      return getservbyname(serv)
-    else
-      raise "Please us an interger or string for services."
-    end
+  
+  def self.close
+    ret = @closesocket.call($fd) rescue nil
+    return ret
   end
-  #--------------------------------------------------------------------------
-  # * Returns information about the given hostname.
-  #--------------------------------------------------------------------------
+  
+  def self.connect(ip, port)
+    check if ($fd = @socket.call(2, 1, 6)) == -1
+    sockaddr = sockaddr_in(port, ip)
+    ret = @connect.call($fd, sockaddr, sockaddr.size)
+    check if ret == -1
+    return ret
+  end
+  
   def self.gethostbyname(name)
-    raise SocketError::ENOASSOCHOST if (ptr = Winsock.gethostbyname(name)) == 0
-    host = ptr.copymem(16).unpack("iissi")
-    return [host[0].copymem(64).split("\0")[0], [], host[2], host[4].copymem(4).unpack("l")[0].copymem(4)]
+    data = @gethostbyname.call(name)
+    raise SocketError::ENOASSOCHOST if data == 0
+    host = data.ref(16).unpack('LLssL')
+    name = host[0].ref(256).unpack("c*").pack("c*").split("\0")[0]
+    address_type = host[2]
+    address_list = host[4].ref(4).unpack('L')[0].ref(4).unpack("c*").pack("c*")
+    return [name, [], address_type, address_list]
+    #ptr = @gethostbyname.call(name)
+    #host = ptr.copymem(16).unpack('iissi')
+    #p [host[0].copymem(16).split('\u0000')[0], [], host[2], host[4].copymem(4).unpack('l')[0].copymem(4)]
+    #return [host[0].copymem(16).split('\u0000')[0], [], host[2], host[4].copymem(4).unpack('l')[0].copymem(4)]
   end
-  #--------------------------------------------------------------------------
-  # * Returns the user's hostname.
-  #--------------------------------------------------------------------------  
-  def self.gethostname
-    buf = "\0" * 256
-    Winsock.gethostname(buf, 256)
-    return buf.strip
+  
+  def self.recv(len, flags = 0)
+    buf = "\0" * len
+    len = @recv.call($fd, buf, buf.size, flags)
+    check if len == -1
+    return buf, len
   end
-  #--------------------------------------------------------------------------
-  # * Returns information about the given service.
-  #--------------------------------------------------------------------------
-  def self.getservbyname(name)
-    case name
-    when /echo/i
-      return 7
-    when /daytime/i
-      return 13
-    when /ftp/i
-      return 21
-    when /telnet/i
-      return 23
-    when /smtp/i
-      return 25
-    when /time/i
-      return 37
-    when /http/i
-      return 80
-    when /pop/i
-      return 110
-    else
-      Network.testing? != 0 ? (Network.testresult(true)) : (raise "Service not recognized.")
-      return if Network.testing? == 2
-    end
+  
+  def self.select(timeout)
+    ret = @select.call(1, [1, $fd].pack('ll'), 0, 0, [timeout, timeout * 1000000].pack('ll'))
+    check if ret == -1
+    return ret
   end
-  #--------------------------------------------------------------------------
-  # * Creates an INET-sockaddr struct.
-  #--------------------------------------------------------------------------  
+  
+  def self.send(msg, flags = 0)
+    ret = @send.call($fd, msg, msg.size, flags)
+    check if ret == -1
+    return ret
+  end
+  
   def self.sockaddr_in(port, host)
-    begin
-      [2, getservice(port)].pack("sn") + gethostbyname(host)[3] + [].pack("x8")
-    rescue
-      Network.testing? != 0 ? (Network.testresult(true)): (nil)
-      return if Network.testing? == 2
+    return [2, port].pack('sn') + gethostbyname(host)[3] + [].pack('x8')
+  end
+  
+  def self.ready?
+    if select(0) != 0
+      return true
+    else
+      return false
     end
   end
-  #--------------------------------------------------------------------------
-  # * Creates a new socket and connects it to the given host and port.
-  #--------------------------------------------------------------------------  
-  def self.open(*args)
-    socket = new(*args)
-    if block_given?
-      begin
-        yield socket
-      ensure
-        socket.close
-      end
-    end
-    return nil
-  end
-  #--------------------------------------------------------------------------
-  # * Creates a new socket.
-  #--------------------------------------------------------------------------  
-  def initialize(domain, type, protocol)
-    SocketError.check if (@fd = Winsock.socket(domain, type, protocol)) == -1
-    return @fd
-  end
-  #--------------------------------------------------------------------------
-  # * Accepts incoming connections.
-  #--------------------------------------------------------------------------  
-  def accept(flags = 0)
-    buf = "\0" * 16
-    SocketError.check if Winsock.accept(@fd, buf, flags) == -1
-    return buf
-  end
-  #--------------------------------------------------------------------------
-  # * Binds a socket to the given sockaddr.
-  #--------------------------------------------------------------------------  
-  def bind(sockaddr)
-    SocketError.check if (ret = Winsock.bind(@fd, sockaddr, sockaddr.size)) == -1
-    return ret
-  end
-  #--------------------------------------------------------------------------
-  # * Closes a socket.
-  #--------------------------------------------------------------------------  
-  def close
-    SocketError.check if (ret = Winsock.closesocket(@fd)) == -1
-    return ret
-  end
-  #--------------------------------------------------------------------------
-  # * Connects a socket to the given sockaddr.
-  #--------------------------------------------------------------------------  
-  def connect(sockaddr)
-    #return if Network.testing? == 2
-    SocketError.check if (ret = Winsock.connect(@fd, sockaddr, sockaddr.size)) == -1
-    return ret
-  end
-  #--------------------------------------------------------------------------
-  # * Listens for incoming connections.
-  #--------------------------------------------------------------------------  
-  def listen(backlog)
-    SocketError.check if (ret = Winsock.listen(@fd, backlog)) == -1
-    return ret
-  end
-  #--------------------------------------------------------------------------
-  # * Checks waiting data's status.
-  #--------------------------------------------------------------------------  
-  def select(timeout)
-    SocketError.check if (ret = Winsock.select(1, [1, @fd].pack("ll"), 0, 0, [timeout, timeout * 1000000].pack("ll"))) == -1
-    return ret
-  end
-  #--------------------------------------------------------------------------
-  # * Checks if data is waiting.
-  #--------------------------------------------------------------------------  
-  def ready?
-    not select(0) == 0
-  end
-  #--------------------------------------------------------------------------
-  # * Reads data from socket.
-  #--------------------------------------------------------------------------  
-  def read(len)
-    buf = "\0" * len
-    Win32API.new("msvcrt", "_read", "lpl", "l").call(@fd, buf, len)
-    return buf
-  end
-  #--------------------------------------------------------------------------
-  # * Returns recieved data.
-  #--------------------------------------------------------------------------  
-  def recv(len, flags = 0)
-    buf = "\0" * len
-    len = Winsock.recv(@fd, buf, buf.size, flags)
-    SocketError.check if len == -1
-    return buf,len
-  end
-  #--------------------------------------------------------------------------
-  # * Sends data to a host.
-  #--------------------------------------------------------------------------  
-  def send(data, flags = 0)
-    SocketError.check if (ret = Winsock.send(@fd, data, data.size, flags)) == -1
-    return ret
-  end
-  #--------------------------------------------------------------------------
-  # * Recieves file from a socket
-  #     size  : file size
-  #     scene : update scene boolean 
-  #--------------------------------------------------------------------------
-  def recv_file(size,scene=false,file="")
-    data = []
-    size.times do |i|
-      if scene == true
-        $scene.recv_update(size,i,file)  if i%((size/1000)+1)== 0
-      else
-        Graphics.update if i%1024 == 0
-      end
-      data << recv(1)
-    end
-    return data
-  end
-  #--------------------------------------------------------------------------
-  # * Gets
-  #--------------------------------------------------------------------------
-  def gets
-    # Create buffer
-    message = ""
-    # Loop Until "end of line"
-    while (char = recv(1)) != "\n"
-      message += char
-    end
-    # Return recieved data 
-    return message
-  end
-  #--------------------------------------------------------------------------
-  # * Writes data to socket.
-  #--------------------------------------------------------------------------  
-  def write(data)
-    Win32API.new("msvcrt", "_write", "lpl", "l").call(@fd, data, 1)
-  end
-end
-
-class TCPSocket < APISocket
-  #--------------------------------------------------------------------------
-  # * Creates a new socket and connects it to the given host and port.
-  #--------------------------------------------------------------------------  
-  def self.open(*args)
-    socket = new(*args)
-    if block_given?
-      begin
-        yield socket
-      ensure
-        socket.close
-      end
-    end
-    nil
-  end
-  #--------------------------------------------------------------------------
-  # * Creates a new socket and connects it to the given host and port.
-  #--------------------------------------------------------------------------  
-  def initialize(host, port)
-    super(2, 1, 6)
-    connect(APISocket.sockaddr_in(port, host))
-  end
-end
-
-class SocketError < StandardError
-  ENOASSOCHOST = "getaddrinfo: no address associated with hostname."
+  
   def self.check
-    errno = Winsock.WSAGetLastError
-    case errno
-    when 10053
-      desc = "연결이 out-of-band나 다른 실패 때문에 끊어져 버렸습니다."
-    when 10054
-      desc = "원격 연결지에서 \"hard\"나 \"abortive\" 종료를 수행해서 리셋되었습니다."
-    when 10061
-      desc = "서버가 닫혀있습니다."
-    when 10065
-      desc = "네트워크 시스템 장애 등에 의해 원격 호스트까지도 도달할 수 없습니다."
+    errno = @wsagetlasterror.call
+    if errno == 10053
+      desc = "연결이 사용자의 호스트 시스템에 의해 중단되었습니다."
+    elsif errno == 10054
+      desc = "서버에서 현재 연결을 강제로 끊었습니다."
+    elsif errno == 10061
+      desc = "서버가 열리지 않아서 연결이 불가능 합니다."
+    elsif errno == 10065
+      desc = "네트워크 장애등에 의해 서버와 연결이 불가능 합니다."
     else
-      desc = "알 수 없는 오류입니다."
+      desc = "시스템이 판단할 수 없는 에러입니다."
     end
-    print "소켓 오류: #{errno}\n#{desc}"
+    print desc
     exit
-    if not Network.testing? == 1
-      raise Errno.const_get(Errno.constants.detect { |c| Errno.const_get(c).new.errno == errno })
-    else
-      errno != 0 ? (Network.testresult(true)) : (Network.testresult(false)) 
-    end
   end
 end
 
@@ -5013,7 +7600,7 @@ class Socket
   end
   
   def self.connect(ip, port)
-    @sock = TCPSocket.new(ip, port)
+    Network.connect(ip, port)
     @isConnected = true
   end  
   
@@ -5022,37 +7609,36 @@ class Socket
     
     json_data = JSON.encode(data)
     msg = "\0" * (json_data.size + 4)
-    msg[0] = json_data.size >> 24 & 0xff
-    msg[1] = json_data.size >> 16 & 0xff
-    msg[2] = json_data.size >>  8 & 0xff
-    msg[3] = json_data.size       & 0xff
+    msg[0] = [json_data.size >> 24 & 0xff].pack('U*')
+    msg[1] = [json_data.size >> 16 & 0xff].pack('U*')
+    msg[2] = [json_data.size >>  8 & 0xff].pack('U*')
+    msg[3] = [json_data.size       & 0xff].pack('U*')
     for i in 0...json_data.size
       msg[4+i] = json_data[i]
     end
     msg += "\n"
-    
-    @sock.send(msg)
+    Network.send(msg)
   end
   
   def self.close
-    @sock.close if @sock
+    Network.close# if Network
   end
   
   def self.update
     return if not @isConnected
-    if @sock.ready?
-      temp, plen = @sock.recv(0xfff)
+    if Network.ready?
+      temp, plen = Network.recv(0xffff)
       @pdata = @pdata + temp[0...plen]
     end
-    
-    while @pdata.size > 0
+    @pdata.gsub!("\u0000", "")
+    while @pdata.size > 2
       sIndex = 0
       eIndex = 0
       for i in 0...@pdata.size
-        if @pdata[i] == 123
+        if @pdata[i] == "{"
           sIndex = i
         end
-        if @pdata[i] == 125
+        if @pdata[i] == "}"
           eIndex = i
           break
         end
@@ -5061,25 +7647,8 @@ class Socket
         data = @pdata[sIndex..eIndex]
         self.recv(JSON.decode(data))
       end
-      @pdata = @pdata[(eIndex + 1)...@pdata.size]
+      @pdata = @pdata[(eIndex + (eIndex == 0 ? 0 : 1))...@pdata.size]
     end
-=begin
-    while @pdata.size > 3
-      len = (@pdata[0] << 24) | (@pdata[1] << 16) | (@pdata[2] << 8) | (@pdata[3])
-      break if @pdata.size < 4+len
-      data = "\0" * len
-      for i in 0...len
-        puts i.to_s + ":" + @pdata[i+4].to_s
-        data[i] = @pdata[i+4]
-      end
-      self.recv(JSON.decode(data))
-      data = "\0" * (@pdata.size - len - 4)
-      for i in 0...data.size
-        data[i] = @pdata[i+len+4]
-      end
-      @pdata = data
-    end
-=end
   end
 end
 #────────────────────────────────────────────────────────────────────────────
@@ -5096,18 +7665,18 @@ end
 #────────────────────────────────────────────────────────────────────────────
 
 module JSON
-  TOKEN_NONE = 0;
-  TOKEN_CURLY_OPEN = 1;
-  TOKEN_CURLY_CLOSED = 2;
-  TOKEN_SQUARED_OPEN = 3;
-  TOKEN_SQUARED_CLOSED = 4;
-  TOKEN_COLON = 5;
-  TOKEN_COMMA = 6;
-  TOKEN_STRING = 7;
-  TOKEN_NUMBER = 8;
-  TOKEN_TRUE = 9;
-  TOKEN_FALSE = 10;
-  TOKEN_NULL = 11;
+  TOKEN_NONE = 0
+  TOKEN_CURLY_OPEN = 1
+  TOKEN_CURLY_CLOSED = 2
+  TOKEN_SQUARED_OPEN = 3
+  TOKEN_SQUARED_CLOSED = 4
+  TOKEN_COLON = 5
+  TOKEN_COMMA = 6
+  TOKEN_STRING = 7
+  TOKEN_NUMBER = 8
+  TOKEN_TRUE = 9
+  TOKEN_FALSE = 10
+  TOKEN_NULL = 11
   
   @index = 0
   @json = ""
@@ -5365,6 +7934,9 @@ module CTSHeader
 	KICK_GUILD = 120
 	BREAK_UP_GUILD = 121
   BUY_SHOP_ITEM = 122
+  
+  SET_SLOT = 200
+  DEL_SLOT = 201
 end
 
 module STCHeader
@@ -5414,6 +7986,9 @@ module STCHeader
 	SET_GUILD_MEMBER = 123
 	REMOVE_GUILD_MEMBER = 124
   OPEN_SHOP_WINDOW = 125
+  
+  SET_SLOT = 200
+  SET_COOLTIME = 201
 end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ Packet
@@ -5429,7 +8004,7 @@ end
 class Socket
   include Game
   def self.recv(recv)
-    begin
+    #begin
     return if not recv
     case recv["header"]
     when STCHeader::LOGIN
@@ -5475,8 +8050,8 @@ class Socket
         Game.player.moveto(Game.player.x, Game.player.y)
         Game.player.refresh
         Game.map.autoplay
+        $scene = Scene_Map.new
         Game.map.update
-        p $scene = Scene_Map.new
       when 1
         dialog = MUI_Dialog.new(Dialog::LOGIN, "로그인 실패", "아이디와 비밀번호를 확인해주세요.", ["닫기"]) do
           dialog.dispose if dialog.value == 0
@@ -5863,10 +8438,15 @@ class Socket
           dialog.dispose
         end
       end
+    when STCHeader::SET_SLOT
+      Game.slot.setSlot(recv["index"], recv["slot"])
+      $scene.hud.slotRefresh(:icon_shortcut) if $scene.is_a?(Scene_Map)
+    when STCHeader::SET_COOLTIME
+      Game.cooltime.setCool(recv['index'], recv['nowCooltime'], recv['fullCooltime'])
     end
-    rescue
-      #p $!
-    end
+    #rescue
+    #  p $!
+    #end
   end
 end
 
@@ -5894,6 +8474,7 @@ class MUI
     @dragItemSprite.z = 999999
     @cursor = MUI::Cursor.new
     ItemInfo.init
+    SkillInfo.init
     @z = 99999
   end
   
@@ -5975,6 +8556,8 @@ class MUI
     @dragItem = value
     if value.is_a?(Item)
       @cursor.setImage(RPG::Cache.icon(Game.getItem(@dragItem.itemNo).image))
+    elsif value.is_a?(Skill)
+      @cursor.setImage(RPG::Cache.icon(Game.getSkill(@dragItem.no).image))
     elsif value.is_a?(NilClass)
       @cursor.setDefaultImage
     end
@@ -5989,6 +8572,7 @@ class MUI
     if Mouse.x && Mouse.y
       @cursor.update
       ItemInfo.update
+      SkillInfo.update
       if @dragItem
         @dragItemSprite.x = Mouse.x
         @dragItemSprite.y = Mouse.y
@@ -6006,7 +8590,6 @@ end
 # 
 #    MUI 에서 사용하는 함수를 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 module RPG
   module Cache
     def self.mui(filename)
@@ -6099,8 +8682,6 @@ def remove_sprite(c)
         @character_sprites.each do |v|
           if v.character == c
             v.erase = 1
-            #v.dispose
-            #@character_sprites.delete(v)
             break
           end
         end
@@ -6110,180 +8691,22 @@ def remove_sprite(c)
   return nil
 end
 #────────────────────────────────────────────────────────────────────────────
-# ▶ Bitmap
-# --------------------------------------------------------------------------
-# Author    @cheapmunk.naver
-# Date      2014
-# --------------------------------------------------------------------------
-# Description
-# 
-#    확장된 함수가 추가된 비트맵 클래스입니다.
-#────────────────────────────────────────────────────────────────────────────
-
-class Bitmap
-  # 테두리 텍스트
-  def draw_outline_text(x, y, width, height, str,
-                       color = Color.white, color2 = Color.black, align = 0, multi = false)
-    font.color = color2
-    str = str.to_s if !str.is_a?(String)
-    for i in -1..1
-      for j in -1..1
-        if i*j == 0 and i+j != 0
-          multi ? draw_multi_text(x + i, y + j, width, height, str, align) : 
-            draw_text(x + i, y + j, width, height, str, align)
-        end
-      end
-    end
-    font.color = color
-    multi ? draw_multi_text(x, y, width, height, str, align) : draw_text(x, y, width, height, str, align)
-  end
-  
-  # 멀티라인(\n) 테두리 텍스트
-  def draw_multi_outline_text(x, y, width, height, str, color = Color.white, color2 = Color.black, align = 0)
-    draw_outline_text(x, y, width, height, str, color, color2, align, true)
-  end
-  
-  # 텍스트 덩어리
-  # esn : Escape Sequence '\n' 으로 나누거나(true), 혹은 width에 맞추거나(false)
-  def get_divided_text(width, str, esn = false)
-    line, text, x = Array.new, String.new, 0
-    return line if not str
-    for char in str.split(//)
-      # \n은 문자열에 더하고, 사이즈는 더하지 않는다.
-      text += char
-      if char != "\n"
-        rect = text_size(char)
-        x += rect.width
-      end
-      if esn
-        if char == "\n"
-          text.gsub!("\n", "")
-          line.push(text)
-          text = ""
-          x = 0
-        end
-      elsif !esn
-        if x + rect.width > width or char == "\n"
-          text.gsub!("\n", "")
-          line.push(text)
-          text = ""
-          x = 0
-        end
-      end      
-    end
-    line.push(text)
-    return line
-  end
-  
-  # 멀티라인(\n) 텍스트
-  def draw_multi_text(x, y, width, height, str, align = 0, esn = false)
-    text = get_divided_text(width, str, esn)
-    text.each_index do |n|
-      next if text[n] == ""
-      # 비트맵 세로 크기보다 크면 중단
-      return if y + n * text_size(text[n]).height >= height
-      draw_text(x, y + n * text_size(text[n]).height, 
-      width, text_size(text[n]).height, text[n], align)
-=begin
-      # 정렬 변수
-      xa = case align
-      when 0; x
-      when 1; (width - text_size(text[n]).width) / 2.0
-      when 2; width - text_size(text[n]).width end
-      # 비트맵 세로 크기보다 크면 중단
-      return if y + n * text_size(text[n]).height >= height
-      # 텍스트 생성
-      draw_text(
-        x + xa, y + n * text_size(text[n]).height,
-        text_size(text[n]).width + 1, text_size(text[n]).height, text[n])
-=end
-    end
-  end
-  
-  # xalign // 0 : 왼, 1 : 중간, 2 : 오른
-  # yalign // 0 : 위, 1 : 중간, 2 : 아래
-  # 선
-  def fill_line(str, color = Color.new(0, 0, 0), xalign = 0, yalign = 2, esn = false)
-    return if color.nil?
-    # 굵기
-    thick = (text_size(str).height / 12.0).round
-    thick = 1 if thick == 0
-    # 글자
-    text = get_divided_text(self.width, str, esn)
-    text.each_index do |n|
-      # 정렬
-      xa = case xalign
-      when 0; 0
-      when 1; (width - text_size(text[n]).width) / 2.0
-      when 2; width - text_size(text[n]).width end
-      ya = case yalign
-      when 0; 0
-      when 1; text_size(text[n]).height / 2.0
-      when 2; text_size(text[n]).height - thick end
-      # 선 그리기
-      fill_rect(
-        xa, 
-        ya + n * text_size(text[n]).height,
-        text_size(text[n]).width,
-        thick,
-        color)
-    end
-  end
-end
-#────────────────────────────────────────────────────────────────────────────
-# ▶ Color
-# --------------------------------------------------------------------------
-# Author    @cheapmunk.naver
-# Date      2014
-# --------------------------------------------------------------------------
-# Description
-# 
-#    색깔 클래스입니다. alpha는 투명도 입니다.
-#────────────────────────────────────────────────────────────────────────────
-
-class Color
-  def self.black(alpha = 255)
-    return Color.new(0, 0, 0, alpha)
-  end
-  
-  def self.white(alpha = 255)
-    return Color.new(255, 255, 255, alpha)
-  end
-    
-  def self.gray(alpha = 255)
-    return Color.new(96, 96, 96, alpha)
-  end
-  
-  def self.red(alpha = 255)
-    return Color.new(255, 0, 0, alpha)
-  end
-  
-  def self.system(alpha = 255)
-    return Color.new(0, 96, 255, alpha)
-  end
-  
-  def self.yellow(alpha = 255)
-    return Color.new(255, 255, 0, alpha)
-  end
-end
-#────────────────────────────────────────────────────────────────────────────
 # ▶ Math
 # --------------------------------------------------------------------------
 # Author    뮤 (mu29gl@gmail.com)
 # Date      2014
 #────────────────────────────────────────────────────────────────────────────
-
 module Math
   # 원(W) 단위 절사함수 : 1000 => 1,000
   def self.unitMoney(num)
     num = num.to_s
     a = num.split(//).reverse
-    result = []
+    result = ""
     for i in 0...a.size
       if i % 3 == 0 && i != 0
-        result.push ','
+        result += ','
       end
-      result.push a[i]
+      result += a[i]
     end
     return result.reverse.to_s
   end
@@ -6295,26 +8718,25 @@ class MUI
     @skill = Rect.new(0, 0, 0, 0)
     @option = Rect.new(0, 0, 0, 0)
     @community = Rect.new(0, 0, 0, 0)
-    @quest = Rect.new (0, 0, 0, 0)
+    @quest = Rect.new(0, 0, 0, 0)
   end
 end
 
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::Form
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
 # 
 #    폼을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class Form
     def initialize(x, y, w, h)
-      @x = (x == 'center' ? (Device.getRect[0] - w) / 2 : x)
-      @y = (y == 'center' ? (Device.getRect[1] - h) / 2 : y)
+      @x = (x == 'center' ? (Graphics.width - w) / 2 : x)
+      @y = (y == 'center' ? (Graphics.height - h) / 2 : y)
       @width = w
       @height = h
       @opacity = 255
@@ -6483,7 +8905,7 @@ class MUI
 
     # 타이틀
     def getTitle; @captionText end
-    def setTitle(text, align = 1, color = (@style == "Black" ? Color.white : (@style == "White" ? Color.gray : Color.black)), font = Config::FONT, size = Config::FONT_NORMAL_SIZE + 1)
+    def setTitle(text, align = 1, color = (@style == "Black" ? Color.white : (@style == "White" ? Color.gray : Color.black)), font = Config::FONT[0], size = Config::FONT_NORMAL_SIZE + 1)
       #return if @captionText == text
       @captionText = text
       @captionSprite.bitmap.clear
@@ -6644,14 +9066,13 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::Control
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
 # 
 #    컨트롤을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class Control
     def initialize(x, y, w, h)
@@ -6871,7 +9292,7 @@ class MUI
             puts "#{self.x}, #{self.y}, #{self.width}, #{self.height}"
           end
           if Key.trigger?(KEY_C)
-            File.SetClipboard(", ", self.x, self.y, self.width, self.height)
+            File.setClipboard(", ", self.x, self.y, self.width, self.height)
           end
         elsif Key.press?(KEY_SHIFT)
           form.drag = false
@@ -6891,14 +9312,13 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::Label
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
 # 
 #    레이블 컨트롤을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class Label < Control
     def initialize(x, y, w, h)
@@ -6907,7 +9327,7 @@ class MUI
       @bold = false
       @italic = false
       @color = [Color.black, nil]
-      @name = Config::FONT
+      @name = Config::FONT[0]
       @size = Config::FONT_NORMAL_SIZE
       @underLine = false
       @middleLine = false
@@ -7073,14 +9493,13 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::Button
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
 # 
 #    버튼 컨트롤을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class Button < Control
     def initialize(x, y, w, h)
@@ -7088,7 +9507,7 @@ class MUI
       @align = 1
       @bold = false
       @color = Color.white
-      @name = Config::FONT
+      @name = Config::FONT[0]
       @size = Config::FONT_NORMAL_SIZE
       @italic = false
       @text = ""
@@ -7268,14 +9687,13 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::TextBox
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
 # 
 #    IME을 사용하는, 텍스트박스 컨트롤을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class TextBox < Control    
     def initialize(x, y, w, h)
@@ -7283,7 +9701,7 @@ class MUI
       @align = 0
       @bold = false
       @color = Color.black
-      @name = Config::FONT
+      @name = Config::FONT[0]
       @size = Config::FONT_NORMAL_SIZE
       @focus = false
       @italic = false
@@ -7323,6 +9741,7 @@ class MUI
       @parent = form
       @baseSprite = Sprite.new(form.getViewport)
       @textSprite = Sprite.new(form.getViewport)
+      @textSprite.z = @baseSprite.z + 1
       @textBitmap = Bitmap.new(@width, @height)
       @baseSprite.x = @x
       @baseSprite.y = @y
@@ -7473,7 +9892,7 @@ class MUI
             @ime.choice = false
             @ime.focus = true
             @baseSprite.bitmap = @baseBitmap[1]
-            @ime.setIMEMode = 0 if @passwordChar
+            @ime.setIMEMode = @passwordChar ? 0 : 1
           end
         elsif self.focus
           self.focus = false
@@ -7546,26 +9965,27 @@ class MUI
         end
       else
         @textBitmap.draw_text(@gap, @gap, @width, @height, (@passwordChar ? @passwordChar * @text.size : @text))
+        @textSprite.bitmap = @textBitmap
       end
     end
 
     def dispose
       super
       @text = ""
+      @ime.dispose
     end
   end
 end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::PictureBox
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
 # 
 #    픽쳐박스 컨트롤을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class PictureBox < Control
     def picture; @picture; end
@@ -7631,14 +10051,13 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::CheckBox
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
 # 
 #    체크박스 컨트롤을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class CheckBox < Control    
     def initialize(x, y, w, h)
@@ -7698,14 +10117,13 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::RadioBox
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
 # 
 #    라디오박스 컨트롤을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class RadioBox < Control    
     @@group = {}
@@ -7795,7 +10213,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::VScroll
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 02. 11
 # --------------------------------------------------------------------------
 # Description
@@ -7803,7 +10221,6 @@ end
 #    수직 스크롤바 컨트롤을 담당하는 클래스입니다.
 #    바 드래그, 마우스 휠, 버튼 등을 사용할 수 있습니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class VScroll < Control
     def initialize(x, y, w, h)
@@ -7860,7 +10277,7 @@ class MUI
       # 백그라운드 클릭
       if Mouse.trigger? and @visible
         # 포커스 등록
-        @focus = isSelected ? self.id : nil
+        @focus = isSelected ? self.object_id : nil
         # 클릭으로 조작
         if @focus and isSelected and not isBarSelected and not isUpSelected and not isDownSelected
           self.value = (Mouse.y - @realY - @@cache['VU'].height) / @dh
@@ -7869,7 +10286,7 @@ class MUI
       end
       
       # 키보드로 조작
-      if @focus == self.id
+      if @focus == self.object_id
         # 아래, 오른쪽 키를 눌렀을 때
         if Key.repeat?(KEY_DOWN) or Key.repeat?(KEY_RIGHT)
           # 값 +1
@@ -7897,7 +10314,7 @@ class MUI
       end
       
       # 마우스 휠
-      if @focus == self.id # 포커스가 잡힐 때
+      if @focus == self.object_id # 포커스가 잡힐 때
         if Mouse.wheel != 0 and not Mouse.wheel.nil?
           self.value += Mouse.wheel
           Mouse.wheel = 0
@@ -8054,7 +10471,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::HScroll
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 02. 15
 # --------------------------------------------------------------------------
 # Description
@@ -8062,7 +10479,6 @@ end
 #    수평 스크롤바 컨트롤을 담당하는 클래스입니다.
 #    바 드래그, 마우스 휠, 버튼 등을 사용할 수 있습니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class HScroll < Control
     def initialize(x, y, w, h)
@@ -8119,7 +10535,7 @@ class MUI
       # 백그라운드 클릭
       if Mouse.trigger? and @visible
         # 포커스 등록
-        @focus = isSelected ? self.id : nil
+        @focus = isSelected ? self.object_id : nil
         # 클릭으로 조작
         if @focus and isSelected and not isBarSelected and not isLeftSelected and not isRightSelected
           self.value = (Mouse.x - @realX - @@cache['VL'].width) / @dw
@@ -8128,7 +10544,7 @@ class MUI
       end
       
       # 키보드로 조작
-      if @focus == self.id
+      if @focus == self.object_id
         # 아래, 오른쪽 키를 눌렀을 때
         if Key.repeat?(KEY_DOWN) or Key.repeat?(KEY_RIGHT)
           # 값 +1
@@ -8156,7 +10572,7 @@ class MUI
       end
       
       # 마우스 휠
-      if @focus == self.id # 포커스가 잡힐 때
+      if @focus == self.object_id # 포커스가 잡힐 때
         if !Mouse.wheel.nil? and Mouse.wheel != 0 
           self.value += Mouse.wheel
           Mouse.wheel = 0
@@ -8313,7 +10729,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::TabPage
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 02. 17
 # --------------------------------------------------------------------------
 # Description
@@ -8321,7 +10737,6 @@ end
 #    탭 컨트롤을 담당하는 클래스입니다.
 #    탭 길이에 오차가 생기면 자동 조정합니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class TabPage < Control
     attr_reader :page
@@ -8333,7 +10748,7 @@ class MUI
       @bold = false
       @italic = false
       @color = [Color.gray, Color.white]
-      @name = Config::FONT
+      @name = Config::FONT[0]
       @size = Config::FONT_NORMAL_SIZE
       @item = [""]
       @tab = []
@@ -8560,19 +10975,18 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI::ListBox
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 02. 18
 # --------------------------------------------------------------------------
 # Description
 # 
 #    리스트박스 컨트롤을 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class ListBox < Control
     def initialize(x, y, w, h)
       super(x, y, w, h)
-      @name = Config::FONT
+      @name = Config::FONT[0]
       @size = Config::FONT_NORMAL_SIZE
       @color = [Color.gray, Color.system]
       @visible = true
@@ -8674,12 +11088,11 @@ end
 # 
 #    마우스 커서를 담당하는 클래스입니다.
 #────────────────────────────────────────────────────────────────────────────
-
 class MUI
   class Cursor < Sprite
     def initialize
-      @viewport = Viewport.new(0, 0, Device.getRect[0], Device.getRect[1])
-      @viewport.z = 999999
+      @viewport = Viewport.new(0, 0, Graphics.getRect[0], Graphics.getRect[1])
+      @viewport.z = 9999999
       super(@viewport)
       @route = "Graphics/Icons/"
       @x = Mouse.x
@@ -8700,11 +11113,20 @@ class MUI
     
     def update
       super
-      if @x != Mouse.x or @y != Mouse.y
-        @x = Mouse.x
-        @y = Mouse.y
-        self.x = @x
-        self.y = @y
+      if Mouse.press?
+        if @x != Mouse.ox or @y != Mouse.oy
+          @x = Mouse.ox
+          @y = Mouse.oy
+          self.x = @x
+          self.y = @y
+        end
+      else
+        if @x != Mouse.x or @y != Mouse.y
+          @x = Mouse.x
+          @y = Mouse.y
+          self.x = @x
+          self.y = @y
+        end
       end
     end
   end
@@ -8712,7 +11134,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_HUD
 # --------------------------------------------------------------------------
-# Author    @cheapmunk.naver
+# Author    jubin
 # Date      2015. 2. 5
 # --------------------------------------------------------------------------
 # Description
@@ -8720,24 +11142,20 @@ end
 #    헤드 업 디스플레이를 표시합니다.
 #    메뉴 클릭이 가능하며, 단축키를 등록할 수 있습니다.
 #────────────────────────────────────────────────────────────────────────────
-module Config
-  HP_BORDER = [1, 1]
-  MP_BORDER = [1, 1]
-  EXP_BORDER = [1, 1]
-  
-  BAR_SPEED = 5
-  
-  SHORTCUT_RECT = []
-  for n in 0...10
-    SHORTCUT_RECT[n] = Rect.new(214 + n * 30, 558, 24, 24)
-  end
-  # 커스텀
-  # SHORTCUT_RECT[0] = Rect.new(214 + 0 * 30, 558, 24, 24)
-  # SHORTCUT_RECT[1] = Rect.new(214 + 1 * 30, 558, 24, 24)
-  # ...
-end
-
 class MUI_HUD
+  
+  def loadCache
+    @@cache = {}
+    @@cache[:hud]       = RPG::Cache.hud(Config::FILE_HUD)
+    @@cache[:gauge_hp]  = RPG::Cache.hud(Config::FILE_HP)
+    @@cache[:gauge_mp]  = RPG::Cache.hud(Config::FILE_MP)
+    @@cache[:gauge_exp] = RPG::Cache.hud(Config::FILE_EXP)
+    @@cache[:menu_icon] = []
+    for n in 0..5
+      @@cache[:menu_icon][n] = RPG::Cache.hud("menu#{n}")
+    end
+  end
+  
   def initialize
     # 표시
     @visible = true
@@ -8746,95 +11164,114 @@ class MUI_HUD
     # 이전 값
     @old = {}
     # 캐시
-    @@cache = {}
-    @@cache['hud']        = RPG::Cache.hud(Config::FILE_HUD)
-    @@cache['gauge_hp']   = RPG::Cache.hud(Config::FILE_HP)
-    @@cache['gauge_mp']   = RPG::Cache.hud(Config::FILE_MP)
-    @@cache['gauge_exp']  = RPG::Cache.hud(Config::FILE_EXP)
-    @@cache['menu'] = []
-    for n in 0..5
-      @@cache['menu'][n] = RPG::Cache.hud("menu#{n}")
-    end
+    loadCache()
     # 뷰포트
     @viewport = {}
-    @viewport['hud'] = Viewport.new(0, 0, Device.getRect[0], Device.getRect[1])
-    @viewport['hp']  = Viewport.new(70, 553, @@cache['gauge_hp'].width, 14)
-    @viewport['mp']  = Viewport.new(70, 570, @@cache['gauge_mp'].width, 14)
-    @viewport['exp'] = Viewport.new(0, 588, @@cache['gauge_exp'].width, 14)
-    @viewport['icon'] = []
-    for n in 0...Config::SHORTCUT_RECT.size
-      @viewport['icon'][n] = Viewport.new(Config::SHORTCUT_RECT[n])
-      @viewport['icon'][n].z = 999
+    @viewport[:hud] = Viewport.new(0, 0, Graphics.getRect[0], Graphics.getRect[1])
+    @viewport[:hud].z = 999
+    @viewport[:icon_shortcut] = []
+    for n in 0...Config::COOLTIME_RECT.size
+      @viewport[:icon_shortcut][n] = Viewport.new(Config::COOLTIME_RECT[n])
+      @viewport[:icon_shortcut][n].z = 1000
     end
-    @viewport['hud'].z = 999
-    @viewport['hp'].z = 1001
-    @viewport['mp'].z = 1001
-    @viewport['exp'].z = 1001
     # 스프라이트 생성
     @sprite = {}
     @@cache.each_key do |key|
       # 아래 캐시 제외
-      next if ['gauge_hp', 'gauge_mp', 'gauge_exp', 'menu'].include?(key)
-      @sprite[key] = Sprite.new(@viewport['hud'])
+      next if [:gauge_hp, :gauge_mp, :gauge_exp, :menu_icon].include?(key)
+      @sprite[key] = Sprite.new(@viewport[:hud])
       @sprite[key].bitmap = Bitmap.new(@@cache[key].width, @@cache[key].height)
       @sprite[key].bitmap.blt(0, 0, @@cache[key], Rect.new(0, 0, @@cache[key].width, @@cache[key].height))
     end
     # 레벨
-    @sprite['level'] = Sprite.new(@viewport['hud'])
-    @sprite['level'].bitmap = Bitmap.new(40, 16)
-    @sprite['level'].bitmap.font.name = Config::FONT2
-    @sprite['level'].bitmap.font.size = 14
-    @sprite['level'].x = 12
-    @sprite['level'].y = 560
+    @sprite[:txt_lv] = Sprite.new(@viewport[:hud])
+    @sprite[:txt_lv].bitmap = Bitmap.new(40, 16)
+    @sprite[:txt_lv].bitmap.font.name = Config::FONT[1]
+    @sprite[:txt_lv].bitmap.font.size = 14
+    @sprite[:txt_lv].x = Config::LV_TEXT_X
+    @sprite[:txt_lv].y = Config::LV_TEXT_Y
+    @sprite[:txt_lv].z = 1
     # HP
-    @sprite['hp'] = Sprite.new(@viewport['hp'])
-    @sprite['hp'].bitmap = Bitmap.new(@viewport['hp'].rect.width, @viewport['hp'].rect.height)
-    @sprite['hp'].bitmap.font.name = Config::FONT2
-    @sprite['hp'].bitmap.font.size = 12
+    @sprite[:txt_hp] = Sprite.new(@viewport[:hud])
+    @sprite[:txt_hp].bitmap = Bitmap.new(@@cache[:gauge_hp].width, 14)
+    @sprite[:txt_hp].bitmap.font.name = Config::FONT[1]
+    @sprite[:txt_hp].bitmap.font.size = 12
+    @sprite[:txt_hp].x = Config::HP_TEXT_X
+    @sprite[:txt_hp].y = Config::HP_TEXT_Y
+    @sprite[:txt_hp].z = 1
     # MP
-    @sprite['mp'] = Sprite.new(@viewport['mp'])
-    @sprite['mp'].bitmap = Bitmap.new(@viewport['mp'].rect.width, @viewport['mp'].rect.height)
-    @sprite['mp'].bitmap.font.name = Config::FONT2
-    @sprite['mp'].bitmap.font.size = 12
+    @sprite[:txt_mp] = Sprite.new(@viewport[:hud])
+    @sprite[:txt_mp].bitmap = Bitmap.new(@@cache[:gauge_mp].width, 14)
+    @sprite[:txt_mp].bitmap.font.name = Config::FONT[1]
+    @sprite[:txt_mp].bitmap.font.size = 12
+    @sprite[:txt_mp].x = Config::MP_TEXT_X
+    @sprite[:txt_mp].y = Config::MP_TEXT_Y
+    @sprite[:txt_mp].z = 1
     # EXP
-    @sprite['exp'] = Sprite.new(@viewport['exp'])
-    @sprite['exp'].bitmap = Bitmap.new(@viewport['exp'].rect.width, @viewport['exp'].rect.height)
-    @sprite['exp'].bitmap.font.name = Config::FONT2
-    @sprite['exp'].bitmap.font.size = 12
+    @sprite[:txt_exp] = Sprite.new(@viewport[:hud])
+    @sprite[:txt_exp].bitmap = Bitmap.new(@@cache[:gauge_exp].width, 14)
+    @sprite[:txt_exp].bitmap.font.name = Config::FONT[1]
+    @sprite[:txt_exp].bitmap.font.size = 12
+    @sprite[:txt_exp].x = Config::EXP_TEXT_X
+    @sprite[:txt_exp].y = Config::EXP_TEXT_Y
+    @sprite[:txt_exp].z = 1
     # 메뉴
-    @sprite['menu'] = []
+    @sprite[:menu_icon] = []
     for n in 0...6
-      @sprite['menu'][n] = Sprite.new(@viewport['hud'])
-      @sprite['menu'][n].bitmap = Bitmap.new(@@cache['menu'][n].width, @@cache['menu'][n].height)
-      @sprite['menu'][n].bitmap.blt(0, 0, @@cache['menu'][n], Rect.new(0, 0, @@cache['menu'][n].width, @@cache['menu'][n].height))
-      @sprite['menu'][n].x = 560 + n * 40
-      @sprite['menu'][n].y = 558
+      @sprite[:menu_icon][n] = Sprite.new(@viewport[:hud])
+      @sprite[:menu_icon][n].bitmap = Bitmap.new(@@cache[:menu_icon][n].width, @@cache[:menu_icon][n].height)
+      @sprite[:menu_icon][n].bitmap.blt(0, 0, @@cache[:menu_icon][n], Rect.new(0, 0, @@cache[:menu_icon][n].width, @@cache[:menu_icon][n].height))
+      @sprite[:menu_icon][n].x = Config::MENU_ICON_X + n * Config::MENU_ICON_GAP
+      @sprite[:menu_icon][n].y = Config::MENU_ICON_Y
     end
     # 단축키
-    @sprite['icon'] = []
+    @sprite[:icon_shortcut] = []
     for n in 0...Config::SHORTCUT_RECT.size
-      @sprite['icon'][n] = Sprite.new(@viewport['icon'][n])
-      @sprite['icon'][n].bitmap = Bitmap.new(@viewport['icon'][n].rect.width, @viewport['icon'][n].rect.height)
-      @sprite['icon'][n].bitmap.blt(0, 0, Bitmap.new("./Graphics/Icons/black.png"), Rect.new(0, 0, 24, 24))
+      @sprite[:icon_shortcut][n] = Sprite.new(@viewport[:icon_shortcut][n])
     end
-    # GAYBAR
-    barDraw('gauge_hp', Config::HP_X, Config::HP_Y, Config::HP_BORDER)
-    barDraw('gauge_mp', Config::MP_X, Config::MP_Y, Config::MP_BORDER)
-    barDraw('gauge_exp', Config::EXP_X, Config::EXP_Y, Config::EXP_BORDER)
+    # 쿨타임
+    @sprite[:cool] = []
+    for n in 0...Config::COOLTIME_RECT.size
+      width, height = Config::COOLTIME_RECT[n].width, Config::COOLTIME_RECT[n].height
+      @sprite[:cool][n] = Sprite.new(@viewport[:icon_shortcut][n])
+      @sprite[:cool][n].bitmap = Bitmap.new(width, height)
+      @sprite[:cool][n].zoom_y = 0
+      @sprite[:cool][n].bitmap.fill_rect(0,0,32,33, Color.new(150,150,150,100)) 
+    end
+    # 게이지바
+    barDraw(:gauge_hp, Config::HP_X, Config::HP_Y, Config::HP_BORDER)
+    barDraw(:gauge_mp, Config::MP_X, Config::MP_Y, Config::MP_BORDER)
+    barDraw(:gauge_exp, Config::EXP_X, Config::EXP_Y, Config::EXP_BORDER)
+    barRefresh(:gauge_hp, Game.player.hp, Game.player.maxHp)
+    barRefresh(:gauge_mp, Game.player.mp, Game.player.maxMp)
+    barRefresh(:gauge_exp, Game.player.exp, Game.player.maxExp)
   end
   
   # 메인 업데이트
   def update
     return if not @visible # 숨김 상태에서는 중단
-    barRefresh('gauge_hp', Game.player.hp, Game.player.maxHp)
-    barRefresh('gauge_mp', Game.player.mp, Game.player.maxMp)
-    barRefresh('gauge_exp', Game.player.exp, Game.player.maxExp)
-    textRefresh('level', Game.player.level)
-    textRefresh('hp', Game.player.hp)
-    textRefresh('mp', Game.player.mp)
-    textRefresh('exp', Game.player.exp)
+    barRefresh(:gauge_hp, Game.player.hp, Game.player.maxHp)
+    barRefresh(:gauge_mp, Game.player.mp, Game.player.maxMp)
+    barRefresh(:gauge_exp, Game.player.exp, Game.player.maxExp)
+    textRefresh(:txt_lv, Game.player.level)
+    textRefresh(:txt_hp, Game.player.hp)
+    textRefresh(:txt_mp, Game.player.mp)
+    textRefresh(:txt_exp, Game.player.exp)
+    ctRefresh(:cool)
     menuSelected
     iconSelected
+    keyUpdate
+  end
+  
+  # 슬롯 작동
+  def keyUpdate
+    return if MUI.nowTyping?
+    for i in 0...10
+      next if Game.slot.getSlot(i) == -1
+      if Key.trigger?(Game.slot.getKey(i))
+        Socket.send({'header' => CTSHeader::USE_SKILL, 'no' => Game.getSkill(Game.slot.getSlot(i)).no})
+      end
+    end
   end
   
   # 게이지바 생성
@@ -8842,41 +11279,85 @@ class MUI_HUD
     @rect[key] = []
     @viewport[key] = []
     @sprite[key] = []
-    
+    # left
     @rect[key][0] = Rect.new(0, 0, border[0], @@cache[key].height)
+    # center
     @rect[key][1] = Rect.new(border[0], 0, @@cache[key].width - border[0] - border[1], @@cache[key].height)
+    # right
     @rect[key][2] = Rect.new(@@cache[key].width - border[1], 0, border[1], @@cache[key].height)
-    
     3.times do |n|
-      @viewport[key][n] = Viewport.new(@rect[key][n])
-      @viewport[key][n].rect.x += x
-      @viewport[key][n].rect.y += y
-      @viewport[key][n].z = 1000
       begin
-        @sprite[key][n] = Sprite.new(@viewport[key][n])
+        @sprite[key][n] = Sprite.new(@viewport[:hud])
         @sprite[key][n].bitmap = Bitmap.new(@rect[key][n].width, @rect[key][n].height)
         @sprite[key][n].bitmap.blt(0, 0, @@cache[key], @rect[key][n])
+        @sprite[key][n].x = x
+        @sprite[key][n].y = y
       rescue
         # border == 0
+      end
+    end
+    @sprite[key][1].x = x + @rect[key][0].width
+    @sprite[key][2].x = x + @sprite[key][1].src_rect.width + @rect[key][0].width
+  end
+  
+  # 슬롯 리프레시
+  def slotRefresh(key)
+    @sprite[key] ||= []
+    for n in 0...10
+      @sprite[key][n] ||= Sprite.new(@viewport[key][n])
+      if Game.slot.getSlot(n) == -1
+        @viewport[:icon_shortcut][n].visible = false
+        next
+      else
+        @viewport[:icon_shortcut][n].visible = true
+      end
+      @sprite[key][n].bitmap = RPG::Cache.icon(Game.getSkill(Game.slot.getSlot(n)).image)
+      #@sprite[key][n].bitmap = Bitmap.new(@viewport[key][n].rect.width, @viewport[key][n].rect.height)
+      #@sprite[key][n].bitmap.blt(0, 0, RPG::Cache.icon(Game.getSkill(Game.slot.getSlot(n)).image), Rect.new(0, 0, 32, 32))
+    end
+  end
+  
+  # 쿨타임 리프레쉬
+  def ctRefresh(key)
+    for i in 0...10
+      if Game.slot.getSlot(i) == -1
+        @viewport[:icon_shortcut][i].visible = false
+        next
+      else
+        @viewport[:icon_shortcut][i].visible = true
+      end
+      skill = Game.getSkill(Game.slot.getSlot(i))
+      cooltime = Game.cooltime.getCool(i)
+      if cooltime.nowCooltime.to_f <= 0
+        @sprite[key][i].zoom_y = 0
+      else
+        @sprite[key][i].zoom_y = cooltime.nowCooltime.to_f / cooltime.fullCooltime.to_f
+        @sprite[key][i].y = 26 - 25 * cooltime.nowCooltime.to_f / cooltime.fullCooltime.to_f
       end
     end
   end
 
   # 게이지바 리프레시
   def barRefresh(key, now, max)
-    @old[key] ||= @viewport[key][1].rect.width
+    @old[key] ||= @sprite[key][1].src_rect.width
     if @old[key] != now
       delta = now * @sprite[key][1].bitmap.width / max.to_f - @old[key]
       barSlide(key, delta)
-      @old[key] = @viewport[key][1].rect.width
+      @old[key] = @sprite[key][1].src_rect.width
     end
   end
   
   # 게이지바 슬라이딩
   def barSlide(key, delta)
     if delta != 0
-      @viewport[key][1].rect.width += (delta / Config::BAR_SPEED).to_i
-      @viewport[key][2].rect.x = @viewport[key][1].rect.x + @viewport[key][1].rect.width
+      @sprite[key][1].src_rect.width += (delta / Config::BAR_SPEED).to_i
+      if @sprite[key][1].src_rect.width > @sprite[key][1].bitmap.width
+        @sprite[key][1].src_rect.width = @sprite[key][1].bitmap.width
+      end
+      if @sprite[key][1].src_rect.width < 0
+        @sprite[key][1].src_rect.width = 0
+      end
+      @sprite[key][2].x = @sprite[key][1].x + @sprite[key][1].src_rect.width
     end
   end
   
@@ -8884,28 +11365,28 @@ class MUI_HUD
   def textRefresh(key, now)
     if @old[key] != now
       case key
-      when 'level'
+      when :txt_lv
         @sprite[key].bitmap.clear
         @sprite[key].bitmap.draw_outline_text(
           0, 0, @sprite[key].bitmap.width, @sprite[key].bitmap.height,
           Game.player.level.to_s, Color.white, Color.new(255, 120, 0), 1)
-      when 'hp'
+      when :txt_hp
         n, m = Game.player.hp, Game.player.maxHp
         @sprite[key].bitmap.clear
         @sprite[key].bitmap.draw_outline_text(
-          0, 0, @viewport[key].rect.width, @viewport[key].rect.height,
+          0, 0, @sprite[key].bitmap.width, @sprite[key].bitmap.height,
           "#{n} / #{m}", Color.white, Color.red, 1)
-      when 'mp'
+      when :txt_mp
         n, m = Game.player.mp, Game.player.maxMp
         @sprite[key].bitmap.clear
         @sprite[key].bitmap.draw_outline_text(
-        0, 0, @viewport[key].rect.width, @viewport[key].rect.height,
+        0, 0, @sprite[key].bitmap.width, @sprite[key].bitmap.height,
         "#{n} / #{m}", Color.white, Color.new(0, 128, 224), 1)
-      when 'exp'
+      when :txt_exp
         n, m = Game.player.exp, Game.player.maxExp
         @sprite[key].bitmap.clear
         @sprite[key].bitmap.draw_outline_text(
-        0, 0, @viewport[key].rect.width, @viewport[key].rect.height,
+        0, 0, @sprite[key].bitmap.width, @sprite[key].bitmap.height,
         "#{n} / #{m} (#{n * 100 / m}%)", Color.white, Color.black(128), 1)
       end
       @old[key] = now
@@ -8915,7 +11396,7 @@ class MUI_HUD
   # 메뉴 선택
   def menuSelected
     if (n = menuIndex)
-      @sprite['menu'][n].opacity = 128 if @sprite['menu'][n].opacity != 128
+      @sprite[:menu_icon][n].opacity = 128 if @sprite[:menu_icon][n].opacity != 128
       if Mouse.trigger?
         case n
         when 0
@@ -8934,7 +11415,7 @@ class MUI_HUD
       end
     else
       for n in 0..5
-        @sprite['menu'][n].opacity = 255 if @sprite['menu'][n].opacity != 255
+        @sprite[:menu_icon][n].opacity = 255 if @sprite[:menu_icon][n].opacity != 255
       end
     end
   end
@@ -8943,9 +11424,17 @@ class MUI_HUD
   def iconSelected
     if (n = iconIndex)
       # Info
-      if Mouse.trigger?
-        # 픽업
-        p n
+      if Mouse.trigger?(0) && MUI.dragItem
+        # 단축키 등록
+        if MUI.dragItem.is_a?(Skill)
+          Socket.send({'header' => CTSHeader::SET_SLOT, 'index' => iconIndex, 'itemidx' => Game.getSkill(MUI.dragItem.no).no})
+        else
+          Socket.send({'header' => CTSHeader::SET_SLOT, 'index' => iconIndex, 'itemidx' => MUI.dragItem.index})
+        end
+        MUI.dragItem = nil
+      elsif Mouse.trigger?(1)
+        Socket.send({'header' => CTSHeader::DEL_SLOT, 'index' => iconIndex})
+        slotRefresh(:icon_shortcut)
       end
     end
   end
@@ -8953,8 +11442,8 @@ class MUI_HUD
   # 메뉴 인덱스
   def menuIndex
     for n in 0..5
-      sprite = @sprite['menu'][n]
-      cache = @@cache['menu'][n]
+      sprite = @sprite[:menu_icon][n]
+      cache = @@cache[:menu_icon][n]
       if Mouse.x >= sprite.x and Mouse.x <= sprite.x + cache.width and
         Mouse.y >= sprite.y and Mouse.y <= sprite.y + cache.height
         select = n
@@ -8966,7 +11455,7 @@ class MUI_HUD
   # 단축키 인덱스
   def iconIndex
     for n in 0...Config::SHORTCUT_RECT.size
-      viewport = @viewport['icon'][n]
+      viewport = @viewport[:icon_shortcut][n]
       if Mouse.x >= viewport.rect.x and Mouse.x <= viewport.rect.x + viewport.rect.width and
         Mouse.y >= viewport.rect.y and Mouse.y <= viewport.rect.y + viewport.rect.height
         select = n
@@ -9015,7 +11504,7 @@ class FlashMessage
   
   def initialize
     @sprite = Sprite.new
-    @sprite.bitmap = Bitmap.new(Device.getRect[0], 20)
+    @sprite.bitmap = Bitmap.new(Graphics.getRect[0], 20)
     @sprite.x = 0
     @sprite.y = 100
     @sprite.z = 999999
@@ -9032,17 +11521,17 @@ class FlashMessage
   
   def refresh
     @sprite.bitmap.clear
-    @sprite.bitmap.fill_rect(Rect.new(0,0,Device.getRect[0],20), Color.new(0, 0, 0, 100))
-    @sprite.bitmap.draw_text(1, 3, Device.getRect[0], 12, @text, 1)
-    @sprite.bitmap.draw_text(1, 4, Device.getRect[0], 12, @text, 1)
-    @sprite.bitmap.draw_text(1, 5, Device.getRect[0], 12, @text, 1)
-    @sprite.bitmap.draw_text(-1, 3, Device.getRect[0], 12, @text, 1)
-    @sprite.bitmap.draw_text(-1, 4, Device.getRect[0], 12, @text, 1)
-    @sprite.bitmap.draw_text(-1, 5, Device.getRect[0], 12, @text, 1)
-    @sprite.bitmap.draw_text(0, 3, Device.getRect[0], 12, @text, 1)
-    @sprite.bitmap.draw_text(0, 5, Device.getRect[0], 12, @text, 1)
+    @sprite.bitmap.fill_rect(Rect.new(0,0,Graphics.getRect[0],20), Color.new(0, 0, 0, 100))
+    @sprite.bitmap.draw_text(1, 3, Graphics.getRect[0], 12, @text, 1)
+    @sprite.bitmap.draw_text(1, 4, Graphics.getRect[0], 12, @text, 1)
+    @sprite.bitmap.draw_text(1, 5, Graphics.getRect[0], 12, @text, 1)
+    @sprite.bitmap.draw_text(-1, 3, Graphics.getRect[0], 12, @text, 1)
+    @sprite.bitmap.draw_text(-1, 4, Graphics.getRect[0], 12, @text, 1)
+    @sprite.bitmap.draw_text(-1, 5, Graphics.getRect[0], 12, @text, 1)
+    @sprite.bitmap.draw_text(0, 3, Graphics.getRect[0], 12, @text, 1)
+    @sprite.bitmap.draw_text(0, 5, Graphics.getRect[0], 12, @text, 1)
     @sprite.bitmap.font.color = Color.new(255, 255, 255)
-    @sprite.bitmap.draw_text(0, 4, Device.getRect[0], 12, @text, 1)
+    @sprite.bitmap.draw_text(0, 4, Graphics.getRect[0], 12, @text, 1)
     @sprite.visible = true
     @fade_in = true
   end
@@ -9083,7 +11572,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_ItemInfo
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 2. 22
 # --------------------------------------------------------------------------
 # Description
@@ -9120,7 +11609,7 @@ class MUI
       name = @item.reinforce == 0 ? @itemData.name : @itemData.name + " + " + @item.reinforce.to_s
       @section['@name'] = Bitmap.new(width, 24)
       @section['@name'].fill_rect(0, 0, @section['@name'].width, @section['@name'].height, Color.black(192))
-      @section['@name'].font.name = Config::FONT2
+      @section['@name'].font.name = Config::FONT[1]
       @section['@name'].font.size = 15
       @section['@name'].draw_text(0, (@section['@name'].height - @section['@name'].font.size) / 2, 
         @section['@name'].width, @section['@name'].font.size, name, 1)
@@ -9177,7 +11666,7 @@ class MUI
       # STR
       @section['@str'] = Bitmap.new(width, 20) 
       @section['@str'].fill_rect(0, 0, @section['@str'].width, @section['@str'].height, Color.black(128))
-      @section['@str'].font.name = Config::FONT
+      @section['@str'].font.name = Config::FONT[0]
       @section['@str'].draw_outline_text(
         12, 0, @section['@str'].width, @section['@str'].height,
         "STR",
@@ -9190,7 +11679,7 @@ class MUI
       # DEX
       @section['@dex'] = Bitmap.new(width, 20)
       @section['@dex'].fill_rect(0, 0, @section['@dex'].width, @section['@dex'].height, Color.black(128))
-      @section['@dex'].font.name = Config::FONT
+      @section['@dex'].font.name = Config::FONT[0]
       @section['@dex'].draw_outline_text(
         12, 0, @section['@dex'].width, @section['@dex'].height,
         "DEX",
@@ -9203,7 +11692,7 @@ class MUI
       # AGI
       @section['@agi'] = Bitmap.new(width, 20)
       @section['@agi'].fill_rect(0, 0, @section['@agi'].width, @section['@agi'].height, Color.black(128))
-      @section['@agi'].font.name = Config::FONT
+      @section['@agi'].font.name = Config::FONT[0]
       @section['@agi'].draw_outline_text(
         12, 0, @section['@agi'].width, @section['@agi'].height,
         "AGI",
@@ -9216,7 +11705,7 @@ class MUI
       # 크리티컬
       @section['@critical'] = Bitmap.new(width, 20)
       @section['@critical'].fill_rect(0, 0, @section['@critical'].width, @section['@critical'].height, Color.black(128))
-      @section['@critical'].font.name = Config::FONT
+      @section['@critical'].font.name = Config::FONT[0]
       @section['@critical'].draw_outline_text(
         12, 0, @section['@critical'].width, @section['@critical'].height,
         "크리티컬",
@@ -9229,7 +11718,7 @@ class MUI
       # 회피율
       @section['@avoid'] = Bitmap.new(width, 20)
       @section['@avoid'].fill_rect(0, 0, @section['@avoid'].width, @section['@avoid'].height, Color.black(128))
-      @section['@avoid'].font.name = Config::FONT
+      @section['@avoid'].font.name = Config::FONT[0]
       @section['@avoid'].draw_outline_text(
         12, 0, @section['@avoid'].width, @section['@avoid'].height,
         "회피율",
@@ -9242,7 +11731,7 @@ class MUI
       # 명중율
       @section['@hit'] = Bitmap.new(width, 20)
       @section['@hit'].fill_rect(0, 0, @section['@hit'].width, @section['@hit'].height, Color.black(128))
-      @section['@hit'].font.name = Config::FONT
+      @section['@hit'].font.name = Config::FONT[0]
       @section['@hit'].draw_outline_text(
         12, 0, @section['@hit'].width, @section['@hit'].height,
         "명중율",
@@ -9255,7 +11744,7 @@ class MUI
       # 딜레이
       @section['@delay'] = Bitmap.new(width, 20)
       @section['@delay'].fill_rect(0, 0, @section['@delay'].width, @section['@delay'].height, Color.black(128))
-      @section['@delay'].font.name = Config::FONT
+      @section['@delay'].font.name = Config::FONT[0]
       @section['@delay'].draw_outline_text(
         12, 0, @section['@delay'].width, @section['@delay'].height,
         "딜레이",
@@ -9268,7 +11757,7 @@ class MUI
       # 물리공격력
       @section['@damage'] = Bitmap.new(width, 20)
       @section['@damage'].fill_rect(0, 0, @section['@damage'].width, @section['@damage'].height, Color.black(128))
-      @section['@damage'].font.name = Config::FONT
+      @section['@damage'].font.name = Config::FONT[0]
       @section['@damage'].draw_outline_text(
         12, 0, @section['@damage'].width, @section['@damage'].height,
         "물리공격력",
@@ -9281,7 +11770,7 @@ class MUI
       # 마법공격력
       @section['@magic_damage'] = Bitmap.new(width, 20)
       @section['@magic_damage'].fill_rect(0, 0, @section['@magic_damage'].width, @section['@magic_damage'].height, Color.black(128))
-      @section['@magic_damage'].font.name = Config::FONT
+      @section['@magic_damage'].font.name = Config::FONT[0]
       @section['@magic_damage'].draw_outline_text(
         12, 0, @section['@magic_damage'].width, @section['@magic_damage'].height,
         "마법공격력",
@@ -9294,7 +11783,7 @@ class MUI
       # 물리방어력
       @section['@defense'] = Bitmap.new(width, 20)
       @section['@defense'].fill_rect(0, 0, @section['@defense'].width, @section['@defense'].height, Color.black(128))
-      @section['@defense'].font.name = Config::FONT
+      @section['@defense'].font.name = Config::FONT[0]
       @section['@defense'].draw_outline_text(
         12, 0, @section['@defense'].width, @section['@defense'].height,
         "물리방어력",
@@ -9307,7 +11796,7 @@ class MUI
       # 마법방어력
       @section['@magic_defense'] = Bitmap.new(width, 20)
       @section['@magic_defense'].fill_rect(0, 0, @section['@magic_defense'].width, @section['@magic_defense'].height, Color.black(128))
-      @section['@magic_defense'].font.name = Config::FONT
+      @section['@magic_defense'].font.name = Config::FONT[0]
       @section['@magic_defense'].draw_outline_text(
         12, 0, @section['@magic_defense'].width, @section['@magic_defense'].height,
         "마법방어력",
@@ -9320,7 +11809,7 @@ class MUI
       # HP
       @section['@hp'] = Bitmap.new(width, 20)
       @section['@hp'].fill_rect(0, 0, @section['@hp'].width, @section['@hp'].height, Color.black(128))
-      @section['@hp'].font.name = Config::FONT
+      @section['@hp'].font.name = Config::FONT[0]
       @section['@hp'].draw_outline_text(
         12, 0, @section['@hp'].width, @section['@hp'].height,
         "HP",
@@ -9333,7 +11822,7 @@ class MUI
       # MP
       @section['@mp'] = Bitmap.new(width, 20)
       @section['@mp'].fill_rect(0, 0, @section['@mp'].width, @section['@mp'].height, Color.black(128))
-      @section['@mp'].font.name = Config::FONT
+      @section['@mp'].font.name = Config::FONT[0]
       @section['@mp'].draw_outline_text(
         12, 0, @section['@mp'].width, @section['@mp'].height,
         "MP",
@@ -9343,7 +11832,7 @@ class MUI
         @itemData.mp.to_s + " ( +" + @item.mp.to_s + " )",
         Color.new(0, 192, 255), Color.black(128), 2)
       # 섹션 합체
-      @viewport = Viewport.new(0, 0, width, Device.getRect[1])
+      @viewport = Viewport.new(0, 0, width, Graphics.getRect[1])
       @viewport.z = 999999 + 1
       @sprite = Sprite.new(@viewport)
       @sprite.bitmap = Bitmap.new(@viewport.rect.width, @viewport.rect.height)
@@ -9385,26 +11874,146 @@ class MUI
     end
   end
 end
-module Config
-  # 채팅창 RECT 설정 (x, y, width, height)
-  RECT_CHAT = Rect.new(490, 425, 300, 94)
-  RECT_INPUT = Rect.new(490, 520, 300, 20)
-  # 채팅창 그래픽
-  FILE_CHAT = "chatbox.png"
+#────────────────────────────────────────────────────────────────────────────
+# ▶ MUI_ItemInfo
+# --------------------------------------------------------------------------
+# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Date      2015. 2. 22
+# --------------------------------------------------------------------------
+# Description
+# 
+#    아이템의 정보를 띄우는 클래스입니다.
+#────────────────────────────────────────────────────────────────────────────
+class MUI
+  class SkillInfo
+    def self.init
+      @viewport = Viewport.new(0, 0, 10, 10)
+      @viewport.z = 999999 + 1
+      @sprite = Sprite.new(@viewport)
+      @sprite.bitmap = Bitmap.new(@viewport.rect.width, @viewport.rect.height)
+    end
+    
+    def self.set(skill)
+      return if not skill
+      return if @skill == skill
+      clear
+      @skill = skill
+      @skillData = Game.getSkill(skill.no)
+      width = 200
+      @section = {}
+  
+      # 이미지
+      @section['@image'] = Bitmap.new(width, 36)
+      icon = RPG::Cache.icon(@skillData.image)
+      @section['@image'].fill_rect(0, 0, @section['@image'].width, @section['@image'].height, Color.black(128))
+      @section['@image'].blt(
+        (@section['@image'].width - icon.width) / 2,
+        (@section['@image'].height - icon.height) / 2,
+        icon, Rect.new(0, 0, icon.width, icon.height))
+      
+      # 이름 (타입)
+      name = @skillData.name
+      @section['@name'] = Bitmap.new(width, 24)
+      @section['@name'].fill_rect(0, 0, @section['@name'].width, @section['@name'].height, Color.black(192))
+      @section['@name'].font.name = Config::FONT[1]
+      @section['@name'].font.size = 15
+      @section['@name'].draw_text(0, (@section['@name'].height - @section['@name'].font.size) / 2, 
+        @section['@name'].width, @section['@name'].font.size, name, 1)
+      
+      # 설명
+      @section['@description'] = Bitmap.new(1, 1)
+      line = @section['@description'].get_divided_text(width - 12, @skillData.description).size
+      @section['@description'] = Bitmap.new(width, line * 14 + 20)
+      @section['@description'].fill_rect(0, 0, @section['@description'].width, @section['@description'].height, Color.black(128))
+      @section['@description'].draw_multi_outline_text(
+        6, 10, @section['@description'].width - 18, @section['@description'].height,
+        @skillData.description, Color.white, Color.black(128))
+      
+      # 타입
+      @section['@type'] = Bitmap.new(width, 16) 
+      @section['@type'].fill_rect(0, 0, @section['@type'].width, @section['@type'].height, Color.black(128))
+      @section['@type'].draw_outline_text(
+        0, 0, @section['@type'].width, @section['@type'].height,
+        "(" + @skillData.type + ")",
+        Color.white, Color.black(128), 1)
+        
+      # 사용 가능 레벨
+      @section['@limitLevel'] = Bitmap.new(width, 20) 
+      @section['@limitLevel'].fill_rect(0, 0, @section['@limitLevel'].width, @section['@limitLevel'].height, Color.black(128))
+      @section['@limitLevel'].draw_outline_text(
+        0, 0, @section['@limitLevel'].width - 5, @section['@limitLevel'].height,
+        @skillData.limitLevel.to_s + " 레벨 이상 사용 가능",
+        Color.white, Color.black(128), 2)
+        
+      # 딜레이
+      @section['@delay'] = Bitmap.new(width, 20)
+      @section['@delay'].fill_rect(0, 0, @section['@delay'].width, @section['@delay'].height, Color.black(128))
+      @section['@delay'].font.name = Config::FONT
+      @section['@delay'].draw_outline_text(
+        12, 0, @section['@delay'].width, @section['@delay'].height,
+        "쿨타임",
+        Color.new(0, 192, 255), Color.black(128), 0)
+      @section['@delay'].draw_outline_text(
+        0, 0, @section['@delay'].width - 12, @section['@delay'].height,
+        "#{@skillData.delay.to_f / 5}",
+        Color.new(0, 192, 255), Color.black(128), 2)
+      
+ 
+      # 섹션 합체
+      @viewport = Viewport.new(0, 0, width, Graphics.getRect[1])
+      @viewport.z = 999999 + 1
+      @sprite = Sprite.new(@viewport)
+      @sprite.bitmap = Bitmap.new(@viewport.rect.width, @viewport.rect.height)
+      blt(0, 0, '@name')
+      blt(0, 24, '@image')
+      blt(0, 60, '@type')
+      blt(0, 76, '@description')
+      h = @section['@description'].height
+      batch = []
+      batch.push('@delay') if @section['@delay']
+      batch.push('@damage') if @section['@damage']
+      n = 0
+      for i in 0...batch.size
+        if @skillData.instance_variable_get(batch[i]) != 0
+          blt(0, h + 77 + n * 20, batch[i])
+          n += 1
+        end
+      end
+      h2 = h + 57 + n * 20 + 1
+      blt(0, h2 + 20, '@limitLevel')
+    end
+    
+    def self.blt(x, y, key)
+      if @skillData.instance_variable_get(key) != 0 or ['@type', '@consume', '@trade', '@price', '@limitLevel'].include?(key)
+        @sprite.bitmap.blt(x, y, @section[key], Rect.new(0, 0, @section[key].width, @section[key].height))
+      end
+    end
+    
+    def self.update
+      @viewport.rect.x = Mouse.x
+      @viewport.rect.y = Mouse.y
+    end
+    
+    def self.clear
+      return if not @skill
+      @skill = nil
+      @sprite.bitmap.clear
+    end
+  end
 end
 
 class MUI
   class Console
     include Config
     def self.init
-      viewport = Viewport.new(RECT_CHAT)
+      viewport = Viewport.new(RECT_CHATBOX)
       viewport.z = 2000
       @backSprite = Sprite.new(viewport)
-      @backSprite.bitmap = Bitmap.new(RECT_CHAT.width, RECT_CHAT.height)
-      @backSprite.bitmap.fill_rect(0, 0, RECT_CHAT.width, RECT_CHAT.height, Color.black(100))
+      @backSprite.bitmap = Bitmap.new(RECT_CHATBOX.width, RECT_CHATBOX.height)
+      @backSprite.bitmap.fill_rect(0, 0, RECT_CHATBOX.width, RECT_CHATBOX.height, Color.black(100))
       @sprite = Sprite.new(viewport)
       @sprite.z = 1
-      @sprite.bitmap = Bitmap.new(RECT_CHAT.width, RECT_CHAT.height)
+      @sprite.bitmap = Bitmap.new(RECT_CHATBOX.width, RECT_CHATBOX.height)
       @sprite.bitmap.font.name = FONT
       @sprite.bitmap.font.size = FONT_NORMAL_SIZE
       @message = []
@@ -9447,7 +12056,7 @@ class MUI
       @helpText = "대화하시려면 Enter키를 눌러주세요."
       @text = ""
       @ime = IME.new
-      @viewport = Viewport.new(RECT_INPUT.x, RECT_INPUT.y, RECT_INPUT.width, RECT_INPUT.height)
+      @viewport = Viewport.new(*RECT_INPUT.to_a)
       @viewport.z = 2000
       @baseSprite = Sprite.new(@viewport)
       @baseSprite.bitmap = Bitmap.new(RECT_INPUT.width, RECT_INPUT.height)
@@ -9523,7 +12132,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Server
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014. 7. 27
 # --------------------------------------------------------------------------
 # Description
@@ -9538,7 +12147,6 @@ class MUI_Server < MUI::Form
     super('center', 300, 200, Config::SERVER.size * 58)
     # 드래그, 닫기 비허용
     self.drag = self.close = false
-    
     # 서버 이름, 아이콘 배열 생성
     @lbl_server_name = []; @pic_server = []
     # 서버 리스트 로드
@@ -9600,7 +12208,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Login
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014. 11. 15
 # --------------------------------------------------------------------------
 # Description
@@ -9648,7 +12256,8 @@ class MUI_Login < MUI::Form
     # 아이디
     @chk_id = MUI::CheckBox.new(22, 29, 14, 14)
     # 아이디 문자열 로드
-    GetPrivateProfileString.call("User", "id", "", id = 0.chr * 20, id.size, "./User.ini")
+    Win32API::GetPrivateProfileString.call("User", "id", "", id = 0.chr * 20, id.size, "./User.ini")
+    id = id.unpack("c*").pack("c*")
     id.gsub!(0.chr, "")
     @chk_id.value = (id != "")
     @tb_id.text = id if id != ""
@@ -9698,13 +12307,13 @@ class MUI_Login < MUI::Form
           'pass'   => @tb_pw.text})
         # 아이디 저장
         if @chk_id.value
-          WritePrivateProfileString.call("User", "id", @tb_id.text, "./User.ini")
+          Win32API::WritePrivateProfileString.call("User", "id", @tb_id.text, "./User.ini")
         end
       end
     elsif @chk_id.click
       if not @chk_id.value
         # 아이디 문자열 삭제
-        WritePrivateProfileString.call("User", "id", @tb_id.text = "", "./User.ini")
+        Win32API::WritePrivateProfileString.call("User", "id", @tb_id.text = "", "./User.ini")
       end
     end
   end
@@ -9712,7 +12321,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Register
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014. 11. 15
 # --------------------------------------------------------------------------
 # Description
@@ -9867,7 +12476,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Dialog
 # --------------------------------------------------------------------------
-# Author    @cheapmunk.naver
+# Author    jubin
 # Date      2014. 2. 12
 # --------------------------------------------------------------------------
 # Description
@@ -9884,6 +12493,7 @@ module Dialog
   PARTY_INVITE = 5
   GUILD_CREATE = 6
   GUILD_INVITE = 7
+  RESOLUTION = 101
 end
 
 class MUI_Dialog < MUI::Form
@@ -9893,11 +12503,11 @@ class MUI_Dialog < MUI::Form
     @id, @title, @text, @button, @textbox = id, title, text, button, textbox
     @@id.include?(@id) ? return : @@id.push(@id)
     # 프록
-    Thread.new do
+    @proc = Thread.new do
       loop do
-        sleep 0.1
+        sleep 0.05
         if @value != nil
-          yield
+          block.call
           break
         end
       end
@@ -9924,7 +12534,7 @@ class MUI_Dialog < MUI::Form
     @lbl.height = line * @lbl.size + 2
     @lbl.align = 1
     
-    formHeight = @@cache['TM'].height + @lbl.y + @lbl.height
+    formHeight = getTitleViewport.rect.height + @lbl.y + @lbl.height
     
     # TextBox
     if !@textbox.nil? and @textbox.size > 0
@@ -9983,12 +12593,13 @@ class MUI_Dialog < MUI::Form
   def dispose
     super
     @@id.delete(@id) if @@id.include?(@id)
+    @proc.kill
   end
 end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Inventory
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014. 11. 16
 # --------------------------------------------------------------------------
 # Description
@@ -10129,7 +12740,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Status
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014. 11. 22
 # --------------------------------------------------------------------------
 # Description
@@ -10381,7 +12992,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Skill
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 02. 01
 # --------------------------------------------------------------------------
 # Description
@@ -10392,7 +13003,6 @@ end
 class MUI_Skill < MUI::Form
   def initialize
     super('center', 'center', 300, 220)
-    @close = false
     @pic_window = MUI::PictureBox.new(24, 30, 251, 133) 
     @pic_window.picture = "Graphics/MUI/Skill/" + "window.png"
     addControl(@pic_window)
@@ -10402,7 +13012,7 @@ class MUI_Skill < MUI::Form
     addControl(@pic_point)
     
     @lbl_point = MUI::Label.new(@pic_window.x, 6, @pic_window.width - 20, 14)
-    @lbl_point.text = Math.unitMoney("1000")
+    @lbl_point.text = Math.unitMoney(Game.player.skillPoint)
     @lbl_point.align = 2
     @lbl_point.color = Color.system
     addControl(@lbl_point)
@@ -10450,14 +13060,17 @@ class MUI_Skill < MUI::Form
   def update
     super
     for i in 1..20
-      if @pic_icon[i].click(1)
-        Socket.send({'header' => CTSHeader::USE_SKILL,
-                    'no' => @skill_data[i]})
-      end
-      if @pic_plus[i].isSelected
-        @op = i
+      if @pic_icon[i].click(0)
+        MUI.dragItem = Game.player.getSkill(i)
       end
     end
+    for i in 1..20
+      if @pic_icon[i].isSelected && Game.player.getSkill(i)
+        MUI::SkillInfo.set(Game.player.getSkill(i))
+        return
+      end
+    end
+    MUI::SkillInfo.clear
     opSelect
   end
   
@@ -10477,8 +13090,8 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Option
 # --------------------------------------------------------------------------
-# Author    @cheapmunk.naver
-# Date      2015. 2. 17
+# Author    jubin
+# Date      2016. 01. 11
 # --------------------------------------------------------------------------
 # Description
 # 
@@ -10488,72 +13101,89 @@ end
 
 class MUI_Option < MUI::Form
   def initialize
-    super('center', 'center', 250, 150)
+    super('center', 'center', 250, 200)
     # 레이블
     @lbl = {}
     # BGM
-    @lbl['bgm'] = MUI::Label.new(35, 24, 1, 1)
-    @lbl['bgm'].text = "배경음"
-    @lbl['bgm'].color = Color.gray
-    addControl(@lbl['bgm'])
-    @lbl['bgm'].autoSize
+    @lbl[:bgm] = MUI::Label.new(35, 24, 1, 1)
+    @lbl[:bgm].text = "BGM"
+    @lbl[:bgm].color = Color.gray
+    addControl(@lbl[:bgm])
+    @lbl[:bgm].autoSize
     # BGS
-    @lbl['bgs'] = MUI::Label.new(35, 49, 1, 1)
-    @lbl['bgs'].text = "효과음"
-    @lbl['bgs'].color = Color.gray
-    addControl(@lbl['bgs'])
-    @lbl['bgs'].autoSize
+    @lbl[:bgs] = MUI::Label.new(35, 24+25, 1, 1)
+    @lbl[:bgs].text = "BGS"
+    @lbl[:bgs].color = Color.gray
+    addControl(@lbl[:bgs])
+    @lbl[:bgs].autoSize
+    # ME
+    @lbl[:me] = MUI::Label.new(35, 24+50, 1, 1)
+    @lbl[:me].text = "ME"
+    @lbl[:me].color = Color.gray
+    addControl(@lbl[:me])
+    @lbl[:me].autoSize
+    # SE
+    @lbl[:se] = MUI::Label.new(35, 24+75, 1, 1)
+    @lbl[:se].text = "SE"
+    @lbl[:se].color = Color.gray
+    addControl(@lbl[:se])
+    @lbl[:se].autoSize
     # 풀스크린
-    @lbl['full'] = MUI::Label.new(35, 74, 1, 1)
-    @lbl['full'].text = "풀스크린"
-    @lbl['full'].color = Color.gray
-    addControl(@lbl['full'])
-    @lbl['full'].autoSize
-      # on
-      @lbl['full_on'] = MUI::Label.new(110, 75, 1, 1)
-      @lbl['full_on'].text = "On"
-      @lbl['full_on'].color = Color.gray
-      addControl(@lbl['full_on'])
-      @lbl['full_on'].autoSize
-      # off
-      @lbl['full_off'] = MUI::Label.new(170, 75, 1, 1)
-      @lbl['full_off'].text = "Off"
-      @lbl['full_off'].color = Color.gray
-      addControl(@lbl['full_off'])
-      @lbl['full_off'].autoSize
+    @lbl[:fullscreen] = MUI::Label.new(35, 74+50, 1, 1)
+    @lbl[:fullscreen].text = "풀스크린"
+    @lbl[:fullscreen].color = Color.gray
+    addControl(@lbl[:fullscreen])
+    @lbl[:fullscreen].autoSize
+    # on
+    @lbl[:fullscreen_on] = MUI::Label.new(110, 75+50, 1, 1)
+    @lbl[:fullscreen_on].text = "On"
+    @lbl[:fullscreen_on].color = Color.gray
+    addControl(@lbl[:fullscreen_on])
+    @lbl[:fullscreen_on].autoSize
+    # off
+    @lbl[:fullscreen_off] = MUI::Label.new(170, 75+50, 1, 1)
+    @lbl[:fullscreen_off].text = "Off"
+    @lbl[:fullscreen_off].color = Color.gray
+    addControl(@lbl[:fullscreen_off])
+    @lbl[:fullscreen_off].autoSize
     
     # 수평 스크롤바
     @hs = {}
     # BGM
-    @hs['bgm'] = MUI::HScroll.new(@lbl['bgm'].x + 55, @lbl['bgm'].y+1, 120, 13)
-    @hs['bgm'].max, @hs['bgm'].min = 100, 0
-    GetPrivateProfileString.call("Option", "bgm", @hs['bgm'].max.to_s, buf = 0.chr*6, buf.size, Config::OPTION_PATH)
-    buf.gsub!(0.chr, "")
-    @hs['bgm'].value = buf.to_i
-    addControl(@hs['bgm'])
-    
+    @hs[:bgm] = MUI::HScroll.new(@lbl[:bgm].x + 55, @lbl[:bgm].y+1, 120, 13)
+    @hs[:bgm].max, @hs[:bgm].min = 100, 0
+    @hs[:bgm].value = Game.system.bgm_load
+    addControl(@hs[:bgm])
     # BGS
-    @hs['bgs'] = MUI::HScroll.new(@lbl['bgs'].x + 55, @lbl['bgs'].y+1, 120, 13)
-    @hs['bgs'].max, @hs['bgs'].min = 100, 0
-    GetPrivateProfileString.call("Option", "bgs", @hs['bgs'].max.to_s, buf = 0.chr*6, buf.size, Config::OPTION_PATH)
-    buf.gsub!(0.chr, "")
-    @hs['bgs'].value = buf.to_i
-    addControl(@hs['bgs'])
+    @hs[:bgs] = MUI::HScroll.new(@lbl[:bgs].x + 55, @lbl[:bgs].y+1, 120, 13)
+    @hs[:bgs].max, @hs[:bgs].min = 100, 0
+    @hs[:bgs].value = Game.system.bgs_load
+    addControl(@hs[:bgs])
+    # ME
+    @hs[:me] = MUI::HScroll.new(@lbl[:me].x + 55, @lbl[:me].y+1, 120, 13)
+    @hs[:me].max, @hs[:me].min = 100, 0
+    @hs[:me].value = Game.system.me_load
+    addControl(@hs[:me])
+    # SE
+    @hs[:se] = MUI::HScroll.new(@lbl[:se].x + 55, @lbl[:se].y+1, 120, 13)
+    @hs[:se].max, @hs[:se].min = 100, 0
+    @hs[:se].value = Game.system.se_load
+    addControl(@hs[:se])
     
     # 라디오 박스
     @rb = {}
     # 풀스크린 on
-    @rb['full_on'] = MUI::RadioBox.new(@lbl['full'].x + 55, @lbl['full'].y+1, 14, 14)
-    addControl(@rb['full_on'])
+    @rb[:fullscreen_on] = MUI::RadioBox.new(@lbl[:fullscreen].x + 55, @lbl[:fullscreen].y+1, 14, 14)
+    addControl(@rb[:fullscreen_on])
     # 풀스크린 off
-    @rb['full_off'] = MUI::RadioBox.new(@rb['full_on'].x + 60, @lbl['full'].y+1, 14, 14)
-    addControl(@rb['full_off'])
+    @rb[:fullscreen_off] = MUI::RadioBox.new(@rb[:fullscreen_on].x + 60, @lbl[:fullscreen].y+1, 14, 14)
+    addControl(@rb[:fullscreen_off])
     # 그룹화
-    @rb['full_off'].group = @rb['full_on'].group = 'fullscreen'
-    if Config::WINDOW_FULL
-      @rb['full_on'].value = true
+    @rb[:fullscreen_off].group = @rb[:fullscreen_on].group = 'fullscreen'
+    if Game.system.fullscreen_load
+      @rb[:fullscreen_on].value = true
     else
-      @rb['full_off'].value = true
+      @rb[:fullscreen_off].value = true
     end
   end
   
@@ -10564,34 +13194,58 @@ class MUI_Option < MUI::Form
   
   def update
     super
-    @hs['bgm'].toolTip = @hs['bgm'].value.to_i.to_s if @hs['bgm'].isSelected
-    @hs['bgs'].toolTip = @hs['bgs'].value.to_i.to_s if @hs['bgs'].isSelected
-    if @bgm != @hs['bgm'].value.to_i
-      Game.system.bgm_play(RPG::AudioFile.new("Rain.mp3", @hs['bgm'].value.to_i, 100))
-      @bgm = @hs['bgm'].value.to_i
+    @hs[:bgm].toolTip = @hs[:bgm].value.to_i.to_s if @hs[:bgm].isSelected
+    @hs[:bgs].toolTip = @hs[:bgs].value.to_i.to_s if @hs[:bgs].isSelected
+    @hs[:me].toolTip = @hs[:me].value.to_i.to_s if @hs[:me].isSelected
+    @hs[:se].toolTip = @hs[:se].value.to_i.to_s if @hs[:se].isSelected
+    if @bgm != @hs[:bgm].value.to_i
+      Game.system.bgm_save(@hs[:bgm].value.to_i)
+      @bgm = @hs[:bgm].value.to_i
     end
-    if @rb['full_on'].click && @rb['full_on'].value
+    if @bgs != @hs[:bgs].value.to_i
+      Game.system.bgs_save(@hs[:bgs].value.to_i)
+      @bgs = @hs[:bgs].value.to_i
+    end
+    if @me != @hs[:me].value.to_i
+      Game.system.me_save(@hs[:me].value.to_i)
+      @me = @hs[:me].value.to_i
+    end
+    if @se != @hs[:se].value.to_i
+      Game.system.se_save(@hs[:se].value.to_i)
+      @se = @hs[:se].value.to_i
+    end
+    
+    if @rb[:fullscreen_on].click && @rb[:fullscreen_on].value
       if not Graphics.isFullScreen
-        Graphics.resize_screen(Graphics.width, Graphics.height, true)
+        b = Graphics.resize_screen2(Graphics.width, Graphics.height, true)
+        Game.system.fullscreen_save(b)
+        if b
+          @rb[:fullscreen_on].value = true
+        else
+          @rb[:fullscreen_off].value = true
+        end
       end
-    elsif @rb['full_off'].click && @rb['full_off'].value
+    elsif @rb[:fullscreen_off].click && @rb[:fullscreen_off].value
       if Graphics.isFullScreen
-        Graphics.resize_screen(Graphics.width, Graphics.height)
+        b = Graphics.resize_screen2(Graphics.width, Graphics.height)
+        Game.system.fullscreen_save(b)
+        if b
+          @rb[:fullscreen_on].value = true
+        else
+          @rb[:fullscreen_off].value = true
+        end
       end
     end
   end
   
-  def dispose
-    WritePrivateProfileString.call("Option", "bgm", @hs['bgm'].value.to_i.to_s, Config::OPTION_PATH)
-    WritePrivateProfileString.call("Option", "bgs", @hs['bgs'].value.to_i.to_s, Config::OPTION_PATH)
-    WritePrivateProfileString.call("Option", "fullscreen", @rb['full_on'].value ? "true" : "false", Config::OPTION_PATH)
-    super
+  def updateData
+    
   end
 end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Message
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 1. 25
 # --------------------------------------------------------------------------
 # Description
@@ -10601,7 +13255,7 @@ end
 
 class MUI_Message < MUI::Form
   def initialize(no)
-    super(48, 350, Device.getRect[0] - 200, 200)
+    super(48, 350, Graphics.getRect[0] - 200, 200)
     self.style = "Black"
     self.opacity /= 1.1
     @msg = File.open("./GameData/npc/" + "#{no}.txt").readlines
@@ -10668,8 +13322,8 @@ class MUI_Message < MUI::Form
     @bitmap = Bitmap.new("Graphics/Pictures/togi.png")
     @sprite = Sprite.new
     @sprite.z = 999999
-    @sprite.x = Device.getRect[0] - @bitmap.width
-    @sprite.y = Device.getRect[1] - @bitmap.height
+    @sprite.x = Graphics.getRect[0] - @bitmap.width
+    @sprite.y = Graphics.getRect[1] - @bitmap.height
     @sprite.bitmap = @bitmap
   end
   
@@ -10693,7 +13347,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Trade
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 2. 20
 # --------------------------------------------------------------------------
 # Description
@@ -10942,10 +13596,11 @@ class MUI_Trade < MUI::Form
     MUI::ItemInfo.clear
   end
 end
+
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Shop
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 2. 16
 # --------------------------------------------------------------------------
 # Description
@@ -11025,7 +13680,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Community
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 2. 17
 # --------------------------------------------------------------------------
 # Description
@@ -11196,7 +13851,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_ClickMenu
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2015. 2. 15
 # --------------------------------------------------------------------------
 # Description
@@ -11264,7 +13919,7 @@ end
 #────────────────────────────────────────────────────────────────────────────
 # ▶ MUI_Quest
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014. 3. 9
 # --------------------------------------------------------------------------
 # Description
@@ -11464,9 +14119,24 @@ end
   KEY_SEP	      = 0xBC        # , key
   KEY_DASH	    = 0xBD        # - key
   KEY_DOTT	    = 0xBE        # . key
-
+  
 module Key
   module_function
+  
+  #--------------------------------------------------------------------------
+  # * 단축키 설정
+  #--------------------------------------------------------------------------
+  SLOT = []
+  SLOT[0] = KEY_Q
+  SLOT[1] = KEY_W
+  SLOT[2] = KEY_E
+  SLOT[3] = KEY_R
+  SLOT[4] = KEY_T
+  SLOT[5] = KEY_A
+  SLOT[6] = KEY_S
+  SLOT[7] = KEY_D
+  SLOT[8] = KEY_F
+  SLOT[9] = KEY_G
   #--------------------------------------------------------------------------
   # * Key Functions
   #--------------------------------------------------------------------------
@@ -11478,7 +14148,7 @@ module Key
   end
   
   def update
-    return unless Graphics.state
+    return unless Graphics.focus
     for i in 0..255
       if press?(i)
         if @key_states[i] == 0
@@ -11493,22 +14163,22 @@ module Key
   end
   
   def trigger?(key)
-    return unless Graphics.state
+    return unless Graphics.focus
     return @key_states[key] == 1
   end
   
   def press?(key)
-    return unless Graphics.state
-    return GetKeyState.call(key) != 0
+    return unless Graphics.focus
+    return Win32API::GetKeyState.call(key) != 0
   end
   
   def repeat?(key)
-    return unless Graphics.state
+    return unless Graphics.focus
     return (trigger?(key) or @key_states[key] >= 20)
   end
   
   def dir4
-    return unless Graphics.state
+    return unless Graphics.focus
     if press?(KEY_DOWN)
       return 2
     elsif press?(KEY_LEFT)
@@ -11535,7 +14205,7 @@ end
 module Mouse
   Mouse_to_Input_Triggers = {0 => Input::C, 1 => Input::B, 2 => Input::A} 
   
-  @@frame = [GetSystemMetrics.call(32), GetSystemMetrics.call(33), GetSystemMetrics.call(4)]  
+  @@frame = [Win32API::GetSystemMetrics.call(32), Win32API::GetSystemMetrics.call(33), Win32API::GetSystemMetrics.call(4)]  
   @triggers     =   [0, 1], [0, 2], [0, 4]
   @old_pos      =   0
   @pos_i        =   0
@@ -11553,33 +14223,34 @@ module Mouse
 
   def self.global_pos
     pos = [0, 0].pack('ll')
-    return GetCursorPos.call(pos) == 0 ? nil : pos.unpack('ll')
+    return Win32API::GetCursorPos.call(pos) == 0 ? nil : pos.unpack('ll')
   end
 
   def self.screen_to_client(x=0, y=0)
     pos = [x, y].pack('ll')
-    return ScreenToClient.call(Device::HWND, pos) == 0 ? nil : pos.unpack('ll')
+    return Win32API::ScreenToClient.call(Game::HWND, pos) == 0 ? nil : pos.unpack('ll')
   end  
 
   def self.pos
     global_pos = [0, 0].pack('ll')    
-    gx, gy = GetCursorPos.call(global_pos) == 0 ? nil : global_pos.unpack('ll')
+    gx, gy = Win32API::GetCursorPos.call(global_pos) == 0 ? nil : global_pos.unpack('ll')
     local_pos = [gx, gy].pack('ll')
-    x, y = ScreenToClient.call(Device::HWND, local_pos) == 0 ? nil : local_pos.unpack('ll')
+    x, y = Win32API::ScreenToClient.call(Game::HWND, local_pos) == 0 ? nil : local_pos.unpack('ll')
     begin
-      if (x >= -@@frame[0] && y >= -@@frame[2] && x <= Device.getRect[0] + @@frame[0] && y <= Device.getRect[1] + @@frame[1])
-        return x, y
-      end
+      #if (x >= -@@frame[0] && y >= -@@frame[2] && x <= Graphics.getRect[0] + @@frame[0] && y <= Graphics.getRect[1] + @@frame[1])
+      return x, y
+      #end
     rescue
       return 0, 0
     end
   end  
     
   def self.update
+    return unless Graphics.focus
     old_pos = @pos
     @pos = self.pos
     for i in @triggers
-      n = GetAsyncKeyState.call(i[1])
+      n = Win32API::GetAsyncKeyState.call(i[1])
       if [0, 1].include?(n)
         i[0] = (i[0] > 0 ? i[0] * -1 : 0)
       else
@@ -11607,14 +14278,14 @@ module Mouse
   end
 
   def self.trigger?(id = 0)
-    return unless Graphics.state
+    return unless Graphics.focus
     if @triggers[id][0] == 1
       return true
     end
   end
 
   def self.repeat?(id = 0)
-    return unless Graphics.state
+    return unless Graphics.focus
     if @triggers[id][0] <= 0
       return false
     else
@@ -11623,13 +14294,13 @@ module Mouse
   end
 
   def self.press?(id = 0)
-    return unless Graphics.state
+    return unless Graphics.focus
     return @triggers[id][0] > 0
   end
 
   WHEEL_DELTA = 120
   def self.on_wheel(delta, keys, x, y)
-    return unless Graphics.state
+    return unless Graphics.focus
     @@delta += delta
     if @@delta.abs >= WHEEL_DELTA
       delta_idx = - @@delta / WHEEL_DELTA
@@ -11644,7 +14315,7 @@ module Mouse
   
   def self.screen_to_client(x=0, y=0)
     pos = [x, y].pack('ll')
-    return ScreenToClient.call(Device::HWND, pos) == 0 ? nil : pos.unpack('ll')
+    return Win32API::ScreenToClient.call(Game::HWND, pos) == 0 ? nil : pos.unpack('ll')
   end
   
   module_function
@@ -11765,7 +14436,7 @@ end
 # ▶ IME
 # --------------------------------------------------------------------------
 # Author    카에데
-# Modify    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Modify    뮤 (mu29gl@gmail.com), jubin
 # Date      2015
 # --------------------------------------------------------------------------
 # Description
@@ -11787,16 +14458,16 @@ class IME
   attr_accessor :setcstr
   
   def initialize
-    @settext = Win32API.new('IME.dll', 'SetIMEText', 'lp', '')
-    @gettext = Win32API.new('IME.dll', 'GetIMEText', 'l', 'p')
-    @setlong = Win32API.new('IME.dll', 'SetIMELong', 'l', 'l')
-    @getlong = Win32API.new('IME.dll', 'GetIMELong', '', 'l')
-    @setflag = Win32API.new('IME.dll', 'SetIMEFlag', 'l', '')
-    @getflag = Win32API.new('IME.dll', 'GetIMEFlag', '', 'l')
-    @setcstr = Win32API.new('IME.dll', 'SetIMECstr', 'p', 'l')
-    @getcstr = Win32API.new('IME.dll', 'GetIMECstr', '', 'p')
-    @change  = Win32API.new('IME.dll', 'ChangeIME', 'l', 'l')
-    @getstate = Win32API.new('IME.dll', 'GetStateIME', '', 'l')
+    @settext = Win32API.new(Config::DLL_PATH + 'IME.dll', 'SetIMEText', 'lp', '')
+    @gettext = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetIMEText', 'l', 'p')
+    @setlong = Win32API.new(Config::DLL_PATH + 'IME.dll', 'SetIMELong', 'l', 'l')
+    @getlong = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetIMELong', '', 'l')
+    @setflag = Win32API.new(Config::DLL_PATH + 'IME.dll', 'SetIMEFlag', 'l', '')
+    @getflag = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetIMEFlag', '', 'l')
+    @setcstr = Win32API.new(Config::DLL_PATH + 'IME.dll', 'SetIMECstr', 'p', 'l')
+    @getcstr = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetIMECstr', '', 'p')
+    @change  = Win32API.new(Config::DLL_PATH + 'IME.dll', 'ChangeIME', 'l', 'l')
+    @getstate = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetStateIME', '', 'l')
     @choice = false
     @focus = false
     @multiline = false
@@ -11836,11 +14507,11 @@ class IME
     @change.call(a)
   end
   
-  def clear(i = 0)
+  def clear(i = 1)
     if i == 1
       i = 0 if @cstr.size != 3
     end
-    Win32API.new('IME.dll', 'ClearIME', 'l', '').call(i)
+    Win32API.new(Config::DLL_PATH + 'IME.dll', 'ClearIME', 'l', '').call(i)
   end
   
   def update
@@ -11883,6 +14554,7 @@ end
 # Author    뮤 (mu29gl@gmail.com)
 # Date      2015. 1. 23
 #────────────────────────────────────────────────────────────────────────────
+
 def blockMapExtract
   $data_tilesets = load_data("Data/Tilesets.rxdata")
   Game.init
@@ -11914,7 +14586,7 @@ blockMapExtract if Config::EXTRACT_MAP
 #────────────────────────────────────────────────────────────────────────────
 # ▶ Main
 # --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com), @cheapmunk.naver
+# Author    뮤 (mu29gl@gmail.com), jubin
 # Date      2014
 # --------------------------------------------------------------------------
 # Description
@@ -11927,18 +14599,17 @@ begin
   MUI.init
   Game.init
   Game.load
+  Network.call
   Socket.init
-  NoF1.call(1)
-  NoF12.call(1)
-  ShowCursor.call(0)
-  StartGraphics.call(Device::HWND)
-  Font.default_name = Config::FONT
+  Win32API::NoF1.call(1)
+  Win32API::NoF12.call(1)
+  Win32API::ShowCursor.call(0)
+  Font.default_outline = false
+  Font.default_name = Config::FONT[0]
   Font.default_size = Config::FONT_NORMAL_SIZE
-  Graphics.freeze
   Graphics.frame_rate = 60
   $scene = Scene_Server.new
-  # 소켓 업데이트
-  #Thread.new { loop { sleep 0.1; Socket.update } }
+  Graphics.freeze
   while $scene != nil
     $scene.main
   end
@@ -11949,3 +14620,4 @@ rescue Errno::ENOENT
 ensure
   Socket.close
 end
+
