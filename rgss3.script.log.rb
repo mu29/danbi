@@ -8143,7 +8143,7 @@ module JSON
         @index -= 1
         complete = true
         break
-      when "0", "1", "2", '3', '4', '5', '6', '7', '8', '9', '.'
+      when "0", "1", "2", '3', '4', '5', '6', '7', '8', '9', '.', '-'
         string += char.to_s
       end
     end
