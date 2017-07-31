@@ -65,8 +65,12 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 				User.get(ctx).pickItem();
 				break;
 			case CTSHeader.CHAT:
-				User.get(ctx).chat((String) packet.get("message"));
+				User.get(ctx).chat((int) packet.get("no"), (String) packet.get("message"));
 				break;
+            case CTSHeader.CHAT_BALLOON_START:
+                User.get(ctx).startShowingBalloon((int) packet.get("no"));
+                break;
+
 	    	case CTSHeader.OPEN_REGISTER_WINDOW:
 				ctx.writeAndFlush(Packet.openRegisterWindow());
 				break;
@@ -136,6 +140,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.BUY_SHOP_ITEM:
 				User.get(ctx).buyShopItem((int) packet.get("shopNo"), (int) packet.get("index"), (int) packet.get("amount"));
 				break;
+
 			case CTSHeader.SET_SLOT:
 				User.get(ctx).setSlot((int) packet.get("index"), (int) packet.get("itemidx"));
 				break;

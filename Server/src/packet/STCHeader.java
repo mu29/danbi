@@ -20,7 +20,8 @@ public final class STCHeader {
 	public final static int NOTIFY = 16;
 	public final static int MOVE_MAP = 17;
 	public final static int CHAT = 18;
-	public final static int PLAY_MUSIC = 19;
+	public final static int CHAT_BALLOON_END = 19;
+	public final static int PLAY_MUSIC = 20;
 	
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int UPDATE_STATUS = 101;

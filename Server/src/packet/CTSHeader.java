@@ -14,7 +14,8 @@ public final class CTSHeader {
 	public final static int DROP_GOLD = 10;
 	public final static int PICK_ITEM = 11;
 	public final static int CHAT = 12;
-	
+	public final static int CHAT_BALLOON_START = 13;
+
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int CHANGE_ITEM_INDEX = 101;
 	public final static int REQUEST_TRADE = 102;

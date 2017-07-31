@@ -49,10 +49,13 @@ public class User extends Character {
 	private int partyNo;
 	// NPC 관련
 	private Message message = new Message();
-
+    // 말풍선
+    private static int standardDelay = -1;
+    private boolean isBalloonShowing = false;
+    private long startChattingTime;
+    // 쿨타임
 	public Cooltime coolTime = new Cooltime();
 	public Cooltime getCoolTime() { return coolTime; }
-
 	private long lastTime = System.currentTimeMillis() / 100;
 
 	private static Hashtable<ChannelHandlerContext, User> users = new Hashtable<ChannelHandlerContext, User>();
@@ -1994,19 +1997,18 @@ public class User extends Character {
 	}
 
 	// 채팅
-	public void chat(String _message) {
+	public void chat(int no, String _message) {
 		Vector<User> mapUsers = Map.getMap(map).getField(seed).getUsers();
 		switch (_message.split(" ")[0]) {
 			case "/공지":
 				if (!admin)
 					return;
-
 				for (User u : users.values())
-					u.getCtx().writeAndFlush(Packet.chat("[공지] " + _message.replace("/공지 ", ""), 255, 255, 255, 255, 0, 0));
+					u.getCtx().writeAndFlush(Packet.chat(no, "[공지] " + _message.replace("/공지 ", ""), 255, 255, 255, 255, 0, 0));
 				break;
 			default:
 				for (User u : mapUsers)
-					u.getCtx().writeAndFlush(Packet.chat(name + " : " + _message));
+					u.getCtx().writeAndFlush(Packet.chat(no, name + " : " + _message));
 				break;
 		}
 	}
@@ -2017,7 +2019,7 @@ public class User extends Character {
  			return;
  		for (int members : Party.get(partyNo).getMembers()) {
  			User u = User.get(members);
- 			u.getCtx().writeAndFlush(Packet.chat("[파티] " + name + " : " + _message, 0, 255, 0));
+ 			u.getCtx().writeAndFlush(Packet.chat(no, "[파티] " + name + " : " + _message, 0, 255, 0));
  		}
  	}
  
@@ -2027,7 +2029,7 @@ public class User extends Character {
  			return;
  		for (int members : Guild.get(guildNo).getMembers()) {
  			User u = User.get(members);
- 			u.getCtx().writeAndFlush(Packet.chat("[길드] " + name + " : " + _message, 255, 255, 0));
+ 			u.getCtx().writeAndFlush(Packet.chat(no, "[길드] " + name + " : " + _message, 255, 255, 0));
  		}
  	}
  	
@@ -2042,8 +2044,8 @@ public class User extends Character {
  		
  		for (User u : users.values()) {
  			if (u.getName().equals(_target)) {
- 				u.getCtx().writeAndFlush(Packet.chat("[From:" + name + "] " + _message));
- 				ctx.writeAndFlush(Packet.chat("[To:" + _target + "] " + _message));
+ 				u.getCtx().writeAndFlush(Packet.chat(no, "[From:" + name + "] " + _message));
+ 				ctx.writeAndFlush(Packet.chat(no, "[To:" + _target + "] " + _message));
  				return;
  			}
  		}
@@ -2064,13 +2066,48 @@ public class User extends Character {
 		return false;
 	}
 
+    // 채팅
+    public void startShowingBalloon(int no) {
+	    // 옵션 DB 에서 말풍선 표시 시간 취득
+        try {
+            if (standardDelay < 0) {
+                ResultSet rs = DataBase.executeQuery("SELECT `value` FROM `setting_option` WHERE `name` = 'chatting_balloon_delay';");
+                if (rs.next()) {
+                    standardDelay = rs.getInt(1);
+                    standardDelay /= 100;
+                }
+                rs.close();
+            }
+        } catch (SQLException e) {
+            logger.warning(e.toString());
+        }
+
+        isBalloonShowing = true;
+        startChattingTime = System.currentTimeMillis() / 100;
+    }
+
+    public void endShowingBalloon(int no) {
+        Vector<User> mapUsers = Map.getMap(map).getField(seed).getUsers();
+        for (User u : mapUsers)
+            u.getCtx().writeAndFlush(Packet.removeChattingBalloon(no));
+        //logger.info("5초가 지났습니다.");
+        isBalloonShowing = false;
+    }
+
 	public void update() {
 		long nowTime = System.currentTimeMillis() / 100;
+		// 쿨타임
 		if (nowTime > lastTime + 1)
 		{
 			lastTime = System.currentTimeMillis() / 100;
 			coolTime.coolDown();
 		}
+        // 말풍선
+		if (isBalloonShowing) {
+            if (nowTime - startChattingTime >= standardDelay) {
+                endShowingBalloon(no);
+            }
+        }
 	}
 
 	// 좌표 이동

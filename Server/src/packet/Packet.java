@@ -265,17 +265,18 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject chat(String message) {
+	public static JSONObject chat(int no, String message) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT);
+		packet.put("no", no);
 		packet.put("message", message);
-
 		return packet;
 	}
 
-	public static JSONObject chat(String message, int r, int g, int b) {
+	public static JSONObject chat(int no, String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT);
+		packet.put("no", no);
 		packet.put("message", message);
 		packet.put("r", r);
 		packet.put("g", g);
@@ -284,9 +285,10 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject chat(String message, int r, int g, int b, int r2, int g2, int b2) {
+	public static JSONObject chat(int no, String message, int r, int g, int b, int r2, int g2, int b2) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT);
+		packet.put("no", no);
 		packet.put("message", message);
 		packet.put("r", r);
 		packet.put("g", g);
@@ -612,6 +614,14 @@ public final class Packet {
 		return packet;
 	}
 
+	public static JSONObject removeChattingBalloon(int no) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_BALLOON_END);
+		packet.put("no", no);
+
+		return packet;
+	}
+
 	public static JSONObject setCooltime(int nowCooltime, int fullCooltime, int idx)
 	{
 		JSONObject packet = new JSONObject();
@@ -626,7 +636,6 @@ public final class Packet {
 	public static JSONObject setSlot(int index, int slot) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.SET_SLOT);
-
 		packet.put("index", index);
 		packet.put("slot", slot);
 
