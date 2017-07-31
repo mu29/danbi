@@ -1,10 +1,10 @@
-﻿/*
+/*
 MySQL Data Transfer
 Source Host: localhost
 Source Database: danbi
 Target Host: localhost
 Target Database: danbi
-Date: 2016-10-15 오후 5:09:15
+Date: 2017-08-01 ���� 1:57:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -122,6 +122,14 @@ CREATE TABLE `setting_npc` (
   `direction` int(11) DEFAULT NULL,
   `function` char(255) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for setting_option
+-- ----------------------------
+CREATE TABLE `setting_option` (
+  `name` char(64) NOT NULL,
+  `value` double(6,0) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- ----------------------------
 -- Table structure for setting_portal
@@ -281,7 +289,7 @@ CREATE TABLE `user` (
   `speed` int(11) NOT NULL DEFAULT '4',
   `admin` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`no`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records 
@@ -299,6 +307,11 @@ INSERT INTO `equip` VALUES ('13', '1', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('15', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('16', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `equip` VALUES ('17', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('18', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('19', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('20', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('21', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `equip` VALUES ('22', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `item` VALUES ('12', '1', '1', '6', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `item` VALUES ('12', '1', '1', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `item` VALUES ('12', '1', '1', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
@@ -313,6 +326,10 @@ INSERT INTO `item` VALUES ('1', '1', '1', '3', '0', '0', '0', '0', '0', '0', '0'
 INSERT INTO `item` VALUES ('1', '8', '5', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `item` VALUES ('1', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `item` VALUES ('1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
+INSERT INTO `item` VALUES ('18', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
+INSERT INTO `item` VALUES ('18', '8', '2', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
+INSERT INTO `item` VALUES ('18', '1', '1', '3', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
+INSERT INTO `item` VALUES ('18', '1', '1', '4', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');
 INSERT INTO `setting_item` VALUES ('1', '목도', '나무로 만든 검', '001-Weapon01', '0', '1', '0', '100', '10', '10', '10', '10', '5', '4', '3', '2', '1', '10', '5', '5', '2', '0', '1', '1', null);
 INSERT INTO `setting_item` VALUES ('2', '냄비 뚜껑', '방패가 없으니 이거라도 쓰자', '009-Shield01', '0', '1', '1', '10', '0', '0', '5', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1', null);
 INSERT INTO `setting_item` VALUES ('3', '밀짚모자', '난 해적왕이 될 사나이!', '010-Head01', '0', '1', '2', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '0', '1', '1', null);
@@ -325,6 +342,7 @@ INSERT INTO `setting_job` VALUES ('1', '전사', '1000', '5', '1', '0', '0');
 INSERT INTO `setting_job` VALUES ('2', '마법사', '5', '10', '0', '0', '1');
 INSERT INTO `setting_job` VALUES ('3', '도적', '7', '7', '0', '1', '0');
 INSERT INTO `setting_npc` VALUES ('1', '테스트', '003-Fighter03', '1', '10', '4', '2', 'testNpc');
+INSERT INTO `setting_option` VALUES ('chatting_balloon_delay', '5000');
 INSERT INTO `setting_portal` VALUES ('1', '19', '8', '2', '0', '14');
 INSERT INTO `setting_portal` VALUES ('2', '0', '14', '1', '19', '8');
 INSERT INTO `setting_register` VALUES ('1', '1', '001-Fighter01', '1', '0', '0', '1');
@@ -336,19 +354,10 @@ INSERT INTO `setting_shop` VALUES ('1', '8');
 INSERT INTO `setting_skill` VALUES ('1', '크로스 컷', '전사의 기본적인 기술. 적을 두차례 벤다.', '근접 공격', '1', '20', '1', '10', '0', '67', '050-Skill07', 'crossCut');
 INSERT INTO `setting_troop` VALUES ('1', '다람쥐', '168-Small10', '4', '0', '10', '10', '10', '10', '4', '1', '1', '1', '1', '10', '50', '50', '5', '5', '2', '5', '5', '2', '30', '1', '10', '100', '1', 'chipmunkSkill', '50', null);
 INSERT INTO `skill` VALUES ('17', '1', '1');
-INSERT INTO `user` VALUES ('1', '1', '1', '테스트', '0', '0', '1', '001-Fighter01', '1', '33', '19', '20', '68', '21', '9002', '46', '9', '800', '212000', '2', '0', '3', '11', '2', '4', '0');
-INSERT INTO `user` VALUES ('2', '22', '2', '22', '0', '0', '2', '002-Fighter02', '1', '0', '0', '0', '0', '0', '10000', '0', '1', '0', '0', '1', '0', '3', '9', '2', '4', '0');
-INSERT INTO `user` VALUES ('3', '3', '3', '3', '0', '0', '3', '004-Fighter04', '2', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '13', '7', '2', '4', '0');
-INSERT INTO `user` VALUES ('4', '11', '1', '1', '0', '0', '1', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '4', '6', '4', '0');
-INSERT INTO `user` VALUES ('5', 'springday94', '메롱메롱', '?', '0', '0', 'springday94@naver.com', '002-Fighter02', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
-INSERT INTO `user` VALUES ('6', '4', '4', '4sdafa', '0', '0', '4sdaf', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '10', '9', '2', '4', '0');
-INSERT INTO `user` VALUES ('7', 'answp', 'sdafsa', 'asdfasdf', '0', '0', 'sadfsadf', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
-INSERT INTO `user` VALUES ('8', 'a', 'KkPhAQH4Tx5uyU3BEt3KAQ==', 'a', '0', '0', 'a', '001-Fighter01', '1', '11', '4', '0', '0', '3', '39928', '20', '4', '0', '0', '1', '0', '8', '9', '2', '4', '0');
-INSERT INTO `user` VALUES ('9', 'b', 'hqxcuUK5XT5yO4I6W1/2JQ==', 'b', '0', '0', 'a', '001-Fighter01', '1', '0', '0', '0', '0', '0', '-90', '0', '1', '0', '0', '1', '0', '3', '6', '6', '4', '0');
-INSERT INTO `user` VALUES ('10', '123', 'PPAkXhcIYGcDVjdCgY/hHg==', '1213', '0', '0', '1', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
-INSERT INTO `user` VALUES ('11', 'chip', 'wtUrc38hNLCxbeFjlTKA1g==', '???', '0', '0', 'never', '004-Fighter04', '2', '0', '0', '0', '0', '0', '-27', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
-INSERT INTO `user` VALUES ('12', '2', 'gKBvNUyp+H1+LZJgpXESyA==', '2', '0', '0', '2', '002-Fighter02', '1', '0', '0', '0', '10', '2', '2874', '15', '3', '30', '6600', '2', '0', '2', '12', '2', '4', '0');
-INSERT INTO `user` VALUES ('13', 'test', 'MMobYwa4me92vrmWJTDIow==', 'test', '0', '0', 'test@co.kr', '001-Fighter01', '1', '0', '0', '0', '10', '2', '1875', '16', '3', '10', '500', '1', '0', '9', '11', '2', '4', '0');
-INSERT INTO `user` VALUES ('14', '한글안되냐', 'PPAkXhcIYGcDVjdCgY/hHg==', '한글안되냐', '0', '0', '1', '001-Fighter01', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '2', '4', '0');
-INSERT INTO `user` VALUES ('15', 'linja', 'A8BiSgM3VJ+dnGJ/C+st8Q==', '린자', '0', '0', 'linja0@naver.com', '001-Fighter01', '1', '0', '0', '0', '10', '2', '2991', '15', '3', '20', '0', '1', '0', '18', '8', '4', '4', '0');
-INSERT INTO `user` VALUES ('16', '마니아', '3Kzn9z+j4YQPX+NoV4KkWA==', '마니아', '0', '0', 'mania@co.kr', '001-Fighter01', '1', '0', '0', '0', '5', '1', '2000', '10', '2', '0', '0', '1', '0', '13', '3', '6', '4', '0');
+INSERT INTO `slot` VALUES ('18', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1');
+INSERT INTO `slot` VALUES ('19', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1');
+INSERT INTO `slot` VALUES ('20', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1');
+INSERT INTO `slot` VALUES ('21', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1');
+INSERT INTO `slot` VALUES ('22', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1');
+INSERT INTO `user` VALUES ('21', '1', 'PPAkXhcIYGcDVjdCgY/hHg==', 'cheapmunk', '0', '0', '1', '016-Thief01', '1', '0', '0', '0', '0', '0', '999', '0', '1', '0', '0', '1', '0', '10', '6', '4', '4', '0');
+INSERT INTO `user` VALUES ('22', '2', 'gKBvNUyp+H1+LZJgpXESyA==', 'jubinpark', '0', '0', '2', '053-Undead03', '1', '0', '0', '0', '0', '0', '1000', '0', '1', '0', '0', '1', '0', '8', '5', '8', '4', '0');
