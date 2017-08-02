@@ -124,11 +124,6 @@ module Config # 채팅창 설정
   FILE_CHAT = "chatbox.png"
 end
 
-module Config # 스위치
-  # 맵 파일 추출
-  EXTRACT_MAP = false
-end
-
 
 
 #────────────────────────────────────────────────────────────────────────────
@@ -2753,7 +2748,6 @@ end
 # Author    뮤 (mu29gl@gmail.com)
 # Date      2015. 1. 8
 #────────────────────────────────────────────────────────────────────────────
-
 module Game
   module_function
   def init
@@ -2976,7 +2970,6 @@ end
 # Author    뮤 (mu29gl@gmail.com)
 # Date      2015. 1. 9
 #────────────────────────────────────────────────────────────────────────────
-
 class ItemData
   attr_accessor :no
   attr_accessor :name
@@ -3004,30 +2997,30 @@ class ItemData
   attr_accessor :trade
   
   def initialize(list)
-    @no = list[0].to_i#list[0] == "1" ? 1 : list[0].to_i
-    @name = list[1].to_s
-    @description = list[2].to_s
-    @image = list[3].to_s
-    @job = list[4].to_i
-    @limitLevel = list[5].to_i
-    @type = list[6].to_i
-    @price = list[7].to_i
-    @damage = list[8].to_i
-    @magicDamage = list[9].to_i
-    @defense = list[10].to_i
+    @no           = list[0].to_i
+    @name         = list[1].to_s
+    @description  = list[2].to_s
+    @image        = list[3].to_s
+    @job          = list[4].to_i
+    @limitLevel   = list[5].to_i
+    @type         = list[6].to_i
+    @price        = list[7].to_i
+    @damage       = list[8].to_i
+    @magicDamage  = list[9].to_i
+    @defense      = list[10].to_i
     @magicDefense = list[11].to_i
-    @str = list[12].to_i
-    @dex = list[13].to_i
-    @agi = list[14].to_i
-    @hp = list[15].to_i
-    @mp = list[16].to_i
-    @critical = list[17].to_i
-    @avoid = list[18].to_i
-    @hit = list[19].to_i
-    @delay = list[20].to_i
-    @consume = list[21].to_i
-    @maxLoad = list[22].to_i
-    @trade = list[23].to_i
+    @str          = list[12].to_i
+    @dex          = list[13].to_i
+    @agi          = list[14].to_i
+    @hp           = list[15].to_i
+    @mp           = list[16].to_i
+    @critical     = list[17].to_i
+    @avoid        = list[18].to_i
+    @hit          = list[19].to_i
+    @delay        = list[20].to_i
+    @consume      = list[21].to_i
+    @maxLoad      = list[22].to_i
+    @trade        = list[23].to_i
   end
 end
 
@@ -3054,25 +3047,25 @@ class Item
   def initialize(userNo, itemNo, amount, index, damage, magicDamage,
                 defense, magicDefense, str, dex, agi, hp, mp, critical,
                 avoid, hit, reinforce, trade, equipped)
-    @userNo = userNo
-		@itemNo = itemNo
-		@amount = amount
-    @index = index
-    @damage = damage
-    @magicDamage = magicDamage
-    @defense = defense
+    @userNo       = userNo
+		@itemNo       = itemNo
+		@amount       = amount
+    @index        = index
+    @damage       = damage
+    @magicDamage  = magicDamage
+    @defense      = defense
     @magicDefense = magicDefense
-    @str = str
-    @dex = dex
-    @agi = agi
-    @hp = hp
-    @mp = mp
-    @critical = critical
-    @avoid = avoid
-    @hit = hit
-    @reinforce = reinforce
-    @trade = trade == 1
-    @equipped = equipped == 1
+    @str          = str
+    @dex          = dex
+    @agi          = agi
+    @hp           = hp
+    @mp           = mp
+    @critical     = critical
+    @avoid        = avoid
+    @hit          = hit
+    @reinforce    = reinforce
+    @trade        = trade == 1
+    @equipped     = equipped == 1
   end
 end
 
@@ -3090,17 +3083,17 @@ class SkillData
   attr_accessor :image
   
   def initialize(list)
-    @no = list[0].to_i
-    @name = list[1].to_s
-    @description = list[2].to_s
-    @type = list[3].to_s
-    @job = list[4].to_i
-    @delay = list[5].to_i
-    @limitLevel = list[6].to_i
-    @maxRank = list[7].to_s
-    @userAnimation = list[8].to_s
+    @no              = list[0].to_i
+    @name            = list[1].to_s
+    @description     = list[2].to_s
+    @type            = list[3].to_s
+    @job             = list[4].to_i
+    @delay           = list[5].to_i
+    @limitLevel      = list[6].to_i
+    @maxRank         = list[7].to_s
+    @userAnimation   = list[8].to_s
     @targetAnimation = list[9].to_s
-    @image = list[10].to_s
+    @image           = list[10].to_s
   end
 end
 
@@ -3109,7 +3102,7 @@ class Skill
   attr_accessor :rank
   
   def initialize(no, rank)
-    @no = no
+    @no   = no
     @rank = rank
   end
 end
@@ -5245,22 +5238,22 @@ class Player < Character
   def updateItem(index, amount, damage, magicDamage,
                 defense, magicDefense, str, dex, agi, hp, mp, critical,
                 avoid, hit, reinforce, trade, equipped)
-    @inventory[index].amount = amount
-    @inventory[index].damage = damage
-    @inventory[index].magicDamage = magicDamage
-    @inventory[index].defense = defense
+    @inventory[index].amount       = amount
+    @inventory[index].damage       = damage
+    @inventory[index].magicDamage  = magicDamage
+    @inventory[index].defense      = defense
     @inventory[index].magicDefense = magicDefense
-    @inventory[index].str = str
-    @inventory[index].dex = dex
-    @inventory[index].agi = agi
-    @inventory[index].hp = hp
-    @inventory[index].mp = mp
-    @inventory[index].critical = critical
-    @inventory[index].avoid = avoid
-    @inventory[index].hit = hit
-    @inventory[index].reinforce = reinforce
-    @inventory[index].trade = trade == 1
-    @inventory[index].equipped = equipped == 1
+    @inventory[index].str          = str
+    @inventory[index].dex          = dex
+    @inventory[index].agi          = agi
+    @inventory[index].hp           = hp
+    @inventory[index].mp           = mp
+    @inventory[index].critical     = critical
+    @inventory[index].avoid        = avoid
+    @inventory[index].hit          = hit
+    @inventory[index].reinforce    = reinforce
+    @inventory[index].trade        = trade == 1
+    @inventory[index].equipped     = equipped == 1
   end
   
   def removeItem(index)
@@ -14861,41 +14854,6 @@ end
 
 
 
-#────────────────────────────────────────────────────────────────────────────
-# ▶ Map Extractor
-# --------------------------------------------------------------------------
-# Author    뮤 (mu29gl@gmail.com)
-# Date      2015. 1. 23
-#────────────────────────────────────────────────────────────────────────────
-
-def blockMapExtract
-  $data_tilesets = load_data("Data/Tilesets.rxdata")
-  Game.init
-  Dir.mkdir("./Map") if !FileTest.exist?("./Map")
-  map_infos = load_data('Data/MapInfos.rxdata')
-  map_infos.each do |k, v|
-    Game.map.setup(k)
-    mapfile = sprintf("Map/Map%d.map", k)
-    File.open(mapfile, "w") do |fw|
-      writeMapData(fw, k, v)
-    end
-  end
-  print "맵 데이터 추출 완료"
-  exit
-end
-
-def writeMapData(fw, id, info)
-  map = load_data(sprintf("Data/Map%03d.rxdata", id))
-  fw.write("#{id},#{info.name},#{Game.map.width},#{Game.map.height},")
-  for y in 0...(Game.map.height)
-    for x in 0...(Game.map.width)
-      flag = Game.map.passable?(x, y, 0) ? 0 : 1
-      fw.write("#{flag},")
-    end
-  end
-end
-
-blockMapExtract if Config::EXTRACT_MAP
 #────────────────────────────────────────────────────────────────────────────
 # ▶ Main
 # --------------------------------------------------------------------------
