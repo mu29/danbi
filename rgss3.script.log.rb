@@ -12478,6 +12478,10 @@ class MUI
       @textBitmap = Bitmap.new(RECT_INPUT.width, RECT_INPUT.height)
       @focus = false
       
+      @textBitmap.draw_outline_text(55, 0, 
+        RECT_INPUT.width, RECT_INPUT.height, @helpText)
+      @textSprite.bitmap = @textBitmap
+      
       initButtons()
       
       @muiFrm = MUI_SetWhisperNickname.new
