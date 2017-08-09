@@ -13,8 +13,12 @@ public final class CTSHeader {
 	public final static int DROP_ITEM = 9;
 	public final static int DROP_GOLD = 10;
 	public final static int PICK_ITEM = 11;
-	public final static int CHAT = 12;
-	public final static int CHAT_BALLOON_START = 13;
+	public final static int CHAT_NORMAL = 12;
+	public final static int CHAT_WHISPER = 13;
+	public final static int CHAT_PARTY = 14;
+	public final static int CHAT_GUILD = 15;
+	public final static int CHAT_ALL = 16;
+	public final static int CHAT_BALLOON_START = 17;
 
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int CHANGE_ITEM_INDEX = 101;

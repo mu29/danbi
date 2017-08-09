@@ -64,11 +64,23 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.PICK_ITEM:
 				User.get(ctx).pickItem();
 				break;
-			case CTSHeader.CHAT:
-				User.get(ctx).chat((int) packet.get("no"), (String) packet.get("message"));
+			case CTSHeader.CHAT_NORMAL:
+				User.get(ctx).chatNormal((String) packet.get("message"));
+				break;
+			case CTSHeader.CHAT_WHISPER:
+				User.get(ctx).chatWhisper((String) packet.get("to"), (String) packet.get("message"));
+				break;
+			case CTSHeader.CHAT_PARTY:
+				User.get(ctx).chatParty((String) packet.get("message"));
+				break;
+			case CTSHeader.CHAT_GUILD:
+				User.get(ctx).chatGuild((String) packet.get("message"));
+				break;
+			case CTSHeader.CHAT_ALL:
+				User.get(ctx).chatAll((String) packet.get("message"));
 				break;
             case CTSHeader.CHAT_BALLOON_START:
-                User.get(ctx).startShowingBalloon((int) packet.get("no"));
+                User.get(ctx).startShowingBalloon();
                 break;
 
 	    	case CTSHeader.OPEN_REGISTER_WINDOW:

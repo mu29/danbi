@@ -118,8 +118,8 @@ end
 
 module Config # 채팅창 설정
   # 채팅창 RECT 설정 (x, y, width, height)
-  RECT_CHATBOX = Rect.new(490, 425, 300, 94)
-  RECT_INPUT = Rect.new(490, 520, 300, 20)
+  RECT_CHATBOX = Rect.new(11, 403, 300, 94)
+  RECT_INPUT   = Rect.new(11, 503, 300, 29)
   # 채팅창 그래픽
   FILE_CHAT = "chatbox.png"
 end
@@ -218,6 +218,16 @@ class Win32API
   FindNextFile              = new('kernel32', 'FindNextFileW', 'lp', 'i')
 end
 Game.SubClassing
+
+class Sprite
+  def isPointInRect?(_x, _y)
+    return false unless self.visible
+    return false unless self.opacity > 0
+    return false unless (_x + self.ox >= self.x && _x + self.ox < self.x + self.width)
+    return false unless (_y + self.oy >= self.y && _y + self.oy < self.y + self.height)
+    return true
+  end
+end
 
 #───────────────────────────────────────────────────────────────────────────────
 # ▶ Color
@@ -6835,8 +6845,10 @@ class Map
     @map_edge.collect! {|size| size * 128 }
     # Change the map center if map is smaller than the resolution
     if Game.map.width < SCREEN_RESOLUTION[0] / 32
+      puts 1
       Player.const_set(:CENTER_X, Game.map.width * 128)
     else
+      puts 2
       Player.const_set(:CENTER_X, ((SCREEN_RESOLUTION[0] / 2) - 16) * 4)
     end
     if Game.map.height < SCREEN_RESOLUTION[1] / 32
@@ -7009,12 +7021,12 @@ class MapSprite
   def initialize
     @center_offsets = [0,0]
     if Game.map.width < SCREEN_RESOLUTION[0] / 32
-      x = (SCREEN_RESOLUTION[0] - Game.map.width * 32) / 2
+      x = 0#(SCREEN_RESOLUTION[0] - Game.map.width * 32) / 2
     else
       x = 0
     end
     if Game.map.height < SCREEN_RESOLUTION[1] / 32
-      y = (SCREEN_RESOLUTION[1] - Game.map.height * 32) / 2
+      y = 0#(SCREEN_RESOLUTION[1] - Game.map.height * 32) / 2
     else
       y = 0
     end
@@ -7676,8 +7688,12 @@ class Scene_Map
       end
     end
     @mapSprite.update
-    if Mouse.trigger?
+    if Mouse.trigger?(1)
       for netplayer in Game.map.netplayers.values
+        #puts "mouse:"
+        #puts [Mouse.map_x, Mouse.map_y].inspect
+        #puts "netplayer"
+        #puts [netplayer.x, netplayer.y].inspect
         if netplayer.x == Mouse.map_x && netplayer.y == Mouse.map_y
           MUI.getForm(MUI_ClickMenu).dispose if MUI.include?(MUI_ClickMenu)
           MUI_ClickMenu.new(netplayer.no)
@@ -8136,7 +8152,7 @@ module JSON
         @index -= 1
         complete = true
         break
-      when "0", "1", "2", '3', '4', '5', '6', '7', '8', '9', '.', '-'
+      when "0", "1", "2", '3', '4', '5', '6', '7', '8', '9', '.'
         string += char.to_s
       end
     end
@@ -8189,8 +8205,12 @@ module CTSHeader # Client -> Server
   DROP_ITEM = 9
   DROP_GOLD = 10
   PICK_ITEM = 11
-  CHAT = 12
-	CHAT_BALLOON_START = 13
+  CHAT_NORMAL = 12
+  CHAT_WHISPER = 13
+  CHAT_PARTY = 14
+  CHAT_GUILD = 15
+  CHAT_ALL = 16
+	CHAT_BALLOON_START = 17
   
 	OPEN_REGISTER_WINDOW = 100
 	CHANGE_ITEM_INDEX = 101
@@ -8239,9 +8259,13 @@ module STCHeader # Server -> Client
 	REMOVE_DROP_GOLD = 15
 	NOTIFY = 16
   MOVE_MAP = 17
-  CHAT = 18
-	CHAT_BALLOON_END = 19
-  PLAY_MUSIC = 20
+  CHAT_NORMAL = 18
+  CHAT_WHISPER = 19
+  CHAT_PARTY = 20
+  CHAT_GUILD = 21
+  CHAT_ALL = 22
+	CHAT_BALLOON_END = 23
+  PLAY_MUSIC = 24
   
 	OPEN_REGISTER_WINDOW = 100
 	UPDATE_STATUS = 101
@@ -8513,7 +8537,25 @@ class Socket
       Game.player.new_y = recv["y"]
       Game.player.transferring = true
       $scene.transfer_player
-    when STCHeader::CHAT
+    when STCHeader::CHAT_NORMAL
+      color1 = Color.new(recv["r"], recv["g"], recv["b"]) if recv["r"]
+      color2 = Color.new(recv["r2"], recv["g2"], recv["b2"]) if recv["r2"]
+      MUI::Console.write(recv["message"], color1 ? color1 : Color.white, color2 ? color2 : Color.black)
+      if Game.player.no == recv["no"]
+        Game.player.chatBalloonText = recv["message"]
+        Game.player.chatBalloonVisible = true
+      end
+      if netplayer = Game.map.getNetplayer(recv["no"])
+        netplayer.chatBalloonText = recv["message"]
+        netplayer.chatBalloonVisible = true
+      end
+    when STCHeader::CHAT_WHISPER, STCHeader::CHAT_PARTY, STCHeader::CHAT_GUILD
+      color1 = Color.new(recv["r"], recv["g"], recv["b"]) if recv["r"]
+      color2 = Color.new(recv["r2"], recv["g2"], recv["b2"]) if recv["r2"]
+      MUI::Console.write(recv["message"], color1 ? color1 : Color.white, color2 ? color2 : Color.black)
+    #when STCHeader::CHAT_PARTY
+    #when STCHeader::CHAT_GUILD
+    when STCHeader::CHAT_ALL
       color1 = Color.new(recv["r"], recv["g"], recv["b"]) if recv["r"]
       color2 = Color.new(recv["r2"], recv["g2"], recv["b2"]) if recv["r2"]
       MUI::Console.write(recv["message"], color1 ? color1 : Color.white, color2 ? color2 : Color.black)
@@ -9043,6 +9085,7 @@ class MUI
       @width = w
       @height = h
       @opacity = 255
+      @visible = true
       @captionText = nil
       @drag = true
       @close = true
@@ -9205,6 +9248,20 @@ class MUI
         @baseSprite.opacity = @opacity
       end
     end
+    
+    def visible; @visible end
+    def visible=(value)
+      return if @visible == value
+      return unless value.is_a?(TrueClass) or value.is_a?(FalseClass)
+      @visible = value
+      @titleViewport.visible = @visible
+      @baseViewport.visible = @visible
+      @pic_close.visible = @visible
+      @tipSprite.visible = @visible
+      #@titleSprite = Sprite.new(@titleViewport)
+      #@captionSprite = Sprite.new(@titleViewport)
+      #@baseSprite = Sprite.new(@baseViewport)
+    end
 
     # 타이틀
     def getTitle; @captionText end
@@ -9315,6 +9372,8 @@ class MUI
     
     # 업데이트
     def update
+      return unless @visible
+      return unless @opacity > 0
       return if MUI.getFocus != self
       @toolTipDraw = false
       # 컨트롤 업데이트
@@ -12314,7 +12373,7 @@ class MUI
       viewport.z = 2000
       @backSprite = Sprite.new(viewport)
       @backSprite.bitmap = Bitmap.new(RECT_CHATBOX.width, RECT_CHATBOX.height)
-      @backSprite.bitmap.fill_rect(0, 0, RECT_CHATBOX.width, RECT_CHATBOX.height, Color.black(100))
+      @backSprite.bitmap.fill_rect(RECT_CHATBOX.src_rect, Color.black(100))
       @sprite = Sprite.new(viewport)
       @sprite.z = 1
       @sprite.bitmap = Bitmap.new(RECT_CHATBOX.width, RECT_CHATBOX.height)
@@ -12356,20 +12415,73 @@ end
 class MUI
   class ChatBox
     include Config
+    SWAP_SE = RPG::AudioFile.new("032-Switch01.ogg", 100, 100)
+    
+    @button = %w{일반 귓말 파티 길드 전체}
+    @btn_type = 0
+    
+    def self.initButtons
+      ft = Font.new
+      ft.outline = false
+      ft.name = Config::FONT[0]
+      ft.size = Config::FONT_NORMAL_SIZE
+      ft.color = Color.white
+      ft.bold = false
+      ft.italic = false
+      
+      src = RPG::Cache.hud("btn_chat_type.png")
+      @btn_width = src.width / 2
+      @btn_height = src.height
+      
+      @bmp_button = Bitmap.new(@btn_width * 2, @btn_height * @button.size)
+      @bmp_button.font = ft
+      @button.size.times { |i|
+        @bmp_button.blt(0, @btn_height * i, src, src.rect)
+        2.times { |x|
+          @bmp_button.draw_text(x * @btn_width, i * @btn_height, @btn_width, @btn_height, @button[i], 1)
+        }
+      }
+            
+      @spr_button = Sprite.new
+      @spr_button.z = 9999
+      @spr_button.x = RECT_INPUT.x + 4
+      @spr_button.y = RECT_INPUT.y + 4
+      @spr_button.bitmap = @bmp_button
+      @spr_button.src_rect = Rect.new(0, 0, @btn_width, @btn_height)
+      
+      # target icon
+      @nicknameSprite = Sprite.new
+      @nicknameSprite.bitmap = RPG::Cache.hud("target.png")
+      @nicknameSprite.ox = @nicknameSprite.src_rect.width / 2
+      @nicknameSprite.oy = @nicknameSprite.src_rect.height / 2
+      @nicknameSprite.x = RECT_INPUT.x
+      @nicknameSprite.y = RECT_INPUT.y
+      @nicknameSprite.z = @spr_button.z + 1
+      @nicknameSprite.visible = false
+    end
+          
     def self.init
       @helpText = "대화하시려면 Enter키를 눌러주세요."
       @text = ""
       @ime = IME.new
+      
       @viewport = Viewport.new(*RECT_INPUT.to_a)
       @viewport.z = 2000
+      
       @baseSprite = Sprite.new(@viewport)
       @baseSprite.bitmap = Bitmap.new(RECT_INPUT.width, RECT_INPUT.height)
       @baseSprite.bitmap.fill_rect(0, 0, RECT_INPUT.width, RECT_INPUT.height, Color.black(128))
+      
       @textSprite = Sprite.new(@viewport)
       @textSprite.y = 1
       @textSprite.z = 1
       @textBitmap = Bitmap.new(RECT_INPUT.width, RECT_INPUT.height)
       @focus = false
+      
+      initButtons()
+      
+      @muiFrm = MUI_SetWhisperNickname.new
+      @muiFrm.dispose()
     end
     
     def self.focus; @focus end
@@ -12394,12 +12506,75 @@ class MUI
     end
     
     def self.update
+      # 닉네임 설정 아이콘
+      if @nicknameSprite.isPointInRect?(Mouse.x, Mouse.y)
+        @nicknameSprite.color = Color.red
+        if Mouse.trigger?(0)
+          if @muiFrm.disposed?
+            @muiFrm = MUI_SetWhisperNickname.new
+          else
+            @muiFrm.x = Mouse.x
+            @muiFrm.y = Mouse.y
+          end
+        end
+      else
+        @nicknameSprite.color = Color.white
+      end
+      # 채팅 타입 버튼
+      if @spr_button.isPointInRect?(Mouse.x, Mouse.y)
+        @spr_button.src_rect = Rect.new(@btn_width, @btn_type * @btn_height, @btn_width, @btn_height)
+        if Mouse.trigger?(0)
+          unless @nicknameSprite.isPointInRect?(Mouse.x, Mouse.y)
+            @btn_type += 1
+            @btn_type %= @button.size
+            @nicknameSprite.visible = (@btn_type == 1)
+            Game.system.se_play(SWAP_SE)
+          end
+        elsif Mouse.trigger?(1)
+          @btn_type -= 1
+          @btn_type %= @button.size
+          @nicknameSprite.visible = (@btn_type == 1)
+          Game.system.se_play(SWAP_SE)
+        end
+      else
+        @spr_button.src_rect = Rect.new(0, @btn_type * @btn_height, @btn_width, @btn_height)
+      end
+      # 입력 부분
       if Key.trigger?(KEY_RETURN)
         if @focus
           if @text != ""
-            Socket.send({'header' => CTSHeader::CHAT, 'no' => Game.player.no, 'message' => @text})
-            #Socket.send(Hash['header', CTSHeader::CHAT_BALLOON_START, 'no', Game.player.no])
-            Socket.send(Hash['header', CTSHeader::CHAT_BALLOON_START, 'no', Game.player.no])
+            case @btn_type
+            # 일반
+            when 0
+              Socket.send({'header' => CTSHeader::CHAT_NORMAL, 'message' => @text})
+            # 귓말
+            when 1
+              param = Hash.new
+              param['header']  = CTSHeader::CHAT_WHISPER
+              param['to']      = @muiFrm.textNickName
+              param['message'] = @text
+              Socket.send(param)
+            # 파티
+            when 2
+              param = Hash.new
+              param['header']  = CTSHeader::CHAT_PARTY
+              param['message'] = @text
+              Socket.send(param)
+            # 길드
+            when 3
+              param = Hash.new
+              param['header']  = CTSHeader::CHAT_GUILD
+              param['message'] = @text
+              Socket.send(param)
+            # 전체
+            when 4
+              param = Hash.new
+              param['header']  = CTSHeader::CHAT_ALL
+              param['message'] = @text
+              Socket.send(param)
+              #Socket.send(Hash['header', CTSHeader::CHAT_BALLOON_START, 'no', Game.player.no])
+            else
+            end
             @text = ""
             @ime.clear
           else
@@ -12411,11 +12586,21 @@ class MUI
         end
       end
       if @focus
+        if Key.trigger?(KEY_TAB)
+          if Key.press?(KEY_SHIFT)
+            @btn_type -= 1
+          else
+            @btn_type += 1
+          end
+          @btn_type %= @button.size
+          @spr_button.src_rect = Rect.new(0, @btn_type * @btn_height, @btn_width, @btn_height)
+          @nicknameSprite.visible = (@btn_type == 1)
+        end
         @ime.update
         textRefresh if @text != @ime.getText
       end
     end
-        
+    
     def self.refresh
       @textSprite.bitmap = @textBitmap
       textRefresh
@@ -12425,13 +12610,19 @@ class MUI
       @text = @ime.getText
       @textBitmap.clear
       if @focus
-        @textBitmap.draw_outline_text(5, 0, RECT_INPUT.width, RECT_INPUT.height, @text + "_")
+        @textBitmap.draw_outline_text(55, 0,
+          RECT_INPUT.width, RECT_INPUT.height, @text + "_")
         @textSprite.bitmap = @textBitmap
       elsif @helpText != "" and @helpText != nil
-        @textBitmap.draw_outline_text(5, 0, 
-        RECT_INPUT.width, RECT_INPUT.height, @helpText)
+        @textBitmap.draw_outline_text(55, 0, 
+          RECT_INPUT.width, RECT_INPUT.height, @helpText)
       end
     end
+    
+    def self.muiFrm
+      @muiFrm
+    end
+    
   end
 end
 
@@ -14219,6 +14410,9 @@ class MUI_ClickMenu < MUI::Form
       Socket.send({'header' => CTSHeader::REQUEST_TRADE, "partner" => @user.no})
       dispose
     elsif @btn_whisper.click
+      MUI::ChatBox.muiFrm.textNickName = @user.name
+      MUI::Console.write("귓속말 상대의 닉네임이 `" + @user.name + "`로 설정됐습니다.")
+      dispose
     end
   end
 end
@@ -14292,6 +14486,70 @@ class MUI_Quest < MUI::Form
         @lbl_subject.text = "퀘스트내용 #{i}"
       end
     end
+  end
+end
+#────────────────────────────────────────────────────────────────────────────
+# ▶ MUI_SetWhisperNickname
+# --------------------------------------------------------------------------
+# Author    jubin-park
+# Date      2017. 8. 7
+# --------------------------------------------------------------------------
+# Description
+# 
+#    채팅창에서 귓속말 상대의 닉네임을 정하는 폼 윈도우입니다.
+#────────────────────────────────────────────────────────────────────────────
+
+class MUI_SetWhisperNickname < MUI::Form
+  
+  @@disposed = true
+  @@text = ""
+  
+  def initialize
+    super(Mouse.x, Mouse.y, 170, 80)
+    @@disposed = false
+    
+    @tb_name = MUI::TextBox.new(12, 8, 96, 28)
+    @tb_name.helpText = "닉네임"
+    if @@text != ""
+      @tb_name.text = @@text
+    end
+    addControl(@tb_name)
+    @btn_apply = MUI::Button.new(112, 8, 48, 28)
+    @btn_apply.text = "적용"
+    addControl(@btn_apply)
+  end
+
+  def refresh
+    super
+    setTitle("닉네임 설정")
+  end
+  
+  def update
+    super
+    if @btn_apply.click
+      @@text = @tb_name.text.force_encoding("UTF-8")
+      if @@text != ""
+        MUI::Console.write("귓속말 상대의 닉네임이 `" + @@text + "`로 설정됐습니다.")
+      end
+      self.dispose
+    end
+  end
+    
+  def textNickName=(text)
+    @@text = text
+  end
+  
+  def textNickName
+    @@text
+  end
+  
+  def dispose
+    @@disposed = true
+    super
+  end
+  
+  def disposed?
+    @@disposed
   end
 end
 

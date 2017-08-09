@@ -19,10 +19,14 @@ public final class STCHeader {
 	public final static int REMOVE_DROP_GOLD = 15;
 	public final static int NOTIFY = 16;
 	public final static int MOVE_MAP = 17;
-	public final static int CHAT = 18;
-	public final static int CHAT_BALLOON_END = 19;
-	public final static int PLAY_MUSIC = 20;
-	
+	public final static int CHAT_NORMAL = 18;
+	public final static int CHAT_WHISPER = 19;
+	public final static int CHAT_PARTY = 20;
+	public final static int CHAT_GUILD = 21;
+	public final static int CHAT_ALL = 22;
+	public final static int CHAT_BALLOON_END = 23;
+	public final static int PLAY_MUSIC = 24;
+
 	public final static int OPEN_REGISTER_WINDOW = 100;
 	public final static int UPDATE_STATUS = 101;
 	public final static int SET_ITEM = 102;
@@ -39,7 +43,7 @@ public final class STCHeader {
 	public final static int OPEN_MESSAGE_WINDOW = 113;
 	public final static int CLOSE_MESSAGE_WINDOW = 114;
 	public final static int SET_SHOP_ITEM = 115;
-	public final static int SET_PARTY  = 116;
+	public final static int SET_PARTY = 116;
 	public final static int INVITE_PARTY = 117;
 	public final static int SET_PARTY_MEMBER = 118;
 	public final static int REMOVE_PARTY_MEMBER = 119;

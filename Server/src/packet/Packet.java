@@ -265,29 +265,24 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject chat(int no, String message) {
+	public static JSONObject chatNormal(int no, String message) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.CHAT);
+		packet.put("header", STCHeader.CHAT_NORMAL);
 		packet.put("no", no);
 		packet.put("message", message);
 		return packet;
-	}
-
-	public static JSONObject chat(int no, String message, int r, int g, int b) {
+	}public static JSONObject chatNormal(int no, String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.CHAT);
+		packet.put("header", STCHeader.CHAT_NORMAL);
 		packet.put("no", no);
 		packet.put("message", message);
 		packet.put("r", r);
 		packet.put("g", g);
 		packet.put("b", b);
-
 		return packet;
-	}
-
-	public static JSONObject chat(int no, String message, int r, int g, int b, int r2, int g2, int b2) {
+	}public static JSONObject chatNormal(int no, String message, int r, int g, int b, int r2, int g2, int b2) {
 		JSONObject packet = new JSONObject();
-		packet.put("header", STCHeader.CHAT);
+		packet.put("header", STCHeader.CHAT_NORMAL);
 		packet.put("no", no);
 		packet.put("message", message);
 		packet.put("r", r);
@@ -296,10 +291,116 @@ public final class Packet {
 		packet.put("r2", r2);
 		packet.put("g2", g2);
 		packet.put("b2", b2);
-
 		return packet;
 	}
-	
+
+	public static JSONObject chatWhisper(String message) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_WHISPER);
+		packet.put("message", message);
+		return packet;
+	}public static JSONObject chatWhisper(String message, int r, int g, int b) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_WHISPER);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		return packet;
+	}public static JSONObject chatWhisper(String message, int r, int g, int b, int r2, int g2, int b2) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_WHISPER);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		packet.put("r2", r2);
+		packet.put("g2", g2);
+		packet.put("b2", b2);
+		return packet;
+	}
+
+	public static JSONObject chatParty(String message) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_PARTY);
+		packet.put("message", message);
+		return packet;
+	}public static JSONObject chatParty(String message, int r, int g, int b) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_PARTY);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		return packet;
+	}public static JSONObject chatParty(String message, int r, int g, int b, int r2, int g2, int b2) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_PARTY);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		packet.put("r2", r2);
+		packet.put("g2", g2);
+		packet.put("b2", b2);
+		return packet;
+	}
+
+	public static JSONObject chatGuild(String message) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_GUILD);
+		packet.put("message", message);
+		return packet;
+	}public static JSONObject chatGuild(String message, int r, int g, int b) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_GUILD);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		return packet;
+	}public static JSONObject chatGuild(String message, int r, int g, int b, int r2, int g2, int b2) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_GUILD);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		packet.put("r2", r2);
+		packet.put("g2", g2);
+		packet.put("b2", b2);
+		return packet;
+	}
+
+	public static JSONObject chatAll(int no, String message) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_ALL);
+		packet.put("no", no);
+		packet.put("message", message);
+		return packet;
+	}public static JSONObject chatAll(int no, String message, int r, int g, int b) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_ALL);
+		packet.put("no", no);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		return packet;
+	}public static JSONObject chatAll(int no, String message, int r, int g, int b, int r2, int g2, int b2) {
+		JSONObject packet = new JSONObject();
+		packet.put("header", STCHeader.CHAT_ALL);
+		packet.put("no", no);
+		packet.put("message", message);
+		packet.put("r", r);
+		packet.put("g", g);
+		packet.put("b", b);
+		packet.put("r2", r2);
+		packet.put("g2", g2);
+		packet.put("b2", b2);
+		return packet;
+	}
+
 	public static JSONObject openRegisterWindow() {
 		String[] image = new String[GameData.register.size()];
 		int[] job = new int[GameData.register.size()];

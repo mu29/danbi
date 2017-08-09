@@ -1997,61 +1997,136 @@ public class User extends Character {
 	}
 
 	// 채팅
-	public void chat(int no, String _message) {
-		Vector<User> mapUsers = Map.getMap(map).getField(seed).getUsers();
-		switch (_message.split(" ")[0]) {
+	public boolean chatCommand(String _message) {
+		String command_param[] = _message.split(" ");
+		// 콘솔 명령어가 실행되었는가
+		boolean isCmdExecuted = true;
+		switch (command_param[0]) {
 			case "/공지":
-				if (!admin)
-					return;
+				if (!admin)	{
+					isCmdExecuted = false;
+					break;
+				}
 				for (User u : users.values())
-					u.getCtx().writeAndFlush(Packet.chat(no, "[공지] " + _message.replace("/공지 ", ""), 255, 255, 255, 255, 0, 0));
+					u.getCtx().writeAndFlush(Packet.chatAll(no, "[공지] " + _message.replaceFirst("/공지 ", ""), 255, 38, 19));
 				break;
+			case "/귓":
+				_message = _message.replaceFirst("/귓 ", "");
+				_message = _message.replaceFirst(command_param[1] + " ", "");
+				chatWhisper(command_param[1], _message);
+				break;
+			case "/w":
+				_message = _message.replaceFirst("/w ", "");
+				_message = _message.replaceFirst(command_param[1] + " ", "");
+				chatWhisper(command_param[1], _message);
+			case "/파티":
+				_message = _message.replaceFirst("/파티 ", "");
+				chatParty(_message);
+				break;
+			case "/p":
+				_message = _message.replaceFirst("/p ", "");
+				chatParty(_message);
+				break;
+			case "/길드":
+				_message = _message.replaceFirst("/길드 ", "");
+				chatGuild(_message);
+				break;
+			case "/g":
+				_message = _message.replaceFirst("/g ", "");
+				chatGuild(_message);
+				break;
+			case "/전체":
+				_message = _message.replaceFirst("/전체 ", "");
+				chatAll(_message);
+				break;
+			case "/a":
+				_message = _message.replaceFirst("/a ", "");
+				chatAll(_message);
+				break;
+			// 커맨드 콘솔이 입력되지 않은 경우
 			default:
-				for (User u : mapUsers)
-					u.getCtx().writeAndFlush(Packet.chat(no, name + " : " + _message));
-				break;
+				isCmdExecuted = false;
 		}
+		return isCmdExecuted;
 	}
-	
+
+	// 일반 채팅
+	public void chatNormal(String _message) {
+		if (chatCommand(_message))
+			return;
+		Vector<User> mapUsers = Map.getMap(map).getField(seed).getUsers();
+		for (User u : mapUsers)
+			u.getCtx().writeAndFlush(Packet.chatNormal(no, name + " : " + _message));
+		startShowingBalloon();
+	}
+
+	// 귓속말
+	public void chatWhisper(String _target_name, String _message) {
+		if (chatCommand(_message))
+			return;
+
+		User u_target = null;
+
+		// 타겟이 본인일 경우
+		if (name.equals(_target_name))
+			return;
+		// 검색하려는 닉네임이 공백인 경우
+		if (_target_name.equals(""))
+			return;
+		// 메세지가 존재하지 않을 경우
+		if (_message == null || _message.equals(""))
+			return;
+
+		// 닉네임으로 타겟 유저 검색
+		for (User u : users.values()) {
+			if (u.getName().equals(_target_name)) {
+				u_target = u;
+				break;
+			}
+		}
+
+		// 타겟 유저가 접속 중이 아닐 경우
+		if (u_target == null)
+			return;
+
+		// `상대`가 `나`로부터 받음
+		u_target.getCtx().writeAndFlush(Packet.chatWhisper("[From:" + name + "] " + _message, 25, 181, 254, 32, 32, 32));
+		// `나`가 `상대`에게 보냄
+		ctx.writeAndFlush(Packet.chatWhisper("[To:" + u_target.getName() + "] " + _message, 25, 181, 254, 32, 32, 32));
+	}
+
 	// 파티 채팅
-	public void partyChat(String _message) {
+	public void chatParty(String _message) {
+		if (chatCommand(_message))
+			return;
  		if (!nowJoinParty())
  			return;
  		for (int members : Party.get(partyNo).getMembers()) {
  			User u = User.get(members);
- 			u.getCtx().writeAndFlush(Packet.chat(no, "[파티] " + name + " : " + _message, 0, 255, 0));
+ 			u.getCtx().writeAndFlush(Packet.chatParty("[파티] " + name + " : " + _message, 3, 201, 169, 32, 32, 32));
  		}
  	}
  
  	// 길드 채팅
- 	public void guildChat(String _message) {
+ 	public void chatGuild(String _message) {
+		if (chatCommand(_message))
+			return;
  		if (!nowJoinGuild())
  			return;
  		for (int members : Guild.get(guildNo).getMembers()) {
  			User u = User.get(members);
- 			u.getCtx().writeAndFlush(Packet.chat(no, "[길드] " + name + " : " + _message, 255, 255, 0));
+ 			u.getCtx().writeAndFlush(Packet.chatGuild("[길드] " + name + " : " + _message, 247, 202, 24, 32, 32, 32));
  		}
  	}
- 	
- 	// 귓속말
- 	public void whistle(String _target, String _message) {
- 		// 타겟이 본인일 경우
- 		if (name.equals(_target))
- 			return;
- 		// 메세지가 존재하지 않을 경우
- 		if (_message == null)
- 			return;
- 		
- 		for (User u : users.values()) {
- 			if (u.getName().equals(_target)) {
- 				u.getCtx().writeAndFlush(Packet.chat(no, "[From:" + name + "] " + _message));
- 				ctx.writeAndFlush(Packet.chat(no, "[To:" + _target + "] " + _message));
- 				return;
- 			}
- 		}
- 		// 타겟이 접속중이 아닐 경우
- 		return;
- 	}
+
+	// 전체 채팅
+	public void chatAll(String _message) {
+		if (chatCommand(_message))
+			return;
+		for (User u : users.values())
+			u.getCtx().writeAndFlush(Packet.chatAll(no, "[전체] " + name + " : " + _message, 255, 255, 255, 219, 10, 91));
+		startShowingBalloon();
+	}
 
 	// 다른 작업을 하고 있는지 (대화, 거래)
 	private boolean isBusy() {
@@ -2067,7 +2142,7 @@ public class User extends Character {
 	}
 
     // 채팅
-    public void startShowingBalloon(int no) {
+    public void startShowingBalloon() {
 	    // 옵션 DB 에서 말풍선 표시 시간 취득
         try {
             if (standardDelay < 0) {
