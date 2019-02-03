@@ -29,7 +29,6 @@ def create_log(filename, logname)
 
 end
 
-create_log(app_path + "/ClientRGSS3/Data/Scripts.rxdata", app_path + "/rgss3.script.log.rb")
-create_log(app_path + "/Client/Data/Scripts.rxdata", app_path + "/rgss1.script.log.rb")
+create_log(app_path + "/Client/Data/Scripts.rxdata", app_path + "/script.log.rb")
 
 puts "finished"
