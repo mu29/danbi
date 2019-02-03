@@ -1,1 +1,35 @@
 *.xml
+
+# RGSS1
+Client/Data/Actors.rxdata
+Client/Data/Animations.rxdata
+Client/Data/Armors.rxdata
+Client/Data/Classes.rxdata
+Client/Data/CommonEvents.rxdata
+Client/Data/Enemies.rxdata
+Client/Data/Items.rxdata
+Client/Data/Map*.rxdata
+Client/Data/MapInfos.rxdata
+Client/Data/Skills.rxdata
+Client/Data/States.rxdata
+Client/Data/System.rxdata
+Client/Data/Tilesets.rxdata
+Client/Data/Troops.rxdata
+Client/Data/Weapons.rxdata
+
+# RGSS3
+ClientRGSS3/Data/Actors.rxdata
+ClientRGSS3/Data/Animations.rxdata
+ClientRGSS3/Data/Armors.rxdata
+ClientRGSS3/Data/Classes.rxdata
+ClientRGSS3/Data/CommonEvents.rxdata
+ClientRGSS3/Data/Enemies.rxdata
+ClientRGSS3/Data/Items.rxdata
+ClientRGSS3/Data/Map*.rxdata
+ClientRGSS3/Data/MapInfos.rxdata
+ClientRGSS3/Data/Skills.rxdata
+ClientRGSS3/Data/States.rxdata
+ClientRGSS3/Data/System.rxdata
+ClientRGSS3/Data/Tilesets.rxdata
+ClientRGSS3/Data/Troops.rxdata
+ClientRGSS3/Data/Weapons.rxdata
