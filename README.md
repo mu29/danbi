@@ -7,4 +7,4 @@ Here is the community website [cafe.naver.com/rmdanbi](https://cafe.naver.com/rm
 For beginners, We have prepared [wiki page](https://github.com/mu29/danbi/wiki) in Github. Try to follow danbi-setting course!
 
 ## Be Caution
-danbi have two client versions, are RGSS1 & RGSS3. The former's support had ceased. We have updated only RGSS3.
+danbi uses a client of RGSS3. This client can be unstable in compatibility between RMXP and RGSS3.
