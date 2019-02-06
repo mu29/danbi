@@ -55,7 +55,9 @@ public class Map {
 
 		if (listFiles.length > 0) {
 			for (File file : listFiles) {
-				if (file.isFile()) {
+				String name = file.getName();
+				String ext = name.substring(name.length() - 4);
+				if (file.isFile() && ext.equals(".map")) {
 					new Map(file.getPath());
 				}
 			}
