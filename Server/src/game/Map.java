@@ -1,5 +1,6 @@
 package game;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -16,10 +17,11 @@ public class Map {
 	private static Hashtable<Integer, Map> maps = new Hashtable<Integer, Map>();
 	private static Logger logger = Logger.getLogger(Map.class.getName());
 
+	// 생성자
 	public Map(String fileName) {
-		//String[] test = getClass().getResource("").getPath().split("\\!");
-		//loadMapData(test[0].substring(6) + fileName);
-		loadMapData(fileName);
+		if (loadMapData(fileName)) {
+			maps.put(this.no, this);
+		}
 	}
 
 	// 필드를 넣음
@@ -47,21 +49,27 @@ public class Map {
 	}
 
 	// 모든 맵을 로드
-	public static void loadMap(int num) {
+	public static void loadMap() {
+		File curDir = new File("Map");
+		File listFiles[] = curDir.listFiles();
 
-		for (int i = 1; i <= num; i++) {
-			maps.put(i, new Map("./Map/MAP" + i + ".map"));
+		if (listFiles.length > 0) {
+			for (File file : listFiles) {
+				if (file.isFile()) {
+					new Map(file.getPath());
+				}
+			}
 		}
 
 		for (Map map : maps.values()) {
 			map.addField(0);
 		}
 
-		logger.info("맵 로드 완료.");
+		logger.info("맵 " + maps.size() + "개 로드 완료.");
 	}
 
 	// 맵 데이터 로드
-	private void loadMapData(String fileName) {
+	private boolean loadMapData(String fileName) {
 		try {
 			FileReader fr = new FileReader(fileName);
 			BufferedReader br = new BufferedReader(fr);
@@ -77,12 +85,13 @@ public class Map {
 					data[width * y + x] = Integer.parseInt(readData[width * y + x + 4]);
 				}
 			}
-
 			br.close();
 			fr.close();
 		} catch (IOException e) {
 			logger.warning(e.getMessage());
+			return false;
 		}
+		return true;
 	}
 
 	public boolean isPassable(int x, int y) {

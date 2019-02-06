@@ -52,7 +52,7 @@ public class Server {
 			     , Setting.load().getProperty("Database.username")
 			     , Setting.load().getProperty("Database.password"));
 			GameData.loadSettings();
-            Map.loadMap(2);
+            Map.loadMap();
 
 			while (Handler.isRunning) {
 				Thread.sleep(100);
