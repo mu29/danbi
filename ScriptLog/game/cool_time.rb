@@ -1,4 +1,4 @@
-# filename cool_time.rb
+# filename game/cool_time.rb
 class Cool
   attr_accessor :nowCooltime
   attr_accessor :fullCooltime

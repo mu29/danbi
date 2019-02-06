@@ -1,4 +1,4 @@
-# filename resolution.rb
+# filename game/resolution.rb
 =begin
 ================================================================================
 XPA Tilemap                                                      Version 0.34

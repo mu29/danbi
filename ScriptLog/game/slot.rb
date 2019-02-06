@@ -1,4 +1,4 @@
-# filename slot.rb
+# filename game/slot.rb
 class Slot
   attr_accessor :slot
   

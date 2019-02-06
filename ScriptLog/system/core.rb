@@ -1,4 +1,4 @@
-# filename core.rb
+# filename system/core.rb
 Game.SubClassing
 
 class Sprite

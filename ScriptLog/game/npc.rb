@@ -1,11 +1,11 @@
-# filename enemy.rb
+# filename game/npc.rb
 #────────────────────────────────────────────────────────────────────────────
-# ▶ Enemy
+# ▶ NPC
 # --------------------------------------------------------------------------
 # Author    뮤 (mu29gl@gmail.com)
-# Date      2015. 1. 23
+# Date      2015. 2. 8
 #────────────────────────────────────────────────────────────────────────────
-class Enemy < Character
+class NPC < Character
   attr_accessor :no
   attr_accessor :name
   attr_accessor :image
@@ -13,8 +13,6 @@ class Enemy < Character
   attr_accessor :maxHp
   attr_accessor :x
   attr_accessor :y
-  attr_accessor :finalX
-  attr_accessor :finalY
   attr_accessor :direction
   
   def initialize

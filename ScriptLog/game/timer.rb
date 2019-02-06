@@ -1,4 +1,4 @@
-# filename timer.rb
+# filename game/timer.rb
 class Timer < Sprite
   #--------------------------------------------------------------------------
   # ● 오브젝트 초기화
