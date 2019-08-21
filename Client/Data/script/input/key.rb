@@ -156,6 +156,7 @@ module Key
   end
   
   def update
+    return unless GameWindow.is_active?
     for i in 0..255
       if press?(i)
         if @key_states[i] == 0
@@ -170,18 +171,22 @@ module Key
   end
   
   def trigger?(key)
+    return unless GameWindow.is_active?
     return @key_states[key] == 1
   end
   
   def press?(key)
+    return unless GameWindow.is_active?
     return Win32API::GetKeyState.call(key) != 0
   end
   
   def repeat?(key)
+    return unless GameWindow.is_active?
     return (trigger?(key) or @key_states[key] >= 20)
   end
   
   def dir4
+    return unless GameWindow.is_active?
     if press?(KEY_DOWN)
       return 2
     elsif press?(KEY_LEFT)

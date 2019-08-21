@@ -57,11 +57,22 @@ module GameWindow
     end
   end  
 
-  # 핸들
-  HWND = GameWindow.getHwnd()
-  # 게임 타이틀
-  CAPTION = GameWindow.getCaption()
+  @@state_active = true
 
+  def set_focus_state
+    @@state_active = (Win32API::GetForegroundWindow.call == GameWindow::HWND)
+  end
+
+  def is_active?
+    return @@state_active
+  end
+
+  # 핸들
+  HWND = GameWindow.getHwnd
+  # 게임 타이틀
+  CAPTION = GameWindow.getCaption
+  # 디버그 모드 설정
   GameWindow.set_debug_mode
-  GameWindow.openDebugWindow()
+  # 디버그 콘솔
+  GameWindow.openDebugWindow
 end

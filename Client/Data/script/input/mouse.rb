@@ -66,7 +66,6 @@ module Mouse
         i[0] = (i[0] > 0 ? i[0] + 1 : 1)
       end
     end
-    
     x, y = @pos
     (x == nil or y == nil) ? return : 0
     if self.press?
@@ -87,12 +86,14 @@ module Mouse
   end
 
   def self.trigger?(id = 0)
+    return unless GameWindow.is_active?
     if @triggers[id][0] == 1
       return true
     end
   end
 
   def self.repeat?(id = 0)
+    return unless GameWindow.is_active?
     if @triggers[id][0] <= 0
       return false
     else
@@ -101,11 +102,13 @@ module Mouse
   end
 
   def self.press?(id = 0)
+    return unless GameWindow.is_active?
     return @triggers[id][0] > 0
   end
 
   WHEEL_DELTA = 120
   def self.on_wheel(delta, keys, x, y)
+    return unless GameWindow.is_active?
     @@delta += delta
     if @@delta.abs >= WHEEL_DELTA
       delta_idx = - @@delta / WHEEL_DELTA

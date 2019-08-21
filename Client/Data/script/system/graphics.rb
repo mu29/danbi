@@ -267,8 +267,9 @@ module Graphics
   class << self
     alias :_update_ :update if !$@
     def update
+      GameWindow.set_focus_state
       _update_
-      if defined? Key and Config::USE_ALT_ENTER
+      if defined? Key && Config::USE_ALT_ENTER && GameWindow.is_active?
         if Key.press?(KEY_LALT) and Key.trigger?(KEY_RETURN)
           Graphics.resize_screen2(self.width, self.height, !isFullScreen)
         end
