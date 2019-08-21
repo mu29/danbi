@@ -346,7 +346,7 @@ public final class Packet {
 		return packet;
 	}
 
-	ublic static JSONObject chatGuild(String message, int r, int g, int b) {
+	public static JSONObject chatGuild(String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_GUILD);
 		packet.put("message", message);

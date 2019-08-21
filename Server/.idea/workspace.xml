@@ -11,28 +11,9 @@
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/main.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/main.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/func.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/func.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/system/game-window.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/system/game-window.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/system/win32api.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/system/win32api.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Library/XPA_Tilemap.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Library/XPA_Tilemap.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/Crypto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/Crypto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/DataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/DataBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/GameData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/GameData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/Type.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/Type.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Character.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Character.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Enemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Enemy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Field.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Functions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Guild.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Guild.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Npc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Npc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Party.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Party.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/Handler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/Handler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/Initializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/Initializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/packet/JsonDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/JsonDecoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/packet/JsonEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/JsonEncoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/packet/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/Packet.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
