@@ -79,7 +79,7 @@ public class Functions {
             Field field = Map.getMap(user.getMap()).getField(user.getSeed());
             GameData.SkillData skill = GameData.skill.get(_skill.getNo());
             // 쿹타임 처리
-            user.getCoolTime().setCooltime(skill.getDelay(), skill.getNo());
+            user.getCoolTime().setCoolTime(skill.getDelay(), skill.getNo());
             // 에너미 데미지 처리
             for (game.Enemy enemy : field.getAliveEnemies()) {
                 enemy.animation(57);

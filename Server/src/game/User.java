@@ -54,8 +54,8 @@ public class User extends Character {
     private boolean isBalloonShowing = false;
     private long startChattingTime;
     // 쿨타임
-	public Cooltime coolTime = new Cooltime();
-	public Cooltime getCoolTime() { return coolTime; }
+	public CoolTime coolTime = new CoolTime();
+	public CoolTime getCoolTime() { return coolTime; }
 	private long lastTime = System.currentTimeMillis() / 100;
 
 	private static Hashtable<ChannelHandlerContext, User> users = new Hashtable<ChannelHandlerContext, User>();
@@ -1328,7 +1328,7 @@ public class User extends Character {
 		if (skill == null) {
 			return false;
 		}
-		if (coolTime.getCooltime(skill.getNo()) > 0) {
+		if (coolTime.getCoolTime(skill.getNo()) > 0) {
 			return false;
 		}
 		// 함수가 있을 경우 실행
@@ -2246,7 +2246,7 @@ public class User extends Character {
 				}
 				for (int i = 2; i < 12; ++i) {
 					if (rs.getInt(i) != -1) {
-						coolTime.initCooltime(i - 2, GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getNo());
+						coolTime.initCoolTime(i - 2, GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getNo());
 					}
 				}
 			}
@@ -2261,7 +2261,7 @@ public class User extends Character {
 			return;
 		}
 		DataBase.setSlot(this, index, itemidx);
-		coolTime.initCooltime(index, GameData.skill.get(findSkillByIndex(itemidx).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(itemidx).getNo()).getNo());
+		coolTime.initCoolTime(index, GameData.skill.get(findSkillByIndex(itemidx).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(itemidx).getNo()).getNo());
 		loadSlot();
 	}
 
@@ -2350,13 +2350,13 @@ public class User extends Character {
 		}
 	}
 
-	class Cooltime
+	class CoolTime
 	{
 		public Vector<int[]> slot = new Vector<>();
 		public int BasicAttack;
 		public int Global;
 
-		public Cooltime() {
+		public CoolTime() {
 			for (int i = 0; i < 10; ++i) {
 				int[] a = new int[3];
 				slot.add(i, a);
@@ -2377,14 +2377,14 @@ public class User extends Character {
 
 		public int getGlobal() { return Global; }
 
-		public void initCooltime(int index, int value, int no) {
+		public void initCoolTime(int index, int value, int no) {
 			slot.get(index)[0] = no;
 			slot.get(index)[1] = 0;
 			slot.get(index)[2] = value;
-			ctx.writeAndFlush(Packet.setCooltime(slot.get(index)[1], slot.get(index)[2], index));
+			ctx.writeAndFlush(Packet.setCoolTime(slot.get(index)[1], slot.get(index)[2], index));
 		}
 
-		public int getCooltime(int no) {
+		public int getCoolTime(int no) {
 			for (int i = 0; i < 10; ++i) {
 				if (slot.get(i)[0] == no) {
 					return slot.get(i)[1];
@@ -2393,11 +2393,11 @@ public class User extends Character {
 			return -1;
 		}
 
-		public void setCooltime(int value, int no) {
+		public void setCoolTime(int value, int no) {
 			for (int i = 0; i < 10; ++i) {
 				if (slot.get(i)[0] == no) {
 					slot.get(i)[1] = value;
-					ctx.writeAndFlush(Packet.setCooltime(slot.get(i)[1], slot.get(i)[2], i));
+					ctx.writeAndFlush(Packet.setCoolTime(slot.get(i)[1], slot.get(i)[2], i));
 				}
 			}
 		}
@@ -2406,7 +2406,7 @@ public class User extends Character {
 			for (int i = 0; i < 10; ++i) {
 				if (slot.get(i)[1] > 0) {
 					--slot.get(i)[1];
-					ctx.writeAndFlush(Packet.setCooltime(slot.get(i)[1], slot.get(i)[2], i));
+					ctx.writeAndFlush(Packet.setCoolTime(slot.get(i)[1], slot.get(i)[2], i));
 				}
 			}
 			if (BasicAttack > 0) {

@@ -695,13 +695,13 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject setCooltime(int nowCooltime, int fullCooltime, int idx)
+	public static JSONObject setCoolTime(int nowCoolTime, int fullCoolTime, int idx)
 	{
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.SET_COOLTIME);
 		packet.put("index", idx);
-		packet.put("nowCooltime", nowCooltime);
-		packet.put("fullCooltime", fullCooltime);
+		packet.put("nowCoolTime", nowCoolTime);
+		packet.put("fullCoolTime", fullCoolTime);
 		return packet;
 	}
 

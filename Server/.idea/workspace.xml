@@ -13,7 +13,7 @@
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/system/win32api.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/system/win32api.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Library/XPA_Tilemap.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Library/XPA_Tilemap.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/packet/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/Packet.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
