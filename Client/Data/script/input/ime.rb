@@ -26,16 +26,16 @@ class IME
   attr_accessor :setcstr
   
   def initialize
-    @settext = Win32API.new(Config::DLL_PATH + 'IME.dll', 'SetIMEText', 'lp', '')
-    @gettext = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetIMEText', 'l', 'p')
-    @setlong = Win32API.new(Config::DLL_PATH + 'IME.dll', 'SetIMELong', 'l', 'l')
-    @getlong = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetIMELong', '', 'l')
-    @setflag = Win32API.new(Config::DLL_PATH + 'IME.dll', 'SetIMEFlag', 'l', '')
-    @getflag = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetIMEFlag', '', 'l')
-    @setcstr = Win32API.new(Config::DLL_PATH + 'IME.dll', 'SetIMECstr', 'p', 'l')
-    @getcstr = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetIMECstr', '', 'p')
-    @change  = Win32API.new(Config::DLL_PATH + 'IME.dll', 'ChangeIME', 'l', 'l')
-    @getstate = Win32API.new(Config::DLL_PATH + 'IME.dll', 'GetStateIME', '', 'l')
+    @settext = Win32API.new('Library/IME.dll', 'SetIMEText', 'lp', '')
+    @gettext = Win32API.new('Library/IME.dll', 'GetIMEText', 'l', 'p')
+    @setlong = Win32API.new('Library/IME.dll', 'SetIMELong', 'l', 'l')
+    @getlong = Win32API.new('Library/IME.dll', 'GetIMELong', '', 'l')
+    @setflag = Win32API.new('Library/IME.dll', 'SetIMEFlag', 'l', '')
+    @getflag = Win32API.new('Library/IME.dll', 'GetIMEFlag', '', 'l')
+    @setcstr = Win32API.new('Library/IME.dll', 'SetIMECstr', 'p', 'l')
+    @getcstr = Win32API.new('Library/IME.dll', 'GetIMECstr', '', 'p')
+    @change  = Win32API.new('Library/IME.dll', 'ChangeIME', 'l', 'l')
+    @getstate = Win32API.new('Library/IME.dll', 'GetStateIME', '', 'l')
     @choice = false
     @focus = false
     @multiline = false
@@ -79,7 +79,7 @@ class IME
     if i == 1
       i = 0 if @cstr.size != 3
     end
-    Win32API.new(Config::DLL_PATH + 'IME.dll', 'ClearIME', 'l', '').call(i)
+    Win32API.new('Library/IME.dll', 'ClearIME', 'l', '').call(i)
   end
   
   def update

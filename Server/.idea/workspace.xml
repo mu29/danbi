@@ -6,7 +6,22 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="" />
+    <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Items.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Items.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/States.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/States.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/System.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/System.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Server.iml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,12 +69,6 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
-  </component>
   <component name="ProjectId" id="1PiUc0YoDDy0EruizaRXxYUClzy" />
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -97,46 +106,47 @@
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="PropertiesComponent">
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="111" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="113" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="116" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="910" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="111" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="113" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="116" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="910" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="server" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="MemberChooser.sorted" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="aspect.path.notification.shown" value="true" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SearchEverywhereHistoryKey" value="getter&#9;PSI&#9;JAVA://com.sun.javafx.fxml.builder.ProxyBuilder.Getter" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="recentsLimit" value="5" />
-    <property name="restartRequiresConfirmation" value="true" />
+    <property name="aspect.path.notification.shown" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
-    <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="111" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="113" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="116" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="910" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="111" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="113" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="116" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="910" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+    <property name="options.splitter.main.proportions" value="0.3" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="SearchEverywhereHistoryKey" value="getter&#9;PSI&#9;JAVA://com.sun.javafx.fxml.builder.ProxyBuilder.Getter" />
+    <property name="recentsLimit" value="5" />
+    <property name="restartRequiresConfirmation" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
-    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
-    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
-    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="server" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -399,6 +409,17 @@
       <flatten-packages value="false" />
       <is-autoscroll-to-source value="false" />
     </todo-panel>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
