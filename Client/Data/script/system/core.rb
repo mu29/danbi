@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-Game.SubClassing
-
 class Sprite
   def isPointInRect?(_x, _y)
     return false unless self.visible
@@ -939,7 +937,7 @@ module Graphics
     alias :_update_ :update if !$@
     def update
       _update_
-      if defined? Key and Config::USE_ALT_ENTER and Graphics.focus
+      if defined? Key and Config::USE_ALT_ENTER
         if Key.press?(KEY_LALT) and Key.trigger?(KEY_RETURN)
           Graphics.resize_screen2(self.width, self.height, !isFullScreen)
         end

@@ -56,7 +56,6 @@ module Mouse
   end  
     
   def self.update
-    return unless Graphics.focus
     old_pos = @pos
     @pos = self.pos
     for i in @triggers
@@ -88,14 +87,12 @@ module Mouse
   end
 
   def self.trigger?(id = 0)
-    return unless Graphics.focus
     if @triggers[id][0] == 1
       return true
     end
   end
 
   def self.repeat?(id = 0)
-    return unless Graphics.focus
     if @triggers[id][0] <= 0
       return false
     else
@@ -104,13 +101,11 @@ module Mouse
   end
 
   def self.press?(id = 0)
-    return unless Graphics.focus
     return @triggers[id][0] > 0
   end
 
   WHEEL_DELTA = 120
   def self.on_wheel(delta, keys, x, y)
-    return unless Graphics.focus
     @@delta += delta
     if @@delta.abs >= WHEEL_DELTA
       delta_idx = - @@delta / WHEEL_DELTA
