@@ -48,12 +48,10 @@ module GameWindow
   end
   
   def set_debug_mode
-    if Win32API::GetCommandLine.call =~ /Game.exe (.*)/
-      $DEBUG = $TEST = if $1 == "debug"
-        true
-      else
-        false
-      end
+    $DEBUG = $TEST = if Win32API::GetCommandLine.call =~ /(.*) debug/
+      true
+    else
+      false
     end
   end  
 
