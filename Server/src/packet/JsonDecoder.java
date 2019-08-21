@@ -15,21 +15,17 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonDecoder extends StringDecoder {
-	
 	@Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) throws Exception {
     	if (msg.readableBytes() < 4) {
             return;
     	}
-
 	    msg.markReaderIndex();
-
 	    int dataLength = msg.readInt();
 	    if (msg.readableBytes() < dataLength) {
-	            msg.resetReaderIndex();
-	            return;
+            msg.resetReaderIndex();
+            return;
 	    }
-	
 	    byte[] decoded = new byte[dataLength];
 	    msg.readBytes(decoded);
 	    out.add(deserialize(decoded));
@@ -37,7 +33,6 @@ public class JsonDecoder extends StringDecoder {
 	
     private Object deserialize(byte[] buf) throws CorruptedFrameException {
         ObjectMapper mapper = new ObjectMapper();
-
         Throwable t;
         try {
                 return mapper.readValue(buf, JSONObject.class);
@@ -48,8 +43,6 @@ public class JsonDecoder extends StringDecoder {
         } catch (IOException e) {
                 t = e;
         }
-
         throw new CorruptedFrameException("Error deserializing json: " + t.getMessage());
     }
-    
 }

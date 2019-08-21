@@ -531,13 +531,11 @@ public class GameData extends DataBase {
 		@Override
 		public Item clone() {
 			Item cloneItem = null;
-
 			try {
 				cloneItem = (Item) super.clone();
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
 			}
-
 			return cloneItem;
 		}
 	}
@@ -948,9 +946,9 @@ public class GameData extends DataBase {
 		}
 
 		public ItemData getItem(int index) {
-			if (items.containsKey(index))
+			if (items.containsKey(index)) {
 				return items.get(index);
-
+			}
 			return null;
 		}
 

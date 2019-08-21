@@ -106,9 +106,9 @@ public class Enemy extends Character {
 
     public void gainHp(int value) {
         // 최대 HP 이상인 경우 보정
-        if (hp + value > getMaxHp())
+        if (hp + value > getMaxHp()) {
             value = getMaxHp() - hp;
-
+        }
         hp += value;
         Map.getMap(map).getField(seed).sendToAll(Packet.updateCharacter(characterType, no,
                 new int[]{ Type.Status.HP }, new Integer[]{ hp }));
@@ -116,7 +116,6 @@ public class Enemy extends Character {
 
     public void loseHp(int value) {
         gainHp(-value);
-
         if (hp - value < 0) {
             // 죽음
             die();
@@ -136,9 +135,9 @@ public class Enemy extends Character {
     }
 
     public boolean loseMp(int value) {
-        if (mp - value < 0)
+        if (mp - value < 0) {
             return false;
-
+        }
         gainMp(-value);
         return true;
     }
@@ -158,44 +157,51 @@ public class Enemy extends Character {
     public void update() {
         // 0.1초 단위로 업데이트
         long nowTime = System.currentTimeMillis() / 100;
-
         // 죽어있다면 아무 행동도 하지 않음
         if (isDead) {
-            if (deadTime + regen < nowTime)
+            if (deadTime + regen < nowTime) {
                 regen();
+            }
             return;
         }
-
         // 이동 가능한 시간인지 판정
-        if (nowTime < lastMoveTime)
+        if (nowTime < lastMoveTime) {
             return;
-
+        }
         // 이동 속도에 비례하여 다음 이동 시간 설정
         lastMoveTime = nowTime + moveSpeed + random.nextInt(moveSpeed) / 2;
-
         // 타겟이 있는 경우
         if (target != null) {
             int distance = Math.abs(target.getX() - x) + Math.abs(target.getY() - y);
             // 타겟이 범위 내의 경우
             if (distance < range) {
                 // 스킬 사용
-                if (frequency > random.nextInt(100))
+                if (frequency > random.nextInt(100)) {
                     Functions.execute(Functions.enemy, function, new Object[]{this});
-
+                }
                 // 에너미 종류에 따라 분기
                 switch (type) {
                     case Type.Enemy.PACIFISM:
-                        moveRandom(); break;
-                    case Type.Enemy.CAUTIOUS:
-                        moveAway(); break;
-                    case Type.Enemy.PROTECTIVE:
-                        if (hp < maxHp)
-                            moveToward();
-                        else
-                            moveRandom();
+                        moveRandom();
                         break;
+
+                    case Type.Enemy.CAUTIOUS:
+                        moveAway();
+                        break;
+
+                    case Type.Enemy.PROTECTIVE:
+                        if (hp < maxHp) {
+                            moveToward();
+                        } else {
+                            moveRandom();
+                        }
+                        break;
+
                     case Type.Enemy.AGGRESSIVE:
-                        moveToward(); break;
+                        moveToward();
+                        break;
+
+                    default:
                 }
             } else {
                 // 타겟이 범위 외의 경우
@@ -213,32 +219,33 @@ public class Enemy extends Character {
         // 타겟이 유저인 경우
         if (target != null && target.getClass().getName().equals("game.User")) {
             User u = (User) target;
-
             // 파티가 있다면 경험치 분배
             if (u.getPartyNo() > 0) {
                 int partyExp = exp / Party.get(u.getPartyNo()).getMembers().size();
                 for (int memberNo : Party.get(u.getPartyNo()).getMembers()) {
                     User member = User.get(memberNo);
-                    if (member.getMap() == u.getMap())
+                    if (member.getMap() == u.getMap()) {
                         member.gainExp(partyExp);
+                    }
                 }
             } else {
                 u.gainExp(exp);
             }
             // 골드 드랍
-            if (gold > 0)
+            if (gold > 0) {
                 Map.getMap(map).getField(seed).loadDropGold(gold, x, y);
+            }
             // 보상 목록에 있는 아이템을 드랍
-            for (GameData.Reward r : GameData.reward)
-                if (r.getNo() == reward && r.getPer() > random.nextInt(10000))
+            for (GameData.Reward r : GameData.reward) {
+                if (r.getNo() == reward && r.getPer() > random.nextInt(10000)) {
                     Map.getMap(map).getField(seed).loadDropItem(r.getItemNo(), r.getNum(), x, y);
-
+                }
+            }
             Functions.execute(Functions.enemy, dieFunction, new Object[]{this});
         }
         // 죽은 시간을 저장
         deadTime = System.currentTimeMillis() / 100;
         Map.getMap(map).getField(seed).sendToAll(Packet.removeCharacter(Type.Character.ENEMY, no));
-
         target = null;
         isDead = true;
     }
@@ -250,7 +257,6 @@ public class Enemy extends Character {
         mp = maxMp;
         x = originalX;
         y = originalY;
-
         Map.getMap(map).getField(seed).sendToAll(Packet.createCharacter(Type.Character.ENEMY, this));
     }
 
@@ -258,24 +264,29 @@ public class Enemy extends Character {
     private void attackTarget() {
         // 공속 1당 0.1초
         long nowTime = System.currentTimeMillis() / 100;
-
         // 공격 가능한 시간인지 판정
-        if (nowTime < lastAttackTime)
+        if (nowTime < lastAttackTime) {
             return;
-
+        }
         // 공격 속도에 비례하여 다음 공격 시간 설정
         lastAttackTime = nowTime + attackSpeed + random.nextInt(attackSpeed) / 2;
-
         // 에너미 종류에 따라 분기
         switch (type) {
             case Type.Enemy.CAUTIOUS:
-                distanceAttack(); break;
-            case Type.Enemy.PROTECTIVE:
-                if (hp < maxHp)
-                    meleeAttack();
+                distanceAttack();
                 break;
+
+            case Type.Enemy.PROTECTIVE:
+                if (hp < maxHp) {
+                    meleeAttack();
+                }
+                break;
+
             case Type.Enemy.AGGRESSIVE:
-                meleeAttack(); break;
+                meleeAttack();
+                break;
+
+            default:
         }
     }
 
@@ -283,9 +294,9 @@ public class Enemy extends Character {
     private void meleeAttack() {
         int new_x = x + (direction == 6 ? 1 : direction == 4 ? -1 : 0);
         int new_y = y + (direction == 2 ? 1 : direction == 8 ? -1 : 0);
-
-        if (target.x == new_x && target.y == new_y)
+        if (target.x == new_x && target.y == new_y) {
             assault(target);
+        }
     }
 
     // 원거리 공격
@@ -295,7 +306,6 @@ public class Enemy extends Character {
         for (int i = 0; i < range; i++) {
             new_x += (direction == 6 ? 1 : direction == 4 ? -1 : 0);
             new_y += (direction == 2 ? 1 : direction == 8 ? -1 : 0);
-
             if (target.x == new_x && target.y == new_y) {
                 assault(target);
                 break;
@@ -307,15 +317,15 @@ public class Enemy extends Character {
     private void assault(Character target) {
         jump(0, 0);
         target.animation(attackAnimation);
-
         // 실 데미지를 계산
         int attackDamage = damage - target.getDefense();
         boolean isFatal = critical > random.nextInt(100);
-        if (isFatal) attackDamage *= 2;
-
-        if (attackDamage < 0)
+        if (isFatal) {
+            attackDamage *= 2;
+        }
+        if (attackDamage < 0) {
             attackDamage = 0;
-
+        }
         if (target.getClass().getName().equals("game.User")) {
             // 타겟이 유저인 경우
             User u = (User) target;
@@ -349,8 +359,9 @@ public class Enemy extends Character {
         // 범위 외의 경우, 타겟은 null
         int nearest = range;
         for (Character c : findEnemies()) {
-            if (c.equals(_target))
+            if (c.equals(_target)) {
                 continue;
+            }
             // 가장 가까운 타겟을 찾음
             int distance = Math.abs(c.getX() - x) + Math.abs(c.getY() - y);
             if (distance < nearest) {
@@ -363,7 +374,6 @@ public class Enemy extends Character {
     // 모든 적을 검색
     private Vector<Character> findEnemies() {
         Vector<Character> enemies = new Vector<Character>();
-
         // 팀이 다른 경우 적 목록에 넣음
         for (User user : Map.getMap(map).getField(seed).getUsers()) {
             if (user.getTeam() != team) {
@@ -375,29 +385,26 @@ public class Enemy extends Character {
                 enemies.addElement(enemy);
             }
         }
-
         return enemies;
     }
 
     // 타겟에게 접근함
     private void moveToward() {
-        if (target == null)
+        if (target == null) {
             return;
-
+        }
         int x_gap = Math.abs(x - target.x);
         int y_gap = Math.abs(y - target.y);
-
         // 타겟과 근접한 경우 공격
         if (x_gap + y_gap == 1) {
             turnToward();
             attackTarget();
             return;
         }
-
         // 사방이 막힌 경우 이동하지 않음
-        if (Map.getMap(map).getField(seed).isIsolated(this))
+        if (Map.getMap(map).getField(seed).isIsolated(this)) {
             return;
-
+        }
         // 타겟을 향해 이동
         if (x_gap > y_gap) {
             if (x > target.x) {
@@ -416,16 +423,15 @@ public class Enemy extends Character {
 
     // 타겟으로부터 멀어짐
     private void moveAway() {
-        if (target == null)
+        if (target == null) {
             return;
-
+        }
         int x_gap = Math.abs(x - target.x);
         int y_gap = Math.abs(y - target.y);
-
         // 사방이 막힌 경우 이동하지 않음
-        if (Map.getMap(map).getField(seed).isIsolated(this))
+        if (Map.getMap(map).getField(seed).isIsolated(this)) {
             return;
-
+        }
         // 타겟을 피해 이동
         if (x_gap > y_gap) {
             if (y > target.y) {
@@ -451,46 +457,51 @@ public class Enemy extends Character {
                 if (!super.moveUp())
                     moveUp();
                 break;
+
             case Type.Direction.DOWN:
                 if (!super.moveDown())
                     moveDown();
                 break;
+
             case Type.Direction.LEFT:
                 if (!super.moveLeft())
                     moveLeft();
                 break;
+
             case Type.Direction.RIGHT:
                 if (!super.moveRight())
                     moveRight();
                 break;
+
+            default:
         }
     }
 
     protected boolean moveUp() {
-        if (!super.moveUp())
+        if (!super.moveUp()) {
             moveRandom();
-
+        }
         return true;
     }
 
     protected boolean moveDown() {
-        if (!super.moveDown())
+        if (!super.moveDown()) {
             moveRandom();
-
+        }
         return true;
     }
 
     protected boolean moveLeft() {
-        if (!super.moveLeft())
+        if (!super.moveLeft()) {
             moveRandom();
-
+        }
         return true;
     }
 
     protected boolean moveRight() {
-        if (!super.moveRight())
+        if (!super.moveRight()) {
             moveRandom();
-
+        }
         return true;
     }
 
@@ -498,7 +509,6 @@ public class Enemy extends Character {
     private void turnToward() {
         int x_gap = Math.abs(x - target.x);
         int y_gap = Math.abs(y - target.y);
-
         if (x_gap > y_gap) {
             if (x > target.x) {
                 turnLeft();

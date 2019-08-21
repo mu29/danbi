@@ -12,13 +12,11 @@ import database.GameData;
 
 @SuppressWarnings("unchecked")
 public final class Packet {
-	
 	// success(0), id/pass error(1), sql error(2)
 	public static JSONObject loginMessage(int type) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.LOGIN);
 		packet.put("type", type);
-		
 		return packet;
 	}
 
@@ -62,7 +60,6 @@ public final class Packet {
 		packet.put("cape", user.getCape());
 		packet.put("shoes", user.getShoes());
 		packet.put("accessory", user.getAccessory());
-		
 		return packet;
 	}
 
@@ -71,7 +68,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REGISTER);
 		packet.put("type", type);
-		
 		return packet;
 	}
 
@@ -88,13 +84,11 @@ public final class Packet {
 		packet.put("x", c.getX());
 		packet.put("y", c.getY());
 		packet.put("d", c.getDirection());
-
 		if (type == Type.Character.USER) {
 			User u = (User) c;
 			packet.put("guild", Guild.get(u.getGuild()) != null ? Guild.get(u.getGuild()).getName() : "길드 없음");
 			packet.put("title", u.getTitle());
 		}
-		
 		return packet;
 	}
 
@@ -103,7 +97,6 @@ public final class Packet {
 		packet.put("header", STCHeader.REMOVE_CHARACTER);
 		packet.put("type", type);
 		packet.put("no", no);
-		
 		return packet;
 	}
 
@@ -115,7 +108,6 @@ public final class Packet {
 		packet.put("x", x);
 		packet.put("y", y);
 		packet.put("d", d);
-		
 		return packet;
 	}
 
@@ -127,7 +119,6 @@ public final class Packet {
 		packet.put("x", x);
 		packet.put("y", y);
 		packet.put("d", d);
-		
 		return packet;
 	}
 
@@ -137,7 +128,6 @@ public final class Packet {
 		packet.put("type", type);
 		packet.put("no", no);
 		packet.put("d", d);
-
 		return packet;
 	}
 
@@ -148,7 +138,6 @@ public final class Packet {
 		packet.put("no", no);
 		packet.put("x", x);
 		packet.put("y", y);
-
 		return packet;
 	}
 
@@ -158,7 +147,6 @@ public final class Packet {
 		packet.put("type", type);
 		packet.put("no", no);
 		packet.put("ani", ani);
-
 		return packet;
 	}
 
@@ -167,9 +155,9 @@ public final class Packet {
 		packet.put("header", STCHeader.UPDATE_CHARACTER);
 		packet.put("type", type);
 		packet.put("no", no);
-		for (int i = 0; i < keys.length; i++)
+		for (int i = 0; i < keys.length; i++) {
 			packet.put(keys[i], values[i]);
-
+		}
 		return packet;
 	}
 
@@ -179,8 +167,9 @@ public final class Packet {
 		packet.put("type", type);
 		packet.put("no", no);
 		packet.put("value", value);
-		if (critical) packet.put("critical", 1);
-
+		if (critical) {
+			packet.put("critical", 1);
+		}
 		return packet;
 	}
 
@@ -191,7 +180,6 @@ public final class Packet {
 		packet.put("x", item.getX());
 		packet.put("y", item.getY());
 		packet.put("image", item.getImage());
-
 		return packet;
 	}
 
@@ -202,7 +190,6 @@ public final class Packet {
 		packet.put("x", gold.getX());
 		packet.put("y", gold.getY());
 		packet.put("amount", gold.getAmount());
-
 		return packet;
 	}
 
@@ -210,7 +197,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REMOVE_DROP_ITEM);
 		packet.put("no", item.getNo());
-
 		return packet;
 	}
 
@@ -218,7 +204,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REMOVE_DROP_GOLD);
 		packet.put("no", gold.getNo());
-
 		return packet;
 	}
 
@@ -226,7 +211,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.NOTIFY);
 		packet.put("message", message);
-
 		return packet;
 	}
 
@@ -237,7 +221,6 @@ public final class Packet {
 		packet.put("r", r);
 		packet.put("g", g);
 		packet.put("b", b);
-
 		return packet;
 	}
 
@@ -251,7 +234,6 @@ public final class Packet {
 		packet.put("r2", r2);
 		packet.put("g2", g2);
 		packet.put("b2", b2);
-
 		return packet;
 	}
 
@@ -261,7 +243,6 @@ public final class Packet {
 		packet.put("map", u.getMap());
 		packet.put("x", u.getX());
 		packet.put("y", u.getY());
-
 		return packet;
 	}
 
@@ -271,7 +252,9 @@ public final class Packet {
 		packet.put("no", no);
 		packet.put("message", message);
 		return packet;
-	}public static JSONObject chatNormal(int no, String message, int r, int g, int b) {
+	}
+
+	public static JSONObject chatNormal(int no, String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_NORMAL);
 		packet.put("no", no);
@@ -280,7 +263,9 @@ public final class Packet {
 		packet.put("g", g);
 		packet.put("b", b);
 		return packet;
-	}public static JSONObject chatNormal(int no, String message, int r, int g, int b, int r2, int g2, int b2) {
+	}
+
+	public static JSONObject chatNormal(int no, String message, int r, int g, int b, int r2, int g2, int b2) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_NORMAL);
 		packet.put("no", no);
@@ -299,7 +284,9 @@ public final class Packet {
 		packet.put("header", STCHeader.CHAT_WHISPER);
 		packet.put("message", message);
 		return packet;
-	}public static JSONObject chatWhisper(String message, int r, int g, int b) {
+	}
+
+	public static JSONObject chatWhisper(String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_WHISPER);
 		packet.put("message", message);
@@ -307,7 +294,9 @@ public final class Packet {
 		packet.put("g", g);
 		packet.put("b", b);
 		return packet;
-	}public static JSONObject chatWhisper(String message, int r, int g, int b, int r2, int g2, int b2) {
+	}
+
+	public static JSONObject chatWhisper(String message, int r, int g, int b, int r2, int g2, int b2) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_WHISPER);
 		packet.put("message", message);
@@ -325,7 +314,9 @@ public final class Packet {
 		packet.put("header", STCHeader.CHAT_PARTY);
 		packet.put("message", message);
 		return packet;
-	}public static JSONObject chatParty(String message, int r, int g, int b) {
+	}
+
+	public static JSONObject chatParty(String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_PARTY);
 		packet.put("message", message);
@@ -333,7 +324,9 @@ public final class Packet {
 		packet.put("g", g);
 		packet.put("b", b);
 		return packet;
-	}public static JSONObject chatParty(String message, int r, int g, int b, int r2, int g2, int b2) {
+	}
+
+	public static JSONObject chatParty(String message, int r, int g, int b, int r2, int g2, int b2) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_PARTY);
 		packet.put("message", message);
@@ -351,7 +344,9 @@ public final class Packet {
 		packet.put("header", STCHeader.CHAT_GUILD);
 		packet.put("message", message);
 		return packet;
-	}public static JSONObject chatGuild(String message, int r, int g, int b) {
+	}
+
+	ublic static JSONObject chatGuild(String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_GUILD);
 		packet.put("message", message);
@@ -359,7 +354,9 @@ public final class Packet {
 		packet.put("g", g);
 		packet.put("b", b);
 		return packet;
-	}public static JSONObject chatGuild(String message, int r, int g, int b, int r2, int g2, int b2) {
+	}
+
+	public static JSONObject chatGuild(String message, int r, int g, int b, int r2, int g2, int b2) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_GUILD);
 		packet.put("message", message);
@@ -378,7 +375,9 @@ public final class Packet {
 		packet.put("no", no);
 		packet.put("message", message);
 		return packet;
-	}public static JSONObject chatAll(int no, String message, int r, int g, int b) {
+	}
+
+	public static JSONObject chatAll(int no, String message, int r, int g, int b) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_ALL);
 		packet.put("no", no);
@@ -387,7 +386,9 @@ public final class Packet {
 		packet.put("g", g);
 		packet.put("b", b);
 		return packet;
-	}public static JSONObject chatAll(int no, String message, int r, int g, int b, int r2, int g2, int b2) {
+	}
+
+	public static JSONObject chatAll(int no, String message, int r, int g, int b, int r2, int g2, int b2) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_ALL);
 		packet.put("no", no);
@@ -408,21 +409,19 @@ public final class Packet {
 			image[i] = GameData.register.get(i + 1).getImage();
 			job[i] = GameData.register.get(i + 1).getJob();
 		}
-		
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.OPEN_REGISTER_WINDOW);
 		packet.put("image", image);
 		packet.put("job", job);
-		
 		return packet;
 	}
 
 	public static JSONObject updateStatus(int[] keys, Object[] values) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.UPDATE_STATUS);
-		for (int i = 0; i < keys.length; i++)
+		for (int i = 0; i < keys.length; i++) {
 			packet.put(keys[i], values[i]);
-
+		}
 		return packet;
 	}
 	
@@ -448,7 +447,6 @@ public final class Packet {
 		packet.put("reinforce", item.getReinforce());
 		packet.put("trade", item.isTradeable() ? 1 : 0);
 		packet.put("equipped", item.isEquipped() ? 1 : 0);
-
 		return packet;
 	}
 
@@ -474,7 +472,6 @@ public final class Packet {
 		packet.put("reinforce", item.getReinforce());
 		packet.put("trade", item.isTradeable() ? 1 : 0);
 		packet.put("equipped", item.isEquipped() ? 1 : 0);
-
 		return packet;
 	}
 
@@ -483,7 +480,6 @@ public final class Packet {
 		packet.put("header", STCHeader.SET_SKILL);
 		packet.put("no", skill.getNo());
 		packet.put("rank", skill.getRank());
-
 		return packet;
 	}
 
@@ -494,7 +490,6 @@ public final class Packet {
 		packet.put("type", type);
 		packet.put("no", skill.getNo());
 		packet.put("rank", skill.getRank());
-
 		return packet;
 	}
 
@@ -502,7 +497,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REQUEST_TRADE);
 		packet.put("partnerNo", partnerNo);
-
 		return packet;
 	}
 
@@ -510,7 +504,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.OPEN_TRADE_WINDOW);
 		packet.put("partnerNo", partnerNo);
-
 		return packet;
 	}
 
@@ -534,7 +527,6 @@ public final class Packet {
 		packet.put("avoid", item.getAvoid());
 		packet.put("hit", item.getHit());
 		packet.put("reinforce", item.getReinforce());
-
 		return packet;
 	}
 
@@ -543,7 +535,6 @@ public final class Packet {
 		packet.put("header", STCHeader.DROP_TRADE_ITEM);
 		packet.put("no", no);
 		packet.put("index", index);
-
 		return packet;
 	}
 
@@ -552,7 +543,6 @@ public final class Packet {
 		packet.put("header", STCHeader.CHANGE_TRADE_GOLD);
 		packet.put("no", no);
 		packet.put("amount", amount);
-
 		return packet;
 	}
 
@@ -560,14 +550,12 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.FINISH_TRADE);
 		packet.put("no", no);
-
 		return packet;
 	}
 
 	public static JSONObject cancelTrade() {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CANCEL_TRADE);
-
 		return packet;
 	}
 
@@ -578,14 +566,12 @@ public final class Packet {
 		packet.put("no", no);
 		packet.put("message", message);
 		packet.put("select", select);
-
 		return packet;
 	}
 
 	public static JSONObject closeMessageWindow() {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CLOSE_MESSAGE_WINDOW);
-
 		return packet;
 	}
 
@@ -593,7 +579,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.OPEN_SHOP_WINDOW);
 		packet.put("no", no);
-
 		return packet;
 	}
 
@@ -602,7 +587,6 @@ public final class Packet {
 		packet.put("header", STCHeader.SET_SHOP_ITEM);
 		packet.put("no", no);
 		packet.put("price", price);
-
 		return packet;
 	}
 
@@ -610,7 +594,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.SET_PARTY);
 		packet.put("no", no);
-
 		return packet;
 	}
 
@@ -619,7 +602,6 @@ public final class Packet {
 		packet.put("header", STCHeader.INVITE_PARTY);
 		packet.put("master", master);
 		packet.put("partyNo", partyNo);
-
 		return packet;
 	}
 
@@ -633,7 +615,6 @@ public final class Packet {
 		packet.put("job", user.getJob());
 		packet.put("hp", user.getHp());
 		packet.put("maxHp", user.getMaxHp());
-
 		return packet;
 	}
 
@@ -641,7 +622,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REMOVE_PARTY_MEMBER);
 		packet.put("no", no);
-
 		return packet;
 	}
 
@@ -649,7 +629,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CREATE_GUILD);
 		packet.put("amount", amount);
-
 		return packet;
 	}
 
@@ -657,7 +636,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.SET_GUILD);
 		packet.put("no", no);
-
 		return packet;
 	}
 
@@ -666,7 +644,6 @@ public final class Packet {
 		packet.put("header", STCHeader.INVITE_GUILD);
 		packet.put("master", master);
 		packet.put("guildNo", guildNo);
-
 		return packet;
 	}
 
@@ -680,7 +657,6 @@ public final class Packet {
 		packet.put("job", user.getJob());
 		packet.put("hp", user.getHp());
 		packet.put("maxHp", user.getMaxHp());
-
 		return packet;
 	}
 
@@ -694,7 +670,6 @@ public final class Packet {
 		packet.put("job", job);
 		packet.put("hp", hp);
 		packet.put("maxHp", maxHp);
-
 		return packet;
 	}
 
@@ -702,7 +677,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REMOVE_GUILD_MEMBER);
 		packet.put("no", no);
-
 		return packet;
 	}
 
@@ -711,7 +685,6 @@ public final class Packet {
 		packet.put("header", STCHeader.PLAY_MUSIC);
 		packet.put("type", type);
         packet.put("name", name);
-
 		return packet;
 	}
 
@@ -719,7 +692,6 @@ public final class Packet {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CHAT_BALLOON_END);
 		packet.put("no", no);
-
 		return packet;
 	}
 
@@ -730,7 +702,6 @@ public final class Packet {
 		packet.put("index", idx);
 		packet.put("nowCooltime", nowCooltime);
 		packet.put("fullCooltime", fullCooltime);
-
 		return packet;
 	}
 
@@ -739,7 +710,6 @@ public final class Packet {
 		packet.put("header", STCHeader.SET_SLOT);
 		packet.put("index", index);
 		packet.put("slot", slot);
-
 		return packet;
 	}
 }

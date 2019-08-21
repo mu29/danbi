@@ -25,60 +25,73 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 		JSONObject packet = (JSONObject) msg;
 		switch ((int) packet.get("header")) {
 	    	case CTSHeader.LOGIN:
-				//if (User.get(ctx) == null)
-				//	return;
 	    		login(ctx, packet);
 				break;
+
 	    	case CTSHeader.REGISTER:
-				//if (User.get(ctx) == null)
-			//		return;
 	    		register(ctx, packet);
 				break;
+
 			case CTSHeader.MOVE_CHARACTER:
 				User.get(ctx).move((int) packet.get("type"));
 				break;
+
 			case CTSHeader.TURN_CHARACTER:
 				User.get(ctx).turn((int) packet.get("type"));
 				break;
+
 	    	case CTSHeader.REMOVE_EQUIP_ITEM:
 				User.get(ctx).equipItem((int) packet.get("type"), 0);
 				break;
+
 	    	case CTSHeader.USE_STAT_POINT:
 				User.get(ctx).useStatPoint((int) packet.get("type"));
 				break;
+
 			case CTSHeader.ACTION:
 				User.get(ctx).action();
 				break;
+
 			case CTSHeader.USE_ITEM:
 				User.get(ctx).useItemByIndex((int) packet.get("index"), (int) packet.get("amount"));
 				break;
+
 			case CTSHeader.USE_SKILL:
 				User.get(ctx).useSkill((int) packet.get("no"));
 				break;
+
 			case CTSHeader.DROP_ITEM:
 				User.get(ctx).dropItemByIndex((int) packet.get("index"), (int) packet.get("amount"));
 				break;
+
 			case CTSHeader.DROP_GOLD:
 				User.get(ctx).dropGold((int) packet.get("amount"));
 				break;
+
 			case CTSHeader.PICK_ITEM:
 				User.get(ctx).pickItem();
 				break;
+
 			case CTSHeader.CHAT_NORMAL:
 				User.get(ctx).chatNormal((String) packet.get("message"));
 				break;
+
 			case CTSHeader.CHAT_WHISPER:
 				User.get(ctx).chatWhisper((String) packet.get("to"), (String) packet.get("message"));
 				break;
+
 			case CTSHeader.CHAT_PARTY:
 				User.get(ctx).chatParty((String) packet.get("message"));
 				break;
+
 			case CTSHeader.CHAT_GUILD:
 				User.get(ctx).chatGuild((String) packet.get("message"));
 				break;
+
 			case CTSHeader.CHAT_ALL:
 				User.get(ctx).chatAll((String) packet.get("message"));
 				break;
+
             case CTSHeader.CHAT_BALLOON_START:
                 User.get(ctx).startShowingBalloon();
                 break;
@@ -86,69 +99,91 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 	    	case CTSHeader.OPEN_REGISTER_WINDOW:
 				ctx.writeAndFlush(Packet.openRegisterWindow());
 				break;
+
 	    	case CTSHeader.CHANGE_ITEM_INDEX:
 				User.get(ctx).changeItemIndex((int) packet.get("index1"), (int) packet.get("index2"));
 				break;
+
 			case CTSHeader.REQUEST_TRADE:
 				User.get(ctx).requestTrade((int) packet.get("partner"));
 				break;
+
 			case CTSHeader.RESPONSE_TRADE:
 				User.get(ctx).responseTrade((int) packet.get("type"), (int) packet.get("partner"));
 				break;
+
 			case CTSHeader.LOAD_TRADE_ITEM:
 				User.get(ctx).loadTradeItem((int) packet.get("index"), (int) packet.get("amount"), (int) packet.get("tradeIndex"));
 				break;
+
 			case CTSHeader.DROP_TRADE_ITEM:
 				User.get(ctx).dropTradeItem((int) packet.get("index"));
 				break;
+
 			case CTSHeader.CHANGE_TRADE_GOLD:
 				User.get(ctx).changeTradeGold((int) packet.get("amount"));
 				break;
+
 			case CTSHeader.FINISH_TRADE:
 				User.get(ctx).acceptTrade();
 				break;
+
 			case CTSHeader.CANCEL_TRADE:
 				User.get(ctx).cancelTrade();
 				break;
+
 			case CTSHeader.SELECT_MESSAGE:
 				User.get(ctx).updateMessage((int) packet.get("select"));
 				break;
+
 			case CTSHeader.CREATE_PARTY:
 				User.get(ctx).createParty();
 				break;
+
 			case CTSHeader.INVITE_PARTY:
 				User.get(ctx).inviteParty((int) packet.get("other"));
 				break;
+
 			case CTSHeader.RESPONSE_PARTY:
 				User.get(ctx).responseParty((int) packet.get("type"), (int) packet.get("partyNo"));
 				break;
+
 			case CTSHeader.QUIT_PARTY:
 				User.get(ctx).quitParty();
 				break;
+
 			case CTSHeader.KICK_PARTY:
 				User.get(ctx).kickParty((int) packet.get("member"));
 				break;
+
 			case CTSHeader.BREAK_UP_PARTY:
 				User.get(ctx).breakUpParty();
 				break;
+
 			case CTSHeader.CREATE_GUILD:
 				User.get(ctx).createGuild((String) packet.get("name"));
 				break;
+
 			case CTSHeader.INVITE_GUILD:
 				User.get(ctx).inviteGuild((int) packet.get("other"));
 				break;
+
 			case CTSHeader.RESPONSE_GUILD:
 				User.get(ctx).responseGuild((int) packet.get("type"), (int) packet.get("guildNo"));
 				break;
+
 			case CTSHeader.QUIT_GUILD:
 				User.get(ctx).quitGuild();
 				break;
+
 			case CTSHeader.KICK_GUILD:
 				User.get(ctx).kickGuild((int) packet.get("member"));
 				break;
+
 			case CTSHeader.BREAK_UP_GUILD:
 				User.get(ctx).breakUpGuild();
 				break;
+
 			case CTSHeader.BUY_SHOP_ITEM:
 				User.get(ctx).buyShopItem((int) packet.get("shopNo"), (int) packet.get("index"), (int) packet.get("amount"));
 				break;

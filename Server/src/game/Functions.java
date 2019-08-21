@@ -13,20 +13,19 @@ public class Functions {
 
     public static Object execute(Object obj, String methodName, Object[] objList) {
         Method[] methods = obj.getClass().getMethods();
-
         for (Method m : methods) {
             if (m.getName().equals(methodName)) {
                 try {
-                    if (m.getReturnType().getName().equals("void"))
+                    if (m.getReturnType().getName().equals("void")) {
                         m.invoke(obj, objList);
-                    else
+                    } else {
                         return m.invoke(obj, objList);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-
         return null;
     }
 
@@ -34,8 +33,9 @@ public class Functions {
         public void chipmunkSkill(Enemy enemy) {
             if (enemy.getTarget() instanceof User) {
                 User u = (User) enemy.getTarget();
-                if (enemy.getRandom().nextInt(100) < 1)
+                if (enemy.getRandom().nextInt(100) < 1) {
                     u.jump(u.getDirection(), 0);
+                }
             }
         }
     }
@@ -43,17 +43,17 @@ public class Functions {
     public static class NpcFunction {
         public void testNpc(User user, Npc npc) {
             User.Message msg = user.getMessage();
-            
             if (!msg.isStart()) {
                 msg.open(npc.getNo(), 0);
                 user.studySkill(1);
                 return;
             }
-
-            if (msg.getMessage() == 0)
+            if (msg.getMessage() == 0) {
                 msg.update(5, 0);
-            else if (msg.getMessage() == 5)
+            }
+            else if (msg.getMessage() == 5) {
                 msg.update(10, 2);
+            }
             else if (msg.getMessage() == 10) {
                 if (msg.getSelect() == 0) {
                     user.openShop(1);
@@ -78,10 +78,8 @@ public class Functions {
         public void crossCut(User user, GameData.Skill _skill) {
             Field field = Map.getMap(user.getMap()).getField(user.getSeed());
             GameData.SkillData skill = GameData.skill.get(_skill.getNo());
-
             // 쿹타임 처리
             user.getCoolTime().setCooltime(skill.getDelay(), skill.getNo());
-
             // 에너미 데미지 처리
             for (game.Enemy enemy : field.getAliveEnemies()) {
                 enemy.animation(57);

@@ -239,17 +239,14 @@ public class DataBase {
 						"`no` = '" + _user.getNo() + "';");
 				rs.close();
 			}
-
-			if (!(slotIdx >= 0 && slotIdx <= 9))
+			if (!(slotIdx >= 0 && slotIdx <= 9)) {
 				return;
-
+			}
 			String itemType;
 			itemType = "slot" + (slotIdx + 1);
-
 			connection.createStatement().executeUpdate("UPDATE `slot` SET " +
 					"`" + itemType + "` = '" + -1 + "' " +
 					"WHERE `no` = '" + _user.getNo() + "';");
-
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}

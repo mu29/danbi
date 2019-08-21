@@ -26,10 +26,10 @@ public class Server {
 		this.port = port;
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				for (User u : User.getAll().values())
-					u.exitGracefully();
-
-				logger.info("서버를 종료합니다.");
+			for (User u : User.getAll().values()) {
+				u.exitGracefully();
+			}
+			logger.info("서버를 종료합니다.");
 			}
 		});
 	}
@@ -37,7 +37,6 @@ public class Server {
 	public void run() throws Exception {
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
-		
         try {
             ServerBootstrap bootStrap = new ServerBootstrap()
             	.group(bossGroup, workerGroup)
@@ -56,16 +55,14 @@ public class Server {
 
 			while (Handler.isRunning) {
 				Thread.sleep(100);
-
 				for (User user : User.getAll().values()) {
 					user.update();
 				}
-
 				for (Map map : Map.getAll().values()) {
 					map.update();
 				}
 			}
-            
+
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

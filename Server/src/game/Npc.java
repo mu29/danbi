@@ -1,7 +1,6 @@
 package game;
 
 import database.GameData;
-
 import java.util.logging.Logger;
 
 public class Npc extends Character {

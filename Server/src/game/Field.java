@@ -29,7 +29,6 @@ public class Field {
         mapNo = _mapNo;
         seed = _seed;
         random = new Random();
-
         loadTroops();
         loadNPCs();
         loadPortals();
@@ -77,33 +76,36 @@ public class Field {
     // 통행 가능 여부
     public boolean isPassable(Character c, int x, int y) {
         // 통행 불가 타일일 경우 반환
-        if (!Map.getMap(mapNo).isPassable(x, y))
+        if (!Map.getMap(mapNo).isPassable(x, y)) {
             return false;
-
+        }
         // 유저가 있을 경우 반환
         for (User other : users) {
-            if (other.equals(c))
+            if (other.equals(c)) {
                 continue;
-            if (other.getX() == x && other.getY() == y)
+            }
+            if (other.getX() == x && other.getY() == y) {
                 return false;
+            }
         }
-
         // 에너미가 있을 경우 반환
         for (Enemy other : getAliveEnemies()) {
-            if (other.equals(c))
+            if (other.equals(c)) {
                 continue;
-            if (other.getX() == x && other.getY() == y)
+            }
+            if (other.getX() == x && other.getY() == y) {
                 return false;
+            }
         }
-
         // NPC가 있을 경우 반환
         for (Npc other : npcs.values()) {
-            if (other.equals(c))
+            if (other.equals(c)) {
                 continue;
-            if (other.getX() == x && other.getY() == y)
+            }
+            if (other.getX() == x && other.getY() == y) {
                 return false;
+            }
         }
-
         return true;
     }
 
@@ -113,23 +115,25 @@ public class Field {
         for (int i = 0; i < 4; i++) {
             int x = c.getX() + (i == 0 ? -1 : i == 2 ? + 1 : 0);
             int y = c.getY() + (i == 1 ? -1 : i == 3 ? + 1 : 0);
-
-            if (!Map.getMap(mapNo).isPassable(x ,y))
-                blocked += 1;
-
-            for (User other : users)
-                if (other.getX() == x && other.getY() == y)
-                    blocked += 1;
-
-            for (Enemy other : enemies)
-                if (other.getX() == x && other.getY() == y)
-                    blocked += 1;
-
-            for (Npc other : npcs.values())
-                if (other.getX() == x && other.getY() == y)
-                    blocked += 1;
+            if (!Map.getMap(mapNo).isPassable(x, y)) {
+                blocked++;
+            }
+            for (User other : users) {
+                if (other.getX() == x && other.getY() == y) {
+                    blocked++;
+                }
+            }
+            for (Enemy other : enemies) {
+                if (other.getX() == x && other.getY() == y) {
+                    blocked++;
+                }
+            }
+            for (Npc other : npcs.values()) {
+                if (other.getX() == x && other.getY() == y) {
+                    blocked++;
+                }
+            }
         }
-
         return blocked >= 4;
     }
 
@@ -137,29 +141,23 @@ public class Field {
     public void addUser(User u) {
         // 맵 이동 패킷
         u.getCtx().writeAndFlush(Packet.moveMap(u));
-
         // 캐릭터를 생성하자
         for (User other : users) {
             other.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.USER, u));
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.USER, other));
         }
-
         // 살아있는 에너미를 보내자
         for (Enemy other : getAliveEnemies())
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.ENEMY, other));
-
         // 모든 NPC를 보내자
         for (Npc other : npcs.values())
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.NPC, other));
-
         // 떨어진 아이템을 보내자
         for (DropItem item : dropItems)
             u.getCtx().writeAndFlush(Packet.loadDropItem(item));
-
         // 떨어진 골드를 보내자
         for (DropGold gold : dropGolds)
             u.getCtx().writeAndFlush(Packet.loadDropGold(gold));
-
         users.addElement(u);
     }
 
@@ -167,17 +165,15 @@ public class Field {
     public void removeUser(User u) {
         // 유저 지우고
         for (User other : users) {
-            if (other.equals(u))
+            if (other.equals(u)) {
                 continue;
-
+            }
             other.getCtx().writeAndFlush(Packet.removeCharacter(Type.Character.USER, u.getNo()));
         }
-
         // 해당 유저를 타겟으로 한 에너미는 새 타겟을 찾자
         for (Enemy enemy : getAliveEnemies())
             if (enemy.getTarget() != null && enemy.getTarget().equals(u))
                 enemy.findTarget(u);
-
         // 유저 목록에서 삭제
         users.removeElement(u);
     }
@@ -185,31 +181,29 @@ public class Field {
     // 모든 유저를 반환
     public Vector<User> getUsers() {
         Vector<User> aliveUsers = new Vector<User>();
-
-        for (User user : users)
+        for (User user : users) {
             aliveUsers.addElement(user);
-
+        }
         return aliveUsers;
     }
 
     // 모든 NPC를 반환
     public Vector<Npc> getNPCs() {
         Vector<Npc> aliveNpcs = new Vector<Npc>();
-
-        for (Npc npc : npcs.values())
+        for (Npc npc : npcs.values()) {
             aliveNpcs.addElement(npc);
-
+        }
         return aliveNpcs;
     }
 
     // 살아있는 모든 에너미를 반환
     public Vector<Enemy> getAliveEnemies() {
         Vector<Enemy> aliveEnemies = new Vector<Enemy>();
-
-        for (Enemy enemy : enemies)
-            if (enemy.isAlive())
+        for (Enemy enemy : enemies) {
+            if (enemy.isAlive()) {
                 aliveEnemies.addElement(enemy);
-
+            }
+        }
         return aliveEnemies;
     }
 
@@ -244,61 +238,65 @@ public class Field {
 
     // 아이템 삭제
     public void removeDropItem(DropItem item) {
-        if (!dropItems.contains(item))
+        if (!dropItems.contains(item)) {
             return;
-
+        }
         sendToAll(Packet.removeDropItem(item));
         dropItems.removeElement(item);
     }
 
     // 골드 삭제
     public void removeDropGold(DropGold gold) {
-        if (!dropGolds.contains(gold))
+        if (!dropGolds.contains(gold)) {
             return;
-
+        }
         sendToAll(Packet.removeDropGold(gold));
         dropGolds.removeElement(gold);
     }
 
     // 아이템 줍기
     public DropItem pickItem(int x, int y) {
-        for (DropItem item : dropItems)
-            if (item.getX() == x && item.getY() == y)
+        for (DropItem item : dropItems) {
+            if (item.getX() == x && item.getY() == y) {
                 return item;
-
+            }
+        }
         return null;
     }
 
     // 골드 줍기
     public DropGold pickGold(int x, int y) {
-        for (DropGold gold : dropGolds)
-            if (gold.getX() == x && gold.getY() == y)
+        for (DropGold gold : dropGolds) {
+            if (gold.getX() == x && gold.getY() == y) {
                 return gold;
-
+            }
+        }
         return null;
     }
 
     // 유저가 있다면 업데이트
     public void update() {
-        if (users.size() < 1)
+        if (users.size() < 1) {
             return;
-
-        for (Enemy e : enemies)
+        }
+        for (Enemy e : enemies) {
             e.update();
+        }
     }
 
     // 모든 유저에게 메시지 전송
     public void sendToAll(JSONObject msg) {
-        for (User other : users)
+        for (User other : users) {
             other.getCtx().writeAndFlush(msg);
+        }
     }
 
     // 다른 모든 유저에게 메시지 전송
     public void sendToOthers(User me, JSONObject msg) {
         for (User other : users) {
-            if (other.equals(me))
+            if (other.equals(me)) {
                 continue;
-
+            }
             other.getCtx().writeAndFlush(msg);
         }
     }
@@ -312,7 +310,7 @@ public class Field {
         private GameData.Item item;
         private String image;
 
-        public DropItem( int _no, int _itemNo, int _amount, int _x, int _y) {
+        public DropItem(int _no, int _itemNo, int _amount, int _x, int _y) {
             no = _no;
             itemNo = _itemNo;
             amount = _amount;

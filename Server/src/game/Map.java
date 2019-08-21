@@ -26,9 +26,9 @@ public class Map {
 
 	// 필드를 넣음
 	public boolean addField(int seed) {
-		if (fields.containsKey(seed))
+		if (fields.containsKey(seed)) {
 			return false;
-
+		}
 		fields.put(seed, new Field(no, seed));
 		return true;
 	}
@@ -52,7 +52,6 @@ public class Map {
 	public static void loadMap() {
 		File curDir = new File("Map");
 		File listFiles[] = curDir.listFiles();
-
 		if (listFiles.length > 0) {
 			for (File file : listFiles) {
 				String name = file.getName();
@@ -62,11 +61,9 @@ public class Map {
 				}
 			}
 		}
-
 		for (Map map : maps.values()) {
 			map.addField(0);
 		}
-
 		logger.info("맵 " + maps.size() + "개 로드 완료.");
 	}
 
@@ -97,12 +94,12 @@ public class Map {
 	}
 
 	public boolean isPassable(int x, int y) {
-		if (!isValid(x, y))
+		if (!isValid(x, y)) {
 			return false;
-
-		if (data[width * y + x] == 1)
+		}
+		if (data[width * y + x] == 1) {
 			return false;
-
+		}
 		return true;
 	}
 	
@@ -112,8 +109,9 @@ public class Map {
 
 	public void update() {
 		try {
-			for (Field field : fields.values())
+			for (Field field : fields.values()) {
 				field.update();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

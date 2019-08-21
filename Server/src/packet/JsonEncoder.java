@@ -16,13 +16,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SuppressWarnings("unchecked")
 public class JsonEncoder extends MessageToMessageEncoder {
-
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Object msg, List out) throws Exception {
         String json = serialize(msg);
         byte[] data = json.getBytes(CharsetUtil.UTF_8);
         int dataLength = data.length;
-
         ByteBuf buf = Unpooled.buffer();
         //buf.writeInt(dataLength);
         buf.writeBytes(data);
@@ -41,8 +39,6 @@ public class JsonEncoder extends MessageToMessageEncoder {
         } catch (IOException e) {
                 t = e;
         }
-
         throw new CorruptedFrameException("Error while serializing message: " + t.getMessage());
     }
-    
 }
