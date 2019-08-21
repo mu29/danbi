@@ -20,7 +20,7 @@ module Mouse
   @old_pos      =   0
   @pos_i        =   0
     
-  def self.grid    
+  def self.grid
     return nil if @pos.nil?
     x = (@pos[0] + Game.map.display_x / 4) / 32
     y = (@pos[1] + Game.map.display_y / 4) / 32
@@ -38,14 +38,14 @@ module Mouse
 
   def self.screen_to_client(x=0, y=0)
     pos = [x, y].pack('ll')
-    return Win32API::ScreenToClient.call(Game::HWND, pos) == 0 ? nil : pos.unpack('ll')
+    return Win32API::ScreenToClient.call(GameWindow::HWND, pos) == 0 ? nil : pos.unpack('ll')
   end  
 
   def self.pos
     global_pos = [0, 0].pack('ll')    
     gx, gy = Win32API::GetCursorPos.call(global_pos) == 0 ? nil : global_pos.unpack('ll')
     local_pos = [gx, gy].pack('ll')
-    x, y = Win32API::ScreenToClient.call(Game::HWND, local_pos) == 0 ? nil : local_pos.unpack('ll')
+    x, y = Win32API::ScreenToClient.call(GameWindow::HWND, local_pos) == 0 ? nil : local_pos.unpack('ll')
     begin
       #if (x >= -@@frame[0] && y >= -@@frame[2] && x <= Graphics.getRect[0] + @@frame[0] && y <= Graphics.getRect[1] + @@frame[1])
       return x, y
@@ -120,7 +120,7 @@ module Mouse
   
   def self.screen_to_client(x=0, y=0)
     pos = [x, y].pack('ll')
-    return Win32API::ScreenToClient.call(Game::HWND, pos) == 0 ? nil : pos.unpack('ll')
+    return Win32API::ScreenToClient.call(GameWindow::HWND, pos) == 0 ? nil : pos.unpack('ll')
   end
   
   module_function

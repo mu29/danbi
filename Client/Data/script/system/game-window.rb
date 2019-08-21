@@ -1,10 +1,10 @@
 # encoding: utf-8
 
 #────────────────────────────────────────────────────────────────────────────
-# * Game, jubin
+# * GameWindow, jubin
 #────────────────────────────────────────────────────────────────────────────
 
-module Game
+module GameWindow
   
   module_function
   
@@ -17,21 +17,21 @@ module Game
   end
 
   def getCaption
-    length = Win32API::GetWindowTextLength.call(HWND)
+    length = Win32API::GetWindowTextLength.call(GameWindow::HWND)
     str = "\0" * (length)
-    Win32API::GetWindowText.call(HWND, str, length + 1)
+    Win32API::GetWindowText.call(GameWindow::HWND, str, length + 1)
     return str.to_u
   end
   
   def getRect
     rect = [0, 0, 0, 0].pack('l4')
-    Win32API::GetWindowRect.call(Game::HWND, rect)
+    Win32API::GetWindowRect.call(GameWindow::HWND, rect)
     return rect.unpack('l4')
   end
   
   def getClientRect
     rect = [0, 0, 0, 0].pack('l4')
-    Win32API::GetClientRect.call(Game::HWND, rect)
+    Win32API::GetClientRect.call(GameWindow::HWND, rect)
     return rect.unpack('l4')
   end
   
@@ -39,8 +39,8 @@ module Game
     if $DEBUG || $TEST
       Win32API::AllocConsole.call
       $stdout.reopen('CONOUT$')
-      Win32API::SetForegroundWindow.call(Game::HWND)
-      title = Game::CAPTION + " - " + Config::CONSOLE_TITLE
+      Win32API::SetForegroundWindow.call(GameWindow::HWND)
+      title = GameWindow::CAPTION + " - " + Config::CONSOLE_TITLE
       Win32API::SetConsoleTitle.call(title.to_m)
       Win32API::SetWindowPos.call(Win32API::GetConsoleWindow.call, 0, *Config::CONSOLE_RECT.to_a, 1)
     end
@@ -58,10 +58,10 @@ module Game
   end  
 
   # 핸들
-  HWND = Game.getHwnd()
+  HWND = GameWindow.getHwnd()
   # 게임 타이틀
-  CAPTION = Game.getCaption()
+  CAPTION = GameWindow.getCaption()
 
-  Game.set_debug_mode
-  Game.openDebugWindow()
+  GameWindow.set_debug_mode
+  GameWindow.openDebugWindow()
 end

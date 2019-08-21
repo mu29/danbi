@@ -163,7 +163,7 @@ module Graphics
   
   # 윈도우 스타일
   def getWindowStyle
-    return Win32API::GetWindowLong.call(Game::HWND, GWL_STYLE)
+    return Win32API::GetWindowLong.call(GameWindow::HWND, GWL_STYLE)
   end
   
   # 컴퓨터 해상도
@@ -214,8 +214,8 @@ module Graphics
       end
       case Win32API::ChangeDisplaySettings.call(getDevmode(width, height), CDS_FULLSCREEN)
       when DISP_CHANGE_SUCCESSFUL
-        Win32API::SetWindowLong.call(Game::HWND, GWL_STYLE, WIN_STYLE ^ (WS_BORDER | WS_DLGFRAME))
-        Win32API::SetWindowPos.call(Game::HWND, HWND_TOPMOST, 0, 0, width, height, SWP_SHOWWINDOW)
+        Win32API::SetWindowLong.call(GameWindow::HWND, GWL_STYLE, WIN_STYLE ^ (WS_BORDER | WS_DLGFRAME))
+        Win32API::SetWindowPos.call(GameWindow::HWND, HWND_TOPMOST, 0, 0, width, height, SWP_SHOWWINDOW)
         Win32API::ChangeDisplaySettings.call(0, 0x40000000)
         Win32API::ClipCursor.call([0, 0, self.width, self.height].pack('l4'))
         Win32API::SetCursorPos.call(Game.getClientRect[2] + Graphics.width / 2, Game.getClientRect[3] + Graphics.height / 2)
@@ -229,7 +229,7 @@ module Graphics
     else
       Win32API::ClipCursor.call(0)
       Win32API::ChangeDisplaySettings.call(0, 0)
-      Win32API::SetWindowLong.call(Game::HWND, GWL_STYLE, WIN_STYLE)
+      Win32API::SetWindowLong.call(GameWindow::HWND, GWL_STYLE, WIN_STYLE)
       Win32API::SetCursorPos.call(WIN_RECT[0] / 2, WIN_RECT[1] / 2)
       return setCenterWindow(width, height) == 1
     end
@@ -249,13 +249,13 @@ module Graphics
     rect = rect.unpack('l4'); rect = rect[2] - rect[0], rect[3] - rect[1]
     x = WIN_RECT[0] - TASKSIZE[0] - rect[0]
     y = WIN_RECT[1] - TASKSIZE[1] - rect[1]
-    Win32API::SetWindowPos.call(Game::HWND, HWND_NOTOPMOST, x/2, y/2, rect[0], rect[1], SWP_SHOWWINDOW)
+    Win32API::SetWindowPos.call(GameWindow::HWND, HWND_NOTOPMOST, x/2, y/2, rect[0], rect[1], SWP_SHOWWINDOW)
   end
 
   # 풀스크린 상태
   def isFullScreen
     rect = [0, 0, 0, 0].pack('l4')
-    Win32API::GetWindowRect.call(Game::HWND, rect)
+    Win32API::GetWindowRect.call(GameWindow::HWND, rect)
     return rect.unpack('l4') == [0, 0, *WIN_RECT]
   end
     
@@ -278,6 +278,6 @@ module Graphics
   end
 end
 
-Win32API::RegisterHotKey.call(Game::HWND, 0, Graphics::MOD_ALT, Graphics::VK_RETURN)
+Win32API::RegisterHotKey.call(GameWindow::HWND, 0, Graphics::MOD_ALT, Graphics::VK_RETURN)
 Graphics.resize_screen(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT)
 Graphics.resize_screen2(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, File.iniGet(Config::OPTION_PATH, Config::OPTION_KEY, "fullscreen", false, 10))

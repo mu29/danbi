@@ -7,21 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Items.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Items.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/States.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/States.rxdata" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/System.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/System.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/input/ime.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/input/ime.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Game.ini" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Game.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Server.iml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
