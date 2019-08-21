@@ -21,6 +21,7 @@ begin
   Win32API::NoF1.call(1)
   Win32API::NoF12.call(1)
   Win32API::ShowCursor.call(0)
+  Win32API::StarInputStart.call(GameWindow::HWND)
   Font.default_outline = false
   Font.default_name = Config::FONT[0]
   Font.default_size = Config::FONT_NORMAL_SIZE

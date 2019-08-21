@@ -15,7 +15,9 @@ class Win32API
   InitBlackTile             = new('Library/XPA_Tilemap','InitBlackTile','l','i')
   Wheel                     = new('Library/Wheel', 'intercept', 'v', 'l')
   FindFirstFile             = new('Library/RTP', 'FFF', 'p', 'p')
-  
+  StarInputStart            = new('Library/StarInput', '?start@@YGHPAUHWND__@@@Z', 'l', 'l')
+  StarInputEnd              = new('Library/StarInput', '?end@@YGHXZ', 'v', 'l')
+
   RtlMoveMemory             = new('kernel32', 'RtlMoveMemory', 'ppl', '')
   MultiByteToWideChar       = new('kernel32', 'MultiByteToWideChar', 'llplpl', 'l')
   WideCharToMultiByte       = new('kernel32', 'WideCharToMultiByte', 'llplplpp', 'l')
