@@ -1,5 +1,6 @@
-#*.xml
+*.xml
+
+Server/bin/
 
 # workspace.xml files
-#Server/.idea/workspace.xml
-#Server/bin/.idea/workspace.xml
+Server/.idea/workspace.xml
