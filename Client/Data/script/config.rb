@@ -1,23 +1,5 @@
 # encoding: utf-8
 
-=begin
-
-  단비, RPGXP 전용 온라인 게임 엔진
-  
-  Client Version:
-    RGSS3
-  
-  Wiki:
-    github.com/mu29/danbi/wiki
-  
-  Dev Team:
-    tinystar
-  
-  Community:
-    cafe.naver.com/rmdanbi  
-    
-=end
-
 #────────────────────────────────────────────────────────────────────────────
 # * Config
 #────────────────────────────────────────────────────────────────────────────

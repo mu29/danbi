@@ -87,4 +87,5 @@ class Win32API
   RegOpenKeyEx              = new('advapi32', 'RegOpenKeyEx', 'lpllp', 'l')
   RegQueryValueExW          = new('advapi32', 'RegQueryValueExW', 'lplppp', 'l')
   FindNextFile              = new('kernel32', 'FindNextFileW', 'lp', 'i')
+  GetCommandLine            = new("Kernel32", "GetCommandLineA", "v", "p")
 end
