@@ -52,7 +52,7 @@ module Kernel
     args.each{ |a| arg << (a.nil? ? "nil" : a.to_s) + "\n" }
     puts(*args)
     Win32API::ShowCursor.call(1)
-    Win32API::MessageBox.call(GameWindow::HWND, arg.to_m, Game::CAPTION, 0)
+    Win32API::MessageBox.call(GameWindow::HWND, arg.to_m, GameWindow::CAPTION, 0)
     Win32API::ShowCursor.call(0)
   end
   
@@ -64,7 +64,7 @@ module Kernel
   end
   
   # Custom msgbox
-  def msgbox_c(arg, type=0, caption=Game::CAPTION)
+  def msgbox_c(arg, type=0, caption=GameWindow::CAPTION)
     puts(arg)
     Win32API::ShowCursor.call(1)
     id = Win32API::MessageBox.call(GameWindow::HWND, arg.to_s.to_m, caption.to_s.to_m, type)
