@@ -71,7 +71,7 @@ class Network
     #return [host[0].copymem(16).split('\u0000')[0], [], host[2], host[4].copymem(4).unpack('l')[0].copymem(4)]
   end
   
-  def self.recv(len, flags = 0)
+  def self.receive(len, flags = 0)
     buf = "\0" * len
     len = @recv.call($fd, buf, buf.size, flags)
     check if len == -1

@@ -43,7 +43,7 @@ class Socket
   def self.update
     return if not @isConnected
     if Network.ready?
-      temp, plen = Network.recv(0xffff)
+      temp, plen = Network.receive(0xffff)
       @pdata = @pdata + temp[0...plen]
     end
     @pdata.gsub!("\u0000", "")
@@ -61,7 +61,7 @@ class Socket
       end
       if sIndex < eIndex
         data = @pdata[sIndex..eIndex]
-        self.recv(JSON.decode(data))
+        Packet.receive(JSON.decode(data))
       end
       @pdata = @pdata[(eIndex + (eIndex == 0 ? 0 : 1))...@pdata.size]
     end
