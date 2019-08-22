@@ -7,17 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../Client/Data/System.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/System.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/input/key.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/input/key.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/main.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/main.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/option.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/option.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/func.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/func.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/network/socket.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/network/socket.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/system/game-window.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/system/game-window.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/system/graphics.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/system/graphics.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/system/win32api.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/system/win32api.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Library/XPA_Tilemap.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Library/XPA_Tilemap.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setting.properties" beforeDir="false" afterPath="$PROJECT_DIR$/setting.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setting/Setting.java" beforeDir="false" afterPath="$PROJECT_DIR$/setting/Setting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/Crypto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/Crypto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/Server.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

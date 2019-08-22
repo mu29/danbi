@@ -79,7 +79,7 @@ end
 def create_sprite(c)
   if $scene.is_a?(Scene_Map)
     $scene.instance_eval do
-      @mapSprite.instance_eval do
+      @map_sprite.instance_eval do
         return if not @character_sprites
         @character_sprites.each do |v|
           if v.character == c
@@ -97,7 +97,7 @@ end
 def remove_sprite(c)
   if $scene.is_a?(Scene_Map)
     $scene.instance_eval do
-      @mapSprite.instance_eval do
+      @map_sprite.instance_eval do
         delv = nil
         @character_sprites.each do |v|
           if v.character == c

@@ -129,7 +129,7 @@ class MUI_Option < MUI::Form
     end
     
     if @rb[:fullscreen_on].click && @rb[:fullscreen_on].value
-      if not Graphics.isFullScreen
+      if not Graphics.is_full_screen?
         b = Graphics.resize_screen2(Graphics.width, Graphics.height, true)
         Game.system.fullscreen_save(b)
         if b
@@ -139,7 +139,7 @@ class MUI_Option < MUI::Form
         end
       end
     elsif @rb[:fullscreen_off].click && @rb[:fullscreen_off].value
-      if Graphics.isFullScreen
+      if Graphics.is_full_screen?
         b = Graphics.resize_screen2(Graphics.width, Graphics.height)
         Game.system.fullscreen_save(b)
         if b

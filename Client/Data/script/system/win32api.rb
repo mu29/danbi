@@ -13,6 +13,7 @@ class Win32API
   DrawMapsBitmap            = new('Library/XPA_Tilemap', 'DrawMapsBitmap', 'pppp', 'i')
   InitEmptyTile             = new('Library/XPA_Tilemap','InitEmptyTile','l','i')
   InitBlackTile             = new('Library/XPA_Tilemap','InitBlackTile','l','i')
+  Transition                = new('XPA_Tilemap', 'Transition', 'lliii', 'i')
   Wheel                     = new('Library/Wheel', 'intercept', 'v', 'l')
   FindFirstFile             = new('Library/RTP', 'FFF', 'p', 'p')
   StarInputStart            = new('Library/StarInput', '?start@@YGHPAUHWND__@@@Z', 'l', 'l')
@@ -90,4 +91,6 @@ class Win32API
   RegQueryValueExW          = new('advapi32', 'RegQueryValueExW', 'lplppp', 'l')
   FindNextFile              = new('kernel32', 'FindNextFileW', 'lp', 'i')
   GetCommandLine            = new("Kernel32", "GetCommandLineA", "v", "p")
+
+  
 end

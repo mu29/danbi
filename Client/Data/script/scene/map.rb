@@ -10,7 +10,7 @@ class Scene_Map
   attr_accessor :hud
   
   def initialize
-    @mapSprite = MapSprite.new
+    @map_sprite = MapSprite.new
     @hud = MUI_HUD.new
     MUI::Console.init
     MUI::ChatBox.init
@@ -30,7 +30,7 @@ class Scene_Map
       end
     end
     Graphics.freeze
-    @mapSprite.dispose
+    @map_sprite.dispose
   end
 
   def update
@@ -56,13 +56,9 @@ class Scene_Map
           Game.screen.transition_name)
       end
     end
-    @mapSprite.update
+    @map_sprite.update
     if Mouse.trigger?(1)
       for netplayer in Game.map.netplayers.values
-        #puts "mouse:"
-        #puts [Mouse.map_x, Mouse.map_y].inspect
-        #puts "netplayer"
-        #puts [netplayer.x, netplayer.y].inspect
         if netplayer.x == Mouse.map_x && netplayer.y == Mouse.map_y
           MUI.getForm(MUI_ClickMenu).dispose if MUI.include?(MUI_ClickMenu)
           MUI_ClickMenu.new(netplayer.no)
@@ -70,27 +66,27 @@ class Scene_Map
       end
     end
     return if MUI.nowTyping?
-    if Key.trigger?(KEY_U)
+    if Key.trigger?(Key::KB_U)
       if MUI.include?(MUI_Status)
         MUI.getForm(MUI_Status).dispose
       else
         MUI_Status.new
       end
-    elsif Key.trigger?(KEY_I)
+    elsif Key.trigger?(Key::KB_I)
       if MUI.include?(MUI_Inventory)
         MUI.getForm(MUI_Inventory).dispose
       else
         MUI_Inventory.new
       end
-    elsif Key.trigger?(KEY_K)
+    elsif Key.trigger?(Key::KB_K)
       if MUI.include?(MUI_Skill)
         MUI.getForm(MUI_Skill).dispose
       else
         MUI_Skill.new
       end
-    elsif Key.trigger?(KEY_SPACE)
+    elsif Key.trigger?(Key::KB_SPACE)
       Socket.send({'header' => CTSHeader::ACTION})
-    elsif Key.trigger?(KEY_Z)
+    elsif Key.trigger?(Key::KB_Z)
       Socket.send({'header' => CTSHeader::PICK_ITEM})
     end
   end
@@ -113,8 +109,8 @@ class Scene_Map
     end
     Game.player.straighten
     Game.map.update
-    @mapSprite.dispose
-    @mapSprite = MapSprite.new
+    @map_sprite.dispose
+    @map_sprite = MapSprite.new
     #if Game.screen.transition_processing
     #  Game.screen.transition_processing = false
     #  Graphics.transition(20)
