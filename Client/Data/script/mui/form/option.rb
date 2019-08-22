@@ -129,29 +129,15 @@ class MUI_Option < MUI::Form
     end
     
     if @rb[:fullscreen_on].click && @rb[:fullscreen_on].value
-      if not Graphics.is_full_screen?
-        b = Graphics.resize_screen2(Graphics.width, Graphics.height, true)
-        Game.system.fullscreen_save(b)
-        if b
-          @rb[:fullscreen_on].value = true
-        else
-          @rb[:fullscreen_off].value = true
-        end
-      end
+      Graphics.set_fullscreen_mode
+      Game.system.fullscreen_save(true)
+      @rb[:fullscreen_on].value = true
+      @rb[:fullscreen_off].value = false
     elsif @rb[:fullscreen_off].click && @rb[:fullscreen_off].value
-      if Graphics.is_full_screen?
-        b = Graphics.resize_screen2(Graphics.width, Graphics.height)
-        Game.system.fullscreen_save(b)
-        if b
-          @rb[:fullscreen_on].value = true
-        else
-          @rb[:fullscreen_off].value = true
-        end
-      end
+      Graphics.set_window_mode
+      Game.system.fullscreen_save(false)
+      @rb[:fullscreen_on].value = false
+      @rb[:fullscreen_off].value = true
     end
-  end
-  
-  def updateData
-    
   end
 end

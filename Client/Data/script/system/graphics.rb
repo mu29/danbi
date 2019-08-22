@@ -77,10 +77,6 @@ end
 =end  
 
 module Graphics
-  
-  @@super_sprite = Sprite.new
-  @@super_sprite.z = (2 ** (0.size * 8 - 2) - 1)
-
   class << self
     alias :th_large_screen_resize_screen :resize_screen
   end
@@ -165,16 +161,22 @@ module Graphics
   VK_RETURN = 0x0D
   KEY_LALT = 0xA4
   KEY_RETURN = 0x0D
+
+  SPI_GETWORKAREA = 0x30
   
   module_function
 
   def init
+    initialize_fullscreen_rects
     const_set(:WIN_STYLE, get_window_style)
-    const_set(:WIN_RECT, get_monitor_rect)
+    const_set(:MONITOR_RECT, get_monitor_rect)
     const_set(:TASKBAR_RECT, get_taskbar_rect)
     const_set(:RESOLUTION_LIST, get_usable_resolution)
+    const_set(:BackHWND, Win32API::CreateWindowEx.call(0x08000008, 'Static', '', 0x80000000, 0, 0, 0, 0, 0, 0, 0, 0))
     resize_screen(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT)
-    #resize_screen2(Config::WINDOW_WIDTH, Config::WINDOW_HEIGHT, File.iniGet(Config::OPTION_PATH, Config::OPTION_KEY, "fullscreen", false, 10))
+    if File.iniGet(Config::OPTION_PATH, Config::OPTION_KEY, "fullscreen", false, 10) == true
+      set_fullscreen_mode
+    end
   end
 
   # 윈도우 스타일
@@ -184,7 +186,7 @@ module Graphics
   
   # 컴퓨터 해상도
   def get_monitor_rect
-    return [Win32API::GetSystemMetrics.call(0), Win32API::GetSystemMetrics.call(1)]
+    return Rect.new(0, 0, Win32API::GetSystemMetrics.call(0), Win32API::GetSystemMetrics.call(1))
   end
   
   # 작업표시줄
@@ -193,7 +195,7 @@ module Graphics
     Win32API::GetWindowRect.call(Win32API::FindWindow.call('Shell_TrayWnd', 0), rect)
     rect = rect.unpack('l4')
     w, h = (rect[2] - rect[0]).abs, (rect[3] - rect[1]).abs
-    return [(w >= WIN_RECT[0] ? 0 : w), (h >= WIN_RECT[1] ? 0 : h)]
+    return [(w >= MONITOR_RECT.width ? 0 : w), (h >= MONITOR_RECT.height ? 0 : h)]
   end
   
   # 풀스크린 사용 가능한 해상도
@@ -210,41 +212,6 @@ module Graphics
     end
     return display
   end
-
-  # 해상도 변경
-  def resize_screen2(width, height, fullscreen = false)
-    @width, @height = width, height
-    if fullscreen
-      unless RESOLUTION_LIST.include?([width, height])
-        if defined? MUI_Dialog
-          dialog = MUI_Dialog.new(Dialog::RESOLUTION, "알림", "#{width}*#{height} 의 해상도는 풀스크린을 지원하지 않습니다.", ["확인"]) do
-            dialog.dispose if dialog.value == 0
-          end
-        end
-        return false
-      end
-      case Win32API::ChangeDisplaySettings.call(get_devmode(width, height), CDS_FULLSCREEN)
-      when DISP_CHANGE_SUCCESSFUL
-        Win32API::SetWindowLong.call(GameWindow::HWND, GWL_STYLE, WIN_STYLE ^ (WS_BORDER | WS_DLGFRAME))
-        Win32API::SetWindowPos.call(GameWindow::HWND, HWND_TOPMOST, 0, 0, width, height, SWP_SHOWWINDOW)
-        Win32API::ChangeDisplaySettings.call(0, 0x40000000)
-        Win32API::ClipCursor.call([0, 0, self.width, self.height].pack('l4'))
-        Win32API::SetCursorPos.call(GameWindow.get_client_rect[2] + Graphics.width / 2, GameWindow.get_client_rect[3] + Graphics.height / 2)
-        return true
-      when DISP_CHANGE_BADMODE
-        Win32API::ClipCursor.call(0)
-        Win32API::ChangeDisplaySettings.call(0, 0)
-        Win32API::SetCursorPos.call(GameWindow.get_client_rect[2] + Graphics.width / 2, GameWindow.get_client_rect[3] + Graphics.height / 2)
-        return false
-      end
-    else
-      Win32API::ClipCursor.call(0)
-      Win32API::ChangeDisplaySettings.call(0, 0)
-      Win32API::SetWindowLong.call(GameWindow::HWND, GWL_STYLE, WIN_STYLE)
-      Win32API::SetCursorPos.call(WIN_RECT[0] / 2, WIN_RECT[1] / 2)
-      return set_window_center(width, height) == 1
-    end
-  end
   
   # DEVMODE 구조체
   def get_devmode(width, height, bit=32)
@@ -258,16 +225,16 @@ module Graphics
   def set_window_center(width, height)
     Win32API::AdjustWindowRect.call(rect=[0, 0, width, height].pack('l4'), WIN_STYLE, 0)
     rect = rect.unpack('l4'); rect = rect[2] - rect[0], rect[3] - rect[1]
-    x = WIN_RECT[0] - TASKBAR_RECT[0] - rect[0]
-    y = WIN_RECT[1] - TASKBAR_RECT[1] - rect[1]
+    x = MONITOR_RECT.width - TASKBAR_RECT[0] - rect[0]
+    y = MONITOR_RECT.height - TASKBAR_RECT[1] - rect[1]
     Win32API::SetWindowPos.call(GameWindow::HWND, HWND_NOTOPMOST, x/2, y/2, rect[0], rect[1], SWP_SHOWWINDOW)
   end
 
   # 풀스크린 상태
-  def is_full_screen?
+  def is_fullscreen?
     rect = [0, 0, 0, 0].pack('l4')
     Win32API::GetWindowRect.call(GameWindow::HWND, rect)
-    return rect.unpack('l4') == [0, 0, *WIN_RECT]
+    return rect.unpack('l4') == [0, 0, *MONITOR_RECT]
   end
     
   # Rect
@@ -278,8 +245,7 @@ module Graphics
   def update_alt_enter
     if Config::USE_ALT_ENTER && GameWindow.is_active?
       if Key.press?(Key::KB_LALT) && Key.trigger?(Key::KB_RETURN)
-        #Graphics.resize_screen2(self.width, self.height, !is_full_screen?)
-        toggle_fullscreen
+        (@fullscreen || is_fullscreen?) ? set_window_mode : set_fullscreen_mode
       end
     end
   end
@@ -292,6 +258,14 @@ module Graphics
       update_danbi
     end
   end
+
+  def hide_borders
+    Win32API::SetWindowLong.call(GameWindow::HWND, GWL_STYLE, WIN_STYLE ^ (WS_BORDER | WS_DLGFRAME))
+  end
+
+  def show_borders
+    Win32API::SetWindowLong.call(GameWindow::HWND, GWL_STYLE, WIN_STYLE)
+  end
 end
 
 # Fullscreen++ v2.2 for VX and VXace by Zeus81
@@ -301,70 +275,47 @@ end
 # (fr) Manuel d'utilisation : http://pastebin.com/raw.php?i=1TQfMnVJ
 # (en) User Guide           : http://pastebin.com/raw.php?i=EgnWt9ur
 
-class << Graphics
+module Graphics
 
-  CreateWindowEx            = Win32API.new('user32'  , 'CreateWindowEx'           , 'ippiiiiiiiii', 'i')
-  GetClientRect             = Win32API.new('user32'  , 'GetClientRect'            , 'ip'          , 'i')
-  GetDC                     = Win32API.new('user32'  , 'GetDC'                    , 'i'           , 'i')
-  GetSystemMetrics          = Win32API.new('user32'  , 'GetSystemMetrics'         , 'i'           , 'i')
-  GetWindowRect             = Win32API.new('user32'  , 'GetWindowRect'            , 'ip'          , 'i')
-  FillRect                  = Win32API.new('user32'  , 'FillRect'                 , 'ipi'         , 'i')
-  FindWindow                = Win32API.new('user32'  , 'FindWindow'               , 'pp'          , 'i')
-  ReleaseDC                 = Win32API.new('user32'  , 'ReleaseDC'                , 'ii'          , 'i')
-  SendInput                 = Win32API.new('user32'  , 'SendInput'                , 'ipi'         , 'i')
-  SetWindowLong             = Win32API.new('user32'  , 'SetWindowLong'            , 'iii'         , 'i')
-  SetWindowPos              = Win32API.new('user32'  , 'SetWindowPos'             , 'iiiiiii'     , 'i')
-  ShowWindow                = Win32API.new('user32'  , 'ShowWindow'               , 'ii'          , 'i')
-  SystemParametersInfo      = Win32API.new('user32'  , 'SystemParametersInfo'     , 'iipi'        , 'i')
-  UpdateWindow              = Win32API.new('user32'  , 'UpdateWindow'             , 'i'           , 'i')
-  GetPrivateProfileString   = Win32API.new('kernel32', 'GetPrivateProfileString'  , 'ppppip'      , 'i')
-  WritePrivateProfileString = Win32API.new('kernel32', 'WritePrivateProfileString', 'pppp'        , 'i')
-  CreateSolidBrush          = Win32API.new('gdi32'   , 'CreateSolidBrush'         , 'i'           , 'i')
-  DeleteObject              = Win32API.new('gdi32'   , 'DeleteObject'             , 'i'           , 'i')
- 
-  unless method_defined?(:zeus_fullscreen_update)
-    HWND     = FindWindow.call('RGSS Player', 0)
-    BackHWND = CreateWindowEx.call(0x08000008, 'Static', '', 0x80000000, 0, 0, 0, 0, 0, 0, 0, 0)
-    alias zeus_fullscreen_resize_screen resize_screen
-    alias zeus_fullscreen_update        update
-  end
-private
+  module_function
+
   def initialize_fullscreen_rects
     @borders_size    ||= borders_size
-    @fullscreen_rect ||= screen_rect
+    @fullscreen_rect ||= get_monitor_rect
     @workarea_rect   ||= workarea_rect
   end
+
   def borders_size
-    GetWindowRect.call(HWND, wrect = [0, 0, 0, 0].pack('l4'))
-    GetClientRect.call(HWND, crect = [0, 0, 0, 0].pack('l4'))
+    Win32API::GetWindowRect.call(GameWindow::HWND, wrect = [0, 0, 0, 0].pack('l4'))
+    Win32API::GetClientRect.call(GameWindow::HWND, crect = [0, 0, 0, 0].pack('l4'))
     wrect, crect = wrect.unpack('l4'), crect.unpack('l4')
-    Rect.new(0, 0, wrect[2]-wrect[0]-crect[2], wrect[3]-wrect[1]-crect[3])
+    Rect.new(0, 0, wrect[2] - wrect[0] - crect[2], wrect[3] - wrect[1] - crect[3])
   end
-  def screen_rect
-    Rect.new(0, 0, GetSystemMetrics.call(0), GetSystemMetrics.call(1))
-  end
+
   def workarea_rect
-    SystemParametersInfo.call(0x30, 0, rect = [0, 0, 0, 0].pack('l4'), 0)
+    Win32API::SystemParametersInfo.call(SPI_GETWORKAREA, 0, rect = [0, 0, 0, 0].pack('l4'), 0)
     rect = rect.unpack('l4')
-    Rect.new(rect[0], rect[1], rect[2]-rect[0], rect[3]-rect[1])
+    Rect.new(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1])
   end
-  def hide_borders() SetWindowLong.call(HWND, -16, 0x14000000) end
-  def show_borders() SetWindowLong.call(HWND, -16, 0x14CA0000) end
-  def hide_back()    ShowWindow.call(BackHWND, 0)              end
+
+  def hide_back
+    Win32API::ShowWindow.call(BackHWND, 0)
+  end
+
   def show_back
-    ShowWindow.call(BackHWND, 3)
-    UpdateWindow.call(BackHWND)
-    dc    = GetDC.call(BackHWND)
+    Win32API::ShowWindow.call(BackHWND, 3)
+    Win32API::UpdateWindow.call(BackHWND)
+    dc    = Win32API::GetDC.call(BackHWND)
     rect  = [0, 0, @fullscreen_rect.width, @fullscreen_rect.height].pack('l4')
-    brush = CreateSolidBrush.call(0)
-    FillRect.call(dc, rect, brush)
-    ReleaseDC.call(BackHWND, dc)
-    DeleteObject.call(brush)
+    brush = Win32API::CreateSolidBrush.call(0)
+    Win32API::FillRect.call(dc, rect, brush)
+    Win32API::ReleaseDC.call(BackHWND, dc)
+    Win32API::DeleteObject.call(brush)
   end
-  def resize_window(w, h, ow, oh)
+
+  def resize_window(w, h)
     if @fullscreen
-      x, y, z = (@fullscreen_rect.width-w)/2, (@fullscreen_rect.height-h)/2, -1
-      Win32API::ClipCursor.call([x, y, x + ow + 1, y + oh + 1].pack('l4'))
+      x, y, z = (@fullscreen_rect.width - w) / 2, (@fullscreen_rect.height - h) / 2, -1
     else
       w += @borders_size.width
       h += @borders_size.height
@@ -372,82 +323,31 @@ private
       y = @workarea_rect.y + (@workarea_rect.height - h) / 2
       z = -2
     end
-    SetWindowPos.call(HWND, z, x, y, w, h, 0)
+    Win32API::SetWindowPos.call(GameWindow::HWND, z, x, y, w, h, 0)
   end
-  def release_alt
-    inputs = [1,18,2, 1,164,2, 1,165,2].pack('LSx2Lx16'*3)
-    SendInput.call(3, inputs, 28)
-  end
-public
-  def load_fullscreen_settings
-    @fullscreen       = 0
-    @fullscreen_ratio = 0
-    @windowed_ratio   = 1
-    fullscreen? ? windowed_mode : fullscreen_mode
-  end
-  def fullscreen?
-    @fullscreen or vx_fullscreen?
-  end
-  def vx_fullscreen?
-    rect = screen_rect
-    rect.width == 640 and rect.height == 480
-  end
-  def toggle_fullscreen
-    fullscreen? ? windowed_mode : fullscreen_mode
-  end
-  def vx_fullscreen_mode
-    return if vx_fullscreen?
-    toggle_vx_fullscreen
-  end
-  def fullscreen_mode
-    return if vx_fullscreen?
+
+  def set_fullscreen_mode
     initialize_fullscreen_rects
     show_back
     hide_borders
     @fullscreen = true
-    self.ratio += 0 # refresh window size
+    w_max = @fullscreen_rect.width
+    h_max = @fullscreen_rect.height
+    w, h = w_max, w_max * height / width
+    h, w = h_max, h_max * width / height if h > h_max
+    resize_window(w, h)
+    x, y = (@fullscreen_rect.width - w) / 2, (@fullscreen_rect.height - h) / 2
+    Win32API::ClipCursor.call([x, y, x + width + 1, y + height + 1].pack('l4'))
   end
-  def windowed_mode
-    toggle_vx_fullscreen if vx_fullscreen?
+
+  def set_window_mode
     initialize_fullscreen_rects
     hide_back
     show_borders
     @fullscreen = false
-    self.ratio += 0 # refresh window size
+    w_max = @workarea_rect.width - @borders_size.width
+    h_max = @workarea_rect.height - @borders_size.height
+    resize_window(width, height)
     Win32API::ClipCursor.call(0)
   end
-  def ratio
-    return 1 if vx_fullscreen?
-    @fullscreen ? @fullscreen_ratio : @windowed_ratio
-  end
-  def ratio=(r)
-    return if vx_fullscreen?
-    initialize_fullscreen_rects
-    r = 0 if r < 0
-    if @fullscreen
-      @fullscreen_ratio = r
-      w_max, h_max = @fullscreen_rect.width, @fullscreen_rect.height
-    else
-      @windowed_ratio = r
-      w_max = @workarea_rect.width  - @borders_size.width
-      h_max = @workarea_rect.height - @borders_size.height
-    end
-    if r == 0
-      w, h = w_max, w_max * height / width
-      h, w = h_max, h_max * width / height if h > h_max
-    else
-      w, h = width * r, height * r
-      return self.ratio = 0 if w > w_max or h > h_max
-    end
-    resize_window(w, h, width, height)
-  end
-  def update
-    zeus_fullscreen_update
-  end
-  def resize_screen(width, height)
-    zeus_fullscreen_resize_screen(width, height)
-    self.ratio += 0 # refresh window size
-  end
 end
-
-Graphics.load_fullscreen_settings

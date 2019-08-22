@@ -92,5 +92,22 @@ class Win32API
   FindNextFile              = new('kernel32', 'FindNextFileW', 'lp', 'i')
   GetCommandLine            = new("Kernel32", "GetCommandLineA", "v", "p")
 
-  
+  CreateWindowEx            = Win32API.new('user32'  , 'CreateWindowEx'           , 'ippiiiiiiiii', 'i')
+  GetClientRect             = Win32API.new('user32'  , 'GetClientRect'            , 'ip'          , 'i')
+  GetDC                     = Win32API.new('user32'  , 'GetDC'                    , 'i'           , 'i')
+  GetSystemMetrics          = Win32API.new('user32'  , 'GetSystemMetrics'         , 'i'           , 'i')
+  GetWindowRect             = Win32API.new('user32'  , 'GetWindowRect'            , 'ip'          , 'i')
+  FillRect                  = Win32API.new('user32'  , 'FillRect'                 , 'ipi'         , 'i')
+  FindWindow                = Win32API.new('user32'  , 'FindWindow'               , 'pp'          , 'i')
+  ReleaseDC                 = Win32API.new('user32'  , 'ReleaseDC'                , 'ii'          , 'i')
+  SendInput                 = Win32API.new('user32'  , 'SendInput'                , 'ipi'         , 'i')
+  SetWindowLong             = Win32API.new('user32'  , 'SetWindowLong'            , 'iii'         , 'i')
+  SetWindowPos              = Win32API.new('user32'  , 'SetWindowPos'             , 'iiiiiii'     , 'i')
+  ShowWindow                = Win32API.new('user32'  , 'ShowWindow'               , 'ii'          , 'i')
+  SystemParametersInfo      = Win32API.new('user32'  , 'SystemParametersInfo'     , 'iipi'        , 'i')
+  UpdateWindow              = Win32API.new('user32'  , 'UpdateWindow'             , 'i'           , 'i')
+  GetPrivateProfileString   = Win32API.new('kernel32', 'GetPrivateProfileString'  , 'ppppip'      , 'i')
+  WritePrivateProfileString = Win32API.new('kernel32', 'WritePrivateProfileString', 'pppp'        , 'i')
+  CreateSolidBrush          = Win32API.new('gdi32'   , 'CreateSolidBrush'         , 'i'           , 'i')
+  DeleteObject              = Win32API.new('gdi32'   , 'DeleteObject'             , 'i'           , 'i')
 end
