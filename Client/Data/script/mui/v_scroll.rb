@@ -78,11 +78,11 @@ class MUI
       # 키보드로 조작
       if @focus == self.object_id
         # 아래, 오른쪽 키를 눌렀을 때
-        if Key.repeat?(KEY_DOWN) or Key.repeat?(KEY_RIGHT)
+        if Key.repeat?(Key::KB_DOWN) or Key.repeat?(Key::KB_RIGHT)
           # 값 +1
           self.value += 1
         # 위, 왼쪽 키를 눌렀을 때
-        elsif Key.repeat?(KEY_UP) or Key.repeat?(KEY_LEFT)
+        elsif Key.repeat?(Key::KB_UP) or Key.repeat?(Key::KB_LEFT)
           # 값 -1
           self.value -= 1
         end

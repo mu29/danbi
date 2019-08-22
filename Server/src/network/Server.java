@@ -20,8 +20,8 @@ public class Server {
 	
     public static void main(String[] args) throws Exception {
 		String strPort;
-    	if (args.length > 0) {
-    		strPort = args[0];
+		if (args.length > 0) {
+			strPort = args[0];
 		} else {
 			strPort = Setting.load().getProperty("Server.port");
 		}

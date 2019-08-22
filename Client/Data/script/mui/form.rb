@@ -332,7 +332,7 @@ class MUI
       end
       # 닫기 버튼
       @pic_close.picture = @pic_close.isSelected ? @@cache['X2'] : @@cache['X']
-      if @close && Key.trigger?(KEY_ESCAPE)
+      if @close && Key.trigger?(Key::KB_ESCAPE)
         dispose
       end
       if @pic_close.click

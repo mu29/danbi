@@ -221,17 +221,17 @@ class MUI
     # Recter
     def realTimeEdit(form)
       if $DEBUG
-        if Key.press?(KEY_CTRL)
+        if Key.press?(Key::KB_CTRL)
           form.drag = false
           if Mouse.trigger?
             self.x = Mouse.x - form.x
             self.y = Mouse.y - form.y - form.getTitleViewport.rect.height
             puts "#{self.x}, #{self.y}, #{self.width}, #{self.height}"
           end
-          if Key.trigger?(KEY_C)
+          if Key.trigger?(Key::KB_C)
             File.setClipboard(", ", self.x, self.y, self.width, self.height)
           end
-        elsif Key.press?(KEY_SHIFT)
+        elsif Key.press?(Key::KB_SHIFT)
           form.drag = false
           if Mouse.trigger?
             x = Mouse.x - form.x - @x

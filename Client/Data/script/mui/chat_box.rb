@@ -132,7 +132,7 @@ class MUI
         @spr_button.src_rect = Rect.new(0, @btn_type * @btn_height, @btn_width, @btn_height)
       end
       # 입력 부분
-      if Key.trigger?(KEY_RETURN)
+      if Key.trigger?(Key::KB_RETURN)
         if @focus
           if @text != ""
             case @btn_type
@@ -178,8 +178,8 @@ class MUI
         end
       end
       if @focus
-        if Key.trigger?(KEY_TAB)
-          if Key.press?(KEY_SHIFT)
+        if Key.trigger?(Key::KB_TAB)
+          if Key.press?(Key::KB_SHIFT)
             @btn_type -= 1
           else
             @btn_type += 1

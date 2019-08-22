@@ -270,10 +270,10 @@ module Graphics
       GameWindow.set_focus_state
       _update_
       if defined? Key && Config::USE_ALT_ENTER && GameWindow.is_active?
-        if Key.press?(KEY_LALT) and Key.trigger?(KEY_RETURN)
+        if Key.press?(Key::KB_LALT) and Key.trigger?(Key::KB_RETURN)
           Graphics.resize_screen2(self.width, self.height, !isFullScreen)
         end
-        exit if Key.press?(KEY_LALT) and Key.trigger?(KEY_F4)
+        exit if Key.press?(Key::KB_LALT) and Key.trigger?(Key::KB_F4)
       end
     end
   end
