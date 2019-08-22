@@ -7,8 +7,10 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import setting.Setting;
+
 public class Crypto {
-    private static String key = "projectDanbi";
+    private static String key = Setting.load().getProperty("Database.password");
 
     public static String encrypt(String text) {
         try {

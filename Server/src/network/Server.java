@@ -19,7 +19,13 @@ public class Server {
 	private final Logger logger = Logger.getLogger(Server.class.getName());
 	
     public static void main(String[] args) throws Exception {
-		new Server(Integer.parseInt(args[0])).run();
+		String strPort;
+    	if (args.length > 0) {
+    		strPort = args[0];
+		} else {
+			strPort = Setting.load().getProperty("Server.port");
+		}
+		new Server(Integer.parseInt(strPort)).run();
     }
 	
 	public Server(int port) {

@@ -13,8 +13,11 @@
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/system/win32api.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/system/win32api.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Library/XPA_Tilemap.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Library/XPA_Tilemap.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/packet/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/Packet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setting.properties" beforeDir="false" afterPath="$PROJECT_DIR$/setting.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setting/Setting.java" beforeDir="false" afterPath="$PROJECT_DIR$/setting/Setting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/Crypto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/Crypto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/Server.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,6 +30,13 @@
   </component>
   <component name="FavoritesManager">
     <favorites_list name="Server" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
@@ -116,8 +126,12 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
-    <property name="restartRequiresConfirmation" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -196,8 +210,6 @@
     <configuration name="Danbi Server" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="network.Server" />
       <module name="Server" />
-      <option name="PROGRAM_PARAMETERS" value="50000" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="" />
         <option name="TRANSPORT" value="0" />
@@ -386,7 +398,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
