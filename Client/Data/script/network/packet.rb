@@ -92,10 +92,16 @@ class Packet
       end
 
     when STCHeader::CREATE_CHARACTER
-      character = case recv["type"]
-      when CharacterType::USER; Game.map.addNetplayer(recv["no"], Netplayer.new)
-      when CharacterType::NPC; Game.map.addNPC(recv["no"], NPC.new)
-      when CharacterType::ENEMY; Game.map.addEnemy(recv["no"], Enemy.new) end
+      character = case recv["characterType"]
+      when CharacterType::USER
+        Game.map.addNetplayer(recv["no"], Netplayer.new)
+
+      when CharacterType::NPC
+        Game.map.addNPC(recv["no"], NPC.new)
+
+      when CharacterType::ENEMY
+        Game.map.addEnemy(recv["no"], Enemy.new)
+      end
       return if not character
       character.no = recv["no"]
       character.name = recv["name"]
@@ -105,7 +111,7 @@ class Packet
       character.moveto(recv["x"], recv["y"])
       character.direction = recv["d"]
       character.setGraphic(recv["image"], 0)
-      if recv["type"] == 0
+      if recv["characterType"] == 0
         character.title = recv["title"]
         character.guild = recv["guild"]
       end
@@ -113,7 +119,7 @@ class Packet
       character.refresh
 
     when STCHeader::REMOVE_CHARACTER
-      case recv["type"]
+      case recv["characterType"]
       when 0
         character = Game.map.getNetplayer(recv["no"])
         Game.map.removeNetplayer(recv["no"])
@@ -129,7 +135,7 @@ class Packet
       remove_sprite(character)
 
     when STCHeader::MOVE_CHARACTER
-      case recv["type"]
+      case recv["characterType"]
       when 0
         netplayer = Game.map.getNetplayer(recv["no"])
         return if not netplayer
@@ -159,7 +165,7 @@ class Packet
       end
 
     when STCHeader::TURN_CHARACTER
-      character = case recv["type"]
+      character = case recv["characterType"]
       when CharacterType::USER
         Game.map.getNetplayer(recv["no"])
 
@@ -185,7 +191,7 @@ class Packet
       end
 
     when STCHeader::REFRESH_CHARACTER
-      character = case recv["type"]
+      character = case recv["characterType"]
       when CharacterType::USER
         (Game.player.no == recv["no"] ? Game.player : Game.map.getNetplayer(recv["no"]))
 
@@ -201,7 +207,7 @@ class Packet
       character.refresh
       
     when STCHeader::JUMP_CHARACTER
-      character = case recv["type"]
+      character = case recv["characterType"]
       when CharacterType::USER
         (Game.player.no == recv["no"] ? Game.player : Game.map.getNetplayer(recv["no"]))
 
@@ -216,7 +222,7 @@ class Packet
       character.refresh
       
     when STCHeader::ANIMATION_CHARACTER
-      character = case recv["type"]
+      character = case recv["characterType"]
       when CharacterType::USER
         (Game.player.no == recv["no"] ? Game.player : Game.map.getNetplayer(recv["no"]))
 
@@ -230,7 +236,7 @@ class Packet
       character.animation_id = recv["ani"]
       
     when STCHeader::UPDATE_CHARACTER
-      character = case recv["type"]
+      character = case recv["characterType"]
       when CharacterType::USER
         Game.map.getNetplayer(recv["no"])
 
@@ -239,17 +245,20 @@ class Packet
 
       when CharacterType::ENEMY
         Game.map.getEnemy(recv["no"])
+
+      else
+        nil
       end
-      return if not character
+      return if character == nil
       character.title = recv["#{StatusType::TITLE}"] if recv["#{StatusType::TITLE}"]
-      character.job = recv["StatusType::JOB"] if recv["StatusType::JOB"]
-      character.image = recv["StatusType::IMAGE"] if recv["StatusType::IMAGE"]
-      character.maxHp = recv["StatusType::MAX_HP"] if recv["StatusType::MAX_HP"]
+      character.job = recv["#{StatusType::JOB}"] if recv["#{StatusType::JOB}"]
+      character.image = recv["#{StatusType::IMAGE}"] if recv["#{StatusType::IMAGE}"]
+      character.maxHp = recv["#{StatusType::MAX_HP}"] if recv["#{StatusType::MAX_HP}"]
       character.level = recv["#{StatusType::LEVEL}"] if recv["#{StatusType::LEVEL}"]
       character.hp = recv["#{StatusType::HP}"] if recv["#{StatusType::HP}"]
 
     when STCHeader::DAMAGE_CHARACTER
-      character = case recv["type"]
+      character = case recv["characterType"]
       when CharacterType::USER
         (Game.player.no == recv["no"] ? Game.player : Game.map.getNetplayer(recv["no"]))
 
@@ -406,7 +415,6 @@ class Packet
                               recv["avoid"], recv["hit"], 
                               recv["reinforce"], recv["trade"],
                               recv["equipped"])
-
       end
       MUI.getForm(MUI_Inventory).refreshData if MUI.include?(MUI_Inventory)
 

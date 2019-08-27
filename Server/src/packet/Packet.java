@@ -71,10 +71,10 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject createCharacter(int type, Character c) {
+	public static JSONObject createCharacter(int characterType, Character c) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.CREATE_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", c.getNo());
 		packet.put("name", c.getName());
 		packet.put("image", c.getImage());
@@ -84,7 +84,7 @@ public final class Packet {
 		packet.put("x", c.getX());
 		packet.put("y", c.getY());
 		packet.put("d", c.getDirection());
-		if (type == Type.Character.USER) {
+		if (characterType == Type.Character.USER) {
 			User u = (User) c;
 			packet.put("guild", Guild.get(u.getGuild()) != null ? Guild.get(u.getGuild()).getName() : "길드 없음");
 			packet.put("title", u.getTitle());
@@ -92,18 +92,18 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject removeCharacter(int type, int no) {
+	public static JSONObject removeCharacter(int characterType, int no) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REMOVE_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", no);
 		return packet;
 	}
 
-	public static JSONObject refreshCharacter(int type, int no, int x, int y, int d) {
+	public static JSONObject refreshCharacter(int characterType, int no, int x, int y, int d) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.REFRESH_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", no);
 		packet.put("x", x);
 		packet.put("y", y);
@@ -111,10 +111,10 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject moveCharacter(int type, int no, int x, int y, int d) {
+	public static JSONObject moveCharacter(int characterType, int no, int x, int y, int d) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.MOVE_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", no);
 		packet.put("x", x);
 		packet.put("y", y);
@@ -122,38 +122,38 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject turnCharacter(int type, int no, int d) {
+	public static JSONObject turnCharacter(int characterType, int no, int d) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.TURN_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", no);
 		packet.put("d", d);
 		return packet;
 	}
 
-	public static JSONObject jumpCharacter(int type, int no, int x, int y) {
+	public static JSONObject jumpCharacter(int characterType, int no, int x, int y) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.JUMP_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", no);
 		packet.put("x", x);
 		packet.put("y", y);
 		return packet;
 	}
 
-	public static JSONObject animationCharacter(int type, int no, int ani) {
+	public static JSONObject animationCharacter(int characterType, int no, int ani) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.ANIMATION_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", no);
 		packet.put("ani", ani);
 		return packet;
 	}
 
-	public static JSONObject updateCharacter(int type, int no, int[] keys, Object[] values) {
+	public static JSONObject updateCharacter(int characterType, int no, int[] keys, Object[] values) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.UPDATE_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", no);
 		for (int i = 0; i < keys.length; i++) {
 			packet.put(keys[i], values[i]);
@@ -161,10 +161,10 @@ public final class Packet {
 		return packet;
 	}
 
-	public static JSONObject damageCharacter(int type, int no, int value, boolean critical) {
+	public static JSONObject damageCharacter(int characterType, int no, int value, boolean critical) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.DAMAGE_CHARACTER);
-		packet.put("type", type);
+		packet.put("characterType", characterType);
 		packet.put("no", no);
 		packet.put("value", value);
 		if (critical) {
@@ -454,7 +454,7 @@ public final class Packet {
 	public static JSONObject updateItem(int type, GameData.Item item) {
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.UPDATE_ITEM);
-		packet.put("type", type);
+		packet.put("characterType", type);
 		packet.put("index", item.getIndex());
 		packet.put("amount", item.getAmount());
 		packet.put("damage", item.getDamage());
