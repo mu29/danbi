@@ -191,6 +191,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			case CTSHeader.SET_SLOT:
 				User.get(ctx).setSlot((int) packet.get("index"), (int) packet.get("itemidx"));
 				break;
+
 			case CTSHeader.DEL_SLOT:
 				User.get(ctx).delSlot((int) packet.get("index"));
 				break;
@@ -203,9 +204,9 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     	String readID = (String) packet.get("id");
     	String readPass = (String) packet.get("pass");
     	
-    	if (readID.equals("") || readPass.equals(""))
-    		return;
-
+    	if (readID.equals("") || readPass.equals("")) {
+			return;
+		}
 		try {
 			// 아이디로 검색
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `user` WHERE `id` = '" + readID + "';");
@@ -250,14 +251,13 @@ public final class Handler extends ChannelInboundHandlerAdapter {
     	String readName = (String) packet.get("name");
     	String readMail = (String) packet.get("mail");
     	int readNo = (int) packet.get("no");
-    	
-    	if (readID.equals("") || readPass.equals("") || readName.equals("") || readMail.equals(""))
-    		return;
-
-		// 직업 리스트에 없는 직업일 경우
-		if (!GameData.register.containsKey(readNo))
+    	if (readID.equals("") || readPass.equals("") || readName.equals("") || readMail.equals("")) {
 			return;
-
+		}
+		// 직업 리스트에 없는 직업일 경우
+		if (!GameData.register.containsKey(readNo)) {
+			return;
+		}
 		try {
 			// 아이디로 검색
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `user` WHERE `id` = '" + readID + "';");
@@ -266,7 +266,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 				rs.close();
 	    		return;
 	    	}
-
 			// 닉네임으로 검색
 	    	rs = DataBase.executeQuery("SELECT * FROM `user` WHERE `name` = '" + readName + "';");
 	    	if (rs.next()) {
@@ -274,7 +273,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 				rs.close();
 	    		return;
 	    	}
-
 			rs.close();
 		} catch (SQLException e) {
 			// SQL Error
@@ -282,7 +280,6 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			logger.warning(e.toString());
 			return;
 		}
-
 		// 비밀번호를 암호화
 		readPass = Crypto.encrypt(readPass);
 		// 직업 정보 불러오기
