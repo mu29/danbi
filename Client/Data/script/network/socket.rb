@@ -43,7 +43,7 @@ class Socket
   def self.update
     return if not @isConnected
     if Network.ready?
-      temp, plen = Network.receive(0xffff)
+      temp, plen = Network.recv(0xffff)
       @pdata = @pdata + temp[0...plen]
     end
     @pdata.gsub!("\u0000", "")

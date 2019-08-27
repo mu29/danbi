@@ -60,8 +60,8 @@ class Player < Character
   attr_accessor :chatBalloonText
   attr_accessor :chatBalloonVisible
   
-  CENTER_X =(320 - 16) * 4
-  CENTER_Y =(240 - 16) * 4
+  CENTER_X = (320 - 16) * 4
+  CENTER_Y = (240 - 16) * 4
   
   def initialize
     super

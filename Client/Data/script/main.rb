@@ -18,11 +18,6 @@ begin
   Font.default_outline = false
   # set system
   GameWindow.init
-  Win32API::NoF1.call(1)
-  Win32API::NoF12.call(1)
-  Win32API::ShowCursor.call(0)
-  Win32API::StarInputStart.call(GameWindow::HWND)
-  Win32API::RegisterHotKey.call(GameWindow::HWND, 0, Graphics::MOD_ALT, Graphics::VK_RETURN)
   Graphics.init
   Graphics.frame_rate = 60
   # set module
@@ -30,7 +25,7 @@ begin
   MUI.init
   Game.init
   Game.load
-  Network.call
+  Network.init
   Socket.init
   # switch scene
   Graphics.freeze

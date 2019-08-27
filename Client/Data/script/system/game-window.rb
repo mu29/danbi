@@ -18,6 +18,16 @@ module GameWindow
     set_debug_state
     # 디버그 콘솔
     open_debug_window
+    # F1 금지
+    Win32API::NoF1.call(1)
+    # F12 금지
+    Win32API::NoF12.call(1)
+    # 윈도우 커서 숨기기
+    Win32API::ShowCursor.call(0)
+    # 비활성화 방지
+    Win32API::StarInputStart.call(GameWindow::HWND)
+    # 기존 ALT + ENTER 금지
+    Win32API::RegisterHotKey.call(GameWindow::HWND, 0, Graphics::MOD_ALT, Graphics::VK_RETURN)
   end
 
   def get_hwnd
