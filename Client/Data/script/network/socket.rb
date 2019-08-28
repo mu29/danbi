@@ -37,24 +37,22 @@ class Socket
   end
   
   def self.close
-    Network.close# if Network
+    Network.close
   end
   
   def self.update
     return if not @isConnected
     if Network.ready?
       temp, plen = Network.recv(0xffff)
-      @pdata = @pdata + temp[0...plen]
+      @pdata << temp[0...plen].delete("\0")
     end
-    @pdata.gsub!("\u0000", "")
     while @pdata.size > 2
       sIndex = 0
       eIndex = 0
       for i in 0...@pdata.size
         if @pdata[i] == "{"
           sIndex = i
-        end
-        if @pdata[i] == "}"
+        elsif @pdata[i] == "}"
           eIndex = i
           break
         end
