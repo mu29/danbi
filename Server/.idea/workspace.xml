@@ -7,14 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/game/player.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/game/player.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Client/Data/script/main.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/main.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/network/network.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/network/network.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/network/packet.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/network/packet.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/system/game-window.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/system/game-window.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/network/socket.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/network/socket.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/Handler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/Handler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/packet/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/Packet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/GameData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/GameData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Character.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Character.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Enemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Enemy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Field.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Guild.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Guild.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Map.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Npc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Npc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Party.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Party.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/User.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

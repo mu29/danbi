@@ -103,31 +103,31 @@ public class GameData extends DataBase {
 		}
 		
 		public int getNo() {
-			return this.no;
+			return no;
 		}
 		
 		public String getName() {
-			return this.name;
+			return name;
 		}
 		
 		public int getHp() {
-			return this.hp;
+			return hp;
 		}
 		
 		public int getMp() {
-			return this.mp;
+			return mp;
 		}
 		
 		public int getStr() {
-			return this.str;
+			return str;
 		}
 		
 		public int getDex() {
-			return this.dex;
+			return dex;
 		}
 		
 		public int getAgi() {
-			return this.agi;
+			return agi;
 		}
 	}
 

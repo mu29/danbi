@@ -26,10 +26,10 @@ public class Map {
 
 	// 필드를 넣음
 	public boolean addField(int seed) {
-		if (fields.containsKey(seed)) {
+		if (this.fields.containsKey(seed)) {
 			return false;
 		}
-		fields.put(seed, new Field(no, seed));
+		this.fields.put(seed, new Field(this.no, seed));
 		return true;
 	}
 
@@ -74,14 +74,14 @@ public class Map {
 			BufferedReader br = new BufferedReader(fr);
 			String read = br.readLine();
 			String[] readData = read.split(",");
-			no = Integer.parseInt(readData[0]);
-			name = readData[1];
-			width = Integer.parseInt(readData[2]);
-			height = Integer.parseInt(readData[3]);
-			data = new int[width * height];
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					data[width * y + x] = Integer.parseInt(readData[width * y + x + 4]);
+			this.no = Integer.parseInt(readData[0]);
+			this.name = readData[1];
+			this.width = Integer.parseInt(readData[2]);
+			this.height = Integer.parseInt(readData[3]);
+			this.data = new int[this.width * this.height];
+			for (int y = 0; y < this.height; y++) {
+				for (int x = 0; x < this.width; x++) {
+					data[this.width * y + x] = Integer.parseInt(readData[this.width * y + x + 4]);
 				}
 			}
 			br.close();
@@ -97,19 +97,19 @@ public class Map {
 		if (!isValid(x, y)) {
 			return false;
 		}
-		if (data[width * y + x] == 1) {
+		if (this.data[this.width * y + x] == 1) {
 			return false;
 		}
 		return true;
 	}
 	
 	private boolean isValid(int x, int y) {
-		return x >= 0 && y >= 0 && x < width && y < height;
+		return x >= 0 && y >= 0 && x < this.width && y < this.height;
 	}
 
 	public void update() {
 		try {
-			for (Field field : fields.values()) {
+			for (Field field : this.fields.values()) {
 				field.update();
 			}
 		} catch (Exception e) {

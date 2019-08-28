@@ -14,7 +14,6 @@ import game.*;
 import setting.Setting;
 
 public class Server {
-	
 	private int port;
 	private final Logger logger = Logger.getLogger(Server.class.getName());
 	
@@ -78,5 +77,4 @@ public class Server {
             workerGroup.terminationFuture().sync();
         }
 	}
-	
 }

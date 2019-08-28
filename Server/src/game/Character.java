@@ -24,6 +24,10 @@ public class Character {
     protected int moveSpeed;
     protected int team;
     protected int characterType;
+    protected int damage;
+    protected int magicDamage;
+    protected int defense;
+    protected int magicDefense;
     protected Random random;
 
     public int getNo() {
@@ -94,20 +98,24 @@ public class Character {
         return team;
     }
 
+    public int getCharacterType() {
+        return characterType;
+    }
+
     public int getDamage() {
-        return 0;
+        return damage;
     }
 
     public int getMagicDamage() {
-        return 0;
+        return magicDamage;
     }
 
     public int getDefense() {
-        return 0;
+        return defense;
     }
 
     public int getMagicDefense() {
-        return 0;
+        return magicDefense;
     }
 
     public Random getRandom() {
@@ -115,61 +123,61 @@ public class Character {
     }
 
     protected void displayDamage(int value, boolean cri) {
-        Map.getMap(map).getField(seed).sendToAll(Packet.damageCharacter(characterType, no, value, cri));
+        Map.getMap(this.map).getField(this.seed).sendToAll(Packet.damageCharacter(this.characterType, this.no, value, cri));
     }
 
     // 애니메이션 재생
     protected void animation(int ani) {
-        Map.getMap(map).getField(seed).sendToAll(Packet.animationCharacter(characterType, no, ani));
+        Map.getMap(this.map).getField(this.seed).sendToAll(Packet.animationCharacter(this.characterType, this.no, ani));
     }
 
     // 위를 바라봄
     protected void turnUp() {
-        if (direction == Type.Direction.UP) {
+        if (this.direction == Type.Direction.UP) {
             return;
         }
-        Field gameField = Map.getMap(map).getField(seed);
-        direction = Type.Direction.UP;
-        gameField.sendToAll(Packet.turnCharacter(characterType, no, direction));
+        Field gameField = Map.getMap(this.map).getField(this.seed);
+        this.direction = Type.Direction.UP;
+        gameField.sendToAll(Packet.turnCharacter(this.characterType, this.no, this.direction));
     }
 
     // 아래를 바라봄
     protected void turnDown() {
-        if (direction == Type.Direction.DOWN) {
+        if (this.direction == Type.Direction.DOWN) {
             return;
         }
-        Field gameField = Map.getMap(map).getField(seed);
-        direction = Type.Direction.DOWN;
-        gameField.sendToAll(Packet.turnCharacter(characterType, no, direction));
+        Field gameField = Map.getMap(this.map).getField(this.seed);
+        this.direction = Type.Direction.DOWN;
+        gameField.sendToAll(Packet.turnCharacter(this.characterType, this.no, this.direction));
     }
 
     // 왼쪽을 바라봄
     protected void turnLeft() {
-        if (direction == Type.Direction.LEFT) {
+        if (this.direction == Type.Direction.LEFT) {
             return;
         }
-        Field gameField = Map.getMap(map).getField(seed);
-        direction = Type.Direction.LEFT;
-        gameField.sendToAll(Packet.turnCharacter(characterType, no, direction));
+        Field gameField = Map.getMap(this.map).getField(this.seed);
+        this.direction = Type.Direction.LEFT;
+        gameField.sendToAll(Packet.turnCharacter(this.characterType, this.no, this.direction));
     }
 
     // 오른쪽을 바라봄
     protected void turnRight() {
-        if (direction == Type.Direction.RIGHT) {
+        if (this.direction == Type.Direction.RIGHT) {
             return;
         }
-        Field gameField = Map.getMap(map).getField(seed);
-        direction = Type.Direction.RIGHT;
-        gameField.sendToAll(Packet.turnCharacter(characterType, no, direction));
+        Field gameField = Map.getMap(this.map).getField(this.seed);
+        this.direction = Type.Direction.RIGHT;
+        gameField.sendToAll(Packet.turnCharacter(this.characterType, this.no, this.direction));
     }
 
     // 위로 이동
     protected boolean moveUp() {
-        Field gameField = Map.getMap(map).getField(seed);
-        if (gameField.isPassable(this, x, y - 1)) {
-            direction = Type.Direction.UP;
-            y -= 1;
-            gameField.sendToAll(Packet.moveCharacter(characterType, no, x, y, direction));
+        Field gameField = Map.getMap(this.map).getField(this.seed);
+        if (gameField.isPassable(this, this.x, this.y - 1)) {
+            this.direction = Type.Direction.UP;
+            this.y -= 1;
+            gameField.sendToAll(Packet.moveCharacter(this.characterType, this.no, this.x, this.y, this.direction));
             return true;
         }
         return false;
@@ -177,11 +185,11 @@ public class Character {
 
     // 아래로 이동
     protected boolean moveDown() {
-        Field gameField = Map.getMap(map).getField(seed);
-        if (gameField.isPassable(this, x, y + 1)) {
-            direction = Type.Direction.DOWN;
-            y += 1;
-            gameField.sendToAll(Packet.moveCharacter(characterType, no, x, y, direction));
+        Field gameField = Map.getMap(this.map).getField(this.seed);
+        if (gameField.isPassable(this, this.x, this.y + 1)) {
+            this.direction = Type.Direction.DOWN;
+            this.y += 1;
+            gameField.sendToAll(Packet.moveCharacter(this.characterType, this.no, this.x, this.y, this.direction));
             return true;
         }
         return false;
@@ -190,10 +198,10 @@ public class Character {
     // 왼쪽으로 이동
     protected boolean moveLeft() {
         Field gameField = Map.getMap(map).getField(seed);
-        if (gameField.isPassable(this, x - 1, y)) {
-            direction = Type.Direction.LEFT;
-            x -= 1;
-            gameField.sendToAll(Packet.moveCharacter(characterType, no, x, y, direction));
+        if (gameField.isPassable(this, this.x - 1, this.y)) {
+            this.direction = Type.Direction.LEFT;
+            this.x -= 1;
+            gameField.sendToAll(Packet.moveCharacter(this.characterType, this.no, this.x, this.y, this.direction));
             return true;
         }
         return false;
@@ -201,11 +209,11 @@ public class Character {
 
     // 오른쪽으로 이동
     protected boolean moveRight() {
-        Field gameField = Map.getMap(map).getField(seed);
-        if (gameField.isPassable(this, x + 1, y)) {
-            direction = Type.Direction.RIGHT;
-            x += 1;
-            gameField.sendToAll(Packet.moveCharacter(characterType, no, x, y, direction));
+        Field gameField = Map.getMap(this.map).getField(this.seed);
+        if (gameField.isPassable(this, this.x + 1, this.y)) {
+            this.direction = Type.Direction.RIGHT;
+            this.x += 1;
+            gameField.sendToAll(Packet.moveCharacter(this.characterType, this.no, this.x, this.y, this.direction));
             return true;
         }
         return false;
@@ -215,23 +223,23 @@ public class Character {
     protected void jump(int type, int value) {
         switch (type) {
             case Type.Direction.DOWN:
-                y += value;
+                this.y += value;
                 break;
 
             case Type.Direction.LEFT:
-                x -= value;
+                this.x -= value;
                 break;
 
             case Type.Direction.RIGHT:
-                x += value;
+                this.x += value;
                 break;
 
             case Type.Direction.UP:
-                y -= value;
+                this.y -= value;
                 break;
 
             default:
         }
-        Map.getMap(map).getField(seed).sendToAll(Packet.jumpCharacter(characterType, no, x, y));
+        Map.getMap(this.map).getField(this.seed).sendToAll(Packet.jumpCharacter(this.characterType, this.no, this.x, this.y));
     }
 }

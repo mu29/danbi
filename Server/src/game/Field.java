@@ -25,10 +25,10 @@ public class Field {
 
     private static Logger logger = Logger.getLogger(Field.class.getName());
 
-    public Field(int _mapNo, int _seed) {
-        mapNo = _mapNo;
-        seed = _seed;
-        random = new Random();
+    public Field(int mapNo, int seed) {
+        this.mapNo = mapNo;
+        this.seed = seed;
+        this.random = new Random();
         loadTroops();
         loadNPCs();
         loadPortals();
@@ -37,50 +37,50 @@ public class Field {
     // Enemy 로드
     private void loadTroops() {
         for (GameData.Troop troop : GameData.troop.values()) {
-            if (troop.getMap() == mapNo) {
+            if (troop.getMap() == this.mapNo) {
                 for (int i = 0; i < troop.getNum(); i++) {
                     // 범위 내 임의의 위치 설정
                     int x = troop.getX() - troop.getRange() / 2;
                     int y = troop.getY() - troop.getRange() / 2;
                     do {
-                        x += random.nextInt(troop.getRange());
-                        y += random.nextInt(troop.getRange());
+                        x += this.random.nextInt(troop.getRange());
+                        y += this.random.nextInt(troop.getRange());
                     } while (!isPassable(null, x, y));
-                    enemies.addElement(new Enemy(seed, enemies.size(), x, y, troop));
+                    this.enemies.addElement(new Enemy(this.seed, this.enemies.size(), x, y, troop));
                 }
             }
         }
-        logger.info(mapNo + "번 맵 (" + seed + ") 에너미 등록 완료");
+        logger.info(this.mapNo + "번 맵 (" + this.seed + ") 에너미 등록 완료");
     }
 
     // NPC 로드
     private void loadNPCs() {
         for (GameData.NPC npc : GameData.npc.values()) {
-            if (npc.getMap() == mapNo) {
-                npcs.put(npc.getNo(), new Npc(npc));
+            if (npc.getMap() == this.mapNo) {
+                this.npcs.put(npc.getNo(), new Npc(npc));
             }
         }
-        logger.info(mapNo + "번 맵 (" + seed + ") NPC 등록 완료");
+        logger.info(this.mapNo + "번 맵 (" + this.seed + ") NPC 등록 완료");
     }
 
     // Portal 로드
     private void loadPortals() {
         for (GameData.Portal portal : GameData.portal) {
-            if (portal.getMap() == mapNo) {
-                portals.addElement(portal);
+            if (portal.getMap() == this.mapNo) {
+                this.portals.addElement(portal);
             }
         }
-        logger.info(mapNo + "번 맵 (" + seed + ") 포탈 등록 완료");
+        logger.info(this.mapNo + "번 맵 (" + this.seed + ") 포탈 등록 완료");
     }
 
     // 통행 가능 여부
     public boolean isPassable(Character c, int x, int y) {
         // 통행 불가 타일일 경우 반환
-        if (!Map.getMap(mapNo).isPassable(x, y)) {
+        if (!Map.getMap(this.mapNo).isPassable(x, y)) {
             return false;
         }
         // 유저가 있을 경우 반환
-        for (User other : users) {
+        for (User other : this.users) {
             if (other.equals(c)) {
                 continue;
             }
@@ -98,7 +98,7 @@ public class Field {
             }
         }
         // NPC가 있을 경우 반환
-        for (Npc other : npcs.values()) {
+        for (Npc other : this.npcs.values()) {
             if (other.equals(c)) {
                 continue;
             }
@@ -115,20 +115,20 @@ public class Field {
         for (int i = 0; i < 4; i++) {
             int x = c.getX() + (i == 0 ? -1 : i == 2 ? + 1 : 0);
             int y = c.getY() + (i == 1 ? -1 : i == 3 ? + 1 : 0);
-            if (!Map.getMap(mapNo).isPassable(x, y)) {
+            if (!Map.getMap(this.mapNo).isPassable(x, y)) {
                 blocked++;
             }
-            for (User other : users) {
+            for (User other : this.users) {
                 if (other.getX() == x && other.getY() == y) {
                     blocked++;
                 }
             }
-            for (Enemy other : enemies) {
+            for (Enemy other : this.enemies) {
                 if (other.getX() == x && other.getY() == y) {
                     blocked++;
                 }
             }
-            for (Npc other : npcs.values()) {
+            for (Npc other : this.npcs.values()) {
                 if (other.getX() == x && other.getY() == y) {
                     blocked++;
                 }
@@ -142,46 +142,52 @@ public class Field {
         // 맵 이동 패킷
         u.getCtx().writeAndFlush(Packet.moveMap(u));
         // 캐릭터를 생성하자
-        for (User other : users) {
+        for (User other : this.users) {
             other.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.USER, u));
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.USER, other));
         }
         // 살아있는 에너미를 보내자
-        for (Enemy other : getAliveEnemies())
+        for (Enemy other : getAliveEnemies()) {
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.ENEMY, other));
+        }
         // 모든 NPC를 보내자
-        for (Npc other : npcs.values())
+        for (Npc other : this.npcs.values()) {
             u.getCtx().writeAndFlush(Packet.createCharacter(Type.Character.NPC, other));
+        }
         // 떨어진 아이템을 보내자
-        for (DropItem item : dropItems)
+        for (DropItem item : this.dropItems) {
             u.getCtx().writeAndFlush(Packet.loadDropItem(item));
+        }
         // 떨어진 골드를 보내자
-        for (DropGold gold : dropGolds)
+        for (DropGold gold : this.dropGolds) {
             u.getCtx().writeAndFlush(Packet.loadDropGold(gold));
-        users.addElement(u);
+        }
+        this.users.addElement(u);
     }
 
     // 맵에서 나감
     public void removeUser(User u) {
         // 유저 지우고
-        for (User other : users) {
+        for (User other : this.users) {
             if (other.equals(u)) {
                 continue;
             }
             other.getCtx().writeAndFlush(Packet.removeCharacter(Type.Character.USER, u.getNo()));
         }
         // 해당 유저를 타겟으로 한 에너미는 새 타겟을 찾자
-        for (Enemy enemy : getAliveEnemies())
-            if (enemy.getTarget() != null && enemy.getTarget().equals(u))
+        for (Enemy enemy : getAliveEnemies()) {
+            if (enemy.getTarget() != null && enemy.getTarget().equals(u)) {
                 enemy.findTarget(u);
+            }
+        }
         // 유저 목록에서 삭제
-        users.removeElement(u);
+        this.users.removeElement(u);
     }
 
     // 모든 유저를 반환
     public Vector<User> getUsers() {
         Vector<User> aliveUsers = new Vector<User>();
-        for (User user : users) {
+        for (User user : this.users) {
             aliveUsers.addElement(user);
         }
         return aliveUsers;
@@ -190,7 +196,7 @@ public class Field {
     // 모든 NPC를 반환
     public Vector<Npc> getNPCs() {
         Vector<Npc> aliveNpcs = new Vector<Npc>();
-        for (Npc npc : npcs.values()) {
+        for (Npc npc : this.npcs.values()) {
             aliveNpcs.addElement(npc);
         }
         return aliveNpcs;
@@ -199,7 +205,7 @@ public class Field {
     // 살아있는 모든 에너미를 반환
     public Vector<Enemy> getAliveEnemies() {
         Vector<Enemy> aliveEnemies = new Vector<Enemy>();
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : this.enemies) {
             if (enemy.isAlive()) {
                 aliveEnemies.addElement(enemy);
             }
@@ -214,49 +220,49 @@ public class Field {
 
     // 아이템 드랍
     public void loadDropItem(int itemNo, int num, int x, int y) {
-        DropItem item = new DropItem(dropItemNo, itemNo, num, x, y);
-        dropItems.addElement(item);
-        dropItemNo++;
+        DropItem item = new DropItem(this.dropItemNo, itemNo, num, x, y);
+        this.dropItems.addElement(item);
+        this.dropItemNo++;
         sendToAll(Packet.loadDropItem(item));
     }
 
     // 아이템 드랍 (능력치 유지)
     public void loadDropItem(int itemNo, GameData.Item _item, int x, int y) {
-        DropItem item = new DropItem(dropItemNo, itemNo, _item, x, y);
-        dropItems.addElement(item);
-        dropItemNo++;
+        DropItem item = new DropItem(this.dropItemNo, itemNo, _item, x, y);
+        this.dropItems.addElement(item);
+        this.dropItemNo++;
         sendToAll(Packet.loadDropItem(item));
     }
 
     // 골드 드랍
     public void loadDropGold(int amount, int x, int y) {
-        DropGold gold = new DropGold(dropItemNo, amount, x, y);
-        dropGolds.addElement(gold);
-        dropItemNo++;
+        DropGold gold = new DropGold(this.dropItemNo, amount, x, y);
+        this.dropGolds.addElement(gold);
+        this.dropItemNo++;
         sendToAll(Packet.loadDropGold(gold));
     }
 
     // 아이템 삭제
     public void removeDropItem(DropItem item) {
-        if (!dropItems.contains(item)) {
+        if (!this.dropItems.contains(item)) {
             return;
         }
         sendToAll(Packet.removeDropItem(item));
-        dropItems.removeElement(item);
+        this.dropItems.removeElement(item);
     }
 
     // 골드 삭제
     public void removeDropGold(DropGold gold) {
-        if (!dropGolds.contains(gold)) {
+        if (!this.dropGolds.contains(gold)) {
             return;
         }
         sendToAll(Packet.removeDropGold(gold));
-        dropGolds.removeElement(gold);
+        this.dropGolds.removeElement(gold);
     }
 
     // 아이템 줍기
     public DropItem pickItem(int x, int y) {
-        for (DropItem item : dropItems) {
+        for (DropItem item : this.dropItems) {
             if (item.getX() == x && item.getY() == y) {
                 return item;
             }
@@ -266,7 +272,7 @@ public class Field {
 
     // 골드 줍기
     public DropGold pickGold(int x, int y) {
-        for (DropGold gold : dropGolds) {
+        for (DropGold gold : this.dropGolds) {
             if (gold.getX() == x && gold.getY() == y) {
                 return gold;
             }
@@ -276,24 +282,24 @@ public class Field {
 
     // 유저가 있다면 업데이트
     public void update() {
-        if (users.size() < 1) {
+        if (this.users.size() < 1) {
             return;
         }
-        for (Enemy e : enemies) {
+        for (Enemy e : this.enemies) {
             e.update();
         }
     }
 
     // 모든 유저에게 메시지 전송
     public void sendToAll(JSONObject msg) {
-        for (User other : users) {
+        for (User other : this.users) {
             other.getCtx().writeAndFlush(msg);
         }
     }
 
     // 다른 모든 유저에게 메시지 전송
     public void sendToOthers(User me, JSONObject msg) {
-        for (User other : users) {
+        for (User other : this.users) {
             if (other.equals(me)) {
                 continue;
             }
@@ -310,24 +316,24 @@ public class Field {
         private GameData.Item item;
         private String image;
 
-        public DropItem(int _no, int _itemNo, int _amount, int _x, int _y) {
-            no = _no;
-            itemNo = _itemNo;
-            amount = _amount;
-            x = _x;
-            y = _y;
-            image = GameData.item.get(itemNo).getImage();
-            item = new GameData.Item(0, itemNo, amount, 0, GameData.item.get(itemNo).isTradeable() ? 1 : 0);
+        public DropItem(int no, int itemNo, int amount, int x, int y) {
+            this.no = no;
+            this.itemNo = itemNo;
+            this.amount = amount;
+            this.x = x;
+            this.y = y;
+            this.image = GameData.item.get(this.itemNo).getImage();
+            this.item = new GameData.Item(0, this.itemNo, this.amount, 0, GameData.item.get(this.itemNo).isTradeable() ? 1 : 0);
         }
 
-        public DropItem(int _no, int _itemNo, GameData.Item _item, int _x, int _y) {
-            no = _no;
-            itemNo = _itemNo;
-            amount = 1;
-            x = _x;
-            y = _y;
-            image = GameData.item.get(itemNo).getImage();
-            item = _item;
+        public DropItem(int no, int itemNo, GameData.Item item, int x, int y) {
+            this.no = no;
+            this.itemNo = itemNo;
+            this.amount = 1;
+            this.x = x;
+            this.y = y;
+            this.image = GameData.item.get(itemNo).getImage();
+            this.item = item;
         }
 
         public int getNo() {
@@ -350,12 +356,12 @@ public class Field {
             return y;
         }
 
-        public String getImage() {
-            return image;
-        }
-
         public GameData.Item getItem() {
             return item;
+        }
+
+        public String getImage() {
+            return image;
         }
     }
 
@@ -365,11 +371,11 @@ public class Field {
         private int y;
         private int amount;
 
-        public DropGold(int _no, int _amount, int _x, int _y) {
-            no = _no;
-            amount = _amount;
-            x = _x;
-            y = _y;
+        public DropGold(int no, int amount, int x, int y) {
+            this.no = no;
+            this.amount = amount;
+            this.x = x;
+            this.y = y;
         }
 
         public int getNo() {

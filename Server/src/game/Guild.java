@@ -17,6 +17,35 @@ public class Guild {
     private static Hashtable<Integer, Guild> guildList = new Hashtable<>();
     private static Logger logger = Logger.getLogger(Guild.class.getName());
 
+    public Guild(int master, String name) {
+        this.master = master;
+        this.name = name;
+        this.members = new Vector<>();
+        join(master);
+        DataBase.insertGuild(master, name);
+    }
+
+    public Guild(int master, String name, boolean loading) {
+        this.master = master;
+        this.name = name;
+        this.members = new Vector<>();
+        if (!loading) {
+            join(master);
+        }
+    }
+
+    public Vector<Integer> getMembers() {
+        return members;
+    }
+
+    public int getMaster() {
+        return master;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public static void load() throws SQLException {
         ResultSet rs = DataBase.executeQuery("SELECT * FROM `guild`;");
         while (rs.next()) {
@@ -49,81 +78,52 @@ public class Guild {
         return guildList.get(masterNo);
     }
 
-    public Guild(int _master, String _name) {
-        master = _master;
-        name = _name;
-        members = new Vector<>();
-        join(master);
-        DataBase.insertGuild(master, name);
-    }
-
-    public Guild(int _master, String _name, boolean loading) {
-        master = _master;
-        name = _name;
-        members = new Vector<>();
-        if (!loading) {
-            join(master);
-        }
-    }
-
-    public boolean join(int _userNo) {
-        if (members.contains(_userNo)) {
+    public boolean join(int userNo) {
+        if (this.members.contains(userNo)) {
             return false;
         }
-        User newMember = User.get(_userNo);
-        for (Integer member : members) {
+        User newMember = User.get(userNo);
+        for (Integer member : this.members) {
             User guildMember = User.get(member);
             guildMember.getCtx().writeAndFlush(Packet.setGuildMember(newMember));
             newMember.getCtx().writeAndFlush(Packet.setGuildMember(guildMember));
         }
         newMember.getCtx().writeAndFlush(Packet.setGuildMember(newMember));
-        newMember.setGuild(master);
-        members.addElement(_userNo);
-        DataBase.insertGuildMember(master, _userNo);
+        newMember.setGuild(this.master);
+        this.members.addElement(userNo);
+        DataBase.insertGuildMember(this.master, userNo);
         return true;
     }
 
-    public boolean exit(int _userNo) {
-        if (!members.contains(_userNo)) {
+    public boolean exit(int userNo) {
+        if (!this.members.contains(userNo)) {
             return false;
         }
-        for (Integer member : members) {
+        for (Integer member : this.members) {
             User guildMember = User.get(member);
             if (guildMember != null) {
-                guildMember.getCtx().writeAndFlush(Packet.removeGuildMember(_userNo));
+                guildMember.getCtx().writeAndFlush(Packet.removeGuildMember(userNo));
             }
         }
-        User exitUser = User.get(_userNo);
+        User exitUser = User.get(userNo);
         if (exitUser != null) {
             exitUser.setGuild(0);
         } else {
-            DataBase.updateGuildExit(_userNo);
+            DataBase.updateGuildExit(userNo);
         }
-        members.removeElement(_userNo);
-        DataBase.deleteGuildMember(master, _userNo);
+        this.members.removeElement(userNo);
+        DataBase.deleteGuildMember(this.master, userNo);
         return true;
     }
 
     public void breakUp() {
-        for (Integer member : members) {
+        for (Integer member : this.members) {
             User guildMember = User.get(member);
             guildMember.setGuild(0);
         }
-        members.clear();
-        if (guildList.containsKey(master)) {
-            guildList.remove(master);
+        this.members.clear();
+        if (guildList.containsKey(this.master)) {
+            guildList.remove(this.master);
         }
-    }
-
-    public int getMaster() {
-        return master;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Vector<Integer> getMembers() {
-        return members;
     }
 }

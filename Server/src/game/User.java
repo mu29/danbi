@@ -98,38 +98,38 @@ public class User extends Character {
 		return true;
 	}
 
-	public User(ChannelHandlerContext _ctx, ResultSet rs) {
+	public User(ChannelHandlerContext ctx, ResultSet rs) {
 		try {
-			ctx = _ctx;
-			no = rs.getInt("no");
-			id = rs.getString("id");
-			pass = rs.getString("pass");
-			name = rs.getString("name");
-			title = rs.getInt("title");
-			guildNo = rs.getInt("guild");
-			mail = rs.getString("mail");
-			image = rs.getString("image");
-			job = rs.getInt("job");
-			pureStr = rs.getInt("str");
-			pureDex = rs.getInt("dex");
-			pureAgi = rs.getInt("agi");
-			statPoint = rs.getInt("stat_point");
-			skillPoint = rs.getInt("skill_point");
-			hp = rs.getInt("hp");
-			mp = rs.getInt("mp");
-			level = rs.getInt("level");
-			exp = rs.getInt("exp");
-			gold = rs.getInt("gold");
-			map = rs.getInt("map");
-			seed = rs.getInt("seed");
-			x = rs.getInt("x");
-			y = rs.getInt("y");
-			direction = rs.getInt("direction");
-			moveSpeed = rs.getInt("speed");
-			admin = rs.getInt("admin") == 0;
-			team = no;
-			characterType = Type.Character.USER;
-			random = new Random();
+			this.ctx = ctx;
+			this.no = rs.getInt("no");
+			this.id = rs.getString("id");
+			this.pass = rs.getString("pass");
+			this.name = rs.getString("name");
+			this.title = rs.getInt("title");
+			this.guildNo = rs.getInt("guild");
+			this.mail = rs.getString("mail");
+			this.image = rs.getString("image");
+			this.job = rs.getInt("job");
+			this.pureStr = rs.getInt("str");
+			this.pureDex = rs.getInt("dex");
+			this.pureAgi = rs.getInt("agi");
+			this.statPoint = rs.getInt("stat_point");
+			this.skillPoint = rs.getInt("skill_point");
+			this.hp = rs.getInt("hp");
+			this.mp = rs.getInt("mp");
+			this.level = rs.getInt("level");
+			this.exp = rs.getInt("exp");
+			this.gold = rs.getInt("gold");
+			this.map = rs.getInt("map");
+			this.seed = rs.getInt("seed");
+			this.x = rs.getInt("x");
+			this.y = rs.getInt("y");
+			this.direction = rs.getInt("direction");
+			this.moveSpeed = rs.getInt("speed");
+			this.admin = rs.getInt("admin") == 0;
+			this.team = no;
+			this.characterType = Type.Character.USER;
+			this.random = new Random();
 		} catch (SQLException e) {
 			logger.warning(e.getMessage());
 		}
@@ -152,11 +152,11 @@ public class User extends Character {
 		return title;
 	}
 
-	public void setTitle(int _title) {
-		title = _title;
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.TITLE }, new Integer[]{ title }));
-		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
-				new int[]{ Type.Status.TITLE }, new Integer[]{ title }));
+	public void setTitle(int title) {
+		this.title = title;
+		this.ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.TITLE }, new Integer[]{ this.title }));
+		Map.getMap(this.map).getField(this.seed).sendToOthers(this, Packet.updateCharacter(this.characterType, this.no,
+				new int[]{ Type.Status.TITLE }, new Integer[]{ this.title }));
 	}
 
 	// 길드
@@ -164,9 +164,9 @@ public class User extends Character {
 		return guildNo;
 	}
 
-	public void setGuild(int _guild) {
-		guildNo = _guild;
-		ctx.writeAndFlush(Packet.setGuild(guildNo));
+	public void setGuild(int guild) {
+		this.guildNo = guild;
+		this.ctx.writeAndFlush(Packet.setGuild(this.guildNo));
 	}
 	
 	public String getMail() {
@@ -174,11 +174,11 @@ public class User extends Character {
 	}
 
 	// 이미지
-	public void setImage(String _image) {
-		image = _image;
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.IMAGE }, new String[]{ image }));
-		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
-				new int[]{ Type.Status.IMAGE }, new String[]{ image }));
+	public void setImage(String image) {
+		this.image = image;
+		this.ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.IMAGE }, new String[]{ this.image }));
+		Map.getMap(this.map).getField(this.seed).sendToOthers(this, Packet.updateCharacter(this.characterType, this.no,
+				new int[]{ Type.Status.IMAGE }, new String[]{ this.image }));
 	}
 
 	// 직업
@@ -186,49 +186,48 @@ public class User extends Character {
 		return job;
 	}
 
-	public void setJob(int _job) {
-		job = _job;
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.JOB }, new Integer[]{ job }));
-		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
-				new int[]{ Type.Status.JOB }, new Integer[]{ job }));
+	public void setJob(int job) {
+		this.job = job;
+		this.ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.JOB }, new Integer[]{ job }));
+		Map.getMap(this.map).getField(this.seed).sendToOthers(this, Packet.updateCharacter(this.characterType, this.no,
+				new int[]{ Type.Status.JOB }, new Integer[]{ this.job }));
 	}
 	
 	public int getStr() {
 		int n = 0;
 		// 스텟 Str
-		n += pureStr;
+		n += this.pureStr;
 		// 직업 기본 Str
-		n += GameData.job.get(job).getStr() * level;
+		n += GameData.job.get(this.job).getStr() * this.level;
 		// 아이템으로 오르는 Str
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getStr();
-			n += findItemByIndex(weapon).getStr();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getStr();
+			n += findItemByIndex(this.weapon).getStr();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getStr();
-			n += findItemByIndex(shield).getStr();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getStr();
+			n += findItemByIndex(this.shield).getStr();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getStr();
-			n += findItemByIndex(helmet).getStr();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getStr();
+			n += findItemByIndex(this.helmet).getStr();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getStr();
-			n += findItemByIndex(armor).getStr();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getStr();
+			n += findItemByIndex(this.armor).getStr();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getStr();
-			n += findItemByIndex(cape).getStr();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getStr();
+			n += findItemByIndex(this.cape).getStr();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getStr();
-			n += findItemByIndex(shoes).getStr();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getStr();
+			n += findItemByIndex(this.shoes).getStr();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getStr();
-			n += findItemByIndex(accessory).getStr();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getStr();
+			n += findItemByIndex(this.accessory).getStr();
 		}
-
 		return n;
 	}
 	
@@ -239,37 +238,37 @@ public class User extends Character {
 	public int getDex() {
 		int n = 0;
 		// 스텟 Dex
-		n += pureDex;
+		n += this.pureDex;
 		// 직업 기본 Dex
-		n += GameData.job.get(job).getDex() * level;
+		n += GameData.job.get(this.job).getDex() * this.level;
 		// 아이템으로 오르는 Dex
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getDex();
-			n += findItemByIndex(weapon).getDex();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getDex();
+			n += findItemByIndex(this.weapon).getDex();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getDex();
-			n += findItemByIndex(shield).getDex();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getDex();
+			n += findItemByIndex(this.shield).getDex();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getDex();
-			n += findItemByIndex(helmet).getDex();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getDex();
+			n += findItemByIndex(this.helmet).getDex();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getDex();
-			n += findItemByIndex(armor).getDex();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getDex();
+			n += findItemByIndex(this.armor).getDex();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getDex();
-			n += findItemByIndex(cape).getDex();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getDex();
+			n += findItemByIndex(this.cape).getDex();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getDex();
-			n += findItemByIndex(shoes).getDex();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getDex();
+			n += findItemByIndex(this.shoes).getDex();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getDex();
-			n += findItemByIndex(accessory).getDex();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getDex();
+			n += findItemByIndex(this.accessory).getDex();
 		}
 		return n;
 	}
@@ -281,37 +280,37 @@ public class User extends Character {
 	public int getAgi() {
 		int n = 0;
 		// 스텟 Agi
-		n += pureAgi;
+		n += this.pureAgi;
 		// 직업 기본 Agi
-		n += GameData.job.get(job).getAgi() * level;
+		n += GameData.job.get(this.job).getAgi() * this.level;
 		// 아이템으로 오르는 Agi
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getAgi();
-			n += findItemByIndex(weapon).getAgi();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getAgi();
+			n += findItemByIndex(this.weapon).getAgi();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getAgi();
-			n += findItemByIndex(shield).getAgi();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getAgi();
+			n += findItemByIndex(this.shield).getAgi();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getAgi();
-			n += findItemByIndex(helmet).getAgi();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getAgi();
+			n += findItemByIndex(this.helmet).getAgi();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getAgi();
-			n += findItemByIndex(armor).getAgi();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getAgi();
+			n += findItemByIndex(this.armor).getAgi();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getAgi();
-			n += findItemByIndex(cape).getAgi();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getAgi();
+			n += findItemByIndex(this.cape).getAgi();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getAgi();
-			n += findItemByIndex(shoes).getAgi();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getAgi();
+			n += findItemByIndex(this.shoes).getAgi();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getAgi();
-			n += findItemByIndex(accessory).getAgi();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getAgi();
+			n += findItemByIndex(this.accessory).getAgi();
 		}
 		return n;
 	}
@@ -322,18 +321,18 @@ public class User extends Character {
 
 	public void gainHp(int value) {
 		// 최대 HP 이상인 경우 보정
-		if (hp + value > getMaxHp()) {
-			value = getMaxHp() - hp;
+		if (this.hp + value > getMaxHp()) {
+			value = getMaxHp() - this.hp;
 		}
-		hp += value;
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.HP }, new Integer[]{ hp }));
-		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
-				new int[]{ Type.Status.HP }, new Integer[]{ hp }));
+		this.hp += value;
+		this.ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.HP }, new Integer[]{ this.hp }));
+		Map.getMap(this.map).getField(this.seed).sendToOthers(this, Packet.updateCharacter(this.characterType, this.no,
+				new int[]{ Type.Status.HP }, new Integer[]{ this.hp }));
 	}
 
 	public void loseHp(int value) {
 		gainHp(-value);
-		if (hp - value < 0) {
+		if (this.hp - value < 0) {
 			// 쥬금
 			return;
 		}
@@ -343,50 +342,50 @@ public class User extends Character {
 	public int getMaxHp() {
 		int n = 0;
 		// 직업 기본 Hp
-		n += GameData.job.get(job).getHp() * level;
+		n += GameData.job.get(this.job).getHp() * this.level;
 		// 아이템으로 오르는 Hp
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getHp();
-			n += findItemByIndex(weapon).getHp();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getHp();
+			n += findItemByIndex(this.weapon).getHp();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getHp();
-			n += findItemByIndex(shield).getHp();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getHp();
+			n += findItemByIndex(this.shield).getHp();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getHp();
-			n += findItemByIndex(helmet).getHp();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getHp();
+			n += findItemByIndex(this.helmet).getHp();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getHp();
-			n += findItemByIndex(armor).getHp();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getHp();
+			n += findItemByIndex(this.armor).getHp();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getHp();
-			n += findItemByIndex(cape).getHp();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getHp();
+			n += findItemByIndex(this.cape).getHp();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getHp();
-			n += findItemByIndex(shoes).getHp();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getHp();
+			n += findItemByIndex(this.shoes).getHp();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getHp();
-			n += findItemByIndex(accessory).getHp();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getHp();
+			n += findItemByIndex(this.accessory).getHp();
 		}
 		return n;
 	}
 
 	public void gainMp(int value) {
 		// 최대 MP 이상인 경우 보정
-		if (mp + value > getMaxMp()) {
-			value = getMaxMp() - mp;
+		if (this.mp + value > getMaxMp()) {
+			value = getMaxMp() - this.mp;
 		}
-		mp += value;
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.MP }, new Integer[]{ mp }));
+		this.mp += value;
+		this.ctx.writeAndFlush(Packet.updateStatus(new int[]{ Type.Status.MP }, new Integer[]{ this.mp }));
 	}
 
 	public boolean loseMp(int value) {
-		if (mp - value < 0) {
+		if (this.mp - value < 0) {
 			return false;
 		}
 		gainMp(-value);
@@ -397,35 +396,35 @@ public class User extends Character {
 	public int getMaxMp() {
 		int n = 0;
 		// 직업 기본 Mp
-		n += GameData.job.get(job).getMp() * level;
+		n += GameData.job.get(this.job).getMp() * this.level;
 		// 아이템으로 오르는 Mp
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getMp();
-			n += findItemByIndex(weapon).getMp();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getMp();
+			n += findItemByIndex(this.weapon).getMp();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getMp();
-			n += findItemByIndex(shield).getMp();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getMp();
+			n += findItemByIndex(this.shield).getMp();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getMp();
-			n += findItemByIndex(helmet).getMp();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getMp();
+			n += findItemByIndex(this.helmet).getMp();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getMp();
-			n += findItemByIndex(armor).getMp();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getMp();
+			n += findItemByIndex(this.armor).getMp();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getMp();
-			n += findItemByIndex(cape).getMp();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getMp();
+			n += findItemByIndex(this.cape).getMp();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getMp();
-			n += findItemByIndex(shoes).getMp();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getMp();
+			n += findItemByIndex(this.shoes).getMp();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getMp();
-			n += findItemByIndex(accessory).getMp();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getMp();
+			n += findItemByIndex(this.accessory).getMp();
 		}
 		return n;
 	}
@@ -434,33 +433,33 @@ public class User extends Character {
 	public int getCritical() {
 		int n = 0;
 		// 아이템으로 오르는 Critical
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getCritical();
-			n += findItemByIndex(weapon).getCritical();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getCritical();
+			n += findItemByIndex(this.weapon).getCritical();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getCritical();
-			n += findItemByIndex(shield).getCritical();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getCritical();
+			n += findItemByIndex(this.shield).getCritical();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getCritical();
-			n += findItemByIndex(helmet).getCritical();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getCritical();
+			n += findItemByIndex(this.helmet).getCritical();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getCritical();
-			n += findItemByIndex(armor).getCritical();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getCritical();
+			n += findItemByIndex(this.armor).getCritical();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getCritical();
-			n += findItemByIndex(cape).getCritical();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getCritical();
+			n += findItemByIndex(this.cape).getCritical();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getCritical();
-			n += findItemByIndex(shoes).getCritical();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getCritical();
+			n += findItemByIndex(this.shoes).getCritical();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getCritical();
-			n += findItemByIndex(accessory).getCritical();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getCritical();
+			n += findItemByIndex(this.accessory).getCritical();
 		}
 		return n;
 	}
@@ -469,33 +468,33 @@ public class User extends Character {
 	public int getAvoid() {
 		int n = 0;
 		// 아이템으로 오르는 Avoid
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getAvoid();
-			n += findItemByIndex(weapon).getAvoid();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getAvoid();
+			n += findItemByIndex(this.weapon).getAvoid();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getAvoid();
-			n += findItemByIndex(shield).getAvoid();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getAvoid();
+			n += findItemByIndex(this.shield).getAvoid();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getAvoid();
-			n += findItemByIndex(helmet).getAvoid();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getAvoid();
+			n += findItemByIndex(this.helmet).getAvoid();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getAvoid();
-			n += findItemByIndex(armor).getAvoid();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getAvoid();
+			n += findItemByIndex(this.armor).getAvoid();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getAvoid();
-			n += findItemByIndex(cape).getAvoid();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getAvoid();
+			n += findItemByIndex(this.cape).getAvoid();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getAvoid();
-			n += findItemByIndex(shoes).getAvoid();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getAvoid();
+			n += findItemByIndex(this.shoes).getAvoid();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getAvoid();
-			n += findItemByIndex(accessory).getAvoid();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getAvoid();
+			n += findItemByIndex(this.accessory).getAvoid();
 		}
 		return n;
 	}
@@ -504,33 +503,33 @@ public class User extends Character {
 	public int getHit() {
 		int n = 0;
 		// 아이템으로 오르는 Hit
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getHit();
-			n += findItemByIndex(weapon).getHit();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getHit();
+			n += findItemByIndex(this.weapon).getHit();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getHit();
-			n += findItemByIndex(shield).getHit();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getHit();
+			n += findItemByIndex(this.shield).getHit();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getHit();
-			n += findItemByIndex(helmet).getHit();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getHit();
+			n += findItemByIndex(this.helmet).getHit();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getHit();
-			n += findItemByIndex(armor).getHit();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getHit();
+			n += findItemByIndex(this.armor).getHit();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getHit();
-			n += findItemByIndex(cape).getHit();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getHit();
+			n += findItemByIndex(this.cape).getHit();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getHit();
-			n += findItemByIndex(shoes).getHit();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getHit();
+			n += findItemByIndex(this.shoes).getHit();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getHit();
-			n += findItemByIndex(accessory).getHit();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getHit();
+			n += findItemByIndex(this.accessory).getHit();
 		}
 		return n;
 	}
@@ -539,33 +538,33 @@ public class User extends Character {
 	public int getDamage() {
 		int n = 0;
 		// 아이템으로 오르는 Damage
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getDamage();
-			n += findItemByIndex(weapon).getDamage();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getDamage();
+			n += findItemByIndex(this.weapon).getDamage();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getDamage();
-			n += findItemByIndex(shield).getDamage();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getDamage();
+			n += findItemByIndex(this.shield).getDamage();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getDamage();
-			n += findItemByIndex(helmet).getDamage();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getDamage();
+			n += findItemByIndex(this.helmet).getDamage();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getDamage();
-			n += findItemByIndex(armor).getDamage();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getDamage();
+			n += findItemByIndex(this.armor).getDamage();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getDamage();
-			n += findItemByIndex(cape).getDamage();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getDamage();
+			n += findItemByIndex(this.cape).getDamage();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getDamage();
-			n += findItemByIndex(shoes).getDamage();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getDamage();
+			n += findItemByIndex(this.shoes).getDamage();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getDamage();
-			n += findItemByIndex(accessory).getDamage();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getDamage();
+			n += findItemByIndex(this.accessory).getDamage();
 		}
 		return n;
 	}
@@ -574,33 +573,33 @@ public class User extends Character {
 	public int getMagicDamage() {
 		int n = 0;
 		// 아이템으로 오르는 MagicDamage
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getMagicDamage();
-			n += findItemByIndex(weapon).getMagicDamage();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getMagicDamage();
+			n += findItemByIndex(this.weapon).getMagicDamage();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getMagicDamage();
-			n += findItemByIndex(shield).getMagicDamage();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getMagicDamage();
+			n += findItemByIndex(this.shield).getMagicDamage();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getMagicDamage();
-			n += findItemByIndex(helmet).getMagicDamage();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getMagicDamage();
+			n += findItemByIndex(this.helmet).getMagicDamage();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getMagicDamage();
-			n += findItemByIndex(armor).getMagicDamage();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getMagicDamage();
+			n += findItemByIndex(this.armor).getMagicDamage();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getMagicDamage();
-			n += findItemByIndex(cape).getMagicDamage();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getMagicDamage();
+			n += findItemByIndex(this.cape).getMagicDamage();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getMagicDamage();
-			n += findItemByIndex(shoes).getMagicDamage();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getMagicDamage();
+			n += findItemByIndex(this.shoes).getMagicDamage();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getMagicDamage();
-			n += findItemByIndex(accessory).getMagicDamage();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getMagicDamage();
+			n += findItemByIndex(this.accessory).getMagicDamage();
 		}
 		return n;
 	}
@@ -609,33 +608,33 @@ public class User extends Character {
 	public int getDefense() {
 		int n = 0;
 		// 아이템으로 오르는 Defense
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getDefense();
-			n += findItemByIndex(weapon).getDefense();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getDefense();
+			n += findItemByIndex(this.weapon).getDefense();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getDefense();
-			n += findItemByIndex(shield).getDefense();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getDefense();
+			n += findItemByIndex(this.shield).getDefense();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getDefense();
-			n += findItemByIndex(helmet).getDefense();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getDefense();
+			n += findItemByIndex(this.helmet).getDefense();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getDefense();
-			n += findItemByIndex(armor).getDefense();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getDefense();
+			n += findItemByIndex(this.armor).getDefense();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getDefense();
-			n += findItemByIndex(cape).getDefense();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getDefense();
+			n += findItemByIndex(this.cape).getDefense();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getDefense();
-			n += findItemByIndex(shoes).getDefense();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getDefense();
+			n += findItemByIndex(this.shoes).getDefense();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getDefense();
-			n += findItemByIndex(accessory).getDefense();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getDefense();
+			n += findItemByIndex(this.accessory).getDefense();
 		}
 		return n;
 	}
@@ -644,33 +643,33 @@ public class User extends Character {
 	public int getMagicDefense() {
 		int n = 0;
 		// 아이템으로 오르는 MagicDefense
-		if (weapon > 0) {
-			n += GameData.item.get(findItemByIndex(weapon).getNo()).getMagicDefense();
-			n += findItemByIndex(weapon).getMagicDefense();
+		if (this.weapon > 0) {
+			n += GameData.item.get(findItemByIndex(this.weapon).getNo()).getMagicDefense();
+			n += findItemByIndex(this.weapon).getMagicDefense();
 		}
-		if (shield > 0) {
-			n += GameData.item.get(findItemByIndex(shield).getNo()).getMagicDefense();
-			n += findItemByIndex(shield).getMagicDefense();
+		if (this.shield > 0) {
+			n += GameData.item.get(findItemByIndex(this.shield).getNo()).getMagicDefense();
+			n += findItemByIndex(this.shield).getMagicDefense();
 		}
-		if (helmet > 0) {
-			n += GameData.item.get(findItemByIndex(helmet).getNo()).getMagicDefense();
-			n += findItemByIndex(helmet).getMagicDefense();
+		if (this.helmet > 0) {
+			n += GameData.item.get(findItemByIndex(this.helmet).getNo()).getMagicDefense();
+			n += findItemByIndex(this.helmet).getMagicDefense();
 		}
-		if (armor > 0) {
-			n += GameData.item.get(findItemByIndex(armor).getNo()).getMagicDefense();
-			n += findItemByIndex(armor).getMagicDefense();
+		if (this.armor > 0) {
+			n += GameData.item.get(findItemByIndex(this.armor).getNo()).getMagicDefense();
+			n += findItemByIndex(this.armor).getMagicDefense();
 		}
-		if (cape > 0) {
-			n += GameData.item.get(findItemByIndex(cape).getNo()).getMagicDefense();
-			n += findItemByIndex(cape).getMagicDefense();
+		if (this.cape > 0) {
+			n += GameData.item.get(findItemByIndex(this.cape).getNo()).getMagicDefense();
+			n += findItemByIndex(this.cape).getMagicDefense();
 		}
-		if (shoes > 0) {
-			n += GameData.item.get(findItemByIndex(shoes).getNo()).getMagicDefense();
-			n += findItemByIndex(shoes).getMagicDefense();
+		if (this.shoes > 0) {
+			n += GameData.item.get(findItemByIndex(this.shoes).getNo()).getMagicDefense();
+			n += findItemByIndex(this.shoes).getMagicDefense();
 		}
-		if (accessory > 0) {
-			n += GameData.item.get(findItemByIndex(accessory).getNo()).getMagicDefense();
-			n += findItemByIndex(accessory).getMagicDefense();
+		if (this.accessory > 0) {
+			n += GameData.item.get(findItemByIndex(this.accessory).getNo()).getMagicDefense();
+			n += findItemByIndex(this.accessory).getMagicDefense();
 		}
 		return n;
 	}
@@ -679,52 +678,52 @@ public class User extends Character {
 	public int getMaxExp() {
 		// 필요 경험치 계산식
 		int n = 0;
-		n += level * level * 10;
+		n += this.level * this.level * 10;
 		return n;
 	}
 
 	// 경험치 획득
 	public void gainExp(int value) {
 		int maxExp = getMaxExp();
-		exp += value;
+		this.exp += value;
 		// 현재 경험치가 최대 경험치를 초과한 경우
-		if (exp >= maxExp) {
+		if (this.exp >= maxExp) {
 			// 레벨 업
-			exp = 0;
-			level++;
-			statPoint += 5;
-			skillPoint += 1;
+			this.exp = 0;
+			this.level++;
+			this.statPoint += 5;
+			this.skillPoint += 1;
 			// HP 및 MP 회복
-			hp = getMaxHp();
-			mp = getMaxMp();
+			this.hp = getMaxHp();
+			this.mp = getMaxMp();
 			// 변화한 스텟 정보를 보냄
-			ctx.writeAndFlush(Packet.updateStatus(
+			this.ctx.writeAndFlush(Packet.updateStatus(
 					new int[]{Type.Status.LEVEL, Type.Status.STAT_POINT, Type.Status.SKILL_POINT, Type.Status.STR, Type.Status.DEX,
 							Type.Status.AGI, Type.Status.HP, Type.Status.MAX_HP, Type.Status.MP, Type.Status.MAX_MP, Type.Status.MAX_EXP},
-					new Integer[]{level, statPoint, skillPoint, getStr(), getDex(), getAgi(), hp, getMaxHp(), mp, getMaxMp(), getMaxExp()}));
+					new Integer[]{this.level, this.statPoint, this.skillPoint, getStr(), getDex(), getAgi(), this.hp, getMaxHp(), this.mp, getMaxMp(), getMaxExp()}));
 			Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(characterType, no,
 					new int[]{ Type.Status.LEVEL, Type.Status.HP, Type.Status.MAX_HP },
-					new Integer[] { level, hp, getMaxHp() }));
+					new Integer[] { this.level, this.hp, getMaxHp() }));
 			animation(25);
 		}
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.EXP}, new Integer[]{exp}));
+		this.ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.EXP}, new Integer[]{this.exp}));
 	}
 
 	// 경험치 잃음
 	public void loseExp(int value) {
-		if (exp - value < 0) {
-			value = exp;
+		if (this.exp - value < 0) {
+			value = this.exp;
 		}
 		gainExp(-value);
 	}
 
 	public void gainGold(int value) {
-		gold += value;
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.GOLD}, new Integer[]{gold}));
+		this.gold += value;
+		this.ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.GOLD}, new Integer[]{this.gold}));
 	}
 
 	public boolean loseGold(int value) {
-		if (gold < value) {
+		if (this.gold < value) {
 			return false;
 		}
 		gainGold(-value);
@@ -787,17 +786,17 @@ public class User extends Character {
 	// 장착한 아이템 불러오기
 	public void loadEquipItem() {
 		try {
-			ResultSet rs = DataBase.executeQuery("SELECT * FROM `equip` WHERE `user_no` = '" + no + "';");
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `equip` WHERE `user_no` = '" + this.no + "';");
 	    	if (rs.next()) {
-	    		weapon = rs.getInt("weapon");
-	    		shield = rs.getInt("shield");
-	    		helmet = rs.getInt("helmet");
-	    		armor = rs.getInt("armor");
-	    		cape = rs.getInt("cape");
-	    		shoes = rs.getInt("shoes");
-	    		accessory = rs.getInt("accessory");
+	    		this.weapon = rs.getInt("weapon");
+	    		this.shield = rs.getInt("shield");
+	    		this.helmet = rs.getInt("helmet");
+	    		this.armor = rs.getInt("armor");
+	    		this.cape = rs.getInt("cape");
+	    		this.shoes = rs.getInt("shoes");
+	    		this.accessory = rs.getInt("accessory");
 	    	} else {
-				DataBase.insertEquip(no);
+				DataBase.insertEquip(this.no);
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -808,10 +807,10 @@ public class User extends Character {
 	// 인벤토리 불러오기
 	public void loadInventory() {
 		try {
-			ResultSet rs = DataBase.executeQuery("SELECT * FROM `item` WHERE `user_no` = '" + no + "';");
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `item` WHERE `user_no` = '" + this.no + "';");
 			while (rs.next()) {
-				itemBag.put(rs.getInt("index"), new Item(rs));
-				ctx.writeAndFlush(Packet.setItem(itemBag.get(rs.getInt("index"))));
+				this.itemBag.put(rs.getInt("index"), new Item(rs));
+				this.ctx.writeAndFlush(Packet.setItem(this.itemBag.get(rs.getInt("index"))));
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -822,10 +821,10 @@ public class User extends Character {
 	// 스킬 불러오기
 	public void loadSkillList() {
 		try {
-			ResultSet rs = DataBase.executeQuery("SELECT * FROM `skill` WHERE `user_no` = '" + no + "';");
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `skill` WHERE `user_no` = '" + this.no + "';");
 			while (rs.next()) {
-				skillBag.put(rs.getInt("skill_no"), new Skill(no, rs.getInt("skill_no")));
-				ctx.writeAndFlush(Packet.setSkill(skillBag.get(rs.getInt("skill_no"))));
+				this.skillBag.put(rs.getInt("skill_no"), new Skill(this.no, rs.getInt("skill_no")));
+				this.ctx.writeAndFlush(Packet.setSkill(this.skillBag.get(rs.getInt("skill_no"))));
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -835,18 +834,18 @@ public class User extends Character {
 
 	// 길드 멤버 불러오기
 	public void loadGuildMember() {
-		if (guildNo == 0) {
+		if (this.guildNo == 0) {
 			return;
 		}
 		try {
-			ResultSet rs = DataBase.executeQuery("SELECT * FROM `user` WHERE `guild` = '" + guildNo + "';");
+			ResultSet rs = DataBase.executeQuery("SELECT * FROM `user` WHERE `guild` = '" + this.guildNo + "';");
 			while (rs.next()) {
 				User member = User.get(rs.getInt("no"));
 				if (member == null) {
-					ctx.writeAndFlush(Packet.setGuildMember(rs.getInt("no"), rs.getString("name"), rs.getString("image"),
+					this.ctx.writeAndFlush(Packet.setGuildMember(rs.getInt("no"), rs.getString("name"), rs.getString("image"),
 							rs.getInt("level"), rs.getInt("job"), rs.getInt("hp"), rs.getInt("hp")));
 				} else {
-					ctx.writeAndFlush(Packet.setGuildMember(member));
+					this.ctx.writeAndFlush(Packet.setGuildMember(member));
 				}
 			}
 			rs.close();
@@ -857,32 +856,32 @@ public class User extends Character {
 
 	// 스텟 포인트 사용
 	public void useStatPoint(int stat) {
-		if (statPoint <= 0) {
+		if (this.statPoint <= 0) {
 			return;
 		}
 		// 올릴 수 있는 스텟만 올리고
 		switch (stat) {
 			case Type.Status.STR:
-				pureStr++;
-				ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getStr() }));
+				this.pureStr++;
+				this.ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getStr() }));
 				break;
 
 			case Type.Status.DEX:
-				pureDex++;
-				ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getDex() }));
+				this.pureDex++;
+				this.ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getDex() }));
 				break;
 
 			case Type.Status.AGI:
-				pureAgi++;
-				ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getAgi() }));
+				this.pureAgi++;
+				this.ctx.writeAndFlush(Packet.updateStatus(new int[]{ stat }, new Integer[]{ getAgi() }));
 				break;
 
 			default:
 				return;
 		}
 		// 스포 하나 까자
-		statPoint--;
-		ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.STAT_POINT}, new Integer[]{statPoint}));
+		this.statPoint--;
+		this.ctx.writeAndFlush(Packet.updateStatus(new int[]{Type.Status.STAT_POINT}, new Integer[]{this.statPoint}));
 	}
 	
 	// 아이템 장착
@@ -890,38 +889,38 @@ public class User extends Character {
 		int oldEquip = 0;
 		switch (type) {
 			case Type.Item.WEAPON:
-				oldEquip = weapon;
-				weapon = index;
+				oldEquip = this.weapon;
+				this.weapon = index;
 				break;
 
 			case Type.Item.SHIELD:
-				oldEquip = shield;
-				shield = index;
+				oldEquip = this.shield;
+				this.shield = index;
 				break;
 
 			case Type.Item.HELMET:
-				oldEquip = helmet;
-				helmet = index;
+				oldEquip = this.helmet;
+				this.helmet = index;
 				break;
 
 			case Type.Item.ARMOR:
-				oldEquip = armor;
-				armor = index;
+				oldEquip = this.armor;
+				this.armor = index;
 				break;
 
 			case Type.Item.CAPE:
-				oldEquip = cape;
-				cape = index;
+				oldEquip = this.cape;
+				this.cape = index;
 				break;
 
 			case Type.Item.SHOES:
-				oldEquip = shoes;
-				shoes = index;
+				oldEquip = this.shoes;
+				this.shoes = index;
 				break;
 
 			case Type.Item.ACCESSORY:
-				oldEquip = accessory;
-				accessory = index;
+				oldEquip = this.accessory;
+				this.accessory = index;
 				break;
 
 			default:
@@ -933,26 +932,26 @@ public class User extends Character {
 		// 장착 상태 변경 후 인벤토리 업데이트
 		if (lastEquippedItem != null) {
 			lastEquippedItem.setEquipped(false);
-			ctx.writeAndFlush(Packet.updateItem(1, lastEquippedItem));
+			this.ctx.writeAndFlush(Packet.updateItem(1, lastEquippedItem));
 		}
 		if (nowEquipItem != null) {
 			nowEquipItem.setEquipped(true);
-			ctx.writeAndFlush(Packet.updateItem(1, nowEquipItem));
+			this.ctx.writeAndFlush(Packet.updateItem(1, nowEquipItem));
 		}
 		// HP, MP 보정
-		if (getMaxHp() < hp) {
-			hp = getMaxHp();
+		if (getMaxHp() < this.hp) {
+			this.hp = getMaxHp();
 		}
-		if (getMaxMp() < mp) {
-			mp = getMaxMp();
+		if (getMaxMp() < this.mp) {
+			this.mp = getMaxMp();
 		}
 		// TODO : Type.Status.WEAPON + type는 임시. 수정 요망
-		ctx.writeAndFlush(Packet.updateStatus(
+		this.ctx.writeAndFlush(Packet.updateStatus(
 				new int[]{ Type.Status.WEAPON + type, Type.Status.STR, Type.Status.DEX, Type.Status.AGI, Type.Status.MAX_HP, Type.Status.HP,
 						Type.Status.MAX_MP, Type.Status.MP, Type.Status.CRITICAL, Type.Status.AVOID, Type.Status.HIT },
-				new Integer[]{ index, getStr(), getDex(), getAgi(), getMaxHp(), hp, getMaxMp(), mp, getCritical(), getAvoid(), getHit() }));
-		Map.getMap(map).getField(seed).sendToOthers(this, Packet.updateCharacter(Type.Character.USER, no,
-				new int[]{ Type.Status.MAX_HP, Type.Status.HP }, new Integer[]{ getMaxHp(), hp }));
+				new Integer[]{ index, getStr(), getDex(), getAgi(), getMaxHp(), this.hp, getMaxMp(), this.mp, getCritical(), getAvoid(), getHit() }));
+		Map.getMap(this.map).getField(this.seed).sendToOthers(this, Packet.updateCharacter(Type.Character.USER, this.no,
+				new int[]{ Type.Status.MAX_HP, Type.Status.HP }, new Integer[]{ getMaxHp(), this.hp }));
 	}
 
 	// 아이템 번호로 아이템 획득
@@ -966,17 +965,17 @@ public class User extends Character {
 			gap = item.getAmount() + num - itemData.getMaxLoad();
 			item.addAmount(num);
 			num = gap;
-			ctx.writeAndFlush(Packet.updateItem(1, item));
+			this.ctx.writeAndFlush(Packet.updateItem(1, item));
 		}
 		while (num > 0) {
 			if (index == -1) {
 				// 나머지 아이템 드랍
-				Map.getMap(map).getField(seed).loadDropItem(itemNo, num, x, y);
+				Map.getMap(this.map).getField(this.seed).loadDropItem(itemNo, num, this.x, this.y);
 				return false;
 			}
 			// 계속해서 아이템 채우자
-			itemBag.put(index, new Item(no, itemNo, num, index, itemData.isTradeable() ? 1 : 0));
-			ctx.writeAndFlush(Packet.setItem(itemBag.get(index)));
+			this.itemBag.put(index, new Item(this.no, itemNo, num, index, itemData.isTradeable() ? 1 : 0));
+			this.ctx.writeAndFlush(Packet.setItem(this.itemBag.get(index)));
 			index = getEmptyIndex();
 			num -= itemData.getMaxLoad();
 		}
@@ -989,8 +988,8 @@ public class User extends Character {
 		if (index == -1) {
 			return false;
 		}
-		itemBag.put(index, new Item(no, item.getNo(), index, item));
-		ctx.writeAndFlush(Packet.setItem(itemBag.get(index)));
+		this.itemBag.put(index, new Item(this.no, item.getNo(), index, item));
+		this.ctx.writeAndFlush(Packet.setItem(this.itemBag.get(index)));
 		return true;
 	}
 
@@ -1011,11 +1010,11 @@ public class User extends Character {
 			item.addAmount(-num);
 			if (item.getAmount() == 0) {
 				// 아이템 삭제
-				itemBag.remove(item.getIndex());
-				ctx.writeAndFlush(Packet.updateItem(0, item));
+				this.itemBag.remove(item.getIndex());
+				this.ctx.writeAndFlush(Packet.updateItem(0, item));
 			} else {
 				// 아이템 갯수 업데이트
-				ctx.writeAndFlush(Packet.updateItem(1, item));
+				this.ctx.writeAndFlush(Packet.updateItem(1, item));
 			}
 			num = gap;
 		} while (num > 0);
@@ -1032,19 +1031,19 @@ public class User extends Character {
 		item.addAmount(-num);
 		if (item.getAmount() == 0) {
 			// 아이템 삭제
-			itemBag.remove(item.getIndex());
-			ctx.writeAndFlush(Packet.updateItem(0, item));
+			this.itemBag.remove(item.getIndex());
+			this.ctx.writeAndFlush(Packet.updateItem(0, item));
 		} else {
 			// 아이템 갯수 업데이트
-			ctx.writeAndFlush(Packet.updateItem(1, item));
+			this.ctx.writeAndFlush(Packet.updateItem(1, item));
 		}
 		return true;
 	}
 	
 	// 비어있는 인덱스를 획득
 	public int getEmptyIndex() {
-		for (int i = 1; i <= maxInventory; i++) {
-			if (!itemBag.containsKey(i)) {
+		for (int i = 1; i <= this.maxInventory; i++) {
+			if (!this.itemBag.containsKey(i)) {
 				return i;
 			}
 		}
@@ -1054,7 +1053,7 @@ public class User extends Character {
 	// 가지고 있는 아이템 총량을 획득
 	public int getTotalItemAmount(int itemNo) {
 		int num = 0;
-		for (Item item : itemBag.values()) {
+		for (Item item : this.itemBag.values()) {
 			if (item.getNo() == itemNo) {
 				num += item.getAmount();
 			}
@@ -1064,15 +1063,15 @@ public class User extends Character {
 	
 	// Index로 아이템 검색
 	public Item findItemByIndex(int index) {
-		if (!itemBag.containsKey(index)) {
+		if (!this.itemBag.containsKey(index)) {
 			return null;
 		}
-		return itemBag.get(index);
+		return this.itemBag.get(index);
 	}
 
 	// No로 아이템 검색
 	public Item findItemByNo(int itemNo) {
-		for (Item item : itemBag.values()) {
+		for (Item item : this.itemBag.values()) {
 			if (item.getNo() == itemNo) {
 				return item;
 			}
@@ -1082,7 +1081,7 @@ public class User extends Character {
 
 	// No로 여유 있는 아이템 검색
 	public Item findLazyItemByNo(int itemNo) {
-		for (Item item : itemBag.values()) {
+		for (Item item : this.itemBag.values()) {
 			// 아이템이 꽉 찬 경우가 아니라면
 			if (item.getNo() == itemNo && item.getAmount() < GameData.item.get(item.getNo()).getMaxLoad()) {
 				return item;
@@ -1107,21 +1106,21 @@ public class User extends Character {
 				return;
 			}
 			// 아이템 간 인덱스 변경
-			itemBag.remove(index1);
-			itemBag.remove(index2);
+			this.itemBag.remove(index1);
+			this.itemBag.remove(index2);
 			presentItem.setIndex(index2);
 			targetItem.setIndex(index1);
-			itemBag.put(index2, presentItem);
-			itemBag.put(index1, targetItem);
-			ctx.write(Packet.setItem(presentItem));
-			ctx.writeAndFlush(Packet.setItem(targetItem));
+			this.itemBag.put(index2, presentItem);
+			this.itemBag.put(index1, targetItem);
+			this.ctx.write(Packet.setItem(presentItem));
+			this.ctx.writeAndFlush(Packet.setItem(targetItem));
 		} else {
 			// 빈 곳으로 아이템 이동
-			ctx.write(Packet.updateItem(0, presentItem));
-			itemBag.remove(index1);
+			this.ctx.write(Packet.updateItem(0, presentItem));
+			this.itemBag.remove(index1);
 			presentItem.setIndex(index2);
-			itemBag.put(index2, presentItem);
-			ctx.writeAndFlush(Packet.setItem(presentItem));
+			this.itemBag.put(index2, presentItem);
+			this.ctx.writeAndFlush(Packet.setItem(presentItem));
 		}
 
 	}
@@ -1139,11 +1138,11 @@ public class User extends Character {
 		}
 		ItemData itemData = GameData.item.get(item.getNo());
 		// 레벨이 낮으면 반환
-		if (level < itemData.getLimitLevel()) {
+		if (this.level < itemData.getLimitLevel()) {
 			return false;
 		}
 		// 직업이 다르고 아이템도 공용이 아니면 반환
-		if (job != itemData.getJob() && itemData.getJob() != 0) {
+		if (this.job != itemData.getJob() && itemData.getJob() != 0) {
 			return false;
 		}
 		// 소모품이면 아이템 잃음
@@ -1175,11 +1174,11 @@ public class User extends Character {
 		}
 		ItemData itemData = GameData.item.get(item.getNo());
 		// 레벨이 낮으면 반환
-		if (level < itemData.getLimitLevel()) {
+		if (this.level < itemData.getLimitLevel()) {
 			return false;
 		}
 		// 직업이 다르고 아이템도 공용이 아니면 반환
-		if (job != itemData.getJob() && itemData.getJob() != 0) {
+		if (this.job != itemData.getJob() && itemData.getJob() != 0) {
 			return false;
 		}
 		// 소모품이면 아이템 잃음
@@ -1208,9 +1207,9 @@ public class User extends Character {
 		ItemData itemData = GameData.item.get(item.getNo());
 		loseItemByNo(itemNo, amount);
 		if (itemData.getType() == Type.Item.ITEM) {
-			Map.getMap(no).getField(seed).loadDropItem(itemNo, amount, x, y);
+			Map.getMap(this.no).getField(this.seed).loadDropItem(itemNo, amount, this.x, this.y);
 		} else {
-			Map.getMap(no).getField(seed).loadDropItem(itemNo, item, x, y);
+			Map.getMap(this.no).getField(this.seed).loadDropItem(itemNo, item, this.x, this.y);
 		}
 		return true;
 	}
@@ -1229,33 +1228,33 @@ public class User extends Character {
 		ItemData itemData = GameData.item.get(item.getNo());
 		loseItemByIndex(index, amount);
 		if (itemData.getType() == Type.Item.ITEM) {
-			Map.getMap(no).getField(seed).loadDropItem(item.getNo(), amount, x, y);
+			Map.getMap(this.no).getField(this.seed).loadDropItem(item.getNo(), amount, this.x, this.y);
 		} else {
-			Map.getMap(no).getField(seed).loadDropItem(item.getNo(), item, x, y);
+			Map.getMap(this.no).getField(this.seed).loadDropItem(item.getNo(), item, this.x, this.y);
 		}
 		return true;
 	}
 
 	// 골드 버리기
 	public boolean dropGold(int amount) {
-		if (gold < amount) {
+		if (this.gold < amount) {
 			return false;
 		}
 		loseGold(amount);
-		Map.getMap(no).getField(seed).loadDropGold(amount, x, y);
+		Map.getMap(this.no).getField(this.seed).loadDropGold(amount, this.x, this.y);
 		return true;
 	}
 
 	// 아이템 줍기
 	public void pickItem() {
-		Field field = Map.getMap(map).getField(seed);
+		Field field = Map.getMap(this.map).getField(this.seed);
 		// 골드 먼저 줍자
-		Field.DropGold dropGold = field.pickGold(x, y);
+		Field.DropGold dropGold = field.pickGold(this.x, this.y);
 		Field.DropItem dropItem;
 		// 골드가 없다면
 		if (dropGold == null) {
 			// 아이템을 줍자
-			dropItem = field.pickItem(x, y);
+			dropItem = field.pickItem(this.x, this.y);
 			// 아이템도 없다면 반환
 			if (dropItem == null) {
 				return;
@@ -1285,15 +1284,15 @@ public class User extends Character {
 
 	// No로 스킬 검색
 	public GameData.Skill findSkillByNo(int skillNo) {
-		if (!skillBag.containsKey(skillNo)) {
+		if (!this.skillBag.containsKey(skillNo)) {
 			return null;
 		}
-		return skillBag.get(skillNo);
+		return this.skillBag.get(skillNo);
 	}
 
 	// Index로 스킬 검색
 	public GameData.Skill findSkillByIndex(int itemNo) {
-		for (GameData.Skill skill : skillBag.values()) {
+		for (GameData.Skill skill : this.skillBag.values()) {
 			if (skill.getNo() == itemNo) {
 				return skill;
 			}
@@ -1303,22 +1302,22 @@ public class User extends Character {
 
 	// 스킬 배우기
 	public boolean studySkill(int skillNo) {
-		if (skillBag.containsKey(skillNo)) {
+		if (this.skillBag.containsKey(skillNo)) {
 			return false;
 		}
-		GameData.Skill skill = new GameData.Skill(no, skillNo);
-		skillBag.put(skillNo, skill);
-		ctx.writeAndFlush(Packet.setSkill(skill));
+		GameData.Skill skill = new GameData.Skill(this.no, skillNo);
+		this.skillBag.put(skillNo, skill);
+		this.ctx.writeAndFlush(Packet.setSkill(skill));
 		return true;
 	}
 
 	// 스킬 지우기
 	public boolean forgetSkill(int skillNo) {
-		if (!skillBag.containsKey(skillNo)) {
+		if (!this.skillBag.containsKey(skillNo)) {
 			return false;
 		}
-		ctx.writeAndFlush(Packet.updateSkill(0, skillBag.get(skillNo)));
-		skillBag.remove(skillNo);
+		this.ctx.writeAndFlush(Packet.updateSkill(0, this.skillBag.get(skillNo)));
+		this.skillBag.remove(skillNo);
 		return true;
 	}
 
@@ -1328,7 +1327,7 @@ public class User extends Character {
 		if (skill == null) {
 			return false;
 		}
-		if (coolTime.getCoolTime(skill.getNo()) > 0) {
+		if (this.coolTime.getCoolTime(skill.getNo()) > 0) {
 			return false;
 		}
 		// 함수가 있을 경우 실행
@@ -1355,7 +1354,7 @@ public class User extends Character {
 			return false;
 		}
 		// 거래 요청
-		partner.getCtx().writeAndFlush(Packet.requestTrade(no));
+		partner.getCtx().writeAndFlush(Packet.requestTrade(this.no));
 		return true;
 	}
 
@@ -1373,10 +1372,10 @@ public class User extends Character {
 		switch (type) {
 			case 0:
 				// 수락
-				tradePartner = partnerNo;
-				ctx.writeAndFlush(Packet.openTradeWindow(partnerNo));
-				partner.tradePartner = no;
-				partner.getCtx().writeAndFlush(Packet.openTradeWindow(no));
+				this.tradePartner = partnerNo;
+				this.ctx.writeAndFlush(Packet.openTradeWindow(partnerNo));
+				partner.tradePartner = this.no;
+				partner.getCtx().writeAndFlush(Packet.openTradeWindow(this.no));
 				break;
 
 			case 1:
@@ -1395,7 +1394,7 @@ public class User extends Character {
 			return;
 		}
 		// 거래 종료 대기 중이라면 반환
-		if (isAcceptTrade || User.get(tradePartner).isAcceptTrade) {
+		if (this.isAcceptTrade || User.get(this.tradePartner).isAcceptTrade) {
 			return;
 		}
 		Item item = findItemByIndex(index);
@@ -1416,19 +1415,19 @@ public class User extends Character {
 			return;
 		}
 		// 해당 공간에 이미 아이템이 있는 경우 반환
-		if (tradeItemList.containsKey(tradeIndex)) {
+		if (this.tradeItemList.containsKey(tradeIndex)) {
 			return;
 		}
 		// 거래하려는 아이템을 거래 목록에 올림
 		Item tradeItem = item.clone();
 		tradeItem.setIndex(tradeIndex);
 		tradeItem.setAmount(amount);
-		tradeItemList.put(tradeIndex, tradeItem);
+		this.tradeItemList.put(tradeIndex, tradeItem);
 		// 아이템 잃음
 		loseItemByIndex(index, amount);
 		// 거래 아이템 로드
-		ctx.writeAndFlush(Packet.loadTradeItem(tradeItem));
-		User.get(tradePartner).getCtx().writeAndFlush(Packet.loadTradeItem(tradeItem));
+		this.ctx.writeAndFlush(Packet.loadTradeItem(tradeItem));
+		User.get(this.tradePartner).getCtx().writeAndFlush(Packet.loadTradeItem(tradeItem));
 	}
 
 	// 거래 아이템 내리기
@@ -1438,14 +1437,14 @@ public class User extends Character {
 			return;
 		}
 		// 거래 종료 대기 중이라면 반환
-		if (isAcceptTrade || User.get(tradePartner).isAcceptTrade) {
+		if (this.isAcceptTrade || User.get(this.tradePartner).isAcceptTrade) {
 			return;
 		}
 		// 아이템이 없으면 반환
-		if (!tradeItemList.containsKey(index)) {
+		if (!this.tradeItemList.containsKey(index)) {
 			return;
 		}
-		Item item = tradeItemList.get(index);
+		Item item = this.tradeItemList.get(index);
 		ItemData itemData = GameData.item.get(item.getNo());
 		// 일반 아이템일 경우 그냥 얻고, 장비 아이템일 경우 능력치 보존
 		if (itemData.getType() == Type.Item.ITEM) {
@@ -1454,10 +1453,10 @@ public class User extends Character {
 			gainItem(item.getNo(), item);
 		}
 		// 거래 아이템 리스트에서 제거
-		tradeItemList.remove(index);
+		this.tradeItemList.remove(index);
 		// 거래 아이템 삭제
-		ctx.writeAndFlush(Packet.dropTradeItem(no, index));
-		User.get(tradePartner).getCtx().writeAndFlush(Packet.dropTradeItem(no, index));
+		this.ctx.writeAndFlush(Packet.dropTradeItem(this.no, index));
+		User.get(this.tradePartner).getCtx().writeAndFlush(Packet.dropTradeItem(this.no, index));
 	}
 
 	// 거래 골드 변경
@@ -1467,19 +1466,19 @@ public class User extends Character {
 			return;
 		}
 		// 거래 종료 대기 중이라면 반환
-		if (isAcceptTrade || User.get(tradePartner).isAcceptTrade) {
+		if (this.isAcceptTrade || User.get(this.tradePartner).isAcceptTrade) {
 			return;
 		}
 		// 가진 골드와 거래중인 골드의 합보다 많으면 반환
-		if (tradeGold + gold < value) {
+		if (this.tradeGold + this.gold < value) {
 			return;
 		}
-		gainGold(tradeGold);
+		gainGold(this.tradeGold);
 		loseGold(value);
-		tradeGold = value;
+		this.tradeGold = value;
 		// 골드 변경하렴
-		ctx.writeAndFlush(Packet.changeTradeGold(no, tradeGold));
-		User.get(tradePartner).getCtx().writeAndFlush(Packet.changeTradeGold(no, tradeGold));
+		this.ctx.writeAndFlush(Packet.changeTradeGold(this.no, this.tradeGold));
+		User.get(this.tradePartner).getCtx().writeAndFlush(Packet.changeTradeGold(this.no, this.tradeGold));
 	}
 
 	// 거래 종료 대기
@@ -1488,15 +1487,15 @@ public class User extends Character {
 		if (!nowTrading()) {
 			return;
 		}
-		User partner = User.get(tradePartner);
+		User partner = User.get(this.tradePartner);
 		// 상대방도 거래 종료 대기 중이라면
 		if (partner.isAcceptTrade) {
 			finishTrade();
 		} else {
-			isAcceptTrade = true;
+			this.isAcceptTrade = true;
 		}
-		ctx.writeAndFlush(Packet.acceptTrade(no));
-		partner.getCtx().writeAndFlush(Packet.acceptTrade(no));
+		this.ctx.writeAndFlush(Packet.acceptTrade(this.no));
+		partner.getCtx().writeAndFlush(Packet.acceptTrade(this.no));
 	}
 
 	// 거래 종료
@@ -1505,7 +1504,7 @@ public class User extends Character {
 		if (!nowTrading()) {
 			return;
 		}
-		User partner = User.get(tradePartner);
+		User partner = User.get(this.tradePartner);
 		// 아이템 및 골드 획득
 		for (Item i : partner.tradeItemList.values()) {
 			ItemData iData = GameData.item.get(i.getNo());
@@ -1517,7 +1516,7 @@ public class User extends Character {
 		}
 		gainGold(partner.tradeGold);
 		// 파트너 아이템 및 골드 획득
-		for (Item i : tradeItemList.values()) {
+		for (Item i : this.tradeItemList.values()) {
 			ItemData iData = GameData.item.get(i.getNo());
 			if (iData.getType() == Type.Item.ITEM) {
 				partner.gainItem(i.getNo(), i.getAmount());
@@ -1525,12 +1524,12 @@ public class User extends Character {
 				partner.gainItem(i.getNo(), i);
 			}
 		}
-		partner.gainGold(tradeGold);
+		partner.gainGold(this.tradeGold);
 		// 거래 관련 변수 초기화
-		tradePartner = 0;
-		isAcceptTrade = false;
-		tradeGold = 0;
-		tradeItemList.clear();
+		this.tradePartner = 0;
+		this.isAcceptTrade = false;
+		this.tradeGold = 0;
+		this.tradeItemList.clear();
 		partner.tradePartner = 0;
 		partner.isAcceptTrade = false;
 		partner.tradeGold = 0;
@@ -1544,7 +1543,7 @@ public class User extends Character {
 			return;
 		}
 		// 아이템 및 골드 돌려받기
-		for (Item i : tradeItemList.values()) {
+		for (Item i : this.tradeItemList.values()) {
 			ItemData iData = GameData.item.get(i.getNo());
 			if (iData.getType() == Type.Item.ITEM) {
 				gainItem(i.getNo(), i.getAmount());
@@ -1552,9 +1551,9 @@ public class User extends Character {
 				gainItem(i.getNo(), i);
 			}
 		}
-		gainGold(tradeGold);
+		gainGold(this.tradeGold);
 		// 파트너 아이템 및 골드 돌려받기
-		User partner = User.get(tradePartner);
+		User partner = User.get(this.tradePartner);
 		for (Item i : partner.tradeItemList.values()) {
 			ItemData iData = GameData.item.get(i.getNo());
 			if (iData.getType() == Type.Item.ITEM) {
@@ -1565,10 +1564,10 @@ public class User extends Character {
 		}
 		partner.gainGold(partner.tradeGold);
 		// 거래 관련 변수 초기화
-		tradePartner = 0;
-		isAcceptTrade = false;
-		tradeGold = 0;
-		tradeItemList.clear();
+		this.tradePartner = 0;
+		this.isAcceptTrade = false;
+		this.tradeGold = 0;
+		this.tradeItemList.clear();
 		partner.tradePartner = 0;
 		partner.isAcceptTrade = false;
 		partner.tradeGold = 0;
@@ -1580,11 +1579,11 @@ public class User extends Character {
 	// 거래 중 여부
 	public boolean nowTrading() {
 		// 거래 중이 아니라면
-		if (tradePartner == 0) {
+		if (this.tradePartner == 0) {
 			return false;
 		}
 		// 거래 상대 없다면
-		if (User.get(tradePartner) == null) {
+		if (User.get(this.tradePartner) == null) {
 			cancelTrade();
 			return false;
 		}
@@ -1592,39 +1591,39 @@ public class User extends Character {
 	}
 
 	// 상점 열기
-	public void openShop(int _no) {
-		ctx.writeAndFlush(Packet.openShopWindow(_no));
-		for (ItemData shopItem : GameData.shop.get(_no).getAllItems().values()) {
-			ctx.writeAndFlush(Packet.setShopItem(shopItem.getNo(), shopItem.getPrice()));
+	public void openShop(int no) {
+		this.ctx.writeAndFlush(Packet.openShopWindow(no));
+		for (ItemData shopItem : GameData.shop.get(no).getAllItems().values()) {
+			this.ctx.writeAndFlush(Packet.setShopItem(shopItem.getNo(), shopItem.getPrice()));
 		}
 	}
 
 	// 상점 아이템 구매
-	public void buyShopItem(int _shopNo, int _index, int _amount) {
-		if (!GameData.shop.containsKey(_shopNo)) {
+	public void buyShopItem(int shopNo, int index, int amount) {
+		if (!GameData.shop.containsKey(shopNo)) {
 			return;
 		}
-		Shop shop = GameData.shop.get(_shopNo);
-		if (shop.getItem(_index) == null) {
+		Shop shop = GameData.shop.get(shopNo);
+		if (shop.getItem(index) == null) {
 			return;
 		}
-		ItemData item = shop.getItem(_index);
+		ItemData item = shop.getItem(index);
 		if (item.getType() == Type.Item.ITEM) {
-			_amount = _amount > item.getMaxLoad() ? item.getMaxLoad() : _amount;
+			amount = amount > item.getMaxLoad() ? item.getMaxLoad() : amount;
 		} else {
-			_amount = 1;
+			amount = 1;
 		}
-		if (gold < item.getPrice() * _amount) {
+		if (this.gold < item.getPrice() * amount) {
 			return;
 		}
-		loseGold(item.getPrice() * _amount);
-		gainItem(item.getNo(), _amount);
+		loseGold(item.getPrice() * amount);
+		gainItem(item.getNo(), amount);
 	}
 
 	// 파티 번호 설정
-	public void setPartyNo(int _partyNo) {
-		partyNo = _partyNo;
-		ctx.writeAndFlush(Packet.setParty(partyNo));
+	public void setPartyNo(int partyNo) {
+		this.partyNo = partyNo;
+		this.ctx.writeAndFlush(Packet.setParty(this.partyNo));
 	}
 
 	// 파티 번호 얻기
@@ -1639,21 +1638,21 @@ public class User extends Character {
 			return;
 		}
 		// 파티를 생성
-		Party.add(no);
+		Party.add(this.no);
 	}
 
 	// 파티 요청
-	public void inviteParty(int _other) {
+	public void inviteParty(int otherNo) {
 		// 가입한 파티가 없다면 반환
 		if (!nowJoinParty()) {
 			return;
 		}
 		// 파티 멤버수가 최대라면 반환
-		if (Party.get(partyNo).getMembers().size() >= 4) {
+		if (Party.get(this.partyNo).getMembers().size() >= 4) {
 			return;
 		}
-		User other = User.get(_other);
-		User master = User.get(partyNo);
+		User other = User.get(otherNo);
+		User master = User.get(this.partyNo);
 		// 파티 마스터가 없다면 반환
 		if (master == null) {
 			return;
@@ -1667,19 +1666,19 @@ public class User extends Character {
 			return;
 		}
 		// 파티 요청
-		other.getCtx().writeAndFlush(Packet.inviteParty(partyNo, master.getName()));
+		other.getCtx().writeAndFlush(Packet.inviteParty(this.partyNo, master.getName()));
 	}
 
 	// 파티 응답
-	public void responseParty(int _type, int _partyNo) {
+	public void responseParty(int type, int partyNo) {
 		// 이미 가입한 파티가 있다면 반환
 		if (nowJoinParty()) {
 			return;
 		}
-		switch (_type) {
+		switch (type) {
 			case 0:
 				// 수락
-				Party.get(_partyNo).join(no);
+				Party.get(partyNo).join(this.no);
 				break;
 
 			case 1:
@@ -1701,7 +1700,7 @@ public class User extends Character {
 	}
 
 	// 파티 강퇴
-	public void kickParty(int _member) {
+	public void kickParty(int member) {
 		// 가입한 파티가 없다면 반환
 		if (!nowJoinParty()) {
 			return;
@@ -1711,10 +1710,10 @@ public class User extends Character {
 			return;
 		}
 		// 마스터를 강퇴하려 하면 반환
-		if (_member == partyNo) {
+		if (member == partyNo) {
 			return;
 		}
-		Party.get(partyNo).exit(_member);
+		Party.get(partyNo).exit(member);
 	}
 
 	// 파티 해체
@@ -1746,7 +1745,7 @@ public class User extends Character {
 	}
 
 	// 길드 생성
-	public void createGuild(String _guildName) {
+	public void createGuild(String guildName) {
 		// 가입한 길드가 있다면 반환
 		if (nowJoinGuild()) {
 			return;
@@ -1756,11 +1755,11 @@ public class User extends Character {
 			return;
 		}
 		loseGold(100000);
-		Guild.add(no, _guildName);
+		Guild.add(no, guildName);
 	}
 
 	// 길드 요청
-	public void inviteGuild(int _other) {
+	public void inviteGuild(int otherNo) {
 		// 가입한 길드가 없다면 반환
 		if (!nowJoinGuild()) {
 			return;
@@ -1769,7 +1768,7 @@ public class User extends Character {
 		if (Guild.get(guildNo).getMembers().size() >= 40) {
 			return;
 		}
-		User other = User.get(_other);
+		User other = User.get(otherNo);
 		User master = User.get(Guild.get(guildNo).getMaster());
 		// 마스터가 없다면 반환
 		if (master == null) {
@@ -1788,19 +1787,19 @@ public class User extends Character {
 			return;
 		}
 		// 길드 요청
-		other.getCtx().writeAndFlush(Packet.inviteGuild(guildNo, master.getName()));
+		other.getCtx().writeAndFlush(Packet.inviteGuild(this.guildNo, master.getName()));
 	}
 
 	// 길드 응답
-	public void responseGuild(int _type, int _guildNo) {
+	public void responseGuild(int type, int guildNo) {
 		// 이미 가입한 파티가 있다면 반환
 		if (nowJoinGuild()) {
 			return;
 		}
-		switch (_type) {
+		switch (type) {
 			case 0:
 				// 수락
-				Guild.get(_guildNo).join(no);
+				Guild.get(guildNo).join(this.no);
 				break;
 
 			case 1:
@@ -1818,24 +1817,24 @@ public class User extends Character {
 			return;
 		}
 		// 길드 탈퇴
-		Guild.get(guildNo).exit(no);
+		Guild.get(this.guildNo).exit(this.no);
 	}
 
 	// 길드 강퇴
-	public void kickGuild(int _member) {
+	public void kickGuild(int member) {
 		// 가입한 길드가 없다면 반환
 		if (!nowJoinGuild()) {
 			return;
 		}
 		// 길드 마스터가 아니라면 반환
-		if (guildNo != no) {
+		if (this.guildNo != this.no) {
 			return;
 		}
 		// 마스터를 강퇴하려 하면 반환
-		if (_member == guildNo) {
+		if (member == this.guildNo) {
 			return;
 		}
-		Guild.get(guildNo).exit(_member);
+		Guild.get(this.guildNo).exit(member);
 	}
 
 	// 길드 해체
@@ -1845,22 +1844,22 @@ public class User extends Character {
 			return;
 		}
 		// 길드 마스터가 아니라면 반환
-		if (guildNo != no) {
+		if (this.guildNo != this.no) {
 			return;
 		}
-		Guild.get(guildNo).breakUp();
+		Guild.get(this.guildNo).breakUp();
 	}
 
 	// 길드 가입 여부
 	private boolean nowJoinGuild() {
 		// 가입한 파티가 없다면
-		if (guildNo == 0) {
+		if (this.guildNo == 0) {
 			return false;
 		}
-		Guild guild = Guild.get(guildNo);
+		Guild guild = Guild.get(this.guildNo);
 		// 해당 길드가 없다면
 		if (guild == null) {
-			guildNo = 0;
+			this.guildNo = 0;
 			return false;
 		}
 		return true;
@@ -1873,9 +1872,9 @@ public class User extends Character {
 
 	// 대화 업데이트
 	public void updateMessage(int select) {
-		for (Npc npc : Map.getMap(map).getField(seed).getNPCs()) {
-			if (npc.getNo() == message.getNpc()) {
-				message.mySelect = select;
+		for (Npc npc : Map.getMap(this.map).getField(this.seed).getNPCs()) {
+			if (npc.getNo() == this.message.getNpc()) {
+				this.message.mySelect = select;
 				Functions.execute(Functions.npc, npc.getFunction(), new Object[]{ this, npc });
 				break;
 			}
@@ -1888,17 +1887,17 @@ public class User extends Character {
 		if (isBusy()) {
 			return;
 		}
-		int new_x = x + (direction == 6 ? 1 : direction == 4 ? -1 : 0);
-		int new_y = y + (direction == 2 ? 1 : direction == 8 ? -1 : 0);
+		int new_x = this.x + (this.direction == 6 ? 1 : this.direction == 4 ? -1 : 0);
+		int new_y = this.y + (this.direction == 2 ? 1 : this.direction == 8 ? -1 : 0);
 		// 에너미가 있을 경우 공격하고 반환
-		for (Enemy enemy : Map.getMap(map).getField(seed).getAliveEnemies()) {
+		for (Enemy enemy : Map.getMap(this.map).getField(this.seed).getAliveEnemies()) {
 			if (enemy.getX() == new_x && enemy.getY() == new_y) {
 				assault(enemy);
 				return;
 			}
 		}
 		// NPC가 있을 경우 대화하고 반환
-		for (Npc npc : Map.getMap(map).getField(seed).getNPCs()) {
+		for (Npc npc : Map.getMap(this.map).getField(this.seed).getNPCs()) {
 			if (npc.getX() == new_x && npc.getY() == new_y) {
 				Functions.execute(Functions.npc, npc.getFunction(), new Object[]{ this, npc });
 				return;
@@ -1912,7 +1911,7 @@ public class User extends Character {
 		target.animation(8);
 		// 실 데미지를 계산
 		int attackDamage = (getDamage() - target.getDefense()) *  (getDamage() - target.getDefense());
-		boolean isFatal = getCritical() > random.nextInt(100);
+		boolean isFatal = getCritical() > this.random.nextInt(100);
 		if (isFatal) {
 			attackDamage *= 2;
 		}
@@ -1930,61 +1929,61 @@ public class User extends Character {
 	}
 
 	// 채팅
-	public boolean chatCommand(String _message) {
-		String command_param[] = _message.split(" ");
+	public boolean chatCommand(String strMessage) {
+		String command_param[] = strMessage.split(" ");
 		// 콘솔 명령어가 실행되었는가
 		boolean isCmdExecuted = true;
 		switch (command_param[0]) {
 			case "/공지":
-				if (!admin)	{
+				if (!this.admin) {
 					isCmdExecuted = false;
 					break;
 				}
 				for (User u : users.values()) {
-					u.getCtx().writeAndFlush(Packet.chatAll(no, "[공지] " + _message.replaceFirst("/공지 ", ""), 255, 38, 19));
+					u.getCtx().writeAndFlush(Packet.chatAll(this.no, "[공지] " + strMessage.replaceFirst("/공지 ", ""), 255, 38, 19));
 				}
 				break;
 
 			case "/귓":
-				_message = _message.replaceFirst("/귓 ", "");
-				_message = _message.replaceFirst(command_param[1] + " ", "");
-				chatWhisper(command_param[1], _message);
+				strMessage = strMessage.replaceFirst("/귓 ", "");
+				strMessage = strMessage.replaceFirst(command_param[1] + " ", "");
+				chatWhisper(command_param[1], strMessage);
 				break;
 
 			case "/w":
-				_message = _message.replaceFirst("/w ", "");
-				_message = _message.replaceFirst(command_param[1] + " ", "");
-				chatWhisper(command_param[1], _message);
+				strMessage = strMessage.replaceFirst("/w ", "");
+				strMessage = strMessage.replaceFirst(command_param[1] + " ", "");
+				chatWhisper(command_param[1], strMessage);
 				break;
 
 			case "/파티":
-				_message = _message.replaceFirst("/파티 ", "");
-				chatParty(_message);
+				strMessage = strMessage.replaceFirst("/파티 ", "");
+				chatParty(strMessage);
 				break;
 
 			case "/p":
-				_message = _message.replaceFirst("/p ", "");
-				chatParty(_message);
+				strMessage = strMessage.replaceFirst("/p ", "");
+				chatParty(strMessage);
 				break;
 
 			case "/길드":
-				_message = _message.replaceFirst("/길드 ", "");
-				chatGuild(_message);
+				strMessage = strMessage.replaceFirst("/길드 ", "");
+				chatGuild(strMessage);
 				break;
 
 			case "/g":
-				_message = _message.replaceFirst("/g ", "");
-				chatGuild(_message);
+				strMessage = strMessage.replaceFirst("/g ", "");
+				chatGuild(strMessage);
 				break;
 
 			case "/전체":
-				_message = _message.replaceFirst("/전체 ", "");
-				chatAll(_message);
+				strMessage = strMessage.replaceFirst("/전체 ", "");
+				chatAll(strMessage);
 				break;
 
 			case "/a":
-				_message = _message.replaceFirst("/a ", "");
-				chatAll(_message);
+				strMessage = strMessage.replaceFirst("/a ", "");
+				chatAll(strMessage);
 				break;
 
 			// 커맨드 콘솔이 입력되지 않은 경우
@@ -1995,38 +1994,38 @@ public class User extends Character {
 	}
 
 	// 일반 채팅
-	public void chatNormal(String _message) {
-		if (chatCommand(_message)) {
+	public void chatNormal(String strMessage) {
+		if (chatCommand(strMessage)) {
 			return;
 		}
-		Vector<User> mapUsers = Map.getMap(map).getField(seed).getUsers();
+		Vector<User> mapUsers = Map.getMap(this.map).getField(this.seed).getUsers();
 		for (User u : mapUsers) {
-			u.getCtx().writeAndFlush(Packet.chatNormal(no, name + " : " + _message));
+			u.getCtx().writeAndFlush(Packet.chatNormal(this.no, this.name + " : " + strMessage));
 		}
 		startShowingBalloon();
 	}
 
 	// 귓속말
-	public void chatWhisper(String _target_name, String _message) {
-		if (chatCommand(_message)) {
+	public void chatWhisper(String strTargetName, String strMessage) {
+		if (chatCommand(strMessage)) {
 			return;
 		}
 		User u_target = null;
 		// 타겟이 본인일 경우
-		if (name.equals(_target_name)) {
+		if (this.name.equals(strTargetName)) {
 			return;
 		}
 		// 검색하려는 닉네임이 공백인 경우
-		if (_target_name.equals("")) {
+		if (strTargetName.equals("")) {
 			return;
 		}
 		// 메세지가 존재하지 않을 경우
-		if (_message == null || _message.equals("")) {
+		if (strMessage == null || strMessage.equals("")) {
 			return;
 		}
 		// 닉네임으로 타겟 유저 검색
 		for (User u : users.values()) {
-			if (u.getName().equals(_target_name)) {
+			if (u.getName().equals(strTargetName)) {
 				u_target = u;
 				break;
 			}
@@ -2036,46 +2035,46 @@ public class User extends Character {
 			return;
 		}
 		// `상대`가 `나`로부터 받음
-		u_target.getCtx().writeAndFlush(Packet.chatWhisper("[From:" + name + "] " + _message, 25, 181, 254, 32, 32, 32));
+		u_target.getCtx().writeAndFlush(Packet.chatWhisper("[From:" + this.name + "] " + strMessage, 25, 181, 254, 32, 32, 32));
 		// `나`가 `상대`에게 보냄
-		ctx.writeAndFlush(Packet.chatWhisper("[To:" + u_target.getName() + "] " + _message, 25, 181, 254, 32, 32, 32));
+		this.ctx.writeAndFlush(Packet.chatWhisper("[To:" + u_target.getName() + "] " + strMessage, 25, 181, 254, 32, 32, 32));
 	}
 
 	// 파티 채팅
-	public void chatParty(String _message) {
-		if (chatCommand(_message)) {
+	public void chatParty(String strMessage) {
+		if (chatCommand(strMessage)) {
 			return;
 		}
  		if (!nowJoinParty()) {
 			return;
 		}
- 		for (int members : Party.get(partyNo).getMembers()) {
+ 		for (int members : Party.get(this.partyNo).getMembers()) {
  			User u = User.get(members);
- 			u.getCtx().writeAndFlush(Packet.chatParty("[파티] " + name + " : " + _message, 3, 201, 169, 32, 32, 32));
+ 			u.getCtx().writeAndFlush(Packet.chatParty("[파티] " + this.name + " : " + strMessage, 3, 201, 169, 32, 32, 32));
  		}
  	}
  
  	// 길드 채팅
- 	public void chatGuild(String _message) {
-		if (chatCommand(_message)) {
+ 	public void chatGuild(String strMessage) {
+		if (chatCommand(strMessage)) {
 			return;
 		}
  		if (!nowJoinGuild()) {
 			return;
 		}
- 		for (int members : Guild.get(guildNo).getMembers()) {
+ 		for (int members : Guild.get(this.guildNo).getMembers()) {
  			User u = User.get(members);
- 			u.getCtx().writeAndFlush(Packet.chatGuild("[길드] " + name + " : " + _message, 247, 202, 24, 32, 32, 32));
+ 			u.getCtx().writeAndFlush(Packet.chatGuild("[길드] " + this.name + " : " + strMessage, 247, 202, 24, 32, 32, 32));
  		}
  	}
 
 	// 전체 채팅
-	public void chatAll(String _message) {
-		if (chatCommand(_message)) {
+	public void chatAll(String strMessage) {
+		if (chatCommand(strMessage)) {
 			return;
 		}
 		for (User u : users.values()) {
-			u.getCtx().writeAndFlush(Packet.chatAll(no, "[전체] " + name + " : " + _message, 255, 255, 255, 219, 10, 91));
+			u.getCtx().writeAndFlush(Packet.chatAll(this.no, "[전체] " + this.name + " : " + strMessage, 255, 255, 255, 219, 10, 91));
 		}
 		startShowingBalloon();
 	}
@@ -2083,7 +2082,7 @@ public class User extends Character {
 	// 다른 작업을 하고 있는지 (대화, 거래)
 	private boolean isBusy() {
 		// 대화 중
-		if (message.isStart()) {
+		if (this.message.isStart()) {
 			return true;
 		}
 		// 거래 중
@@ -2097,41 +2096,41 @@ public class User extends Character {
     public void startShowingBalloon() {
 	    // 옵션 DB 에서 말풍선 표시 시간 취득
         try {
-            if (standardDelay < 0) {
+            if (this.standardDelay < 0) {
                 ResultSet rs = DataBase.executeQuery("SELECT `value` FROM `setting_option` WHERE `name` = 'chatting_balloon_delay';");
                 if (rs.next()) {
-                    standardDelay = rs.getInt(1);
-                    standardDelay /= 100;
+					this.standardDelay = rs.getInt(1);
+					this.standardDelay /= 100;
                 }
                 rs.close();
             }
         } catch (SQLException e) {
             logger.warning(e.toString());
         }
-        isBalloonShowing = true;
-        startChattingTime = System.currentTimeMillis() / 100;
+		this.isBalloonShowing = true;
+		this.startChattingTime = System.currentTimeMillis() / 100;
     }
 
     public void endShowingBalloon(int no) {
-        Vector<User> mapUsers = Map.getMap(map).getField(seed).getUsers();
+        Vector<User> mapUsers = Map.getMap(this.map).getField(this.seed).getUsers();
         for (User u : mapUsers) {
 			u.getCtx().writeAndFlush(Packet.removeChattingBalloon(no));
 		}
-        isBalloonShowing = false;
+		this.isBalloonShowing = false;
     }
 
 	public void update() {
 		long nowTime = System.currentTimeMillis() / 100;
 		// 쿨타임
-		if (nowTime > lastTime + 1)
+		if (nowTime > this.lastTime + 1)
 		{
-			lastTime = System.currentTimeMillis() / 100;
-			coolTime.coolDown();
+			this.lastTime = System.currentTimeMillis() / 100;
+			this.coolTime.coolDown();
 		}
         // 말풍선
-		if (isBalloonShowing) {
-            if (nowTime - startChattingTime >= standardDelay) {
-                endShowingBalloon(no);
+		if (this.isBalloonShowing) {
+            if (nowTime - this.startChattingTime >= this.standardDelay) {
+                endShowingBalloon(this.no);
             }
         }
 	}
@@ -2140,7 +2139,7 @@ public class User extends Character {
 	public void move(int type) {
 		// 다른 작업 중이라면 리프레쉬
 		if (isBusy()) {
-			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+			this.ctx.writeAndFlush(Packet.refreshCharacter(this.characterType, this.no, this.x, this.y, this.direction));
 			return;
 		}
 		// 이동
@@ -2164,14 +2163,14 @@ public class User extends Character {
 			default:
 		}
 		// 맵 이동 여부 판정
-		Field gameField = Map.getMap(map).getField(seed);
+		Field gameField = Map.getMap(this.map).getField(this.seed);
 		for (Portal portal : gameField.getPortals()) {
-			if (portal.getX() == x && portal.getY() == y) {
+			if (portal.getX() == this.x && portal.getY() == this.y) {
 				gameField.removeUser(this);
-				map = portal.getNextMap();
-				x = portal.getNextX();
-				y = portal.getNextY();
-				Map.getMap(portal.getNextMap()).getField(seed).addUser(this);
+				this.map = portal.getNextMap();
+				this.x = portal.getNextX();
+				this.y = portal.getNextY();
+				Map.getMap(portal.getNextMap()).getField(this.seed).addUser(this);
 			}
 		}
 	}
@@ -2179,28 +2178,28 @@ public class User extends Character {
 	// 이동이 불가능한 경우 리프레쉬
 	protected boolean moveUp() {
 		if (!super.moveUp()) {
-			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+			this.ctx.writeAndFlush(Packet.refreshCharacter(this.characterType, this.no, this.x, this.y, this.direction));
 		}
 		return true;
 	}
 
 	protected boolean moveDown() {
 		if (!super.moveDown()) {
-			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+			this.ctx.writeAndFlush(Packet.refreshCharacter(this.characterType, this.no, this.x, this.y, this.direction));
 		}
 		return true;
 	}
 
 	protected boolean moveLeft() {
 		if (!super.moveLeft()) {
-			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+			this.ctx.writeAndFlush(Packet.refreshCharacter(this.characterType, this.no, this.x, this.y, this.direction));
 		}
 		return true;
 	}
 
 	protected boolean moveRight() {
 		if (!super.moveRight()) {
-			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+			this.ctx.writeAndFlush(Packet.refreshCharacter(this.characterType, this.no, this.x, this.y, this.direction));
 		}
 		return true;
 	}
@@ -2209,7 +2208,7 @@ public class User extends Character {
 	public void turn(int type) {
 		// 다른 작업 중이라면 리프레쉬
 		if (isBusy()) {
-			ctx.writeAndFlush(Packet.refreshCharacter(characterType, no, x, y, direction));
+			this.ctx.writeAndFlush(Packet.refreshCharacter(this.characterType, this.no, this.x, this.y, this.direction));
 			return;
 		}
 		switch (type) {
@@ -2239,14 +2238,14 @@ public class User extends Character {
 			ResultSet rs = DataBase.executeQuery("SELECT * FROM `slot` WHERE `no` = '" + no + "';");
 			if (!rs.next()) {
 				DataBase.executeUpdate("INSERT `slot` SET " +
-						"`no` = '" + no + "';");
+						"`no` = '" + this.no + "';");
 			} else {
 				for (int i = 2; i < 12; ++i) {
-					ctx.writeAndFlush(Packet.setSlot(i - 2, rs.getInt(i)));
+					this.ctx.writeAndFlush(Packet.setSlot(i - 2, rs.getInt(i)));
 				}
 				for (int i = 2; i < 12; ++i) {
 					if (rs.getInt(i) != -1) {
-						coolTime.initCoolTime(i - 2, GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getNo());
+						this.coolTime.initCoolTime(i - 2, GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(rs.getInt(i)).getNo()).getNo());
 					}
 				}
 			}
@@ -2257,11 +2256,11 @@ public class User extends Character {
 	}
 
 	public void setSlot(int index, int itemidx) {
-		if (GameData.skill.get(findSkillByIndex(itemidx).getNo()).getLimitLevel() > level) {
+		if (GameData.skill.get(findSkillByIndex(itemidx).getNo()).getLimitLevel() > this.level) {
 			return;
 		}
 		DataBase.setSlot(this, index, itemidx);
-		coolTime.initCoolTime(index, GameData.skill.get(findSkillByIndex(itemidx).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(itemidx).getNo()).getNo());
+		this.coolTime.initCoolTime(index, GameData.skill.get(findSkillByIndex(itemidx).getNo()).getDelay(), GameData.skill.get(findSkillByIndex(itemidx).getNo()).getNo());
 		loadSlot();
 	}
 
@@ -2278,26 +2277,26 @@ public class User extends Character {
 		}
 		// 파티 가입중이라면 파티 탈퇴
 		if (nowJoinParty()) {
-			if (partyNo == no) {
+			if (this.partyNo == this.no) {
 				breakUpParty();
 			} else {
 				quitParty();
 			}
 		}
 		// 맵에서 나가기
-		Map.getMap(map).getField(seed).removeUser(this);
+		Map.getMap(this.map).getField(this.seed).removeUser(this);
 		// 유저 정보 업데이트
 		DataBase.updateUser(this);
 		// 장착 아이템 정보 업데이트
 		DataBase.updateEquip(this);
 		// 아이템과 스킬을 지운다
-		DataBase.deleteItem(no);
-		DataBase.deleteSkill(no);
+		DataBase.deleteItem(this.no);
+		DataBase.deleteSkill(this.no);
 		// 가진 아이템과 스킬을 넣자
-		for (Item item : itemBag.values()) {
+		for (Item item : this.itemBag.values()) {
 			DataBase.insertItem(item);
 		}
-		for (GameData.Skill skill : skillBag.values()) {
+		for (GameData.Skill skill : this.skillBag.values()) {
 			DataBase.insertSkill(skill);
 		}
 	}
@@ -2329,37 +2328,37 @@ public class User extends Character {
 		}
 
 		// 대화 시작
-		public void open(int _npcNo, int _npcSelect) {
-			npcNo = _npcNo;
-			npcMessage = 0;
-			npcSelect = _npcSelect;
-			ctx.writeAndFlush(Packet.openMessageWindow(npcNo, npcMessage, npcSelect));
+		public void open(int npcNo, int npcSelect) {
+			this.npcNo = npcNo;
+			this.npcMessage = 0;
+			this.npcSelect = npcSelect;
+			ctx.writeAndFlush(Packet.openMessageWindow(this.npcNo, this.npcMessage, this.npcSelect));
 		}
 
 		// 대화 종료
 		public void close() {
-			npcNo = 0;
+			this.npcNo = 0;
 			ctx.writeAndFlush(Packet.closeMessageWindow());
 		}
 
 		// 대화 진행
 		public void update(int message, int select) {
-			npcMessage = message;
-			npcSelect = select;
-			ctx.writeAndFlush(Packet.openMessageWindow(npcNo, npcMessage, npcSelect));
+			this.npcMessage = message;
+			this.npcSelect = select;
+			ctx.writeAndFlush(Packet.openMessageWindow(this.npcNo, this.npcMessage, this.npcSelect));
 		}
 	}
 
 	class CoolTime
 	{
-		public Vector<int[]> slot = new Vector<>();
-		public int BasicAttack;
-		public int Global;
+		private Vector<int[]> slot = new Vector<>();
+		private int basicAttack;
+		private int global;
 
 		public CoolTime() {
 			for (int i = 0; i < 10; ++i) {
 				int[] a = new int[3];
-				slot.add(i, a);
+				this.slot.add(i, a);
 			}
 		}
 
@@ -2368,26 +2367,32 @@ public class User extends Character {
 		}
 
 		public int getBasicAttack() {
-			return BasicAttack;
+			return basicAttack;
 		}
 
-		public void setBasicAttack(int iValue) { BasicAttack = iValue; }
+		public void setBasicAttack(int iValue) {
+			basicAttack = iValue;
+		}
 
-		public void setGlobal(int value) { Global = value; }
+		public void setGlobal(int value) {
+			global = value;
+		}
 
-		public int getGlobal() { return Global; }
+		public int getGlobal() {
+			return global;
+		}
 
 		public void initCoolTime(int index, int value, int no) {
-			slot.get(index)[0] = no;
-			slot.get(index)[1] = 0;
-			slot.get(index)[2] = value;
-			ctx.writeAndFlush(Packet.setCoolTime(slot.get(index)[1], slot.get(index)[2], index));
+			this.slot.get(index)[0] = no;
+			this.slot.get(index)[1] = 0;
+			this.slot.get(index)[2] = value;
+			ctx.writeAndFlush(Packet.setCoolTime(this.slot.get(index)[1], this.slot.get(index)[2], index));
 		}
 
 		public int getCoolTime(int no) {
 			for (int i = 0; i < 10; ++i) {
-				if (slot.get(i)[0] == no) {
-					return slot.get(i)[1];
+				if (this.slot.get(i)[0] == no) {
+					return this.slot.get(i)[1];
 				}
 			}
 			return -1;
@@ -2395,25 +2400,25 @@ public class User extends Character {
 
 		public void setCoolTime(int value, int no) {
 			for (int i = 0; i < 10; ++i) {
-				if (slot.get(i)[0] == no) {
-					slot.get(i)[1] = value;
-					ctx.writeAndFlush(Packet.setCoolTime(slot.get(i)[1], slot.get(i)[2], i));
+				if (this.slot.get(i)[0] == no) {
+					this.slot.get(i)[1] = value;
+					ctx.writeAndFlush(Packet.setCoolTime(this.slot.get(i)[1], this.slot.get(i)[2], i));
 				}
 			}
 		}
 
 		public void coolDown() {
 			for (int i = 0; i < 10; ++i) {
-				if (slot.get(i)[1] > 0) {
-					--slot.get(i)[1];
-					ctx.writeAndFlush(Packet.setCoolTime(slot.get(i)[1], slot.get(i)[2], i));
+				if (this.slot.get(i)[1] > 0) {
+					--this.slot.get(i)[1];
+					ctx.writeAndFlush(Packet.setCoolTime(this.slot.get(i)[1], this.slot.get(i)[2], i));
 				}
 			}
-			if (BasicAttack > 0) {
-				--BasicAttack;
+			if (this.basicAttack > 0) {
+				--this.basicAttack;
 			}
-			if (Global > 0) {
-				--Global;
+			if (this.global > 0) {
+				--this.global;
 			}
 		}
 	}
