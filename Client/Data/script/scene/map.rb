@@ -11,7 +11,7 @@ class Scene_Map
   
   def initialize
     @map_sprite = MapSprite.new
-    @hud = MUI_HUD.new
+    @hud = MUI::HUD.new
     MUI::Console.init
     MUI::ChatBox.init
   end
@@ -60,29 +60,29 @@ class Scene_Map
     if Mouse.trigger?(1)
       for netplayer in Game.map.netplayers.values
         if netplayer.x == Mouse.map_x && netplayer.y == Mouse.map_y
-          MUI.getForm(MUI_ClickMenu).dispose if MUI.include?(MUI_ClickMenu)
-          MUI_ClickMenu.new(netplayer.no)
+          MUI.getForm(MUI::Form::ClickMenu).dispose if MUI.include?(MUI::Form::ClickMenu)
+          MUI::Form::ClickMenu.new(netplayer.no)
         end
       end
     end
     return if MUI.nowTyping?
     if Key.trigger?(Key::KB_U)
-      if MUI.include?(MUI_Status)
-        MUI.getForm(MUI_Status).dispose
+      if MUI.include?(MUI::Form::Status)
+        MUI.getForm(MUI::Form::Status).dispose
       else
-        MUI_Status.new
+        MUI::Form::Status.new
       end
     elsif Key.trigger?(Key::KB_I)
-      if MUI.include?(MUI_Inventory)
-        MUI.getForm(MUI_Inventory).dispose
+      if MUI.include?(MUI::Form::Inventory)
+        MUI.getForm(MUI::Form::Inventory).dispose
       else
-        MUI_Inventory.new
+        MUI::Form::Inventory.new
       end
     elsif Key.trigger?(Key::KB_K)
-      if MUI.include?(MUI_Skill)
-        MUI.getForm(MUI_Skill).dispose
+      if MUI.include?(MUI::Form::Skill)
+        MUI.getForm(MUI::Form::Skill).dispose
       else
-        MUI_Skill.new
+        MUI::Form::Skill.new
       end
     elsif Key.trigger?(Key::KB_SPACE)
       Socket.send({'header' => CTSHeader::ACTION})

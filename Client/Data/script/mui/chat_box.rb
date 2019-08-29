@@ -72,7 +72,7 @@ class MUI
       
       initButtons()
       
-      @muiFrm = MUI_SetWhisperNickname.new
+      @muiFrm = MUI::Form::SetWhisperNickname.new
       @muiFrm.dispose()
     end
     
@@ -103,7 +103,7 @@ class MUI
         @nicknameSprite.color = Color.red
         if Mouse.trigger?(0)
           if @muiFrm.disposed?
-            @muiFrm = MUI_SetWhisperNickname.new
+            @muiFrm = MUI::Form::SetWhisperNickname.new
           else
             @muiFrm.x = Mouse.x
             @muiFrm.y = Mouse.y

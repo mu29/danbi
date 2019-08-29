@@ -63,7 +63,7 @@ class Packet
         Game.map.update
 
       when 1
-        dialog = MUI_Dialog.new(Dialog::LOGIN, "로그인 실패", "아이디와 비밀번호를 확인해주세요.", ["닫기"]) do
+        dialog = MUI::Form::Dialog.new(DialogType::LOGIN, "로그인 실패", "아이디와 비밀번호를 확인해주세요.", ["닫기"]) do
           dialog.dispose if dialog.value == 0
         end
       end
@@ -71,22 +71,22 @@ class Packet
     when STCHeader::REGISTER
       case recv["type"]
       when 0
-        dialog = MUI_Dialog.new(Dialog::REGISTER, "가입 성공", "가입이 완료되었습니다.", ["닫기"]) do
+        dialog = MUI::Form::Dialog.new(DialogType::REGISTER, "가입 성공", "가입이 완료되었습니다.", ["닫기"]) do
           dialog.dispose if dialog.value == 0
         end
 
       when 1
-        dialog = MUI_Dialog.new(Dialog::REGISTER, "가입 실패", "이미 존재하는 아이디입니다.", ["닫기"]) do
+        dialog = MUI::Form::Dialog.new(DialogType::REGISTER, "가입 실패", "이미 존재하는 아이디입니다.", ["닫기"]) do
           dialog.dispose if dialog.value == 0
         end
 
       when 2
-        dialog = MUI_Dialog.new(Dialog::REGISTER, "가입 실패", "이미 존재하는 닉네임입니다.", ["닫기"]) do
+        dialog = MUI::Form::Dialog.new(DialogType::REGISTER, "가입 실패", "이미 존재하는 닉네임입니다.", ["닫기"]) do
           dialog.dispose if dialog.value == 0
         end
 
       when 3
-        dialog = MUI_Dialog.new(Dialog::REGISTER, "가입 실패", "알 수 없는 오류입니다.", ["닫기"]) do
+        dialog = MUI::Form::Dialog.new(DialogType::REGISTER, "가입 실패", "알 수 없는 오류입니다.", ["닫기"]) do
           dialog.dispose if dialog.value == 0
         end
       end
@@ -352,7 +352,7 @@ class Packet
       end
 
     when STCHeader::OPEN_REGISTER_WINDOW
-      MUI_Register.new(recv["image"], recv["job"])
+      MUI::Form::Register.new(recv["image"], recv["job"])
 
     when STCHeader::UPDATE_STATUS
       Game.player.title = recv["#{StatusType::TITLE}"] if recv["#{StatusType::TITLE}"]
@@ -375,7 +375,7 @@ class Packet
       Game.player.maxExp = recv["#{StatusType::MAX_EXP}"] if recv["#{StatusType::MAX_EXP}"]
       if recv["#{StatusType::GOLD}"]
         Game.player.gold = recv["#{StatusType::GOLD}"]
-        MUI.getForm(MUI_Inventory).refreshData if MUI.include?(MUI_Inventory)
+        MUI.getForm(MUI::Form::Inventory).refreshData if MUI.include?(MUI::Form::Inventory)
       end
       Game.player.weapon = recv["#{StatusType::WEAPON}"] if recv["#{StatusType::WEAPON}"]
       Game.player.shield = recv["#{StatusType::SHIELD}"] if recv["#{StatusType::SHIELD}"]
@@ -384,7 +384,7 @@ class Packet
       Game.player.cape = recv["#{StatusType::CAPE}"] if recv["#{StatusType::CAPE}"]
       Game.player.shoes = recv["#{StatusType::SHOES}"] if recv["#{StatusType::SHOES}"]
       Game.player.accessory = recv["#{StatusType::ACCESSORY}"] if recv["#{StatusType::ACCESSORY}"]
-      MUI.getForm(MUI_Status).refreshData if MUI.include?(MUI_Status)
+      MUI.getForm(MUI::Form::Status).refreshData if MUI.include?(MUI::Form::Status)
 
     when STCHeader::SET_ITEM
       item = Item.new(recv["userNo"], recv["itemNo"], 
@@ -398,7 +398,7 @@ class Packet
                       recv["reinforce"], recv["trade"],
                       recv["equipped"])
       Game.player.addItem(recv["index"], item)
-      MUI.getForm(MUI_Inventory).refreshData if MUI.include?(MUI_Inventory)
+      MUI.getForm(MUI::Form::Inventory).refreshData if MUI.include?(MUI::Form::Inventory)
 
     when STCHeader::UPDATE_ITEM
       case recv["type"]
@@ -416,12 +416,12 @@ class Packet
                               recv["reinforce"], recv["trade"],
                               recv["equipped"])
       end
-      MUI.getForm(MUI_Inventory).refreshData if MUI.include?(MUI_Inventory)
+      MUI.getForm(MUI::Form::Inventory).refreshData if MUI.include?(MUI::Form::Inventory)
 
     when STCHeader::SET_SKILL
       skill = Skill.new(recv["no"], recv["rank"])
       Game.player.addSkill(skill)
-      MUI.getForm(MUI_Skill).refreshData if MUI.include?(MUI_Skill)
+      MUI.getForm(MUI::Form::Skill).refreshData if MUI.include?(MUI::Form::Skill)
 
     when STCHeader::UPDATE_SKILL
       case recv["type"]
@@ -436,7 +436,7 @@ class Packet
     when STCHeader::REQUEST_TRADE
       partner = Game.map.getNetplayer(recv["partnerNo"])
       return if not partner
-      dialog = MUI_Dialog.new(Dialog::TRADE_REQUEST, "거래 요청", partner.name + " 님이 거래를 요청하셨습니다.", ["수락", "거절"]) do
+      dialog = MUI::Form::Dialog.new(DialogType::TRADE_REQUEST, "거래 요청", partner.name + " 님이 거래를 요청하셨습니다.", ["수락", "거절"]) do
         if dialog.value == 0
           Socket.send({"header" => CTSHeader::RESPONSE_TRADE, "type" => 0, "partner" => partner.no})
           dialog.dispose
@@ -449,7 +449,7 @@ class Packet
     when STCHeader::OPEN_TRADE_WINDOW
       partner = Game.map.getNetplayer(recv["partnerNo"])
       return if not partner
-      MUI_Trade.new(partner)
+      MUI::Form::Trade.new(partner)
 
     when STCHeader::LOAD_TRADE_ITEM
       item = Item.new(recv["userNo"], recv["itemNo"], 
@@ -461,49 +461,49 @@ class Packet
                       recv["mp"], recv["critical"], 
                       recv["avoid"], recv["hit"], 
                       recv["reinforce"], 1, 0)
-      if MUI.include?(MUI_Trade)
-        MUI.getForm(MUI_Trade).addMyItem(recv["index"], item) if Game.player.no == recv["userNo"]
-        MUI.getForm(MUI_Trade).addPartnerItem(recv["index"], item) if MUI.getForm(MUI_Trade).user.no == recv["userNo"]
+      if MUI.include?(MUI::Form::Trade)
+        MUI.getForm(MUI::Form::Trade).addMyItem(recv["index"], item) if Game.player.no == recv["userNo"]
+        MUI.getForm(MUI::Form::Trade).addPartnerItem(recv["index"], item) if MUI.getForm(MUI::Form::Trade).user.no == recv["userNo"]
       end
 
     when STCHeader::DROP_TRADE_ITEM
-      if MUI.include?(MUI_Trade)
-        MUI.getForm(MUI_Trade).removeMyItem(recv["index"]) if Game.player.no == recv["no"]
-        MUI.getForm(MUI_Trade).removePartnerItem(recv["index"]) if MUI.getForm(MUI_Trade).user.no == recv["no"]
+      if MUI.include?(MUI::Form::Trade)
+        MUI.getForm(MUI::Form::Trade).removeMyItem(recv["index"]) if Game.player.no == recv["no"]
+        MUI.getForm(MUI::Form::Trade).removePartnerItem(recv["index"]) if MUI.getForm(MUI::Form::Trade).user.no == recv["no"]
       end
 
     when STCHeader::CHANGE_TRADE_GOLD
-      MUI.getForm(MUI_Trade).setGold(recv["no"], recv["amount"]) if MUI.include?(MUI_Trade)
+      MUI.getForm(MUI::Form::Trade).setGold(recv["no"], recv["amount"]) if MUI.include?(MUI::Form::Trade)
 
     when STCHeader::FINISH_TRADE
-      MUI.getForm(MUI_Trade).acceptTrade(recv["no"]) if MUI.include?(MUI_Trade)
+      MUI.getForm(MUI::Form::Trade).acceptTrade(recv["no"]) if MUI.include?(MUI::Form::Trade)
 
     when STCHeader::CANCEL_TRADE
-      MUI.getForm(MUI_Trade).dispose if MUI.include?(MUI_Trade)
+      MUI.getForm(MUI::Form::Trade).dispose if MUI.include?(MUI::Form::Trade)
 
     when STCHeader::OPEN_MESSAGE_WINDOW
-      MUI_Message.new(recv["no"]) if !MUI.include?(MUI_Message)
-      MUI.getForm(MUI_Message).set(recv["message"], recv["select"])
+      MUI::Form::Message.new(recv["no"]) if !MUI.include?(MUI::Form::Message)
+      MUI.getForm(MUI::Form::Message).set(recv["message"], recv["select"])
 
     when STCHeader::CLOSE_MESSAGE_WINDOW
-      MUI.getForm(MUI_Message).dispose if MUI.include?(MUI_Message)
+      MUI.getForm(MUI::Form::Message).dispose if MUI.include?(MUI::Form::Message)
 
     when STCHeader::OPEN_SHOP_WINDOW
       Game.player.shopNo = recv["no"]
       Game.player.clearShopItem
-      MUI_Shop.new 
+      MUI::Form::Shop.new 
 
     when STCHeader::SET_SHOP_ITEM
-      return if !MUI.include?(MUI_Shop)
+      return if !MUI.include?(MUI::Form::Shop)
       item = Item.new(0, recv["no"], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
       Game.player.addShopItem(item)
-      MUI.getForm(MUI_Shop).refreshData
+      MUI.getForm(MUI::Form::Shop).refreshData
 
     when STCHeader::SET_PARTY
       Game.player.partyNo = recv["no"]
       if Game.player.partyNo == 0
         Game.player.party_member = []
-        MUI.getForm(MUI_Community).refreshData if MUI.include?(MUI_Community)
+        MUI.getForm(MUI::Form::Community).refreshData if MUI.include?(MUI::Form::Community)
       end
 
     when STCHeader::SET_PARTY_MEMBER
@@ -516,7 +516,7 @@ class Packet
       member.hp = recv["hp"]
       member.maxHp = recv["maxHp"]
       Game.player.party_member.push(member)
-      MUI.getForm(MUI_Community).refreshData if MUI.include?(MUI_Community)
+      MUI.getForm(MUI::Form::Community).refreshData if MUI.include?(MUI::Form::Community)
 
     when STCHeader::REMOVE_PARTY_MEMBER
       for member in Game.player.party_member
@@ -525,11 +525,11 @@ class Packet
           break
         end
       end
-      MUI.getForm(MUI_Community).refreshData if MUI.include?(MUI_Community)
+      MUI.getForm(MUI::Form::Community).refreshData if MUI.include?(MUI::Form::Community)
 
     when STCHeader::INVITE_PARTY
       partyNo = recv["partyNo"]
-      dialog = MUI_Dialog.new(Dialog::PARTY_INVITE, "파티 초대", recv["master"] + " 님의 파티에 가입하시겠습니까?", ["수락", "거절"]) do
+      dialog = MUI::Form::Dialog.new(DialogType::PARTY_INVITE, "파티 초대", recv["master"] + " 님의 파티에 가입하시겠습니까?", ["수락", "거절"]) do
         if dialog.value == 0
           Socket.send({"header" => CTSHeader::RESPONSE_PARTY, "type" => 0, "partyNo" => partyNo})
           dialog.dispose
@@ -540,7 +540,7 @@ class Packet
       end
 
     when STCHeader::CREATE_GUILD
-      dialog = MUI_Dialog.new(Dialog::GUILD_CREATE, "길드 생성", "길드를 생성합니다.", ["수락", "거절"], ["길드 이름을 입력하세요."]) do
+      dialog = MUI::Form::Dialog.new(DialogType::GUILD_CREATE, "길드 생성", "길드를 생성합니다.", ["수락", "거절"], ["길드 이름을 입력하세요."]) do
         if dialog.value == 0
           Socket.send({"header" => CTSHeader::CREATE_GUILD, "name" => dialog.textbox[0].text}) if dialog.textbox[0].text != ""
           dialog.dispose
@@ -553,7 +553,7 @@ class Packet
       Game.player.guildNo = recv["no"]
       if Game.player.guildNo == 0
         Game.player.guild_member = []
-        MUI.getForm(MUI_Community).refreshData if MUI.include?(MUI_Community)
+        MUI.getForm(MUI::Form::Community).refreshData if MUI.include?(MUI::Form::Community)
       end
 
     when STCHeader::SET_GUILD_MEMBER
@@ -566,7 +566,7 @@ class Packet
       member.hp = recv["hp"]
       member.maxHp = recv["maxHp"]
       Game.player.guild_member.push(member)
-      MUI.getForm(MUI_Community).refreshData if MUI.include?(MUI_Community)
+      MUI.getForm(MUI::Form::Community).refreshData if MUI.include?(MUI::Form::Community)
 
     when STCHeader::REMOVE_GUILD_MEMBER
       for member in Game.player.guild_member
@@ -575,11 +575,11 @@ class Packet
           break
         end
       end
-      MUI.getForm(MUI_Community).refreshData if MUI.include?(MUI_Community)
+      MUI.getForm(MUI::Form::Community).refreshData if MUI.include?(MUI::Form::Community)
 
     when STCHeader::INVITE_GUILD
       guildNo = recv["guildNo"]
-      dialog = MUI_Dialog.new(Dialog::GUILD_INVITE, "길드 초대", recv["master"] + " 님의 길드에 가입하시겠습니까?", ["수락", "거절"]) do
+      dialog = MUI::Form::Dialog.new(DialogType::GUILD_INVITE, "길드 초대", recv["master"] + " 님의 길드에 가입하시겠습니까?", ["수락", "거절"]) do
         if dialog.value == 0
           Socket.send({"header" => CTSHeader::RESPONSE_GUILD, "type" => 0, "guildNo" => guildNo})
           dialog.dispose

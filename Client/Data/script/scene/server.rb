@@ -37,7 +37,8 @@ class Scene_Server
     @sprite[3].bitmap.font.size = 20
     @sprite[3].bitmap.draw_multi_text(0, 0, @sprite[3].bitmap.width, @sprite[3].bitmap.height,
     "RPGXP 온라인 엔진", 1)
-    MUI_Server.new
+    MUI::Form::Server.new
+    #MUI::UniqueForm::Test.new
   end
   
   def main
@@ -57,7 +58,7 @@ class Scene_Server
     Graphics.freeze
     @sprite.each_index { |n| @sprite[n].bitmap.dispose; @sprite[n].dispose }
     #@cache.each_index { |n| @cache[n].dispose }
-    MUI.getForm(MUI_Server).dispose
+    MUI.getForm(MUI::Form::Server).dispose
   end
   
   def slide

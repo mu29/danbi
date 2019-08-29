@@ -7,19 +7,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Items.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Items.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/States.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/States.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/System.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/System.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/game/resolution.rb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/config.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/config.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/main.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/main.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/chat_box.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/chat_box.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/click_menu.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/click_menu.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/community.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/community.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/dialog.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/dialog.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/inventory.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/inventory.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/login.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/login.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/message.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/message.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/option.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/option.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/quest.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/quest.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/register.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/register.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/server.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/server.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/set_whisper_nickname.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/set_whisper_nickname.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/shop.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/shop.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/skill.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/skill.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/status.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/status.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/form/trade.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/form/trade.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/hud.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/hud.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/item_info.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/item_info.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/mui/skill_info.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/mui/skill_info.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/network/network.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/network/network.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/network/packet.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/network/packet.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/scene/login.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/scene/login.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/scene/map.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/scene/server.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/scene/server.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Graphics/Icons/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Graphics/Icons/4.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

@@ -11,7 +11,7 @@ class Scene_Login
     @sprite = Sprite.new
     @sprite.bitmap = RPG::Cache.title("Title")
     Graphics.transition
-    MUI_Login.new
+    MUI::Form::Login.new
     loop do
       MUI.update
       Graphics.update
@@ -20,8 +20,8 @@ class Scene_Login
         break
       end
     end
-    MUI.getForm(MUI_Login).dispose if MUI.include?(MUI_Login)
-    MUI.getForm(MUI_Register).dispose if MUI.include?(MUI_Register)
+    MUI.getForm(MUI::Form::Login).dispose if MUI.include?(MUI::Form::Login)
+    MUI.getForm(MUI::Form::Register).dispose if MUI.include?(MUI::Form::Register)
     Graphics.freeze    
     @sprite.bitmap.dispose
     @sprite.dispose
