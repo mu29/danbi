@@ -2,14 +2,45 @@
 
 =begin
 ================================================================================
-XPA Tilemap                                                      Version 0.34
-by KK20                                                          4 May 2017
+XPA Tilemap                                                      Version 0.42
+by KK20                                                          
 ________________________________________________________________________________
 
  [ Version History ]
  
  Ver.      Date            Notes
  -----     -----------     ----------------------------------------------------
+ 0.42  ... 23 Mar 2019 ... Bug fixes:
+                            - Script crash when F12 is pressed in custom
+                              resolutions
+                            - Creating a Plane object crashes if Game.map is
+                              not instantiated
+                            - Planes would not appear on 640x480 resolution
+                            - The resolution limit breaker made by the anonymous
+                              scripter was tweaked a bit to point to the correct
+                              base address. Games would crash if using software
+                              such as DisplayFusion.
+ 0.41  ... 28 Jan 2018 ... Bug fixes:
+                            - (XP) If the Game.exe/.ini files are renamed, the
+                              script would not function properly
+ 0.4   ... 15 Jan 2018 ... Bug fixes:
+                            - Maps that were smaller than the screen resolution
+                              were not all being properly centered. Even the map
+                              would scroll when it did not need to.
+                            - (XP) Graphics.width/height methods were incorrect
+                           Additions:
+                            - New implementation of screen transitions; now work
+                              as intended for ANY game resolution. Resizes
+                              transition graphics to adjust to the resolution.
+ 0.36  ... 09 Sep 2017 ... Bug fixes:
+                            - Accidentally included a modification to the 
+                              Player#center method
+ 0.35  ... 01 Aug 2017 ... Bug fixes:
+                            - Aliased Map#scroll_down/right methods
+                            - 48th autotile was being drawn incorrectly
+                            - Custom autotile graphics were not functioning
+                            - Translucent tiles with a priority of 1 were being
+                              redrawn if screen scrolled up and down a lot
  0.34  ... 04 May 2017 ... Bug fixes:
                             - CallBackController was not disposing its contents,
                               causing a memory leak whenever a new Tilemap was
@@ -146,7 +177,7 @@ resulting work only under the same or similar license to this one.
  [ Instructions ]
  
  - Place this script below the default scripts but above Main.
- - Move 'XPATilemap.dll' into your project folder (same directory as 'Game.exe')
+ - Move 'XPA_Tilemap.dll' into your project folder (same directory as 'Game.exe')
  - Configure values at the start of the script
 ________________________________________________________________________________
 
@@ -175,6 +206,9 @@ ________________________________________________________________________________
    have yet to receive any valid proof or ways to reproduce this issue
  - Your tileset must have dimensions divisible by 32. The game will raise an
    error otherwise.
+ - For viewports larger than 640x480, please use the Viewport#resize method to
+   move or change the size of the viewport accordingly. I advise not directly
+   accessing Viewport#rect as the changes will not be noticeable.
 ________________________________________________________________________________
 
  [ Credits ]
@@ -311,7 +345,7 @@ module RPG::Cache
   [25,30,31,36],  [15,16,45,46], [13,14,19,20], [13,14,19,12],
   [17,18,23,24],  [17,18,11,24], [41,42,47,48], [5,42,47,48],
   [37,38,43,44],  [37,6,43,44],  [13,18,19,24], [13,14,43,44],
-  [37,42,43,48],  [17,18,47,48], [13,18,43,48], [13,18,43,48]
+  [37,42,43,48],  [17,18,47,48], [13,18,43,48], [1,2,7,8]
     
   ]
   
@@ -331,7 +365,7 @@ module RPG::Cache
   end
 
   def self.format_autotiles(bitmap, filename)
-    if bitmap.height > 32 && bitmap.height < 256
+    if bitmap.height > 32 && bitmap.height < 192
       frames = bitmap.width / 96
       template = Bitmap.new(256*frames,192)
       template.filename = filename
@@ -363,6 +397,10 @@ module CallBackController
   def self.setup_callback(obj, proc)
     @@callback[obj.object_id] = proc
   end
+
+  def self.get_callback(obj)
+    @@callback[obj.object_id]
+  end
   
   def self.call(obj, *args)
     @@callback[obj.object_id].call(*args) if @@callback[obj.object_id]
@@ -379,13 +417,14 @@ end
 # ** Viewport
 #===============================================================================
 class Viewport
-  attr_accessor :offset_x, :offset_y
+  attr_accessor :offset_x, :offset_y, :attached_planes
   
   alias zer0_viewport_resize_init initialize
   def initialize(x=0, y=0, width=SCREEN_RESOLUTION[0], height=SCREEN_RESOLUTION[1], override=false)
     # Variables needed for Viewport children (for the Plane rewrite); ignore if
     # your game resolution is not larger than 640x480
     @offset_x = @offset_y = 0
+    
     if x.is_a?(Rect)
       # If first argument is a Rectangle, just use it as the argument.
       zer0_viewport_resize_init(x)
@@ -403,13 +442,14 @@ class Viewport
     if args[0].is_a?(Rect)
       args[0].x += @offset_x
       args[0].y += @offset_y
-      self.rect = args[0]
+      self.rect.set(args[0].x, args[0].y, args[0].width, args[0].height)
     else
       args[0] += @offset_x
       args[1] += @offset_y
-      self.rect = Rect.new(*args)
+      self.rect.set(*args)
     end
   end
+
 end
 
 #===============================================================================
@@ -711,7 +751,7 @@ class Tilemap
             # Clear out the rows in the layers to prepare for drawing in #update
             width = @layer_sprites[0].bitmap.width
             num = @layer_sprites.size
-            (1...MAX_PRIORITY_LAYERS).each{ |index|
+            (1..MAX_PRIORITY_LAYERS).each{ |index|
               @layer_sprites[num-index].bitmap.fill_rect(0, (index - 1) * 32, width, 32, Color.new(0,0,0,0))
             }
             @shift += 4 # Redraw bottom row bit-flag (0100)
@@ -771,7 +811,7 @@ class Tilemap
     @layer_sprites.each{|sprite| layers.push(sprite.bitmap.object_id) }
     # Insert ground layer last in the array
     layers.push(@ground_sprite.bitmap.object_id)
-    # Load autotile bitmap graphics into array
+    # Load main tileset and autotile bitmap graphics into array
     tile_bms = [self.tileset.object_id]
     self.autotiles.each{|autotile| tile_bms.push(autotile.object_id) }
     # Store autotile animation frame data
@@ -843,15 +883,13 @@ class Map
   alias zer0_map_edge_setup setup
   def setup(map_id)
     zer0_map_edge_setup(map_id)
-    # Find the displayed area of the map in tiles. No calcualting every step.
+    # Find the displayed area of the map in tiles. No calculating every step.
     @map_edge = [self.width - (SCREEN_RESOLUTION[0]/32.0), self.height - (SCREEN_RESOLUTION[1]/32.0)]
-    @map_edge.collect! {|size| size * 128 }
+    @map_edge.collect! {|size| size < 0 ? 0 : (size * 128).round }
     # Change the map center if map is smaller than the resolution
     if Game.map.width < SCREEN_RESOLUTION[0] / 32
-      puts 1
       Player.const_set(:CENTER_X, Game.map.width * 128)
     else
-      puts 2
       Player.const_set(:CENTER_X, ((SCREEN_RESOLUTION[0] / 2) - 16) * 4)
     end
     if Game.map.height < SCREEN_RESOLUTION[1] / 32
@@ -861,14 +899,22 @@ class Map
     end
   end
 
+  alias scroll_down_xpat scroll_down
   def scroll_down(distance)
+    pre_alias = @display_y + distance
+    scroll_down_xpat(distance)
+    @display_y = pre_alias if @display_y == (self.height - 15) * 128
     # Find point that the map edge meets the screen edge, using custom size.
-    @display_y = [@display_y + distance, @map_edge[1]].min
+    @display_y = [@display_y, @map_edge[1]].min
   end
 
+  alias scroll_right_xpat scroll_right
   def scroll_right(distance)
+    pre_alias = @display_x + distance
+    scroll_right_xpat(distance)
+    @display_x = pre_alias if @display_x == (self.width - 20) * 128
     # Find point that the map edge meets the screen edge, using custom size.
-    @display_x = [@display_x + distance, @map_edge[0]].min
+    @display_x = [@display_x, @map_edge[0]].min
   end
 end
 
@@ -1023,13 +1069,13 @@ class MapSprite
   #---------------------------------------------------------------------------
   def initialize
     @center_offsets = [0,0]
-    if Game.map.width < SCREEN_RESOLUTION[0] / 32
-      x = 0#(SCREEN_RESOLUTION[0] - Game.map.width * 32) / 2
+    if Game.map.width < (SCREEN_RESOLUTION[0] / 32.0).ceil
+      x = (SCREEN_RESOLUTION[0] - Game.map.width * 32) / 2
     else
       x = 0
     end
-    if Game.map.height < SCREEN_RESOLUTION[1] / 32
-      y = 0#(SCREEN_RESOLUTION[1] - Game.map.height * 32) / 2
+    if Game.map.height < (SCREEN_RESOLUTION[1] / 32.0).ceil
+      y = (SCREEN_RESOLUTION[1] - Game.map.height * 32) / 2
     else
       y = 0
     end
@@ -1048,6 +1094,7 @@ class MapSprite
     @tilemap.draw
   end
 end
+
 
 # The following script will only be enabled if the resolution is bigger than the
 # default OR if the game does not want certain maps to wrap around.
@@ -1088,20 +1135,50 @@ if DISABLE_WRAP || SCREEN_RESOLUTION[0] > 640 || SCREEN_RESOLUTION[1] > 480
  
 #===============================================================================
 =end
-unless XPACE
-class Bitmap
-  #----------------------------------------------------------------------------
-  # ● New method: address
-  #----------------------------------------------------------------------------
-  def address
-    @rtlmemory_pi ||= Win32API.new('kernel32','RtlMoveMemory','pii','i')
-    @address ||= (  @rtlmemory_pi.call(a="\0"*4, __id__*2+16, 4)
-                      @rtlmemory_pi.call(a, a.unpack('L')[0]+8, 4)
-                      @rtlmemory_pi.call(a, a.unpack('L')[0]+16, 4)
-                      a.unpack('L')[0]    )
-  end
-end
-end
+
+#===============================================================================
+# ** Graphics
+#===============================================================================
+module Graphics
+  
+  @@super_sprite = Sprite.new
+  @@super_sprite.z = (2 ** (0.size * 8 - 2) - 1)
+  
+  class << self
+    
+    def reform_sprite_bitmap
+      @@super_sprite.bitmap = Bitmap.new(Graphics.width, Graphics.height)
+      @@super_sprite.bitmap.fill_rect(@@super_sprite.bitmap.rect, Color.new(0, 0, 0, 255))
+    end
+    
+    def fadeout(frames)
+      incs = 255.0 / frames
+      frames.times do |i|
+        i += 1
+        Graphics.brightness = 255 - incs * i
+        Graphics.wait(1)
+      end
+    end
+    
+    def fadein(frames)
+      incs = 255.0 / frames
+      frames.times do |i|
+        Graphics.brightness = incs * i
+        Graphics.wait(1)
+      end
+    end
+
+    def brightness=(i)
+      @@super_sprite.opacity = 255.0 - i
+    end
+    
+    def brightness
+      255 - @@super_sprite.opacity
+    end
+  end # class << self
+  
+end # if XPACE
+
 #===============================================================================
 # ** Viewport
 #===============================================================================
@@ -1111,13 +1188,38 @@ class Viewport
   alias init_children_vps initialize
   def initialize(*args)
     @children = []
+    @attached_planes = []
     @parent = false
+
     init_children_vps(*args)
+  end
+
+  def parent=(bool)
+    if bool
+      proc = Proc.new { self.resize_planes }
+      CallBackController.setup_callback(rect, proc)
+    end
+    @parent = bool
+  end
+
+  def resize_planes
+    @attached_planes.each { |plane| plane.resize_children }
+  end
+
+  # If the viewport rect changes, then any planes attached to it should resize accordingly
+  alias call_back_for_set_rect rect=
+  def rect=(rect)
+    call_back_for_set_rect(rect)
+    CallBackController.call(rect) if @parent
+    rect
   end
   
   alias dispose_parent dispose
   def dispose
-    @children.each{|child| child.dispose} if @parent
+    if @parent
+      @children.each{|child| child.dispose}
+      CallBackController.delete(self.rect)
+    end
     dispose_parent
   end
   
@@ -1135,23 +1237,7 @@ class Viewport
     @children.each{|child| child.update} if @parent
     update_parent
   end
-  
-  alias resize_trigger resize
-  def resize(*args)
-    @children.each{ |child| 
-      if args[0].is_a?(Rect)
-        rect = args[0]
-        new_args = Rect.new(rect.x,rect.y,child.rect.width,child.rect.height)
-      else
-        new_args = [args[0],args[1]]
-        new_args[2] = child.rect.width
-        new_args[3] = child.rect.height
-      end
-      child.resize_trigger(*new_args)
-    } if @parent
-    resize_trigger(*args)
-  end
-  
+
   alias set_trigger_vp_ox ox=
   def ox=(nx)
     return if self.ox == nx
@@ -1176,6 +1262,7 @@ class Viewport
   end
 
 end
+
 #===============================================================================
 # ** Plane
 #===============================================================================
@@ -1184,47 +1271,67 @@ class Plane
   
   alias parent_initialize initialize
   def initialize(viewport=nil,parent=true)
-    @parent = parent
+    # This Plane does not need children Plane objects if either
+    # - no viewport is passed
+    # - the parent parameter is false
+    # - the viewport's size is less than 640x480
+    # But this Plane NEVER needs children if either the first two are satisfied
+    @parent = parent && viewport
     @children = []
     parent_initialize(viewport)
     @offset_x = 0
     @offset_y = 0
     # If the parent Plane object; but don't make more children if already have
     # some. This occurs in MapSprite when initializing the Panorama and Fog
-    if @parent && viewport
+    if @parent
       viewport.parent = true
+      viewport.attached_planes << self
       create_children
+      resize_children
     end
   end
   
   def create_children
-    gw = [SCREEN_RESOLUTION[0], Game.map.width * 32].min
-    gh = [SCREEN_RESOLUTION[1], Game.map.height * 32].min
+    gw, gh = SCREEN_RESOLUTION
+
     w = (gw - 1) / 640
     h = (gh - 1) / 480
+    
+    vp_x = self.viewport.rect.x
+    vp_y = self.viewport.rect.y
+
     for y in 0..h
       for x in 0..w
-        # This is the top-left default/parent Plane, so skip it
-        #next if x == 0 && y == 0
-        # Create viewport unless it already exists
+        # Create child viewport
         width = w > 0 && x == w ? gw - 640 : 640
         height = h > 0 && y == h ? gh - 480 : 480
-        vp = Viewport.new(x * 640, y * 480, width, height, true)
+        vp = Viewport.new(x * 640 + vp_x, y * 480 + vp_y, width, height, true)
         vp.offset_x = x * 640
         vp.offset_y = y * 480
         # Have to do this in order to prevent overlapping with the parent
         # (for MapSprite viewport1 mainly)
         vp.z = self.viewport.z - 1
-        self.viewport.children.push(vp)
+        self.viewport.children << vp
         # Create the child Plane
         plane = Plane.new(vp,false)
         plane.offset_x = x * 640
-        plane.ox = 0
+        plane.ox = self.ox
         plane.offset_y = y * 480
-        plane.oy = 0
+        plane.oy = self.oy
         # Push to array
-        @children.push(plane)
+        @children << plane
       end
+    end
+  end
+
+  # When the attached viewport's rect size has changed, need to adjust children viewports accordingly
+  def resize_children
+    rect = self.viewport.rect
+    @children.each do |child|
+      width = child.offset_x + 640 <= rect.width ? 640 : [rect.width - child.offset_x, 0].max
+      height = child.offset_y + 480 <= rect.height ? 480 : [rect.height - child.offset_y, 0].max
+
+      child.viewport.rect.set(child.offset_x + rect.x, child.offset_y + rect.y, width, height)
     end
   end
   
@@ -1232,7 +1339,10 @@ class Plane
   
   alias dispose_parent dispose
   def dispose
-    @children.each{|child| child.dispose} if @parent
+    if @parent
+      @children.each{|child| child.dispose}
+      self.viewport.attached_planes.delete(self)
+    end
     dispose_parent
   end
   
@@ -1264,8 +1374,12 @@ class Plane
   
   alias bitmap_parent bitmap=
   def bitmap=(new_val)
-    @children.each{|child| child.bitmap_parent(new_val)} if @parent
-    #bitmap_parent(new_val)
+    if @parent
+      @children.each{|child| child.bitmap_parent(new_val)}
+    else
+      bitmap_parent(new_val)
+    end
+    
   end
   
   alias visible_parent visible=

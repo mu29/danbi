@@ -7,18 +7,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47a6a513-8090-4ad8-9cdb-bab7ddc71bee" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/main.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/main.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/Data/script/network/socket.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/script/network/socket.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Actors.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Animations.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Armors.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/CommonEvents.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Enemies.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Items.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Items.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Scripts.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Skills.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/States.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/States.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/System.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/System.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Tilesets.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/Data/Weapons.rxdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/Data/script/game/resolution.rb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/GameData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/GameData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Character.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Character.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Enemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Enemy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Field.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Guild.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Guild.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Npc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Npc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Party.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Party.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/User.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
