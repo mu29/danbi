@@ -59,7 +59,7 @@ class Packet
         Game.player.moveto(Game.player.x, Game.player.y)
         Game.player.refresh
         Game.map.autoplay
-        $scene = Scene_Map.new
+        $scene = Scene::Map.new
         Game.map.update
 
       when 1
@@ -301,7 +301,7 @@ class Packet
     when STCHeader::NOTIFY
 
     when STCHeader::MOVE_MAP
-      return if !$scene.is_a?(Scene_Map)
+      return if !$scene.is_a?(Scene::Map)
       Game.player.new_map_id = recv["map"]
       Game.player.new_x = recv["x"]
       Game.player.new_y = recv["y"]
@@ -591,7 +591,7 @@ class Packet
 
     when STCHeader::SET_SLOT
       Game.slot.setSlot(recv["index"], recv["slot"])
-      $scene.hud.slotRefresh(:icon_shortcut) if $scene.is_a?(Scene_Map)
+      $scene.hud.slotRefresh(:icon_shortcut) if $scene.is_a?(Scene::Map)
 
     when STCHeader::SET_COOLTIME
       Game.cooltime.setCool(recv['index'], recv['nowCooltime'], recv['fullCooltime'])

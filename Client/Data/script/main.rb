@@ -29,7 +29,7 @@ begin
   Socket.init
   # switch scene
   Graphics.freeze
-  $scene = Scene_Server.new
+  $scene = Scene::Server.new
   while $scene != nil
     $scene.main
   end

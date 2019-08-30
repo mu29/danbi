@@ -65,7 +65,7 @@ class MUI::Form
             if dialog.value == 0
               # 서버 접속
               Socket.connect(Config::SERVER[select][0], Config::SERVER[select][1])
-              $scene = Scene_Login.new
+              $scene = Scene::Login.new
               Graphics.transition
               dialog.dispose
             # 아니오를 누를 시

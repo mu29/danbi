@@ -77,7 +77,7 @@ def comment_include(*args)
 end
 
 def create_sprite(c)
-  if $scene.is_a?(Scene_Map)
+  if $scene.is_a?(Scene::Map)
     $scene.instance_eval do
       @map_sprite.instance_eval do
         return if not @character_sprites
@@ -95,7 +95,7 @@ def create_sprite(c)
 end
 
 def remove_sprite(c)
-  if $scene.is_a?(Scene_Map)
+  if $scene.is_a?(Scene::Map)
     $scene.instance_eval do
       @map_sprite.instance_eval do
         delv = nil

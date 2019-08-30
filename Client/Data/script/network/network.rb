@@ -146,7 +146,10 @@ class Network
 
     when 10065
       desc = "네트워크 장애등에 의해 서버와 연결이 불가능 합니다."
-      
+    
+    when 10038
+      return
+
     else
       desc = "시스템이 판단할 수 없는 에러입니다."
     end
