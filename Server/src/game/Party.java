@@ -5,59 +5,59 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 public class Party {
-    private Vector<Integer> members;
-    private int master;
+    private Vector<Integer> mMembers;
+    private int mMaster;
 
     private static Hashtable<Integer, Party> partyList = new Hashtable<>();
 
     public Party(int masterNo) {
-        this.master = masterNo;
-        this.members = new Vector<>();
-        join(this.master);
+        mMaster = masterNo;
+        mMembers = new Vector<>();
+        join(mMaster);
     }
 
     public boolean join(int userNo) {
-        if (this.members.contains(userNo)) {
+        if (mMembers.contains(userNo)) {
             return false;
         }
         User newMember = User.get(userNo);
-        for (Integer member : this.members) {
+        for (Integer member : mMembers) {
             User partyMember = User.get(member);
             partyMember.getCtx().writeAndFlush(Packet.setPartyMember(newMember));
             newMember.getCtx().writeAndFlush(Packet.setPartyMember(partyMember));
         }
         newMember.getCtx().writeAndFlush(Packet.setPartyMember(newMember));
 
-        newMember.setPartyNo(this.master);
-        this.members.addElement(userNo);
+        newMember.setPartyNo(mMaster);
+        mMembers.addElement(userNo);
         return true;
     }
 
     public boolean exit(int userNo) {
-        if (!this.members.contains(userNo)) {
+        if (!mMembers.contains(userNo)) {
             return false;
         }
-        for (Integer member : this.members) {
+        for (Integer member : mMembers) {
             User partyMember = User.get(member);
             partyMember.getCtx().writeAndFlush(Packet.removePartyMember(userNo));
         }
         User.get(userNo).setPartyNo(0);
-        this.members.removeElement(userNo);
+        mMembers.removeElement(userNo);
         return true;
     }
 
     public void breakUp() {
-        for (Integer member : this.members) {
+        for (Integer member : mMembers) {
             User partyMember = User.get(member);
             partyMember.setPartyNo(0);
         }
-        this.members.clear();
-        if (partyList.containsKey(this.master))
-            partyList.remove(this.master);
+        mMembers.clear();
+        if (partyList.containsKey(mMaster))
+            partyList.remove(mMaster);
     }
 
     public Vector<Integer> getMembers() {
-        return members;
+        return mMembers;
     }
 
     public static boolean add(int masterNo) {

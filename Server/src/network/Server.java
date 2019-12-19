@@ -14,7 +14,7 @@ import game.*;
 import setting.Setting;
 
 public class Server {
-	private int port;
+	private int mPort;
 	private final Logger logger = Logger.getLogger(Server.class.getName());
 	
     public static void main(String[] args) throws Exception {
@@ -28,7 +28,7 @@ public class Server {
     }
 	
 	public Server(int port) {
-		this.port = port;
+		mPort = port;
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 			for (User u : User.getAll().values()) {
@@ -50,8 +50,8 @@ public class Server {
             	.option(ChannelOption.SO_BACKLOG, 128)
             	.childOption(ChannelOption.SO_KEEPALIVE, true);
             
-            logger.info("서버를 시작합니다. (" + port + ")");
-            ChannelFuture f = bootStrap.bind(port).sync();
+            logger.info("서버를 시작합니다. (" + mPort + ")");
+            ChannelFuture f = bootStrap.bind(mPort).sync();
             DataBase.connect("jdbc:mysql://" + Setting.load().getProperty("Database.host") + "/" + Setting.load().getProperty("Database.database") + "?characterEncoding=utf8"
 			     , Setting.load().getProperty("Database.username")
 			     , Setting.load().getProperty("Database.password"));

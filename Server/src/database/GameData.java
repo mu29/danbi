@@ -84,448 +84,442 @@ public class GameData extends DataBase {
 	}
 
 	public static class Job {
-		private int no;
-		private String name;
-		private int hp;
-		private int mp;
-		private int str;
-		private int dex;
-		private int agi;
+		private int mNo;
+		private String mName;
+		private int mHp;
+		private int mMp;
+		private int mStr;
+		private int mDex;
+		private int mAgi;
 		
 		public Job(ResultSet rs) throws SQLException {
-			this.no = rs.getInt("no");
-			this.name = rs.getString("name");
-			this.hp = rs.getInt("hp");
-			this.mp = rs.getInt("mp");
-			this.str =rs.getInt("str");
-			this.dex = 	rs.getInt("dex");
-			this.agi = rs.getInt("agi");
+			mNo = rs.getInt("no");
+			mName = rs.getString("name");
+			mHp = rs.getInt("hp");
+			mMp = rs.getInt("mp");
+			mStr = rs.getInt("str");
+			mDex = rs.getInt("dex");
+			mAgi = rs.getInt("agi");
 		}
 		
 		public int getNo() {
-			return no;
+			return mNo;
 		}
 		
 		public String getName() {
-			return name;
+			return mName;
 		}
 		
 		public int getHp() {
-			return hp;
+			return mHp;
 		}
 		
 		public int getMp() {
-			return mp;
+			return mMp;
 		}
 		
 		public int getStr() {
-			return str;
+			return mStr;
 		}
 		
 		public int getDex() {
-			return dex;
+			return mDex;
 		}
 		
 		public int getAgi() {
-			return agi;
+			return mAgi;
 		}
 	}
 
 	public static class Register {
 		
-		private int job;
-		private String image;
-		private int map;
-		private int x;
-		private int y;
-		private int level;
+		private int mJob;
+		private String mImage;
+		private int mMap;
+		private int mX;
+		private int mY;
+		private int mLevel;
 		
 		public Register(ResultSet rs) {
 			try {
-				job = rs.getInt("job");
-				image = rs.getString("image");
-				map = rs.getInt("map");
-				x = rs.getInt("x");
-				y = rs.getInt("y");
-				level = rs.getInt("level");
+				mJob = rs.getInt("job");
+				mImage = rs.getString("image");
+				mMap = rs.getInt("map");
+				mX = rs.getInt("x");
+				mY = rs.getInt("y");
+				mLevel = rs.getInt("level");
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
 			}
 		}
 
 		public int getJob() {
-			return job;
+			return mJob;
 		}
 		
 		public String getImage() {
-			return image;
+			return mImage;
 		}
 
 		public int getMap() {
-			return map;
+			return mMap;
 		}
 
 		public int getX() {
-			return x;
+			return mX;
 		}
 
 		public int getY() {
-			return y;
+			return mY;
 		}
 
 		public int getLevel() {
-			return level;
+			return mLevel;
 		}
 		
 	}
 	
 	public static class ItemData {
-		private int no;
-		private String name;
-		private String description;
-		private String image;
-		private int job;
-		private int limitLevel;
-		private int type;
-		private int price;
-		private int damage;
-		private int magicDamage;
-		private int defense;
-		private int magicDefense;
-		private int str;
-		private int dex;
-		private int agi;
-		private int hp;
-		private int mp;
-		private int critical;
-		private int avoid;
-		private int hit;
-		private int delay;
-		private boolean consume;
-		private int maxLoad;
-		private boolean trade;
-		private String function;
+		private int mNo;
+		private String mName;
+		private String mDescription;
+		private String mImage;
+		private int mJob;
+		private int mLimitLevel;
+		private int mType;
+		private int mPrice;
+		private int mDamage;
+		private int mMagicDamage;
+		private int mDefense;
+		private int mMagicDefense;
+		private int mStr;
+		private int mDex;
+		private int mAgi;
+		private int mHp;
+		private int mMp;
+		private int mCritical;
+		private int mAvoid;
+		private int mHit;
+		private int mDelay;
+		private boolean mbConsume;
+		private int mMaxLoad;
+		private boolean mbTrade;
+		private String mFunctionName;
 		
 		public ItemData(ResultSet rs) {
 			try {
-				no = rs.getInt("no");
-				name = rs.getString("name");
-				description = rs.getString("description");
-				image = rs.getString("image");
-				job = rs.getInt("job");
-				limitLevel = rs.getInt("limit_level");
-				type = rs.getInt("type");
-				price = rs.getInt("price");
-				damage = rs.getInt("damage");
-				magicDamage = rs.getInt("magic_damage");
-				defense = rs.getInt("defense");
-				magicDefense = rs.getInt("magic_defense");
-				str = rs.getInt("str");
-				dex = rs.getInt("dex");
-				agi = rs.getInt("agi");
-				hp = rs.getInt("hp");
-				mp = rs.getInt("mp");
-				critical = rs.getInt("critical");
-				avoid = rs.getInt("avoid");
-				hit = rs.getInt("hit");
-				delay = rs.getInt("delay");
-				consume = rs.getInt("consume") == 1;
-				maxLoad = rs.getInt("max_load");
-				trade = rs.getInt("trade") == 1;
-				function = rs.getString("function");
+				mNo = rs.getInt("no");
+				mName = rs.getString("name");
+				mDescription = rs.getString("description");
+				mImage = rs.getString("image");
+				mJob = rs.getInt("job");
+				mLimitLevel = rs.getInt("limit_level");
+				mType = rs.getInt("type");
+				mPrice = rs.getInt("price");
+				mDamage = rs.getInt("damage");
+				mMagicDamage = rs.getInt("magic_damage");
+				mDefense = rs.getInt("defense");
+				mMagicDefense = rs.getInt("magic_defense");
+				mStr = rs.getInt("str");
+				mDex = rs.getInt("dex");
+				mAgi = rs.getInt("agi");
+				mHp = rs.getInt("hp");
+				mMp = rs.getInt("mp");
+				mCritical = rs.getInt("critical");
+				mAvoid = rs.getInt("avoid");
+				mHit = rs.getInt("hit");
+				mDelay = rs.getInt("delay");
+				mbConsume = rs.getInt("consume") == 1;
+				mMaxLoad = rs.getInt("max_load");
+				mbTrade = rs.getInt("trade") == 1;
+				mFunctionName = rs.getString("function");
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
 			}
 		}
 
 		public int getNo() {
-			return no;
+			return mNo;
 		}
 		
 		public String getName() {
-			return name;
+			return mName;
 		}
 		
 		public String getDesc() {
-			return description;
+			return mDescription;
 		}
 		
 		public String getImage() {
-			return image;
+			return mImage;
 		}
 		
 		public int getJob() {
-			return job;
+			return mJob;
 		}
 		
 		public int getLimitLevel() {
-			return limitLevel;
+			return mLimitLevel;
 		}
 		
 		public int getType() {
-			return type;
+			return mType;
 		}
 		
 		public int getPrice() {
-			return price;
+			return mPrice;
 		}
-		
-		public int getDamage() {
-			return damage;
-		}
-		
-		public int getMagicDamage() {
-			return magicDamage;
-		}
+
+		public int getDamage() { return mDamage; }
+
+		public int getMagicDamage() { return mMagicDamage; }
 		
 		public int getDefense() {
-			return defense;
+			return mDefense;
 		}
 		
 		public int getMagicDefense() {
-			return magicDefense;
+			return mMagicDefense;
 		}
 		
 		public int getStr() {
-			return str;
+			return mStr;
 		}
 		
 		public int getDex() {
-			return dex;
+			return mDex;
 		}
 		
 		public int getAgi() {
-			return agi;
+			return mAgi;
 		}
 		
 		public int getHp() {
-			return hp;
+			return mHp;
 		}
 		
 		public int getMp() {
-			return mp;
+			return mMp;
 		}
 		
 		public int getCritical() {
-			return critical;
+			return mCritical;
 		}
 		
 		public int getAvoid() {
-			return avoid;
+			return mAvoid;
 		}
 		
 		public int getHit() {
-			return hit;
+			return mHit;
 		}
 		
 		public int getDelay() {
-			return delay;
+			return mDelay;
 		}
 		
 		public int getMaxLoad() {
-			return maxLoad;
+			return mMaxLoad;
 		}
 		
 		public boolean isConsumable() {
-			return consume;
+			return mbConsume;
 		}
 		
 		public boolean isTradeable() {
-			return trade;
+			return mbTrade;
 		}
 
 		public String getFunction() {
-			return function;
+			return mFunctionName;
 		}
 	}
 	
 	public static class Item implements Cloneable {
-		private int userNo;
-		private int itemNo;
-		private int amount;
-		private int index;
-		private int damage;
-		private int magicDamage;
-		private int defense;
-		private int magicDefense;
-		private int str;
-		private int dex;
-		private int agi;
-		private int hp;
-		private int mp;
-		private int critical;
-		private int avoid;
-		private int hit;
-		private int reinforce;
-		private boolean trade;
-		private boolean equipped;
+		private int mUserNo;
+		private int mItemNo;
+		private int mAmount;
+		private int mIndex;
+		private int mDamage;
+		private int mMagicDamage;
+		private int mDefense;
+		private int mMagicDefense;
+		private int mStr;
+		private int mDex;
+		private int mAgi;
+		private int mHp;
+		private int mMp;
+		private int mCritical;
+		private int mAvoid;
+		private int mHit;
+		private int mReinforce;
+		private boolean mbTrade;
+		private boolean mbEquipped;
 
-		public Item(int _userNo, int _itemNo, int _amount, int _index, int _trade) {
-			userNo = _userNo;
-			itemNo = _itemNo;
-			amount = _amount > GameData.item.get(itemNo).getMaxLoad() ? GameData.item.get(itemNo).getMaxLoad() : _amount;
-			index = _index;
-			damage = 0;
-			magicDamage = 0;
-			defense = 0;
-			magicDefense = 0;
-			str = 0;
-			dex = 0;
-			agi = 0;
-			hp = 0;
-			mp = 0;
-			critical = 0;
-			avoid = 0;
-			hit = 0;
-			reinforce = 0;
-			trade = _trade == 1;
-			equipped = false;
+		public Item(int userNo, int itemNo, int amount, int index, int trade) {
+			mUserNo = userNo;
+			mItemNo = itemNo;
+			mAmount = amount > GameData.item.get(mItemNo).getMaxLoad() ? GameData.item.get(mItemNo).getMaxLoad() : amount;
+			mIndex = index;
+			mDamage = 0;
+			mMagicDamage = 0;
+			mDefense = 0;
+			mMagicDefense = 0;
+			mStr = 0;
+			mDex = 0;
+			mAgi = 0;
+			mHp = 0;
+			mMp = 0;
+			mCritical = 0;
+			mAvoid = 0;
+			mHit = 0;
+			mReinforce = 0;
+			mbTrade = trade == 1;
+			mbEquipped = false;
 		}
 
-		public Item(int _userNo, int _itemNo, int _index, GameData.Item itemInfo) {
-			userNo = _userNo;
-			itemNo = _itemNo;
-			amount = 1;
-			index = _index;
-			damage = itemInfo.getDamage();
-			magicDamage = itemInfo.getMagicDamage();
-			defense = itemInfo.getDefense();
-			magicDefense = itemInfo.getMagicDefense();
-			str = itemInfo.getStr();
-			dex = itemInfo.getDex();
-			agi = itemInfo.getAgi();
-			hp = itemInfo.getHp();
-			mp = itemInfo.getMp();
-			critical = itemInfo.getCritical();
-			avoid = itemInfo.getAvoid();
-			hit = itemInfo.getHit();
-			reinforce = itemInfo.getReinforce();
-			trade = itemInfo.isTradeable();
-			equipped = false;
+		public Item(int userNo, int itemNo, int index, GameData.Item itemInfo) {
+			mUserNo = userNo;
+			mItemNo = itemNo;
+			mAmount = 1;
+			mIndex = index;
+			mDamage = itemInfo.getDamage();
+			mMagicDamage = itemInfo.getMagicDamage();
+			mDefense = itemInfo.getDefense();
+			mMagicDefense = itemInfo.getMagicDefense();
+			mStr = itemInfo.getStr();
+			mDex = itemInfo.getDex();
+			mAgi = itemInfo.getAgi();
+			mHp = itemInfo.getHp();
+			mMp = itemInfo.getMp();
+			mCritical = itemInfo.getCritical();
+			mAvoid = itemInfo.getAvoid();
+			mHit = itemInfo.getHit();
+			mReinforce = itemInfo.getReinforce();
+			mbTrade = itemInfo.isTradeable();
+			mbEquipped = false;
 		}
 
 		public Item(ResultSet rs) {
 			try {
-				userNo = rs.getInt("user_no");
-				itemNo = rs.getInt("item_no");
-				amount = rs.getInt("amount");
-				index = rs.getInt("index");
-				damage = rs.getInt("damage");
-				magicDamage = rs.getInt("magic_damage");
-				defense = rs.getInt("defense");
-				magicDefense = rs.getInt("magic_defense");
-				str = rs.getInt("str");
-				dex = rs.getInt("dex");
-				agi = rs.getInt("agi");
-				hp = rs.getInt("hp");
-				mp = rs.getInt("mp");
-				critical = rs.getInt("critical");
-				avoid = rs.getInt("avoid");
-				hit = rs.getInt("hit");
-				reinforce = rs.getInt("reinforce");
-				trade = rs.getInt("trade") == 1;
-				equipped = rs.getInt("equipped") == 1;
+				mUserNo = rs.getInt("user_no");
+				mItemNo = rs.getInt("item_no");
+				mAmount = rs.getInt("amount");
+				mIndex = rs.getInt("index");
+				mDamage = rs.getInt("damage");
+				mMagicDamage = rs.getInt("magic_damage");
+				mDefense = rs.getInt("defense");
+				mMagicDefense = rs.getInt("magic_defense");
+				mStr = rs.getInt("str");
+				mDex = rs.getInt("dex");
+				mAgi = rs.getInt("agi");
+				mHp = rs.getInt("hp");
+				mMp = rs.getInt("mp");
+				mCritical = rs.getInt("critical");
+				mAvoid = rs.getInt("avoid");
+				mHit = rs.getInt("hit");
+				mReinforce = rs.getInt("reinforce");
+				mbTrade = rs.getInt("trade") == 1;
+				mbEquipped = rs.getInt("equipped") == 1;
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
 			}
 		}
 
 		public int getUserNo() {
-			return userNo;
+			return mUserNo;
 		}
 
 		public int getNo() {
-			return itemNo;
+			return mItemNo;
 		}
 
 		public int getAmount() {
-			return amount;
+			return mAmount;
 		}
 
 		public int getIndex() {
-			return index;
+			return mIndex;
 		}
 		
 		public int getDamage() {
-			return damage;
+			return mDamage;
 		}
 		
-		public int getMagicDamage() {
-			return magicDamage;
-		}
+		public int getMagicDamage() { return mMagicDamage; }
 		
 		public int getDefense() {
-			return defense;
+			return mDefense;
 		}
 		
 		public int getMagicDefense() {
-			return magicDefense;
+			return mMagicDefense;
 		}
 		
 		public int getStr() {
-			return str;
+			return mStr;
 		}
 		
 		public int getDex() {
-			return dex;
+			return mDex;
 		}
 		
 		public int getAgi() {
-			return agi;
+			return mAgi;
 		}
 		
 		public int getHp() {
-			return hp;
+			return mHp;
 		}
 		
 		public int getMp() {
-			return mp;
+			return mMp;
 		}
 		
 		public int getCritical() {
-			return critical;
+			return mCritical;
 		}
 		
 		public int getAvoid() {
-			return avoid;
+			return mAvoid;
 		}
 		
 		public int getHit() {
-			return hit;
+			return mHit;
 		}
 		
 		public int getReinforce() {
-			return reinforce;
+			return mReinforce;
 		}
 		
 		public boolean isTradeable() {
-			return trade;
+			return mbTrade;
 		}
 
 		public boolean isEquipped() {
-			return equipped;
+			return mbEquipped;
 		}
 
 		public void setEquipped(boolean value) {
-			equipped = value;
+			mbEquipped = value;
 		}
 
 		public void setIndex(int value) {
-			index = value;
+			mIndex = value;
 		}
 		
 		public void addAmount(int value) {
-			if (amount + value > GameData.item.get(itemNo).getMaxLoad()) {
-				amount = GameData.item.get(itemNo).getMaxLoad();
-			} else if (amount + value < 0) {
-				amount = 0;
+			if (mAmount + value > GameData.item.get(mItemNo).getMaxLoad()) {
+				mAmount = GameData.item.get(mItemNo).getMaxLoad();
+			} else if (mAmount + value < 0) {
+				mAmount = 0;
 			} else {
-				amount += value;
+				mAmount += value;
 			}
 		}
 
 		public void setAmount(int value) {
-			amount = Math.abs(value);
+			mAmount = Math.abs(value);
 		}
 
 		@Override
@@ -541,487 +535,487 @@ public class GameData extends DataBase {
 	}
 
 	public static class SkillData {
-		private int no;
-		private String name;
-		private String description;
-		private String type;
-		private int job;
-		private int delay;
-		private int limitLevel;
-		private int maxRank;
-		private int userAnimation;
-		private int targetAnimation;
-		private String image;
-		private String function;
+		private int mNo;
+		private String mName;
+		private String mDescription;
+		private String mType;
+		private int mJob;
+		private int mDelay;
+		private int mLimitLevel;
+		private int mMaxRank;
+		private int mUserAnimation;
+		private int mTargetAnimation;
+		private String mImage;
+		private String mFunctionName;
 
 		public SkillData(ResultSet rs) {
 			try {
-				no = rs.getInt("no");
-				name = rs.getString("name");
-				description = rs.getString("description");
-				type = rs.getString("type");
-				job = rs.getInt("job");
-				delay = rs.getInt("delay");
-				limitLevel = rs.getInt("limit_level");
-				maxRank = rs.getInt("max_rank");
-				userAnimation = rs.getInt("user_animation");
-				targetAnimation = rs.getInt("target_animation");
-				image = rs.getString("image");
-				function = rs.getString("function");
+				mNo = rs.getInt("no");
+				mName = rs.getString("name");
+				mDescription = rs.getString("description");
+				mType = rs.getString("type");
+				mJob = rs.getInt("job");
+				mDelay = rs.getInt("delay");
+				mLimitLevel = rs.getInt("limit_level");
+				mMaxRank = rs.getInt("max_rank");
+				mUserAnimation = rs.getInt("user_animation");
+				mTargetAnimation = rs.getInt("target_animation");
+				mImage = rs.getString("image");
+				mFunctionName = rs.getString("function");
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
 			}
 		}
 
 		public int getNo() {
-			return no;
+			return mNo;
 		}
 
 		public String getName() {
-			return name;
+			return mName;
 		}
 
 		public String getDescription() {
-			return description;
+			return mDescription;
 		}
 
 		public String getType() {
-			return type;
+			return mType;
 		}
 
 		public int getJob() {
-			return job;
+			return mJob;
 		}
 
 		public int getDelay() {
-			return delay;
+			return mDelay;
 		}
 
 		public int getLimitLevel() {
-			return limitLevel;
+			return mLimitLevel;
 		}
 
 		public int getMaxRank() {
-			return maxRank;
+			return mMaxRank;
 		}
 
 		public int getUserAnimation() {
-			return userAnimation;
+			return mUserAnimation;
 		}
 
 		public int getTargetAnimation() {
-			return targetAnimation;
+			return mTargetAnimation;
 		}
 
 		public String getImage() {
-			return image;
+			return mImage;
 		}
 
 		public String getFunction() {
-			return function;
+			return mFunctionName;
 		}
 	}
 
 	public static class Skill {
-		private int userNo;
-		private int skillNo;
-		private int rank;
+		private int mUserNo;
+		private int mSkillNo;
+		private int mRank;
 
-		public Skill(int _userNo, int _skillNo) {
-			userNo = _userNo;
-			skillNo  = _skillNo;
-			rank = 1;
+		public Skill(int userNo, int skillNo) {
+			mUserNo = userNo;
+			mSkillNo  = skillNo;
+			mRank = 1;
 		}
 
 		public int getUserNo() {
-			return userNo;
+			return mUserNo;
 		}
 
 		public int getNo() {
-			return skillNo;
+			return mSkillNo;
 		}
 
 		public int getRank() {
-			return rank;
+			return mRank;
 		}
 	}
 
 	public static class Troop {
-		private String name;
-		private int num;
-		private String image;
-		private int type;
-		private int team;
-		private int range;
-		private int hp;
-		private int mp;
-		private int attackAnimation;
-		private int damage;
-		private int magicDamage;
-		private int defense;
-		private int magicDefense;
-		private int critical;
-		private int avoid;
-		private int hit;
-		private int moveSpeed;
-		private int attackSpeed;
-		private int map;
-		private int x;
-		private int y;
-		private int direction;
-		private int regen;
-		private int level;
-		private int gold;
-		private int exp;
-		private int reward;
-		private String skill;
-		private int frequency;
-		private String dieFunction;
+		private String mName;
+		private int mNum;
+		private String mImage;
+		private int mType;
+		private int mTeam;
+		private int mRange;
+		private int mHp;
+		private int mMp;
+		private int mAttackAnimation;
+		private int mDamage;
+		private int mMagicDamage;
+		private int mDefense;
+		private int mMagicDefense;
+		private int mCritical;
+		private int mAvoid;
+		private int mHit;
+		private int mMoveSpeed;
+		private int mAttackSpeed;
+		private int mMap;
+		private int mX;
+		private int mY;
+		private int mDirection;
+		private int mRegen;
+		private int mLevel;
+		private int mGold;
+		private int mExp;
+		private int mReward;
+		private String mSkill;
+		private int mFrequency;
+		private String mDieFunctionName;
 
 		public Troop(ResultSet rs) {
 			try {
-				name = rs.getString("name");
-				num = rs.getInt("num");
-				image = rs.getString("image");
-				type = rs.getInt("type");
-				team = rs.getInt("team");
-				range = rs.getInt("range");
-				hp = rs.getInt("hp");
-				mp = rs.getInt("mp");
-				attackAnimation = rs.getInt("animation");
-				damage = rs.getInt("damage");
-				magicDamage = rs.getInt("magic_damage");
-				defense = rs.getInt("defense");
-				magicDefense = rs.getInt("magic_defense");
-				critical = rs.getInt("critical");
-				avoid = rs.getInt("avoid");
-				hit = rs.getInt("hit");
-				moveSpeed = rs.getInt("move_speed");
-				attackSpeed = rs.getInt("attack_speed");
-				map = rs.getInt("map");
-				x = rs.getInt("x");
-				y = rs.getInt("y");
-				direction = rs.getInt("direction");
-				regen = rs.getInt("regen");
-				level = rs.getInt("level");
-				exp = rs.getInt("exp");
-				gold = rs.getInt("gold");
-				reward = rs.getInt("reward");
-				skill = rs.getString("skill");
-				frequency = rs.getInt("frequency");
-				dieFunction = rs.getString("die");
+				mName = rs.getString("name");
+				mNum = rs.getInt("num");
+				mImage = rs.getString("image");
+				mType = rs.getInt("type");
+				mTeam = rs.getInt("team");
+				mRange = rs.getInt("range");
+				mHp = rs.getInt("hp");
+				mMp = rs.getInt("mp");
+				mAttackAnimation = rs.getInt("animation");
+				mDamage = rs.getInt("damage");
+				mMagicDamage = rs.getInt("magic_damage");
+				mDefense = rs.getInt("defense");
+				mMagicDefense = rs.getInt("magic_defense");
+				mCritical = rs.getInt("critical");
+				mAvoid = rs.getInt("avoid");
+				mHit = rs.getInt("hit");
+				mMoveSpeed = rs.getInt("move_speed");
+				mAttackSpeed = rs.getInt("attack_speed");
+				mMap = rs.getInt("map");
+				mX = rs.getInt("x");
+				mY = rs.getInt("y");
+				mDirection = rs.getInt("direction");
+				mRegen = rs.getInt("regen");
+				mLevel = rs.getInt("level");
+				mExp = rs.getInt("exp");
+				mGold = rs.getInt("gold");
+				mReward = rs.getInt("reward");
+				mSkill = rs.getString("skill");
+				mFrequency = rs.getInt("frequency");
+				mDieFunctionName = rs.getString("die");
 			} catch (SQLException e) {
 				logger.warning(e.getMessage());
 			}
 		}
 
 		public int getNum() {
-			return num;
+			return mNum;
 		}
 
 		public int getRange() {
-			return range;
+			return mRange;
 		}
 
 		public String getName() {
-			return name;
+			return mName;
 		}
 
 		public String getImage() {
-			return image;
+			return mImage;
 		}
 
 		public int getType() {
-			return type;
+			return mType;
 		}
 
 		public int getTeam() {
-			return team;
+			return mTeam;
 		}
 
 		public int getHp() {
-			return hp;
+			return mHp;
 		}
 
 		public int getMp() {
-			return mp;
+			return mMp;
 		}
 
 		public int getAttackAnimation() {
-			return attackAnimation;
+			return mAttackAnimation;
 		}
 
 		public int getDamage() {
-			return damage;
+			return mDamage;
 		}
 
 		public int getMagicDamage() {
-			return magicDamage;
+			return mMagicDamage;
 		}
 
 		public int getDefense() {
-			return defense;
+			return mDefense;
 		}
 
 		public int getMagicDefense() {
-			return magicDefense;
+			return mMagicDefense;
 		}
 
 		public int getCritical() {
-			return critical;
+			return mCritical;
 		}
 
 		public int getAvoid() {
-			return avoid;
+			return mAvoid;
 		}
 
 		public int getHit() {
-			return hit;
+			return mHit;
 		}
 
 		public int getMoveSpeed() {
-			return moveSpeed;
+			return mMoveSpeed;
 		}
 
 		public int getAttackSpeed() {
-			return attackSpeed;
+			return mAttackSpeed;
 		}
 
 		public int getMap() {
-			return map;
+			return mMap;
 		}
 
 		public int getX() {
-			return x;
+			return mX;
 		}
 
 		public int getY() {
-			return y;
+			return mY;
 		}
 
 		public int getDirection() {
-			return direction;
+			return mDirection;
 		}
 
 		public int getRegen() {
-			return regen;
+			return mRegen;
 		}
 
 		public int getLevel() {
-			return level;
+			return mLevel;
 		}
 
 		public int getGold() {
-			return gold;
+			return mGold;
 		}
 
 		public int getExp() {
-			return exp;
+			return mExp;
 		}
 
 		public int getReward() {
-			return reward;
+			return mReward;
 		}
 
 		public String getSkill() {
-			return skill;
+			return mSkill;
 		}
 
 		public int getFrequency() {
-			return frequency;
+			return mFrequency;
 		}
 
 		public String getDieFunction() {
-			return dieFunction;
+			return mDieFunctionName;
 		}
 	}
 
 	public static class Reward {
-		private int no;
-		private int itemNo;
-		private int num;
-		private int per;
+		private int mNo;
+		private int mItemNo;
+		private int mNum;
+		private int mPer;
 
 		public Reward(ResultSet rs) {
 			try {
-				no = rs.getInt("no");
-				itemNo = rs.getInt("item_no");
-				num = rs.getInt("num");
-				per = rs.getInt("per");
+				mNo = rs.getInt("no");
+				mItemNo = rs.getInt("item_no");
+				mNum = rs.getInt("num");
+				mPer = rs.getInt("per");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
 		public int getNo() {
-			return no;
+			return mNo;
 		}
 
 		public int getItemNo() {
-			return itemNo;
+			return mItemNo;
 		}
 
 		public int getNum() {
-			return num;
+			return mNum;
 		}
 
 		public int getPer() {
-			return per;
+			return mPer;
 		}
 	}
 
 	public static class NPC {
-		private int no;
-		private String name;
-		private String image;
-		private int map;
-		private int x;
-		private int y;
-		private int direction;
-		private String function;
+		private int mNo;
+		private String mName;
+		private String mImage;
+		private int mMap;
+		private int mX;
+		private int mY;
+		private int mDirection;
+		private String mFunctionName;
 
 		public NPC(ResultSet rs) {
 			try {
-				no = rs.getInt("no");
-				name = rs.getString("name");
-				image = rs.getString("image");
-				map = rs.getInt("map");
-				x = rs.getInt("x");
-				y = rs.getInt("y");
-				direction = rs.getInt("direction");
-				function = rs.getString("function");
+				mNo = rs.getInt("no");
+				mName = rs.getString("name");
+				mImage = rs.getString("image");
+				mMap = rs.getInt("map");
+				mX = rs.getInt("x");
+				mY = rs.getInt("y");
+				mDirection = rs.getInt("direction");
+				mFunctionName = rs.getString("function");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 
 		public int getNo() {
-			return no;
+			return mNo;
 		}
 
 		public String getName() {
-			return name;
+			return mName;
 		}
 
 		public String getImage() {
-			return image;
+			return mImage;
 		}
 
 		public int getMap() {
-			return map;
+			return mMap;
 		}
 
 		public int getX() {
-			return x;
+			return mX;
 		}
 
 		public int getY() {
-			return y;
+			return mY;
 		}
 
 		public int getDirection() {
-			return direction;
+			return mDirection;
 		}
 
 		public String getFunction() {
-			return function;
+			return mFunctionName;
 		}
 	}
 
 	public static class Shop {
-		private int no;
-		private Hashtable<Integer, ItemData> items;
+		private int mNo;
+		private Hashtable<Integer, ItemData> mItems;
 
-		public Shop(int _no) {
-			no = _no;
-			items = new Hashtable<>();
+		public Shop(int no) {
+			mNo = no;
+			mItems = new Hashtable<>();
 		}
 
 		public int getNo() {
-			return no;
+			return mNo;
 		}
 
-		public void addItem(int itemNo) {
-			items.put(items.size() + 1, item.get(itemNo));
+		public void addItem(int mItemNo) {
+			mItems.put(mItems.size() + 1, item.get(mItemNo));
 		}
 
 		public ItemData getItem(int index) {
-			if (items.containsKey(index)) {
-				return items.get(index);
+			if (mItems.containsKey(index)) {
+				return mItems.get(index);
 			}
 			return null;
 		}
 
 		public Hashtable<Integer, ItemData> getAllItems() {
-			return items;
+			return mItems;
 		}
 	}
 
 	public static class ShopItem {
-		private int no;
-		private int itemNo;
+		private int mNo;
+		private int mItemNo;
 
 		public ShopItem(ResultSet rs) {
 			try {
-				no = rs.getInt("no");
-				itemNo = rs.getInt("item_no");
+				mNo = rs.getInt("no");
+				mItemNo = rs.getInt("item_no");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 
 		public int getNo() {
-			return no;
+			return mNo;
 		}
 
 		public int getItemNo() {
-			return itemNo;
+			return mItemNo;
 		}
 	}
 
 	public static class Portal {
-		private int map;
-		private int x;
-		private int y;
-		private int nextMap;
-		private int nextX;
-		private int nextY;
+		private int mMap;
+		private int mX;
+		private int mY;
+		private int mNextMap;
+		private int mNextX;
+		private int mNextY;
 
 		public Portal(ResultSet rs) {
 			try {
-				map = rs.getInt("map");
-				x = rs.getInt("x");
-				y = rs.getInt("y");
-				nextMap = rs.getInt("next_map");
-				nextX = rs.getInt("next_x");
-				nextY = rs.getInt("next_y");
+				mMap = rs.getInt("map");
+				mX = rs.getInt("x");
+				mY = rs.getInt("y");
+				mNextMap = rs.getInt("next_map");
+				mNextX = rs.getInt("next_x");
+				mNextY = rs.getInt("next_y");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 
 		public int getMap() {
-			return map;
+			return mMap;
 		}
 
 		public int getX() {
-			return x;
+			return mX;
 		}
 
 		public int getY() {
-			return y;
+			return mY;
 		}
 
 		public int getNextMap() {
-			return nextMap;
+			return mNextMap;
 		}
 
 		public int getNextX() {
-			return nextX;
+			return mNextX;
 		}
 
 		public int getNextY() {
-			return nextY;
+			return mNextY;
 		}
 	}
 }

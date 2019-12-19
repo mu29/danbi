@@ -6,178 +6,178 @@ import packet.Packet;
 import java.util.Random;
 
 public class Character {
-    protected int no;
-    protected String name;
-    protected String image;
-    protected int hp;
-    protected int maxHp;
-    protected int mp;
-    protected int maxMp;
-    protected int level;
-    protected int exp;
-    protected int gold;
-    protected int map;
-    protected int seed;
-    protected int x;
-    protected int y;
-    protected int direction;
-    protected int moveSpeed;
-    protected int team;
-    protected int characterType;
-    protected int damage;
-    protected int magicDamage;
-    protected int defense;
-    protected int magicDefense;
-    protected Random random;
+    protected int mNo;
+    protected String mName;
+    protected String mImage;
+    protected int mHp;
+    protected int mMaxHp;
+    protected int mMp;
+    protected int mMaxMp;
+    protected int mLevel;
+    protected int mExp;
+    protected int mGold;
+    protected int mMap;
+    protected int mSeed;
+    protected int mX;
+    protected int mY;
+    protected int mDirection;
+    protected int mMoveSpeed;
+    protected int mTeam;
+    protected int mCharacterType;
+    protected int mDamage;
+    protected int mMagicDamage;
+    protected int mDefense;
+    protected int mMagicDefense;
+    protected Random mRandom;
 
     public int getNo() {
-        return no;
+        return mNo;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public String getImage() {
-        return image;
+        return mImage;
     }
 
     public int getHp() {
-        return hp;
+        return mHp;
     }
 
     public int getMaxHp() {
-        return maxHp;
+        return mMaxHp;
     }
 
     public int getMp() {
-        return mp;
+        return mMp;
     }
 
     public int getMaxMp() {
-        return maxMp;
+        return mMaxMp;
     }
 
     public int getLevel() {
-        return level;
+        return mLevel;
     }
 
     public int getExp() {
-        return exp;
+        return mExp;
     }
 
     public int getGold() {
-        return gold;
+        return mGold;
     }
 
     public int getMap() {
-        return map;
+        return mMap;
     }
 
     public int getSeed() {
-        return seed;
+        return mSeed;
     }
 
     public int getX() {
-        return x;
+        return mX;
     }
 
     public int getY() {
-        return y;
+        return mY;
     }
 
     public int getDirection() {
-        return direction;
+        return mDirection;
     }
 
     public int getMoveSpeed() {
-        return moveSpeed;
+        return mMoveSpeed;
     }
 
     public int getTeam() {
-        return team;
+        return mTeam;
     }
 
     public int getCharacterType() {
-        return characterType;
+        return mCharacterType;
     }
 
     public int getDamage() {
-        return damage;
+        return mDamage;
     }
 
     public int getMagicDamage() {
-        return magicDamage;
+        return mMagicDamage;
     }
 
     public int getDefense() {
-        return defense;
+        return mDefense;
     }
 
     public int getMagicDefense() {
-        return magicDefense;
+        return mMagicDefense;
     }
 
     public Random getRandom() {
-        return random;
+        return mRandom;
     }
 
     protected void displayDamage(int value, boolean cri) {
-        Map.getMap(this.map).getField(this.seed).sendToAll(Packet.damageCharacter(this.characterType, this.no, value, cri));
+        Map.getMap(mMap).getField(mSeed).sendToAll(Packet.damageCharacter(mCharacterType, mNo, value, cri));
     }
 
     // 애니메이션 재생
     protected void animation(int ani) {
-        Map.getMap(this.map).getField(this.seed).sendToAll(Packet.animationCharacter(this.characterType, this.no, ani));
+        Map.getMap(mMap).getField(mSeed).sendToAll(Packet.animationCharacter(mCharacterType, mNo, ani));
     }
 
     // 위를 바라봄
     protected void turnUp() {
-        if (this.direction == Type.Direction.UP) {
+        if (mDirection == Type.Direction.UP) {
             return;
         }
-        Field gameField = Map.getMap(this.map).getField(this.seed);
-        this.direction = Type.Direction.UP;
-        gameField.sendToAll(Packet.turnCharacter(this.characterType, this.no, this.direction));
+        Field gameField = Map.getMap(mMap).getField(mSeed);
+        mDirection = Type.Direction.UP;
+        gameField.sendToAll(Packet.turnCharacter(mCharacterType, mNo, mDirection));
     }
 
     // 아래를 바라봄
     protected void turnDown() {
-        if (this.direction == Type.Direction.DOWN) {
+        if (mDirection == Type.Direction.DOWN) {
             return;
         }
-        Field gameField = Map.getMap(this.map).getField(this.seed);
-        this.direction = Type.Direction.DOWN;
-        gameField.sendToAll(Packet.turnCharacter(this.characterType, this.no, this.direction));
+        Field gameField = Map.getMap(mMap).getField(mSeed);
+        mDirection = Type.Direction.DOWN;
+        gameField.sendToAll(Packet.turnCharacter(mCharacterType, mNo, mDirection));
     }
 
     // 왼쪽을 바라봄
     protected void turnLeft() {
-        if (this.direction == Type.Direction.LEFT) {
+        if (mDirection == Type.Direction.LEFT) {
             return;
         }
-        Field gameField = Map.getMap(this.map).getField(this.seed);
-        this.direction = Type.Direction.LEFT;
-        gameField.sendToAll(Packet.turnCharacter(this.characterType, this.no, this.direction));
+        Field gameField = Map.getMap(mMap).getField(mSeed);
+        mDirection = Type.Direction.LEFT;
+        gameField.sendToAll(Packet.turnCharacter(mCharacterType, mNo, mDirection));
     }
 
     // 오른쪽을 바라봄
     protected void turnRight() {
-        if (this.direction == Type.Direction.RIGHT) {
+        if (mDirection == Type.Direction.RIGHT) {
             return;
         }
-        Field gameField = Map.getMap(this.map).getField(this.seed);
-        this.direction = Type.Direction.RIGHT;
-        gameField.sendToAll(Packet.turnCharacter(this.characterType, this.no, this.direction));
+        Field gameField = Map.getMap(mMap).getField(mSeed);
+        mDirection = Type.Direction.RIGHT;
+        gameField.sendToAll(Packet.turnCharacter(mCharacterType, mNo, mDirection));
     }
 
     // 위로 이동
     protected boolean moveUp() {
-        Field gameField = Map.getMap(this.map).getField(this.seed);
-        if (gameField.isPassable(this, this.x, this.y - 1)) {
-            this.direction = Type.Direction.UP;
-            this.y -= 1;
-            gameField.sendToAll(Packet.moveCharacter(this.characterType, this.no, this.x, this.y, this.direction));
+        Field gameField = Map.getMap(mMap).getField(mSeed);
+        if (gameField.isPassable(this, mX, mY - 1)) {
+            mDirection = Type.Direction.UP;
+            mY -= 1;
+            gameField.sendToAll(Packet.moveCharacter(mCharacterType, mNo, mX, mY, mDirection));
             return true;
         }
         return false;
@@ -185,11 +185,11 @@ public class Character {
 
     // 아래로 이동
     protected boolean moveDown() {
-        Field gameField = Map.getMap(this.map).getField(this.seed);
-        if (gameField.isPassable(this, this.x, this.y + 1)) {
-            this.direction = Type.Direction.DOWN;
-            this.y += 1;
-            gameField.sendToAll(Packet.moveCharacter(this.characterType, this.no, this.x, this.y, this.direction));
+        Field gameField = Map.getMap(mMap).getField(mSeed);
+        if (gameField.isPassable(this, mX, mY + 1)) {
+            mDirection = Type.Direction.DOWN;
+            mY += 1;
+            gameField.sendToAll(Packet.moveCharacter(mCharacterType, mNo, mX, mY, mDirection));
             return true;
         }
         return false;
@@ -197,11 +197,11 @@ public class Character {
 
     // 왼쪽으로 이동
     protected boolean moveLeft() {
-        Field gameField = Map.getMap(map).getField(seed);
-        if (gameField.isPassable(this, this.x - 1, this.y)) {
-            this.direction = Type.Direction.LEFT;
-            this.x -= 1;
-            gameField.sendToAll(Packet.moveCharacter(this.characterType, this.no, this.x, this.y, this.direction));
+        Field gameField = Map.getMap(mMap).getField(mSeed);
+        if (gameField.isPassable(this, mX - 1, mY)) {
+            mDirection = Type.Direction.LEFT;
+            mX -= 1;
+            gameField.sendToAll(Packet.moveCharacter(mCharacterType, mNo, mX, mY, mDirection));
             return true;
         }
         return false;
@@ -209,11 +209,11 @@ public class Character {
 
     // 오른쪽으로 이동
     protected boolean moveRight() {
-        Field gameField = Map.getMap(this.map).getField(this.seed);
-        if (gameField.isPassable(this, this.x + 1, this.y)) {
-            this.direction = Type.Direction.RIGHT;
-            this.x += 1;
-            gameField.sendToAll(Packet.moveCharacter(this.characterType, this.no, this.x, this.y, this.direction));
+        Field gameField = Map.getMap(mMap).getField(mSeed);
+        if (gameField.isPassable(this, mX + 1, mY)) {
+            mDirection = Type.Direction.RIGHT;
+            mX += 1;
+            gameField.sendToAll(Packet.moveCharacter(mCharacterType, mNo, mX, mY, mDirection));
             return true;
         }
         return false;
@@ -223,23 +223,23 @@ public class Character {
     protected void jump(int type, int value) {
         switch (type) {
             case Type.Direction.DOWN:
-                this.y += value;
+                mY += value;
                 break;
 
             case Type.Direction.LEFT:
-                this.x -= value;
+                mX -= value;
                 break;
 
             case Type.Direction.RIGHT:
-                this.x += value;
+                mX += value;
                 break;
 
             case Type.Direction.UP:
-                this.y -= value;
+                mY -= value;
                 break;
 
             default:
         }
-        Map.getMap(this.map).getField(this.seed).sendToAll(Packet.jumpCharacter(this.characterType, this.no, this.x, this.y));
+        Map.getMap(mMap).getField(mSeed).sendToAll(Packet.jumpCharacter(mCharacterType, mNo, mX, mY));
     }
 }

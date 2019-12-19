@@ -7,12 +7,12 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 
 public class Map {
-	private int no;
-	private String name;
-	private int width;
-	private int height;
-	private int[] data;
-	private Hashtable<Integer, Field> fields = new Hashtable<Integer, Field>();
+	private int mNo;
+	private String mName;
+	private int mWidth;
+	private int mHeight;
+	private int[] mData;
+	private Hashtable<Integer, Field> mFields = new Hashtable<Integer, Field>();
 
 	private static Hashtable<Integer, Map> maps = new Hashtable<Integer, Map>();
 	private static Logger logger = Logger.getLogger(Map.class.getName());
@@ -20,22 +20,22 @@ public class Map {
 	// 생성자
 	public Map(String fileName) {
 		if (loadMapData(fileName)) {
-			maps.put(this.no, this);
+			maps.put(mNo, this);
 		}
 	}
 
 	// 필드를 넣음
 	public boolean addField(int seed) {
-		if (this.fields.containsKey(seed)) {
+		if (mFields.containsKey(seed)) {
 			return false;
 		}
-		this.fields.put(seed, new Field(this.no, seed));
+		mFields.put(seed, new Field(mNo, seed));
 		return true;
 	}
 
 	// 필드를 얻음
 	public Field getField(int seed) {
-		return fields.get(seed);
+		return mFields.get(seed);
 	}
 
 	// 맵을 얻음
@@ -74,14 +74,14 @@ public class Map {
 			BufferedReader br = new BufferedReader(fr);
 			String read = br.readLine();
 			String[] readData = read.split(",");
-			this.no = Integer.parseInt(readData[0]);
-			this.name = readData[1];
-			this.width = Integer.parseInt(readData[2]);
-			this.height = Integer.parseInt(readData[3]);
-			this.data = new int[this.width * this.height];
-			for (int y = 0; y < this.height; y++) {
-				for (int x = 0; x < this.width; x++) {
-					data[this.width * y + x] = Integer.parseInt(readData[this.width * y + x + 4]);
+			mNo = Integer.parseInt(readData[0]);
+			mName = readData[1];
+			mWidth = Integer.parseInt(readData[2]);
+			mHeight = Integer.parseInt(readData[3]);
+			mData = new int[mWidth * mHeight];
+			for (int y = 0; y < mHeight; y++) {
+				for (int x = 0; x < mWidth; x++) {
+					mData[mWidth * y + x] = Integer.parseInt(readData[mWidth * y + x + 4]);
 				}
 			}
 			br.close();
@@ -97,19 +97,19 @@ public class Map {
 		if (!isValid(x, y)) {
 			return false;
 		}
-		if (this.data[this.width * y + x] == 1) {
+		if (mData[mWidth * y + x] == 1) {
 			return false;
 		}
 		return true;
 	}
 	
 	private boolean isValid(int x, int y) {
-		return x >= 0 && y >= 0 && x < this.width && y < this.height;
+		return x >= 0 && y >= 0 && x < mWidth && y < mHeight;
 	}
 
 	public void update() {
 		try {
-			for (Field field : this.fields.values()) {
+			for (Field field : mFields.values()) {
 				field.update();
 			}
 		} catch (Exception e) {
