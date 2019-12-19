@@ -69,7 +69,7 @@ public class Functions {
 
     public static class ItemFunction {
         public void potion(User user, GameData.Item _item) {
-            GameData.ItemData item = GameData.item.get(_item.getNo());
+            GameData.ItemData item = GameData.itemsHashtable.get(_item.getNo());
             user.gainHp(item.getHp());
         }
     }
@@ -77,7 +77,7 @@ public class Functions {
     public static class SkillFunction {
         public void crossCut(User user, GameData.Skill _skill) {
             Field field = Map.getMap(user.getMap()).getField(user.getSeed());
-            GameData.SkillData skill = GameData.skill.get(_skill.getNo());
+            GameData.SkillData skill = GameData.skillsHashtable.get(_skill.getNo());
             // 쿹타임 처리
             user.getCoolTime().setCoolTime(skill.getDelay(), skill.getNo());
             // 에너미 데미지 처리

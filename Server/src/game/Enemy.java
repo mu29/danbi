@@ -236,7 +236,7 @@ public class Enemy extends Character {
                 Map.getMap(mMap).getField(mSeed).loadDropGold(mGold, mX, mY);
             }
             // 보상 목록에 있는 아이템을 드랍
-            for (GameData.Reward r : GameData.reward) {
+            for (GameData.Reward r : GameData.rewardsVector) {
                 if (r.getNo() == mReward && r.getPer() > mRandom.nextInt(10000)) {
                     Map.getMap(mMap).getField(mSeed).loadDropItem(r.getItemNo(), r.getNum(), mX, mY);
                 }
@@ -373,19 +373,19 @@ public class Enemy extends Character {
 
     // 모든 적을 검색
     private Vector<Character> findEnemies() {
-        Vector<Character> enemies = new Vector<Character>();
+        Vector<Character> enemiesVector = new Vector<Character>();
         // 팀이 다른 경우 적 목록에 넣음
         for (User user : Map.getMap(mMap).getField(mSeed).getUsers()) {
             if (user.getTeam() != mTeam) {
-                enemies.addElement(user);
+                enemiesVector.addElement(user);
             }
         }
         for (Enemy enemy : Map.getMap(mMap).getField(mSeed).getAliveEnemies()) {
             if (enemy.getTeam() != mTeam) {
-                enemies.addElement(enemy);
+                enemiesVector.addElement(enemy);
             }
         }
-        return enemies;
+        return enemiesVector;
     }
 
     // 타겟에게 접근함

@@ -10,15 +10,15 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 public class GameData extends DataBase {
-	public static Hashtable<Integer, Job> job = new Hashtable<>();
-	public static Hashtable<Integer, Register> register = new Hashtable<>();
-	public static Hashtable<Integer, ItemData> item = new Hashtable<>();
-	public static Hashtable<Integer, SkillData> skill = new Hashtable<>();
-	public static Hashtable<Integer, Troop> troop = new Hashtable<>();
-	public static Hashtable<Integer, NPC> npc = new Hashtable<>();
-	public static Hashtable<Integer, Shop> shop = new Hashtable<>();
-	public static Vector<Reward> reward = new Vector<>();
-	public static Vector<Portal> portal = new Vector<>();
+	public static Hashtable<Integer, Job> jobsHashtable = new Hashtable<>();
+	public static Hashtable<Integer, Register> registersHashtable = new Hashtable<>();
+	public static Hashtable<Integer, ItemData> itemsHashtable = new Hashtable<>();
+	public static Hashtable<Integer, SkillData> skillsHashtable = new Hashtable<>();
+	public static Hashtable<Integer, Troop> troopsHashtable = new Hashtable<>();
+	public static Hashtable<Integer, NPC> npcsHashtable = new Hashtable<>();
+	public static Hashtable<Integer, Shop> shopsHashtable = new Hashtable<>();
+	public static Vector<Reward> rewardsVector = new Vector<>();
+	public static Vector<Portal> portalsVector = new Vector<>();
 
 	private static Logger logger = Logger.getLogger(GameData.class.getName());
 
@@ -27,59 +27,59 @@ public class GameData extends DataBase {
 
 		rs = executeQuery("SELECT * FROM `setting_job`;");
 		while (rs.next())
-			job.put(rs.getInt("no"), new Job(rs));
+			jobsHashtable.put(rs.getInt("no"), new Job(rs));
 		logger.info("직업 정보 로드 완료.");
 		
 		rs = executeQuery("SELECT * FROM `setting_register`;");
 		while (rs.next())
-			register.put(rs.getInt("no"), new Register(rs));
+			registersHashtable.put(rs.getInt("no"), new Register(rs));
 		logger.info("가입 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_item`;");
 		while (rs.next())
-			item.put(rs.getInt("no"), new ItemData(rs));
+			itemsHashtable.put(rs.getInt("no"), new ItemData(rs));
 		logger.info("아이템 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_skill`;");
 		while (rs.next())
-			skill.put(rs.getInt("no"), new SkillData(rs));
+			skillsHashtable.put(rs.getInt("no"), new SkillData(rs));
 		logger.info("스킬 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_npc`;");
 		while (rs.next())
-			npc.put(rs.getInt("no"), new NPC(rs));
+			npcsHashtable.put(rs.getInt("no"), new NPC(rs));
 		logger.info("NPC 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_reward`;");
 		while (rs.next())
-			reward.addElement(new Reward(rs));
+			rewardsVector.addElement(new Reward(rs));
 		logger.info("보상 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_troop`;");
 		while (rs.next())
-			troop.put(rs.getInt("no"), new Troop(rs));
+			troopsHashtable.put(rs.getInt("no"), new Troop(rs));
 		logger.info("에너미 정보 로드 완료.");
 
-		ArrayList<ShopItem> shopItems = new ArrayList<>();
+		ArrayList<ShopItem> shopItemsList = new ArrayList<>();
 		rs = executeQuery("SELECT * FROM `setting_shop`;");
 		while (rs.next())
-			shopItems.add(new ShopItem(rs));
+			shopItemsList.add(new ShopItem(rs));
 
-		for (ShopItem shopItem : shopItems) {
+		for (ShopItem shopItem : shopItemsList) {
 			int shopNo = shopItem.getNo();
-			if (!shop.containsKey(shopNo))
-				shop.put(shopNo, new Shop(shopNo));
-			shop.get(shopNo).addItem(shopItem.getItemNo());
+			if (!shopsHashtable.containsKey(shopNo))
+				shopsHashtable.put(shopNo, new Shop(shopNo));
+			shopsHashtable.get(shopNo).addItem(shopItem.getItemNo());
 		}
 		logger.info("상점 정보 로드 완료.");
 
 		rs = executeQuery("SELECT * FROM `setting_portal`;");
-		while (rs.next())
-			portal.addElement(new Portal(rs));
+		while (rs.next()) {
+			portalsVector.addElement(new Portal(rs));
+		}
 		logger.info("포탈 정보 로드 완료.");
 
 		rs.close();
-
 		Guild.load();
 	}
 
@@ -359,7 +359,7 @@ public class GameData extends DataBase {
 		public Item(int userNo, int itemNo, int amount, int index, int trade) {
 			mUserNo = userNo;
 			mItemNo = itemNo;
-			mAmount = amount > GameData.item.get(mItemNo).getMaxLoad() ? GameData.item.get(mItemNo).getMaxLoad() : amount;
+			mAmount = amount > GameData.itemsHashtable.get(mItemNo).getMaxLoad() ? GameData.itemsHashtable.get(mItemNo).getMaxLoad() : amount;
 			mIndex = index;
 			mDamage = 0;
 			mMagicDamage = 0;
@@ -374,7 +374,7 @@ public class GameData extends DataBase {
 			mAvoid = 0;
 			mHit = 0;
 			mReinforce = 0;
-			mbTrade = trade == 1;
+			mbTrade = (trade == 1);
 			mbEquipped = false;
 		}
 
@@ -509,8 +509,8 @@ public class GameData extends DataBase {
 		}
 		
 		public void addAmount(int value) {
-			if (mAmount + value > GameData.item.get(mItemNo).getMaxLoad()) {
-				mAmount = GameData.item.get(mItemNo).getMaxLoad();
+			if (mAmount + value > GameData.itemsHashtable.get(mItemNo).getMaxLoad()) {
+				mAmount = GameData.itemsHashtable.get(mItemNo).getMaxLoad();
 			} else if (mAmount + value < 0) {
 				mAmount = 0;
 			} else {
@@ -924,11 +924,11 @@ public class GameData extends DataBase {
 
 	public static class Shop {
 		private int mNo;
-		private Hashtable<Integer, ItemData> mItems;
+		private Hashtable<Integer, ItemData> mGoodsHashtable;
 
 		public Shop(int no) {
 			mNo = no;
-			mItems = new Hashtable<>();
+			mGoodsHashtable = new Hashtable<>();
 		}
 
 		public int getNo() {
@@ -936,18 +936,18 @@ public class GameData extends DataBase {
 		}
 
 		public void addItem(int mItemNo) {
-			mItems.put(mItems.size() + 1, item.get(mItemNo));
+			mGoodsHashtable.put(mGoodsHashtable.size() + 1, GameData.itemsHashtable.get(mItemNo));
 		}
 
 		public ItemData getItem(int index) {
-			if (mItems.containsKey(index)) {
-				return mItems.get(index);
+			if (mGoodsHashtable.containsKey(index)) {
+				return mGoodsHashtable.get(index);
 			}
 			return null;
 		}
 
 		public Hashtable<Integer, ItemData> getAllItems() {
-			return mItems;
+			return mGoodsHashtable;
 		}
 	}
 

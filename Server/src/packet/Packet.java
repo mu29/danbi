@@ -403,11 +403,11 @@ public final class Packet {
 	}
 
 	public static JSONObject openRegisterWindow() {
-		String[] image = new String[GameData.register.size()];
-		int[] job = new int[GameData.register.size()];
-		for (int i = 0; i < GameData.register.size(); i++) {
-			image[i] = GameData.register.get(i + 1).getImage();
-			job[i] = GameData.register.get(i + 1).getJob();
+		String[] image = new String[GameData.registersHashtable.size()];
+		int[] job = new int[GameData.registersHashtable.size()];
+		for (int i = 0; i < GameData.registersHashtable.size(); i++) {
+			image[i] = GameData.registersHashtable.get(i + 1).getImage();
+			job[i] = GameData.registersHashtable.get(i + 1).getJob();
 		}
 		JSONObject packet = new JSONObject();
 		packet.put("header", STCHeader.OPEN_REGISTER_WINDOW);

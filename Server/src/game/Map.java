@@ -12,7 +12,7 @@ public class Map {
 	private int mWidth;
 	private int mHeight;
 	private int[] mData;
-	private Hashtable<Integer, Field> mFields = new Hashtable<Integer, Field>();
+	private Hashtable<Integer, Field> mFieldsHashtable = new Hashtable<Integer, Field>();
 
 	private static Hashtable<Integer, Map> maps = new Hashtable<Integer, Map>();
 	private static Logger logger = Logger.getLogger(Map.class.getName());
@@ -26,16 +26,16 @@ public class Map {
 
 	// 필드를 넣음
 	public boolean addField(int seed) {
-		if (mFields.containsKey(seed)) {
+		if (mFieldsHashtable.containsKey(seed)) {
 			return false;
 		}
-		mFields.put(seed, new Field(mNo, seed));
+		mFieldsHashtable.put(seed, new Field(mNo, seed));
 		return true;
 	}
 
 	// 필드를 얻음
 	public Field getField(int seed) {
-		return mFields.get(seed);
+		return mFieldsHashtable.get(seed);
 	}
 
 	// 맵을 얻음
@@ -109,7 +109,7 @@ public class Map {
 
 	public void update() {
 		try {
-			for (Field field : mFields.values()) {
+			for (Field field : mFieldsHashtable.values()) {
 				field.update();
 			}
 		} catch (Exception e) {

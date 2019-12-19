@@ -255,7 +255,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 			return;
 		}
 		// 직업 리스트에 없는 직업일 경우
-		if (!GameData.register.containsKey(readNo)) {
+		if (!GameData.registersHashtable.containsKey(readNo)) {
 			return;
 		}
 		try {
@@ -283,8 +283,8 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 		// 비밀번호를 암호화
 		readPass = Crypto.encrypt(readPass);
 		// 직업 정보 불러오기
-    	GameData.Register r = GameData.register.get(readNo);
-		GameData.Job j = GameData.job.get(r.getJob());
+    	GameData.Register r = GameData.registersHashtable.get(readNo);
+		GameData.Job j = GameData.jobsHashtable.get(r.getJob());
 		// 데이터베이스에 넣자
     	DataBase.insertUser(readID, readPass, readName, readMail, r.getImage(), r.getJob(), r.getMap(), r.getX(), r.getY(), r.getLevel(), j.getHp());
     	ctx.writeAndFlush(Packet.registerMessage(0));
