@@ -296,9 +296,9 @@ class MUI
         if Mouse.trigger?(0) && MUI.dragItem
           # 단축키 등록
           if MUI.dragItem.is_a?(Skill)
-            Socket.send({'header' => CTSHeader::SET_SLOT, 'index' => iconIndex, 'itemidx' => Game.getSkill(MUI.dragItem.no).no})
+            Socket.send({'header' => CTSHeader::SET_SLOT, 'index' => iconIndex, 'item_index' => Game.getSkill(MUI.dragItem.no).no})
           else
-            Socket.send({'header' => CTSHeader::SET_SLOT, 'index' => iconIndex, 'itemidx' => MUI.dragItem.index})
+            Socket.send({'header' => CTSHeader::SET_SLOT, 'index' => iconIndex, 'item_index' => MUI.dragItem.index})
           end
           MUI.dragItem = nil
         elsif Mouse.trigger?(1)

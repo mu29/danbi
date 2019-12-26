@@ -189,7 +189,7 @@ public final class Handler extends ChannelInboundHandlerAdapter {
 				break;
 
 			case CTSHeader.SET_SLOT:
-				User.get(ctx).setSlot((int) packet.get("index"), (int) packet.get("itemidx"));
+				User.get(ctx).setSlot((int) packet.get("index"), (int) packet.get("item_index"));
 				break;
 
 			case CTSHeader.DEL_SLOT:

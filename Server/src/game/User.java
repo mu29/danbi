@@ -2242,14 +2242,10 @@ public class User extends Character {
 				// 슬롯 칸 개수
 				final int slotSize = 10;
 				for (int i = 0; i < slotSize; ++i) {
-					final int columnIndex = 2 + i;
-					mCtx.writeAndFlush(Packet.setSlot(i, rs.getInt(columnIndex)));
-				}
-				for (int i = 0; i < slotSize; ++i) {
-					final int columnIndex = 2 + i;
-					// 스킬이 존재하면
-					if (rs.getInt(columnIndex) != -1) {
-						final SkillData nowSkill = GameData.skillsHashtable.get(findSkillByIndex(rs.getInt(columnIndex)).getNo());
+					final int nowSlot = rs.getInt("slot" + i);
+					mCtx.writeAndFlush(Packet.setSlot(i, nowSlot));
+					if (nowSlot != -1) {
+						final SkillData nowSkill = GameData.skillsHashtable.get(findSkillByIndex(nowSlot).getNo());
 						mCoolTime.initCoolTime(i, nowSkill.getDelay(), nowSkill.getNo());
 					}
 				}
@@ -2260,12 +2256,12 @@ public class User extends Character {
 		}
 	}
 
-	public void setSlot(int index, int itemidx) {
-		final SkillData selectedSkill = GameData.skillsHashtable.get(findSkillByIndex(itemidx).getNo());
+	public void setSlot(int index, int itemIndex) {
+		final SkillData selectedSkill = GameData.skillsHashtable.get(findSkillByIndex(itemIndex).getNo());
 		if (selectedSkill.getLimitLevel() > mLevel) {
 			return;
 		}
-		DataBase.setSlot(this, index, itemidx);
+		DataBase.setSlot(this, index, itemIndex);
 		mCoolTime.initCoolTime(index, selectedSkill.getDelay(), selectedSkill.getNo());
 		loadSlot();
 	}
