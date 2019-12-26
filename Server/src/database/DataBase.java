@@ -215,17 +215,18 @@ public class DataBase {
 						"`no` = '" + user.getNo() + "';");
 				rs.close();
 			}
-
-			if (!(slotIndex >= 0 && slotIndex <= 9))
+			if (slotIndex < 0 || slotIndex > 9) {
 				return;
-
-			String itemType;
-			itemType = "slot" + (slotIndex + 1);
-
+			}
+			for (int i = 0; i < 10; ++i) {
+				if (rs.getInt("slot" + i) == index) {
+					return;
+				}
+			}
+			String itemType = "slot" + slotIndex;
 			connection.createStatement().executeUpdate("UPDATE `slot` SET " +
 					"`" + itemType + "` = '" + index + "' " +
 					"WHERE `no` = '" + user.getNo() + "';");
-
 		} catch (SQLException e) {
 			logger.warning(e.toString());
 		}
@@ -239,11 +240,10 @@ public class DataBase {
 						"`no` = '" + user.getNo() + "';");
 				rs.close();
 			}
-			if (!(slotIndex >= 0 && slotIndex <= 9)) {
+			if (slotIndex < 0 || slotIndex > 9) {
 				return;
 			}
-			String itemType;
-			itemType = "slot" + (slotIndex + 1);
+			String itemType = "slot" + slotIndex;
 			connection.createStatement().executeUpdate("UPDATE `slot` SET " +
 					"`" + itemType + "` = '" + -1 + "' " +
 					"WHERE `no` = '" + user.getNo() + "';");

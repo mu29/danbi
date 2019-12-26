@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: danbi
 Target Host: localhost
 Target Database: danbi
-Date: 2017-08-01 ¿ÀÀü 1:57:32
+Date: 2017-08-01 ï¿½ï¿½ï¿½ï¿½ 1:57:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -246,6 +246,7 @@ CREATE TABLE `skill` (
 -- ----------------------------
 CREATE TABLE `slot` (
   `no` int(11) NOT NULL,
+  `slot0` int(11) NOT NULL DEFAULT '-1',
   `slot1` int(11) NOT NULL DEFAULT '-1',
   `slot2` int(11) NOT NULL DEFAULT '-1',
   `slot3` int(11) NOT NULL DEFAULT '-1',
@@ -254,8 +255,7 @@ CREATE TABLE `slot` (
   `slot6` int(11) NOT NULL DEFAULT '-1',
   `slot7` int(11) NOT NULL DEFAULT '-1',
   `slot8` int(11) NOT NULL DEFAULT '-1',
-  `slot9` int(11) NOT NULL DEFAULT '-1',
-  `slot10` int(11) NOT NULL DEFAULT '-1'
+  `slot9` int(11) NOT NULL DEFAULT '-1'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -359,5 +359,5 @@ INSERT INTO `slot` VALUES ('19', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1',
 INSERT INTO `slot` VALUES ('20', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1');
 INSERT INTO `slot` VALUES ('21', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1');
 INSERT INTO `slot` VALUES ('22', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1');
-INSERT INTO `user` VALUES ('21', '1', 'PPAkXhcIYGcDVjdCgY/hHg==', 'cheapmunk', '0', '0', '1', '016-Thief01', '1', '0', '0', '0', '0', '0', '999', '0', '1', '0', '0', '1', '0', '10', '6', '4', '4', '0');
-INSERT INTO `user` VALUES ('22', '2', 'gKBvNUyp+H1+LZJgpXESyA==', 'jubinpark', '0', '0', '2', '053-Undead03', '1', '0', '0', '0', '0', '0', '1000', '0', '1', '0', '0', '1', '0', '8', '5', '8', '4', '0');
+INSERT INTO `user` VALUES ('21', '1', 'PPAkXhcIYGcDVjdCgY/hHg==', 'foo', '0', '0', '1', '016-Thief01', '1', '0', '0', '0', '0', '0', '999', '0', '1', '0', '0', '1', '0', '10', '6', '4', '4', '0');
+INSERT INTO `user` VALUES ('22', '2', 'gKBvNUyp+H1+LZJgpXESyA==', 'bar', '0', '0', '2', '053-Undead03', '1', '0', '0', '0', '0', '0', '1000', '0', '1', '0', '0', '1', '0', '8', '5', '8', '4', '0');
